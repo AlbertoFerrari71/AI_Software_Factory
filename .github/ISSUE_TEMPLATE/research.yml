@@ -1,0 +1,47 @@
+name: Research
+description: Raccogli informazioni prima di una decisione o di uno step.
+title: "[Research] "
+labels: ["research"]
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: Domanda da verificare
+      description: Cosa dobbiamo capire prima di decidere?
+    validations:
+      required: true
+  - type: textarea
+    id: reason
+    attributes:
+      label: Perche' serve
+      description: Quale decisione o rischio abilita questa ricerca?
+    validations:
+      required: true
+  - type: textarea
+    id: sources
+    attributes:
+      label: Fonti preferite
+      value: |
+        - Documentazione ufficiale
+        - Standard
+        - Repository ufficiali
+  - type: dropdown
+    id: risk
+    attributes:
+      label: Livello massimo di rischio
+      options:
+        - L0 - Read only
+        - L1 - Write safe
+      default: 0
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Output atteso
+      value: |
+        - Sintesi
+        - Fatti verificati
+        - Rischi
+        - Alternative
+        - Decisione proposta

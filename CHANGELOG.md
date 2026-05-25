@@ -4,6 +4,30 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.4.0] - 2026-05-25
+
+### Added
+
+- STEP 040 - Prompt Packet Generator.
+- `docs/19_PROMPT_PACKET_GENERATOR.md`.
+- `docs/checklists/040_PROMPT_PACKET_CHECKLIST.md`.
+- Esempio Family Photo Organizer in `templates/codex_tasks/example_040_family_photo_organizer_prompt_packet.md`.
+- Test automatici in `tests/unit/test_prompt_templates.py`.
+
+### Changed
+
+- Standardizzati i prompt ChatGPT, Codex Ask, Codex Code, Codex Review e Codex Repair con sezioni minime comuni.
+- Rafforzato `templates/codex_tasks/codex_task_packet_template.md` con livello L0-L4, file vietati, test/verifica e safe stop.
+- Aggiornata roadmap: STEP 040 completato.
+- Aggiornato decision log con DEC-021 -> DEC-023.
+
+### Not included
+
+- Nessuna logica applicativa reale.
+- Nessuna modifica a policy di sicurezza.
+- Nessuna modifica CI/CD.
+- Nessuna nuova dipendenza.
+
 ## [0.3.0] - 2026-05-25
 
 ### Added

@@ -1,18 +1,40 @@
 # Codex Review Prompt
 
-Lavora in modalità review.
+Usa questo prompt quando Codex deve fare review di un diff o di una pull request.
 
 ## Obiettivo
 
-Analizza il diff o la pull request e valuta:
+Valutare correttezza, semplicita', testabilita', sicurezza, documentazione, rischi e rollback senza modificare file.
 
-- correttezza;
-- semplicità;
-- testabilità;
-- sicurezza;
-- documentazione;
-- rischi;
-- rollback.
+## Contesto
+
+AI Software Factory richiede review umana e verifiche prima del merge. La review deve privilegiare bug, regressioni, rischi e test mancanti.
+
+## Livello rischio L0-L4
+
+Livello massimo: L0 - Read only.
+
+Se la review richiede patch, commit, push, merge, modifica CI/CD o cancellazioni, fermarsi in safe stop e chiedere un task L2/L3/L4 separato.
+
+## File da leggere
+
+- diff o pull request da revisionare;
+- Codex Task Packet collegato, se presente;
+- `AGENTS.md`;
+- `docs/05_SECURITY_MODEL.md`;
+- test e documentazione collegati alla modifica.
+
+## File modificabili
+
+- Nessuno.
+
+## File vietati
+
+- `.env`
+- `.env.*`
+- secret o credenziali
+- file fuori repository
+- qualunque file non necessario alla review
 
 ## Vincoli
 
@@ -20,16 +42,39 @@ Analizza il diff o la pull request e valuta:
 - Non fare commit.
 - Non fare push.
 - Non fare merge.
+- Ordinare i finding per severita'.
+- Citare file e linee quando disponibili.
+- Distinguere problemi bloccanti da suggerimenti.
 
-## Output richiesto
+## Output atteso
 
-1. Sintesi della modifica.
-2. Punti corretti.
-3. Problemi trovati.
-4. Rischi.
-5. Test mancanti.
-6. Suggerimenti minimi per migliorare.
-7. Verdetto:
-   - Approva
-   - Richiede modifiche
-   - Blocca
+1. Findings principali.
+2. Domande aperte o assunzioni.
+3. Test mancanti o non verificati.
+4. Rischi residui.
+5. Verdetto: Approva, Richiede modifiche o Blocca.
+
+## Criteri di accettazione
+
+- La review e' read-only.
+- I problemi sono concreti e collegati al diff.
+- I test mancanti sono esplicitati.
+- Il verdetto e' coerente con i rischi.
+
+## Test / verifica
+
+- Verificare il diff.
+- Verificare lo stato dei test riportati.
+- Se possibile, leggere output CI o test locali senza modificarli.
+
+## Rollback / safe stop
+
+Rollback non necessario per L0. Safe stop se emergono secret, azioni distruttive, modifiche fuori scope, test critici falliti o richiesta di eseguire merge/push.
+
+## Cosa NON fare
+
+- Non applicare fix durante la review.
+- Non riscrivere il diff.
+- Non approvare se mancano verifiche critiche.
+- Non ignorare policy L3/L4.
+- Non usare Full Auto.

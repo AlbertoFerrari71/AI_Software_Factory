@@ -1,0 +1,73 @@
+name: Feature / Work Package
+description: Proponi uno step o una modifica controllata.
+title: "[Step] "
+labels: ["feature"]
+body:
+  - type: input
+    id: step
+    attributes:
+      label: Step
+      description: Usa numerazione 010, 020, 030...
+      placeholder: "040 - Prompt Packet Generator"
+    validations:
+      required: true
+  - type: textarea
+    id: objective
+    attributes:
+      label: Obiettivo
+      description: Descrivi il risultato atteso.
+    validations:
+      required: true
+  - type: textarea
+    id: scope_in
+    attributes:
+      label: Scope incluso
+      value: |
+        - ...
+    validations:
+      required: true
+  - type: textarea
+    id: scope_out
+    attributes:
+      label: Scope escluso
+      value: |
+        - ...
+  - type: textarea
+    id: files
+    attributes:
+      label: File probabilmente coinvolti
+      value: |
+        - ...
+  - type: dropdown
+    id: risk
+    attributes:
+      label: Livello massimo di rischio
+      options:
+        - L0 - Read only
+        - L1 - Write safe
+        - L2 - Write controlled
+        - L3 - Risky
+        - L4 - Destructive
+      default: 2
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Criteri di accettazione
+      value: |
+        - ...
+    validations:
+      required: true
+  - type: textarea
+    id: tests
+    attributes:
+      label: Test richiesti
+      value: |
+        - [ ] `python -m pytest -q`
+  - type: textarea
+    id: rollback
+    attributes:
+      label: Rollback / safe stop
+      value: |
+        - ...

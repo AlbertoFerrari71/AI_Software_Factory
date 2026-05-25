@@ -18,7 +18,7 @@ Conseguenze:
 
 ## DEC-001 — Nome pubblico del progetto
 
-**Data:** 2026-05-25  
+**Data:** 2026-05-25
 **Stato:** Accettata
 
 ### Contesto
@@ -45,7 +45,7 @@ Il repository, i documenti e la comunicazione useranno AI Software Factory come 
 
 ## DEC-002 — Nome interno del metodo
 
-**Data:** 2026-05-25  
+**Data:** 2026-05-25
 **Stato:** Accettata
 
 ### Decisione
@@ -68,7 +68,7 @@ Codex Alchemy Method viene usato nei documenti come nome della metodologia, non 
 
 ## DEC-003 — Strategia local-first, SaaS-ready
 
-**Data:** 2026-05-25  
+**Data:** 2026-05-25
 **Stato:** Accettata
 
 ### Decisione
@@ -451,3 +451,72 @@ I tool remoti possono ricevere dati sensibili o compiere azioni esterne al repos
 ### Conseguenze
 
 Lo STEP 130 dovrà implementare un registry tool coerente con questa policy.
+
+---
+
+## DEC-021 — Prompt Packet come contratto operativo
+
+**Data:** 2026-05-25
+**Stato:** Accettata
+
+### Contesto
+
+Lo STEP 040 deve evitare prompt liberi, ambigui o non verificabili.
+
+### Decisione
+
+Ogni prompt operativo deve dichiarare almeno obiettivo, contesto, livello rischio L0-L4, file da leggere, file modificabili, file vietati, vincoli, output atteso, criteri di accettazione, test/verifica, rollback o safe stop e cosa non fare.
+
+### Motivazione
+
+Queste sezioni trasformano una richiesta naturale in un incarico controllabile, coerente con il Safety Model.
+
+### Conseguenze
+
+I template ChatGPT, Codex e Codex Task Packet devono essere verificabili con test leggeri.
+
+---
+
+## DEC-022 — Template specializzati per modalita' AI
+
+**Data:** 2026-05-25
+**Stato:** Accettata
+
+### Contesto
+
+ChatGPT, Codex Ask, Codex Code, Codex Review e Codex Repair hanno rischi e output diversi.
+
+### Decisione
+
+Mantenere template separati per ciascuna modalita', con lo stesso schema minimo ma con vincoli specifici.
+
+### Motivazione
+
+Un unico prompt generico ridurrebbe chiarezza e controllo operativo.
+
+### Conseguenze
+
+Le modalita' read-only restano L0, mentre Code e Repair sono limitate a L2 salvo approval esplicita L3/L4.
+
+---
+
+## DEC-023 — Test leggeri sui template
+
+**Data:** 2026-05-25
+**Stato:** Accettata
+
+### Contesto
+
+I prompt sono documenti Markdown, ma regressioni strutturali possono renderli incompleti.
+
+### Decisione
+
+Aggiungere test unitari che verificano presenza dei template principali e delle sezioni minime.
+
+### Motivazione
+
+I controlli automatici proteggono il contratto operativo senza introdurre dipendenze o logica applicativa.
+
+### Conseguenze
+
+La CI potra' intercettare template mancanti o incompleti con `python -m pytest -q`.
