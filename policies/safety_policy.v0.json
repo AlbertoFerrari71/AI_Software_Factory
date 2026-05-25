@@ -1,0 +1,245 @@
+{
+  "schema_version": "0.1",
+  "project": "AI Software Factory",
+  "method": "Codex Alchemy Method",
+  "step": "030",
+  "default_behavior": {
+    "unknown_action": "deny_or_escalate",
+    "unknown_tool": "deny_or_escalate",
+    "unknown_path": "deny_or_escalate",
+    "fail_mode": "fail_closed",
+    "prefer_quarantine_over_delete": true,
+    "production_access_default": "deny",
+    "main_branch_write_default": "deny"
+  },
+  "levels": {
+    "L0": {
+      "name": "Read only",
+      "automatic_allowed": true,
+      "requires_log": true,
+      "requires_branch": false,
+      "requires_tests": false,
+      "requires_explicit_approval": false,
+      "requires_dry_run": false,
+      "requires_backup_or_rollback": false,
+      "requires_double_confirmation": false,
+      "examples": [
+        "read_file",
+        "read_repository",
+        "read_issue",
+        "read_logs",
+        "search_documentation"
+      ]
+    },
+    "L1": {
+      "name": "Write safe",
+      "automatic_allowed": true,
+      "requires_log": true,
+      "requires_branch": false,
+      "requires_tests": false,
+      "requires_explicit_approval": false,
+      "requires_dry_run": false,
+      "requires_backup_or_rollback": false,
+      "requires_double_confirmation": false,
+      "examples": [
+        "create_markdown_draft",
+        "create_temp_file",
+        "generate_prompt_packet",
+        "generate_issue_draft",
+        "create_checklist"
+      ]
+    },
+    "L2": {
+      "name": "Write controlled",
+      "automatic_allowed": false,
+      "requires_log": true,
+      "requires_branch": true,
+      "requires_tests": true,
+      "requires_explicit_approval": false,
+      "requires_dry_run": false,
+      "requires_backup_or_rollback": true,
+      "requires_double_confirmation": false,
+      "examples": [
+        "modify_code_on_branch",
+        "update_tests",
+        "update_docs",
+        "create_pull_request",
+        "modify_non_sensitive_config_on_branch"
+      ]
+    },
+    "L3": {
+      "name": "Risky",
+      "automatic_allowed": false,
+      "requires_log": true,
+      "requires_branch": true,
+      "requires_tests": true,
+      "requires_explicit_approval": true,
+      "requires_dry_run": true,
+      "requires_backup_or_rollback": true,
+      "requires_double_confirmation": false,
+      "examples": [
+        "modify_ci_cd",
+        "update_dependencies",
+        "modify_auth",
+        "database_migration_dry_run",
+        "modify_security_policy"
+      ]
+    },
+    "L4": {
+      "name": "Destructive",
+      "automatic_allowed": false,
+      "requires_log": true,
+      "requires_branch": true,
+      "requires_tests": true,
+      "requires_explicit_approval": true,
+      "requires_dry_run": true,
+      "requires_backup_or_rollback": true,
+      "requires_double_confirmation": true,
+      "examples": [
+        "delete_file",
+        "delete_data",
+        "force_push",
+        "merge_direct_to_main",
+        "production_deploy",
+        "rotate_credentials",
+        "modify_real_database"
+      ]
+    }
+  },
+  "classification_rules": [
+    {
+      "when": "action_is_read_only",
+      "minimum_level": "L0"
+    },
+    {
+      "when": "action_creates_new_non_executable_draft_inside_repo",
+      "minimum_level": "L1"
+    },
+    {
+      "when": "action_modifies_code_tests_or_docs_on_dedicated_branch",
+      "minimum_level": "L2"
+    },
+    {
+      "when": "action_touches_ci_dependencies_auth_security_policy_or_database_schema",
+      "minimum_level": "L3"
+    },
+    {
+      "when": "action_deletes_data_changes_production_force_pushes_merges_main_or_rotates_credentials",
+      "minimum_level": "L4"
+    },
+    {
+      "when": "classification_is_uncertain",
+      "minimum_level": "L3"
+    }
+  ],
+  "path_policy": {
+    "repo_relative_allowlist_l1_l2": [
+      "README.md",
+      "AGENTS.md",
+      "CHANGELOG.md",
+      ".env.example",
+      ".gitignore",
+      "pyproject.toml",
+      "docs/**",
+      "templates/**",
+      "tests/**",
+      "src/**",
+      ".github/ISSUE_TEMPLATE/**",
+      ".github/pull_request_template.md"
+    ],
+    "requires_l3_or_higher": [
+      ".github/workflows/**",
+      "requirements*.txt",
+      "poetry.lock",
+      "uv.lock",
+      "package-lock.json",
+      "pnpm-lock.yaml",
+      "Dockerfile",
+      "docker-compose*.yml",
+      "alembic/**",
+      "migrations/**"
+    ],
+    "deny_by_default": [
+      ".git/**",
+      ".venv/**",
+      "venv/**",
+      "node_modules/**",
+      "dist/**",
+      "build/**",
+      "__pycache__/**",
+      ".pytest_cache/**",
+      "*.env",
+      ".env",
+      ".env.*",
+      "*.pem",
+      "*.key",
+      "*.pfx",
+      "*.p12",
+      "id_rsa*",
+      "secrets/**",
+      "credentials/**",
+      "private/**",
+      "prod/**",
+      "production/**",
+      "*.sqlite",
+      "*.sqlite3",
+      "*.db"
+    ],
+    "outside_repository": "deny_by_default"
+  },
+  "approval_requirements": {
+    "L0": [
+      "log_action"
+    ],
+    "L1": [
+      "log_action",
+      "stay_in_allowlist"
+    ],
+    "L2": [
+      "branch_or_worktree",
+      "diff_summary",
+      "tests_or_manual_checklist",
+      "rollback_note"
+    ],
+    "L3": [
+      "explicit_approval",
+      "risk_assessment",
+      "dry_run_when_possible",
+      "rollback_plan",
+      "test_plan"
+    ],
+    "L4": [
+      "explicit_approval",
+      "double_confirmation",
+      "dry_run",
+      "backup_or_snapshot",
+      "rollback_plan",
+      "human_final_gate"
+    ]
+  },
+  "codex_policy": {
+    "ask_only_max_level": "L0",
+    "suggest_max_level": "L1",
+    "auto_edit_max_level": "L2",
+    "full_auto_max_level": "L1",
+    "full_auto_allowed_only_in_sandbox": true,
+    "no_commit_without_explicit_request": true,
+    "no_push_without_explicit_request": true,
+    "no_merge": true,
+    "no_force_push": true
+  },
+  "mcp_policy": {
+    "default_require_approval": true,
+    "prefer_official_or_trusted_servers": true,
+    "allowed_tools_must_be_explicit": true,
+    "log_data_shared_with_remote_server": true,
+    "never_share_secrets_by_default": true
+  },
+  "secret_policy": {
+    "read_real_secrets_by_default": false,
+    "write_real_secrets_by_default": false,
+    "only_placeholders_in_examples": true,
+    "redact_tokens_in_logs": true,
+    "future_secret_scanner_required": true
+  }
+}

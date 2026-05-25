@@ -1,0 +1,56 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+dist/
+build/
+*.egg-info/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+secrets/
+secret/
+credentials/
+*.sqlite
+*.sqlite3
+*.db
+
+# Local application data
+data/
+local_data/
+tmp/
+temp/
+logs/
+exports/
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# GitHub / generated
+*.log
+
+# Project-specific generated outputs
+output/
+artifacts/
+generated/

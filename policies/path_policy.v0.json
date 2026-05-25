@@ -1,0 +1,38 @@
+{
+  "schema_version": "0.1",
+  "step": "030",
+  "safe_write_roots": [
+    "docs",
+    "templates",
+    "tests",
+    "src"
+  ],
+  "l3_roots": [
+    ".github/workflows",
+    "migrations",
+    "alembic"
+  ],
+  "blocked_patterns": [
+    ".git/**",
+    ".venv/**",
+    "venv/**",
+    "node_modules/**",
+    "*.env",
+    ".env",
+    ".env.*",
+    "*.pem",
+    "*.key",
+    "*.pfx",
+    "*.p12",
+    "secrets/**",
+    "credentials/**",
+    "private/**",
+    "prod/**",
+    "production/**",
+    "*.sqlite",
+    "*.sqlite3",
+    "*.db"
+  ],
+  "outside_repository": "blocked",
+  "delete_policy": "quarantine_or_rename_preferred; direct deletion is L4"
+}

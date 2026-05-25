@@ -1,0 +1,11 @@
+Proprietary / License Not Selected
+
+Copyright (c) 2026 Alberto Ferrari.
+
+All rights reserved until a public or private license is explicitly selected and recorded in docs/11_DECISIONS.md.
+
+This repository currently contains an early-stage framework, documentation, templates and structural scaffolding for the AI Software Factory project.
+
+Do not redistribute, sublicense, sell, deploy as a public SaaS, or reuse commercially without explicit permission from the copyright holder.
+
+Before any public release, replace this file with the selected license text and update the decision log.

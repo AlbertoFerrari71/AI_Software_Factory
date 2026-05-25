@@ -1,0 +1,62 @@
+# AI Software Factory — Safety Policy v0
+# Human-readable YAML companion. Canonical machine-readable version: safety_policy.v0.json.
+schema_version: "0.1"
+project: "AI Software Factory"
+method: "Codex Alchemy Method"
+step: "030"
+default_behavior:
+  unknown_action: deny_or_escalate
+  unknown_tool: deny_or_escalate
+  unknown_path: deny_or_escalate
+  fail_mode: fail_closed
+  prefer_quarantine_over_delete: true
+  production_access_default: deny
+  main_branch_write_default: deny
+levels:
+  L0:
+    name: Read only
+    automatic_allowed: true
+    requires_explicit_approval: false
+    requires_dry_run: false
+    requires_backup_or_rollback: false
+    requires_double_confirmation: false
+  L1:
+    name: Write safe
+    automatic_allowed: true
+    requires_log: true
+    requires_explicit_approval: false
+  L2:
+    name: Write controlled
+    automatic_allowed: false
+    requires_branch: true
+    requires_tests: true
+    requires_backup_or_rollback: true
+  L3:
+    name: Risky
+    automatic_allowed: false
+    requires_explicit_approval: true
+    requires_dry_run: true
+    requires_backup_or_rollback: true
+  L4:
+    name: Destructive
+    automatic_allowed: false
+    requires_explicit_approval: true
+    requires_dry_run: true
+    requires_backup_or_rollback: true
+    requires_double_confirmation: true
+codex_policy:
+  ask_only_max_level: L0
+  suggest_max_level: L1
+  auto_edit_max_level: L2
+  full_auto_max_level: L1
+  full_auto_allowed_only_in_sandbox: true
+  no_commit_without_explicit_request: true
+  no_push_without_explicit_request: true
+  no_merge: true
+  no_force_push: true
+mcp_policy:
+  default_require_approval: true
+  prefer_official_or_trusted_servers: true
+  allowed_tools_must_be_explicit: true
+  log_data_shared_with_remote_server: true
+  never_share_secrets_by_default: true
