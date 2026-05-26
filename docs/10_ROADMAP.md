@@ -29,7 +29,7 @@ Esempio:
 | 020 | Repository Genesis | Creare struttura repository completa | Cartelle, template, placeholder, CI base | MVP personale | Completato |
 | 030 | Safety Model | Formalizzare L0-L4 e approval gate | Security model, policy, rollback strategy | MVP + SaaS-ready | Completato |
 | 040 | Prompt Packet Generator | Standardizzare prompt e task packet | Template ChatGPT/Codex/review/repair | MVP personale | Completato |
-| 050 | GitHub Workflow | Standardizzare issue, branch, PR e CI | Issue/PR template, branch policy | MVP personale | Da fare |
+| 050 | GitHub Workflow | Standardizzare issue, branch, PR e CI | Issue/PR template, branch policy | MVP personale | Completato |
 | 060 | Codex Workflow | Definire uso Codex CLI e Cloud | Codex Task Packet, modalità ask/edit | MVP personale | Da fare |
 | 070 | Verification Gate | Definire test, lint, build, smoke, security | Test strategy, checklist, CI | MVP personale | Da fare |
 | 080 | Documentation Sync | Mantenere docs allineate | Changelog, decision log, roadmap update | MVP personale | Da fare |
@@ -49,34 +49,9 @@ Esempio:
 
 Rendere il progetto comprensibile senza dover rileggere tutta la chat.
 
-### Deliverable
-
-- `README.md`
-- `AGENTS.md`
-- `CHANGELOG.md`
-- `docs/00_PROJECT_CONTEXT.md`
-- `docs/01_VISION.md`
-- `docs/02_PRODUCT_STRATEGY.md`
-- `docs/10_ROADMAP.md`
-- `docs/11_DECISIONS.md`
-- `docs/99_REFERENCES.md`
-- template iniziali per prompt e Codex Task Packet
-
-### Criterio di completamento
-
-Completato quando:
-
-- la visione è chiara;
-- il target è chiaro;
-- il caso pilota è indicato;
-- la roadmap 010-150 è presente;
-- le decisioni iniziali sono registrate;
-- le regole per agenti AI sono presenti;
-- non è stato ancora introdotto codice applicativo.
-
 ### Stato
 
-Completato nello ZIP STEP 010.
+Completato.
 
 ---
 
@@ -86,35 +61,9 @@ Completato nello ZIP STEP 010.
 
 Creare lo scheletro completo del repository.
 
-### Deliverable
-
-- struttura `src/`;
-- struttura `tests/`;
-- struttura `templates/`;
-- `.github/workflows/ci.yml`;
-- `.github/ISSUE_TEMPLATE/`;
-- `.github/pull_request_template.md`;
-- `.env.example`;
-- `.gitignore`;
-- `pyproject.toml`;
-- `LICENSE` provvisorio;
-- file placeholder non vuoti;
-- test smoke minimale.
-
-### Criterio di completamento
-
-Completato quando:
-
-- il repository è navigabile;
-- i file principali sono presenti;
-- `pytest` passa almeno sullo smoke test;
-- GitHub Actions ha una CI minima;
-- non è presente logica applicativa reale;
-- Codex può leggere regole e template prima di modificare file.
-
 ### Stato
 
-Completato nello ZIP STEP 020.
+Completato.
 
 ---
 
@@ -124,30 +73,9 @@ Completato nello ZIP STEP 020.
 
 Formalizzare sicurezza e approval policy.
 
-### Output realizzati
-
-- `docs/05_SECURITY_MODEL.md` esteso;
-- `docs/16_APPROVAL_POLICY.md`;
-- `docs/17_TOOL_RISK_CLASSIFICATION.md`;
-- `docs/18_ROLLBACK_STRATEGY.md`;
-- `policies/safety_policy.v0.json`;
-- `policies/safety_policy.v0.yaml`;
-- `policies/path_policy.v0.json`;
-- `templates/safety/`;
-- matrice L0-L4;
-- regole dry-run;
-- regole backup/rollback;
-- gestione credenziali;
-- regole per Codex, GitHub, OpenAI API e MCP;
-- test automatici sulla policy.
-
-### Criterio di completamento
-
-Completato quando ogni azione futura può essere classificata e gestita con una regola precisa, e i test automatici validano i requisiti minimi L3/L4.
-
 ### Stato
 
-Completato nello ZIP STEP 030.
+Completato.
 
 ---
 
@@ -157,22 +85,9 @@ Completato nello ZIP STEP 030.
 
 Rendere standard e riutilizzabili i prompt.
 
-### Output realizzati
-
-- template prompt ChatGPT;
-- template Codex ask/code/review/repair;
-- schema del Prompt Packet;
-- esempi applicati a Family Photo Organizer.
-- checklist di verifica STEP 040;
-- test automatici leggeri sui template principali.
-
-### Criterio di completamento
-
-Completato quando i template principali contengono obiettivo, contesto, livello L0-L4, file da leggere, file modificabili, file vietati, vincoli, output atteso, criteri di accettazione, test/verifica, rollback o safe stop e cosa non fare.
-
 ### Stato
 
-Completato nello STEP 040.
+Completato.
 
 ---
 
@@ -182,13 +97,25 @@ Completato nello STEP 040.
 
 Rendere operativo il flusso GitHub completo.
 
-### Output previsti
+### Output realizzati
 
 - issue policy;
 - branch naming policy;
+- commit policy;
 - PR policy;
+- merge policy;
 - branch protection checklist;
-- release/tag policy.
+- release/tag policy;
+- checklist STEP 050;
+- test automatici leggeri sulla struttura GitHub.
+
+### Criterio di completamento
+
+Completato quando il workflow GitHub è documentato, i template GitHub sono verificati dai test, la roadmap e il changelog sono aggiornati e la PR è aperta senza merge automatico.
+
+### Stato
+
+Completato nello STEP 050.
 
 ---
 
