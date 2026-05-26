@@ -4,6 +4,31 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.5.0] - 2026-05-26
+
+### Added
+
+- STEP 050 - GitHub Workflow.
+- Issue di tracciamento per `050) GitHub Workflow`.
+- `docs/checklists/050_GITHUB_WORKFLOW_CHECKLIST.md`.
+- Test automatici in `tests/unit/test_github_workflow.py`.
+
+### Changed
+
+- Esteso `docs/15_GITHUB_WORKFLOW.md` con issue policy, branch naming policy, commit policy, PR policy, merge policy, branch protection checklist e release/tag policy.
+- Aggiornata roadmap: STEP 050 completato.
+- Aggiornato TREE con checklist e test STEP 050.
+
+### Not included
+
+- Nessuna modifica a `.github/workflows/ci.yml`.
+- Nessuna branch protection applicata automaticamente.
+- Nessuna modifica a policy di sicurezza.
+- Nessuna modifica a `src/**`.
+- Nessuna nuova dipendenza.
+
+---
+
 ## [0.4.0] - 2026-05-25
 
 ### Added
@@ -27,6 +52,8 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 - Nessuna modifica a policy di sicurezza.
 - Nessuna modifica CI/CD.
 - Nessuna nuova dipendenza.
+
+---
 
 ## [0.3.0] - 2026-05-25
 
@@ -57,6 +84,7 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 - MCP/tool remoti richiedono approval default e allowed tools espliciti.
 - Path e secret policy introdotte come configurazioni versionate.
 
+---
 
 ## [0.2.0] — 2026-05-25 — STEP 020 Repository Genesis
 
@@ -91,7 +119,6 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 ### Changed
 
 - Aggiornato `README.md` a stato STEP 020.
-- Aggiornato `AGENTS.md` con regole repository e CI.
 - Aggiornata roadmap con STEP 010 e STEP 020 completati.
 - Aggiornato decision log con decisioni DEC-011 — DEC-015.
 
