@@ -28,7 +28,7 @@ Esempio:
 | 010 | Visione e contesto | Definire identità, target, principi, roadmap e decisioni iniziali | README, contesto, visione, strategia, roadmap, decision log | MVP personale | Completato |
 | 020 | Repository Genesis | Creare struttura repository completa | Cartelle, template, placeholder, CI base | MVP personale | Completato |
 | 030 | Safety Model | Formalizzare L0-L4 e approval gate | Security model, policy, rollback strategy | MVP + SaaS-ready | Completato |
-| 040 | Prompt Packet Generator | Standardizzare prompt e task packet | Template ChatGPT/Codex/review/repair | MVP personale | Da fare |
+| 040 | Prompt Packet Generator | Standardizzare prompt e task packet | Template ChatGPT/Codex/review/repair | MVP personale | Completato |
 | 050 | GitHub Workflow | Standardizzare issue, branch, PR e CI | Issue/PR template, branch policy | MVP personale | Da fare |
 | 060 | Codex Workflow | Definire uso Codex CLI e Cloud | Codex Task Packet, modalità ask/edit | MVP personale | Da fare |
 | 070 | Verification Gate | Definire test, lint, build, smoke, security | Test strategy, checklist, CI | MVP personale | Da fare |
@@ -157,12 +157,22 @@ Completato nello ZIP STEP 030.
 
 Rendere standard e riutilizzabili i prompt.
 
-### Output previsti
+### Output realizzati
 
 - template prompt ChatGPT;
 - template Codex ask/code/review/repair;
 - schema del Prompt Packet;
 - esempi applicati a Family Photo Organizer.
+- checklist di verifica STEP 040;
+- test automatici leggeri sui template principali.
+
+### Criterio di completamento
+
+Completato quando i template principali contengono obiettivo, contesto, livello L0-L4, file da leggere, file modificabili, file vietati, vincoli, output atteso, criteri di accettazione, test/verifica, rollback o safe stop e cosa non fare.
+
+### Stato
+
+Completato nello STEP 040.
 
 ---
 
