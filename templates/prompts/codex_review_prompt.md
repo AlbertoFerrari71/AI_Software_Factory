@@ -14,6 +14,8 @@ AI Software Factory richiede review umana e verifiche prima del merge. La review
 
 Livello massimo: L0 - Read only.
 
+Safety level: L0.
+
 Se la review richiede patch, commit, push, merge, modifica CI/CD o cancellazioni, fermarsi in safe stop e chiedere un task L2/L3/L4 separato.
 
 ## File da leggere
@@ -28,7 +30,7 @@ Se la review richiede patch, commit, push, merge, modifica CI/CD o cancellazioni
 
 - Nessuno.
 
-## File vietati
+## File vietati / file da non toccare
 
 - `.env`
 - `.env.*`
@@ -42,6 +44,7 @@ Se la review richiede patch, commit, push, merge, modifica CI/CD o cancellazioni
 - Non fare commit.
 - Non fare push.
 - Non fare merge.
+- Regola sintetica: no commit, no push, no merge.
 - Ordinare i finding per severita'.
 - Citare file e linee quando disponibili.
 - Distinguere problemi bloccanti da suggerimenti.

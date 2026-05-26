@@ -4,6 +4,34 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.6.0] - 2026-05-26
+
+### Added
+
+- STEP 060 - Codex Workflow.
+- `docs/checklists/060_CODEX_WORKFLOW_CHECKLIST.md`.
+- Esempio STEP 060 in `templates/codex_tasks/example_060_codex_workflow_task.md`.
+- Test automatici in `tests/unit/test_codex_workflow.py`.
+
+### Changed
+
+- Esteso `docs/08_CODEX_WORKFLOW.md` con Codex CLI locale, Codex Web/Cloud, Ask/Suggest, Auto Edit controllato, Review, Repair, divieto di Full Auto, safe stop e rollback.
+- Rafforzati i prompt Codex con no commit, no push, no merge, safety level, file da non toccare e output atteso.
+- Aggiornato il template Codex Task Packet con safety level e file da non toccare.
+- Aggiornata roadmap: STEP 060 completato.
+- Aggiornato TREE con checklist, esempio e test STEP 060.
+
+### Not included
+
+- Nessuna logica applicativa reale.
+- Nessuna modifica a `.github/workflows/ci.yml`.
+- Nessuna modifica a policy di sicurezza.
+- Nessuna modifica a `src/**`.
+- Nessuna nuova dipendenza.
+- Nessun commit, push o merge automatico.
+
+---
+
 ## [0.5.0] - 2026-05-26
 
 ### Added

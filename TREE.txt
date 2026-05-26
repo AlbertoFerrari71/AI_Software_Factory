@@ -1,4 +1,4 @@
-AI-Software-Factory-STEP050/
+AI-Software-Factory-STEP060/
 ├── .github/
 │   ├── ISSUE_TEMPLATE/
 │   │   ├── bug.yml
@@ -13,7 +13,8 @@ AI-Software-Factory-STEP050/
 │   │   ├── 020_REPOSITORY_GENESIS_CHECKLIST.md
 │   │   ├── 030_SECURITY_MODEL_CHECKLIST.md
 │   │   ├── 040_PROMPT_PACKET_CHECKLIST.md
-│   │   └── 050_GITHUB_WORKFLOW_CHECKLIST.md
+│   │   ├── 050_GITHUB_WORKFLOW_CHECKLIST.md
+│   │   └── 060_CODEX_WORKFLOW_CHECKLIST.md
 │   ├── 00_PROJECT_CONTEXT.md
 │   ├── 01_VISION.md
 │   ├── 02_PRODUCT_STRATEGY.md
@@ -85,7 +86,8 @@ AI-Software-Factory-STEP050/
 │   │   ├── codex_task_packet_template.md
 │   │   ├── example_020_repo_genesis_task.md
 │   │   ├── example_030_safety_model_task.md
-│   │   └── example_040_family_photo_organizer_prompt_packet.md
+│   │   ├── example_040_family_photo_organizer_prompt_packet.md
+│   │   └── example_060_codex_workflow_task.md
 │   ├── decision_records/
 │   │   └── adr_template.md
 │   ├── github_issues/
@@ -116,6 +118,7 @@ AI-Software-Factory-STEP050/
 │   │   ├── .gitkeep
 │   │   ├── test_github_workflow.py
 │   │   ├── test_prompt_templates.py
+│   │   ├── test_codex_workflow.py
 │   │   └── test_safety_policy.py
 │   └── conftest.py
 ├── .env.example

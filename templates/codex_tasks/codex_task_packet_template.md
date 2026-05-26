@@ -26,6 +26,8 @@ xxx-nome-breve-task
 
 Livello massimo ammesso: L0 / L1 / L2 / L3 / L4.
 
+Safety level: indicare il livello massimo approvato e il motivo.
+
 Motivazione della classificazione:
 
 - ...
@@ -53,6 +55,8 @@ Default: B
 
 ## File vietati
 
+File da non toccare:
+
 - `.env`
 - `.env.*`
 - secret o credenziali
@@ -64,6 +68,7 @@ Default: B
 - Non fare commit automatico.
 - Non fare push automatico.
 - Non fare merge.
+- Regola sintetica: no commit, no push, no merge.
 - Non modificare file fuori lista.
 - Non introdurre nuove dipendenze senza motivazione.
 - Aggiornare documentazione se cambia comportamento.
