@@ -1,4 +1,4 @@
-AI-Software-Factory-STEP040/
+AI-Software-Factory-STEP050/
 ├── .github/
 │   ├── ISSUE_TEMPLATE/
 │   │   ├── bug.yml
@@ -12,7 +12,8 @@ AI-Software-Factory-STEP040/
 │   ├── checklists/
 │   │   ├── 020_REPOSITORY_GENESIS_CHECKLIST.md
 │   │   ├── 030_SECURITY_MODEL_CHECKLIST.md
-│   │   └── 040_PROMPT_PACKET_CHECKLIST.md
+│   │   ├── 040_PROMPT_PACKET_CHECKLIST.md
+│   │   └── 050_GITHUB_WORKFLOW_CHECKLIST.md
 │   ├── 00_PROJECT_CONTEXT.md
 │   ├── 01_VISION.md
 │   ├── 02_PRODUCT_STRATEGY.md
@@ -113,6 +114,7 @@ AI-Software-Factory-STEP040/
 │   │   └── test_repository_structure.py
 │   ├── unit/
 │   │   ├── .gitkeep
+│   │   ├── test_github_workflow.py
 │   │   ├── test_prompt_templates.py
 │   │   └── test_safety_policy.py
 │   └── conftest.py
