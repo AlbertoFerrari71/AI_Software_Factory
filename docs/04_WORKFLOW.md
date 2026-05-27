@@ -96,6 +96,8 @@ Flusso standard:
 
 Il processo completo e' definito in `docs/20_VERIFICATION_GATE.md`.
 
+`main` deve essere considerato branch protetto: il lavoro normale avviene su branch dedicati e il merge verso `main` passa da PR. La policy e' documentata in `docs/22_BRANCH_PROTECTION_POLICY.md`.
+
 ---
 
 ## 7. Documentation Sync

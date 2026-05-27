@@ -46,6 +46,8 @@ Changelog / Roadmap / Decision log
 
 Ogni passaggio deve lasciare una traccia leggibile.
 
+`main` deve essere trattato come branch protetto: il percorso normale verso `main` e' branch dedicato -> PR -> Verification Gate -> CI verde -> merge. La Branch Protection Policy completa e' in `docs/22_BRANCH_PROTECTION_POLICY.md`.
+
 ---
 
 ## 3. Issue policy
@@ -159,6 +161,8 @@ Non mergiare finche' Verification Gate, CI e review non sono stati verificati.
 
 Eccezione: solo bootstrap iniziali o emergenze documentate.
 
+La PR e' l'unico percorso normale verso `main`. Non usare direct push su `main`, force push su `main` o deletion di `main`.
+
 ---
 
 ## 7. GitHub Actions e status check
@@ -197,7 +201,7 @@ Da valutare manualmente su GitHub quando la CI è stabile:
 - [ ] disallow branch deletion;
 - [ ] restrict direct pushes to `main`.
 
-Queste impostazioni sono L3 se applicate automaticamente da tool, perche' modificano regole del repository. Nello STEP 070 la branch protection resta raccomandata, ma non configurata automaticamente.
+Queste impostazioni sono L3 se applicate automaticamente da tool, perche' modificano regole del repository. Nello STEP 090 la policy e' documentata in `docs/22_BRANCH_PROTECTION_POLICY.md`; l'applicazione concreta puo' avvenire nello STEP 100.
 
 ---
 
@@ -213,6 +217,8 @@ Merge ammesso solo quando:
 - documentazione aggiornata;
 - rollback chiaro;
 - Alberto approva il merge.
+
+Quando la branch protection sara' applicata, GitHub dovra' rendere obbligatoria almeno la PR e la CI verde prima del merge.
 
 Dopo il merge:
 

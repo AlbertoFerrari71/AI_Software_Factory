@@ -578,3 +578,36 @@ Il metodo deve prevenire disallineamenti senza trasformare ogni step in burocraz
 ### Conseguenze
 
 Ogni step futuro deve dichiarare nel report finale le verifiche documentali svolte, distinguere documenti aggiornati da documenti solo controllati e non modificare documenti per zelo.
+
+---
+
+## DEC-029 - Branch Protection Policy per main
+
+**Data:** 2026-05-27
+**Stato:** Accettata
+
+### Contesto
+
+Dopo Verification Gate e Documentation Sync serve una policy chiara per proteggere `main` da push diretti, merge senza CI, force push, deletion e modifiche non verificate.
+
+### Decisione
+
+Introdurre `docs/22_BRANCH_PROTECTION_POLICY.md` come riferimento centrale.
+
+La policy documenta sia branch protection rules sia GitHub rulesets. Il livello minimo raccomandato per `main` richiede:
+
+- pull request obbligatoria;
+- CI verde prima del merge;
+- force push bloccato;
+- deletion bloccata;
+- admin bypass solo per emergenza o recovery.
+
+Nello STEP 090 non viene applicata nessuna regola reale su GitHub. L'implementazione concreta e' rimandata allo STEP 100.
+
+### Motivazione
+
+Il progetto deve proteggere `main` senza introdurre automatismi rischiosi o configurazioni remote prima che la policy sia chiara.
+
+### Conseguenze
+
+Gli step futuri devono trattare modifiche a branch protection e rulesets come azioni GitHub separate, da approvare esplicitamente e verificare dopo applicazione.

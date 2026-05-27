@@ -33,8 +33,8 @@ Esempio:
 | 060 | Codex Workflow | Definire uso Codex CLI e Cloud | Codex Task Packet, modalità ask/edit | MVP personale | Completato |
 | 070 | Verification Gate | Definire test, lint, build, smoke, security | Test strategy, checklist, CI | MVP personale | Completato |
 | 080 | Documentation Sync | Mantenere docs allineate | Changelog, decision log, roadmap update | MVP personale | Completato |
-| 090 | Branch Protection Policy | Definire protezioni branch e status check richiesti | Policy branch protection, required checks, rollout manuale | MVP personale | Da fare |
-| 100 | Family Photo Organizer Case Study | Applicare il metodo al caso pilota | Case study, retrospettiva, template migliorati | MVP personale | Da fare |
+| 090 | Branch Protection Policy | Definire protezioni branch e status check richiesti | Policy branch protection, required checks, rollout manuale | MVP personale | Completato |
+| 100 | Branch Protection Implementation | Applicare e verificare protezioni main | Ruleset o branch protection, required checks, verifica GitHub | MVP personale | Da fare |
 | 110 | Local Orchestrator MVP | Primo software locale | CLI/API locale per generare pacchetti | MVP software | Da fare |
 | 120 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
 | 130 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
@@ -213,7 +213,7 @@ Completato nello STEP 080.
 
 Definire quando e come attivare branch protection e required status checks senza automatismi rischiosi.
 
-### Output previsti
+### Output realizzati
 
 - policy branch protection;
 - required status checks;
@@ -221,21 +221,41 @@ Definire quando e come attivare branch protection e required status checks senza
 - rollout manuale;
 - rollback e safe stop;
 - criteri per non configurare automaticamente protezioni nello step sbagliato.
+- distinzione tra branch protection rules e rulesets;
+- livello minimo raccomandato per `main`;
+- test automatici leggeri sulla policy.
+
+### Future evolutions
+
+- Lint and Formatting Gate;
+- Security Scan Gate;
+- Prompt Packet Hardening;
+- Ruleset Hardening.
+
+### Criterio di completamento
+
+Completato quando la policy e' documentata, i workflow principali rimandano al documento, il changelog e il decision log sono aggiornati e i test verificano i riferimenti minimi.
+
+### Stato
+
+Completato nello STEP 090.
 
 ---
 
-## 12. STEP 100 — Family Photo Organizer Case Study
+## 12. STEP 100 — Branch Protection Implementation
 
 ### Obiettivo
 
-Applicare il metodo al caso reale.
+Applicare concretamente la Branch Protection Policy su GitHub dopo approvazione esplicita.
 
 ### Output previsti
 
-- case study;
-- retrospettiva;
-- template corretti;
-- lessons learned.
+- scelta tra ruleset e branch protection classica;
+- verifica permessi GitHub;
+- identificazione del nome esatto del check CI;
+- applicazione manuale o via `gh api` approvata;
+- verifica che `main` sia protetto;
+- documentazione di output o screenshot di verifica.
 
 ---
 

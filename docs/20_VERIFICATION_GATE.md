@@ -15,6 +15,8 @@ The gate checks that:
 - the pull request documents verification;
 - GitHub Actions confirms the same baseline checks.
 
+Branch protection or rulesets can later make part of this gate mandatory on GitHub. STEP 090 documents the Branch Protection Policy in `docs/22_BRANCH_PROTECTION_POLICY.md`; STEP 100 may apply it.
+
 ---
 
 ## 2. Local verification
@@ -109,6 +111,8 @@ The PR must declare:
 
 GitHub Actions must pass before merge unless Alberto records an explicit exception.
 
+Branch protection is the GitHub mechanism that can enforce required PRs and required status checks. The policy is documented in `docs/22_BRANCH_PROTECTION_POLICY.md`; no real protection is applied by STEP 090.
+
 ---
 
 ## 6. Merge verification
@@ -190,7 +194,7 @@ If a check is not run, the reason must be explicit.
 
 Future steps can strengthen the gate with:
 
-- branch protection requiring PR review and status checks;
+- branch protection or rulesets requiring PR review and status checks;
 - linting;
 - type checking;
 - markdown checks;
@@ -198,4 +202,4 @@ Future steps can strengthen the gate with:
 - security scans;
 - stricter path-policy checks.
 
-Branch protection is recommended, but STEP 070 does not configure it automatically and does not claim it is active.
+Branch protection is recommended, but STEP 090 only documents the policy and does not claim it is active. STEP 100 may apply and verify it.
