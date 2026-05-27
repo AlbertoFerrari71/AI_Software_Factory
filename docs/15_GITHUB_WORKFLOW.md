@@ -23,7 +23,7 @@ Branch dedicato
   ↓
 Modifica piccola e isolata
   ↓
-Test locali
+Verification Gate locale
   ↓
 Commit
   ↓
@@ -148,12 +148,13 @@ Ogni PR deve contenere:
 - documentazione aggiornata;
 - rischi residui;
 - rollback.
+- Verification Gate locale completato.
 
 ### Regola operativa
 
 ```text
 Aprire PR prima del merge.
-Non mergiare finché test e review non sono stati verificati.
+Non mergiare finche' Verification Gate, CI e review non sono stati verificati.
 ```
 
 Eccezione: solo bootstrap iniziali o emergenze documentate.
@@ -162,10 +163,11 @@ Eccezione: solo bootstrap iniziali o emergenze documentate.
 
 ## 7. GitHub Actions e status check
 
-La CI minima deve almeno eseguire:
+La CI e' il Verification Gate remoto su GitHub. Deve almeno eseguire:
 
 ```powershell
-python -m pytest -q
+python -m pytest
+git diff --check
 
 ```
 
@@ -178,7 +180,7 @@ Per gli step futuri, la CI potrà essere estesa con:
 - verifica template;
 - verifica policy.
 
-Nello STEP 050 non vengono modificate le GitHub Actions. Lo STEP 070 sarà il punto corretto per ampliare il Verification Gate.
+Lo STEP 070 allinea GitHub Actions al Verification Gate documentato in `docs/20_VERIFICATION_GATE.md`.
 
 ---
 
@@ -195,7 +197,7 @@ Da valutare manualmente su GitHub quando la CI è stabile:
 - [ ] disallow branch deletion;
 - [ ] restrict direct pushes to `main`.
 
-Queste impostazioni sono L3 se applicate automaticamente da tool, perché modificano regole del repository. In questo step sono solo documentate.
+Queste impostazioni sono L3 se applicate automaticamente da tool, perche' modificano regole del repository. Nello STEP 070 la branch protection resta raccomandata, ma non configurata automaticamente.
 
 ---
 
@@ -206,8 +208,8 @@ Merge ammesso solo quando:
 - branch dedicato presente;
 - PR aperta;
 - diff revisionato;
-- test locali passati o motivazione documentata;
-- CI GitHub verificata quando disponibile;
+- Verification Gate locale passato o motivazione documentata;
+- CI GitHub verde;
 - documentazione aggiornata;
 - rollback chiaro;
 - Alberto approva il merge.

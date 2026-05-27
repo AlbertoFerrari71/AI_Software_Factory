@@ -4,6 +4,31 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.7.0] - 2026-05-27
+
+### Added
+
+- STEP 070 - Verification Gate.
+- `docs/20_VERIFICATION_GATE.md`.
+- Script locale `scripts/verify.ps1`.
+- Test automatici in `tests/unit/test_verification_gate.py`.
+
+### Changed
+
+- Allineata la CI al Verification Gate con `python -m pytest`, `git diff --check` e permessi minimi.
+- Aggiunta sezione Verification Gate al pull request template.
+- Aggiornati workflow, GitHub workflow, Codex workflow, roadmap e decision log.
+
+### Not included
+
+- Nessun commit, push, PR o merge automatico.
+- Nessuna branch protection configurata automaticamente.
+- Nessuna nuova dipendenza.
+- Nessuna modifica a `src/**`.
+- Nessun secret o file `.env` toccato.
+
+---
+
 ## [0.6.0] - 2026-05-26
 
 ### Added
