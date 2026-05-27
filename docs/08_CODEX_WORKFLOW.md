@@ -330,8 +330,13 @@ Codex deve lasciare ad Alberto un riepilogo con:
 - file modificati;
 - test eseguiti;
 - controlli non eseguiti;
+- verifiche documentali effettuate;
 - rischi residui;
 - prossimo step consigliato.
+
+Codex deve valutare se `CHANGELOG.md`, `docs/10_ROADMAP.md` e `docs/11_DECISIONS.md` richiedono aggiornamenti. Deve anche evitare modifiche documentali per zelo quando non sono collegate allo step.
+
+La regola centrale e' `docs/21_DOCUMENTATION_SYNC.md`.
 
 ---
 

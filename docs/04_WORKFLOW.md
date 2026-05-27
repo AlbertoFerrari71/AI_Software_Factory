@@ -95,3 +95,18 @@ Flusso standard:
 5. Dopo il merge si fa pull di `main` e test finale.
 
 Il processo completo e' definito in `docs/20_VERIFICATION_GATE.md`.
+
+---
+
+## 7. Documentation Sync
+
+Dopo ogni modifica Codex deve valutare se la documentazione e' ancora coerente con il lavoro svolto.
+
+Prima del commit Alberto controlla che:
+
+- `CHANGELOG.md` sia aggiornato quando serve;
+- `docs/10_ROADMAP.md` non anticipi o nasconda lo stato reale;
+- `docs/11_DECISIONS.md` contenga solo decisioni stabili;
+- i documenti specifici siano aggiornati solo se collegati allo step.
+
+PR e merge devono avvenire solo dopo verifica documentale. La regola completa e' in `docs/21_DOCUMENTATION_SYNC.md`.

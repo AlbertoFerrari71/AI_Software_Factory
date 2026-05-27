@@ -4,6 +4,32 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.8.0] - 2026-05-27
+
+### Added
+
+- STEP 080 - Documentation Sync.
+- `docs/21_DOCUMENTATION_SYNC.md`.
+- Test automatici in `tests/unit/test_documentation_sync.py`.
+
+### Changed
+
+- Integrato Documentation Sync nel Verification Gate.
+- Aggiornati workflow generale e Codex workflow con responsabilita' documentali.
+- Aggiornato pull request template con controllo su changelog, roadmap e decision log.
+- Aggiornata roadmap: STEP 080 completato e STEP 090 consigliato come Branch Protection Policy.
+- Aggiornato decision log con la regola Documentation Sync.
+
+### Not included
+
+- Nessuno script dedicato aggiunto.
+- Nessuna nuova dipendenza.
+- Nessuna modifica a CI.
+- Nessuna modifica a `src/**`.
+- Nessuna modifica a policy o secret.
+
+---
+
 ## [0.7.0] - 2026-05-27
 
 ### Added

@@ -39,6 +39,7 @@ Indicare cosa non e' stato eseguito e perche'.
 - [ ] Ho eseguito `git diff --check`.
 - [ ] Ho controllato `git status --short`.
 - [ ] Ho verificato che la PR non introduce modifiche fuori scope.
+- [ ] Ho verificato se `CHANGELOG.md`, `docs/10_ROADMAP.md` e `docs/11_DECISIONS.md` richiedono aggiornamenti.
 - [ ] Ho aggiornato documentazione/changelog se necessario.
 - [ ] La CI GitHub e' passata.
 

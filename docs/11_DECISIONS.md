@@ -549,3 +549,32 @@ Il metodo deve rendere esplicito il passaggio tra lavoro Codex locale, verifica 
 ### Conseguenze
 
 Ogni step futuro deve distinguere verifiche locali, CI GitHub, controlli manuali, verifiche non eseguite e rischi residui. L'applicazione automatica della branch protection resta un'azione futura e separata.
+
+---
+
+## DEC-028 - Documentation Sync come regola di completamento
+
+**Data:** 2026-05-27
+**Stato:** Accettata
+
+### Contesto
+
+Dopo l'introduzione del Verification Gate serve una regola stabile per evitare che roadmap, changelog, decision log e documenti centrali restino indietro rispetto alle modifiche mergiate.
+
+### Decisione
+
+Introdurre `docs/21_DOCUMENTATION_SYNC.md` come riferimento centrale e classificare i documenti in:
+
+- always check;
+- update when relevant;
+- do not touch unless needed.
+
+Documentation Sync entra nel Verification Gate e nel PR template. Nello STEP 080 non vengono introdotti script dedicati, nuove dipendenze, lint o scan: i controlli minimi restano pytest e review manuale.
+
+### Motivazione
+
+Il metodo deve prevenire disallineamenti senza trasformare ogni step in burocrazia o generare churn documentale inutile.
+
+### Conseguenze
+
+Ogni step futuro deve dichiarare nel report finale le verifiche documentali svolte, distinguere documenti aggiornati da documenti solo controllati e non modificare documenti per zelo.
