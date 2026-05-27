@@ -30,7 +30,7 @@ Esempio:
 | 030 | Safety Model | Formalizzare L0-L4 e approval gate | Security model, policy, rollback strategy | MVP + SaaS-ready | Completato |
 | 040 | Prompt Packet Generator | Standardizzare prompt e task packet | Template ChatGPT/Codex/review/repair | MVP personale | Completato |
 | 050 | GitHub Workflow | Standardizzare issue, branch, PR e CI | Issue/PR template, branch policy | MVP personale | Completato |
-| 060 | Codex Workflow | Definire uso Codex CLI e Cloud | Codex Task Packet, modalità ask/edit | MVP personale | Da fare |
+| 060 | Codex Workflow | Definire uso Codex CLI e Cloud | Codex Task Packet, modalità ask/edit | MVP personale | Completato |
 | 070 | Verification Gate | Definire test, lint, build, smoke, security | Test strategy, checklist, CI | MVP personale | Da fare |
 | 080 | Documentation Sync | Mantenere docs allineate | Changelog, decision log, roadmap update | MVP personale | Da fare |
 | 090 | Expert Mode | Workflow per utenti tecnici | Procedure con diff, log, test, rollback | MVP personale | Da fare |
@@ -125,13 +125,25 @@ Completato nello STEP 050.
 
 Rendere operativo il flusso Codex CLI/Codex Cloud.
 
-### Output previsti
+### Output realizzati
 
-- modalità ASK;
-- modalità CODE controllata;
-- prompt task standard;
-- checklist diff/test;
-- regole no commit/no push/no merge.
+- differenza tra Codex CLI locale e Codex Web/Cloud;
+- modalita' Ask/Suggest, Auto Edit controllato, Review e Repair;
+- divieto di Full Auto salvo sandbox esplicita;
+- regole no commit/no push/no merge;
+- output finale obbligatorio di Codex;
+- procedura locale standard collegata al GitHub Workflow STEP 050;
+- checklist STEP 060;
+- esempio task packet STEP 060;
+- test automatici leggeri sul workflow Codex.
+
+### Criterio di completamento
+
+Completato quando il workflow Codex e' documentato, i prompt includono i guardrail minimi, checklist ed esempio STEP 060 sono presenti, i test verificano le sezioni chiave e roadmap, changelog e TREE sono aggiornati.
+
+### Stato
+
+Completato nello STEP 060.
 
 ---
 

@@ -14,6 +14,8 @@ La repair e' una modifica controllata: deve partire dalla causa probabile, limit
 
 Livello massimo: L2 - Write controlled.
 
+Safety level: L2.
+
 Se la riparazione richiede CI/CD, dipendenze, auth, database schema, security policy, cancellazioni, produzione, force push o merge diretto, fermarsi in safe stop e richiedere approval L3/L4.
 
 ## File da leggere
@@ -29,7 +31,7 @@ Se la riparazione richiede CI/CD, dipendenze, auth, database schema, security po
 
 - Solo i file necessari alla correzione e ammessi dal task packet o dalla richiesta di repair.
 
-## File vietati
+## File vietati / file da non toccare
 
 - `.env`
 - `.env.*`
@@ -44,6 +46,7 @@ Se la riparazione richiede CI/CD, dipendenze, auth, database schema, security po
 - Applicare il fix minimo.
 - Non introdurre nuove dipendenze salvo decisione approvata.
 - Eseguire i test falliti e quelli di regressione pertinenti.
+- Rispettare i file da non toccare indicati nel task packet o nella repair request.
 - Non cancellare codice senza motivazione.
 - Non dichiarare completato se i test falliscono.
 
@@ -88,5 +91,6 @@ Rollback L2: ripristinare i file modificati o abbandonare il branch. Safe stop s
 - Non fare refactor non richiesti.
 - Non cambiare architettura fuori scope.
 - Non fare commit, push o merge.
+- Regola sintetica: no commit, no push, no merge.
 - Non cancellare file o dati.
 - Non aggirare test o policy.

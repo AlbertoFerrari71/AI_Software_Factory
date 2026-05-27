@@ -14,6 +14,8 @@ AI Software Factory consente Auto Edit solo come L2 su branch dedicato, con file
 
 Livello massimo: L2 - Write controlled.
 
+Safety level: L2.
+
 Se il task richiede CI/CD, dipendenze, auth, database schema, security policy, cancellazioni, produzione, force push o merge diretto, fermarsi in safe stop e richiedere approval L3/L4.
 
 ## File da leggere
@@ -29,7 +31,7 @@ Se il task richiede CI/CD, dipendenze, auth, database schema, security policy, c
 
 - Solo i file elencati nel Codex Task Packet.
 
-## File vietati
+## File vietati / file da non toccare
 
 - `.env`
 - `.env.*`
@@ -43,6 +45,7 @@ Se il task richiede CI/CD, dipendenze, auth, database schema, security policy, c
 
 - Lavorare sul branch indicato.
 - Modificare solo i file consentiti.
+- Rispettare i file da non toccare indicati nel task packet.
 - Non introdurre dipendenze senza decisione registrata.
 - Aggiornare documentazione se cambia comportamento.
 - Eseguire i test indicati.
@@ -90,6 +93,7 @@ Rollback L2: ripristinare i file modificati o abbandonare il branch. Safe stop s
 - Non fare commit.
 - Non fare push.
 - Non fare merge.
+- Regola sintetica: no commit, no push, no merge.
 - Non fare force push.
 - Non cancellare file o dati.
 - Non aggirare test o policy.
