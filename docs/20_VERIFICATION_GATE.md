@@ -82,6 +82,14 @@ Manual verification remains required for meaning:
 - documentation and changelog are updated when behavior or workflow changes;
 - rollback is clear.
 
+### Documentation Sync
+
+The Verification Gate also includes Documentation Sync.
+
+Before merge, Alberto and Codex must evaluate whether `CHANGELOG.md`, `docs/10_ROADMAP.md`, and `docs/11_DECISIONS.md` need updates. Not every document must be edited on every step, but the central documents must not contradict the actual project state.
+
+The detailed rule lives in `docs/21_DOCUMENTATION_SYNC.md`. Any documentation sync pytest checks must pass with the rest of the gate.
+
 ---
 
 ## 5. Pull request verification
@@ -172,6 +180,7 @@ If a check is not run, the reason must be explicit.
 - [ ] `python -m pytest` passed.
 - [ ] `git diff --check` passed.
 - [ ] `git status --short` reviewed.
+- [ ] Documentation Sync reviewed using `docs/21_DOCUMENTATION_SYNC.md`.
 - [ ] Documentation and changelog updated if needed.
 - [ ] Rollback path is clear.
 

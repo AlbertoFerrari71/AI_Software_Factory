@@ -32,8 +32,8 @@ Esempio:
 | 050 | GitHub Workflow | Standardizzare issue, branch, PR e CI | Issue/PR template, branch policy | MVP personale | Completato |
 | 060 | Codex Workflow | Definire uso Codex CLI e Cloud | Codex Task Packet, modalità ask/edit | MVP personale | Completato |
 | 070 | Verification Gate | Definire test, lint, build, smoke, security | Test strategy, checklist, CI | MVP personale | Completato |
-| 080 | Documentation Sync | Mantenere docs allineate | Changelog, decision log, roadmap update | MVP personale | Da fare |
-| 090 | Expert Mode | Workflow per utenti tecnici | Procedure con diff, log, test, rollback | MVP personale | Da fare |
+| 080 | Documentation Sync | Mantenere docs allineate | Changelog, decision log, roadmap update | MVP personale | Completato |
+| 090 | Branch Protection Policy | Definire protezioni branch e status check richiesti | Policy branch protection, required checks, rollout manuale | MVP personale | Da fare |
 | 100 | Family Photo Organizer Case Study | Applicare il metodo al caso pilota | Case study, retrospettiva, template migliorati | MVP personale | Da fare |
 | 110 | Local Orchestrator MVP | Primo software locale | CLI/API locale per generare pacchetti | MVP software | Da fare |
 | 120 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
@@ -181,29 +181,46 @@ Completato nello STEP 070.
 
 Evitare disallineamento tra codice e documentazione.
 
-### Output previsti
+### Output realizzati
 
 - regole aggiornamento docs;
 - changelog policy;
 - decision log policy;
-- roadmap update checklist.
+- roadmap update checklist;
+- classi documentali always check / update when relevant / do not touch unless needed;
+- integrazione nel Verification Gate;
+- test automatici leggeri sul Documentation Sync.
+
+### Future evolutions
+
+- lint/format gate;
+- security scan gate;
+- prompt packet hardening.
+
+### Criterio di completamento
+
+Completato quando la regola Documentation Sync e' documentata, i workflow principali la richiamano, il PR template la include e i test verificano i riferimenti minimi.
+
+### Stato
+
+Completato nello STEP 080.
 
 ---
 
-## 11. STEP 090 — Expert Mode
+## 11. STEP 090 — Branch Protection Policy
 
 ### Obiettivo
 
-Rendere il metodo comodo per Alberto e utenti tecnici.
+Definire quando e come attivare branch protection e required status checks senza automatismi rischiosi.
 
 ### Output previsti
 
-- comandi;
-- diff review;
-- test log;
-- rollback;
-- costi stimati;
-- output JSON.
+- policy branch protection;
+- required status checks;
+- regole per force push e delete branch;
+- rollout manuale;
+- rollback e safe stop;
+- criteri per non configurare automaticamente protezioni nello step sbagliato.
 
 ---
 
