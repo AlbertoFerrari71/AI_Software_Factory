@@ -4,6 +4,32 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.9.0] - 2026-05-27
+
+### Added
+
+- STEP 090 - Branch Protection Policy.
+- `docs/22_BRANCH_PROTECTION_POLICY.md`.
+- Test automatici in `tests/unit/test_branch_protection_policy.py`.
+
+### Changed
+
+- Documentato il livello minimo raccomandato per proteggere `main`.
+- Integrati riferimenti alla Branch Protection Policy in GitHub Workflow, Verification Gate, Codex Workflow e workflow operativo.
+- Aggiornata roadmap: STEP 090 completato e STEP 100 consigliato come Branch Protection Implementation.
+- Aggiornato decision log con la policy per `main`.
+- Aggiornato pull request template con controllo su bypass branch protection.
+
+### Not included
+
+- Nessuna branch protection o ruleset applicato realmente su GitHub.
+- Nessuna modifica a CI.
+- Nessuna nuova dipendenza.
+- Nessuna modifica a `src/**`.
+- Nessuna modifica a policy o secret.
+
+---
+
 ## [0.8.0] - 2026-05-27
 
 ### Added

@@ -338,6 +338,8 @@ Codex deve valutare se `CHANGELOG.md`, `docs/10_ROADMAP.md` e `docs/11_DECISIONS
 
 La regola centrale e' `docs/21_DOCUMENTATION_SYNC.md`.
 
+Codex non deve lavorare direttamente su `main`, aggirare branch protection o usare `gh api` per modificare protezioni GitHub salvo task futuro esplicito e approvato. Se uno step richiede modifiche a branch protection o rulesets, Codex deve segnalarlo come azione GitHub separata. La policy e' in `docs/22_BRANCH_PROTECTION_POLICY.md`.
+
 ---
 
 ## 11. Safe stop
