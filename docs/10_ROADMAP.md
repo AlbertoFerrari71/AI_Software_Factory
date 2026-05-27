@@ -31,7 +31,7 @@ Esempio:
 | 040 | Prompt Packet Generator | Standardizzare prompt e task packet | Template ChatGPT/Codex/review/repair | MVP personale | Completato |
 | 050 | GitHub Workflow | Standardizzare issue, branch, PR e CI | Issue/PR template, branch policy | MVP personale | Completato |
 | 060 | Codex Workflow | Definire uso Codex CLI e Cloud | Codex Task Packet, modalità ask/edit | MVP personale | Completato |
-| 070 | Verification Gate | Definire test, lint, build, smoke, security | Test strategy, checklist, CI | MVP personale | Da fare |
+| 070 | Verification Gate | Definire test, lint, build, smoke, security | Test strategy, checklist, CI | MVP personale | Completato |
 | 080 | Documentation Sync | Mantenere docs allineate | Changelog, decision log, roadmap update | MVP personale | Da fare |
 | 090 | Expert Mode | Workflow per utenti tecnici | Procedure con diff, log, test, rollback | MVP personale | Da fare |
 | 100 | Family Photo Organizer Case Study | Applicare il metodo al caso pilota | Case study, retrospettiva, template migliorati | MVP personale | Da fare |
@@ -153,15 +153,25 @@ Completato nello STEP 060.
 
 Definire cosa significa "verificato".
 
-### Output previsti
+### Output realizzati
 
 - test automatici;
-- lint;
-- build;
-- smoke test;
-- security check;
-- manual checklist;
-- blocchi PR.
+- `git diff --check`;
+- controllo `git status --short`;
+- verifica template e policy principali;
+- checklist manuale;
+- CI GitHub allineata al gate;
+- output standard di verifica;
+- script locale `scripts/verify.ps1`;
+- documento `docs/20_VERIFICATION_GATE.md`.
+
+### Criterio di completamento
+
+Completato quando il gate locale e quello CI eseguono i controlli minimi, la PR template include la checklist di verifica, i documenti di workflow rimandano al gate e i test automatici proteggono la struttura.
+
+### Stato
+
+Completato nello STEP 070.
 
 ---
 

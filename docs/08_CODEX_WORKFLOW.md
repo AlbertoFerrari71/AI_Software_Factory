@@ -230,6 +230,7 @@ Lo STEP 060 definisce cosa puo' fare Codex dentro quel flusso.
 | Branch | Verificare branch atteso, senza crearne uno se non richiesto |
 | Modifica | Applicare Auto Edit controllato solo sui file ammessi |
 | Test | Eseguire i test autorizzati e riportare esito |
+| Verification Gate | Lasciare ad Alberto diff, test, controlli non eseguiti e prossimo step |
 | Commit | Non eseguire commit |
 | Push | Non eseguire push |
 | PR | Preparare testo PR se richiesto, senza aprire PR salvo task approvato |
@@ -306,6 +307,8 @@ python -m pytest -q
 
 Test falliti bloccano il completamento, salvo decisione esplicita documentata.
 
+Per STEP 070 e successivi il riferimento operativo e' `docs/20_VERIFICATION_GATE.md`.
+
 ### 050 - Commit, push, PR e merge
 
 Questi comandi sono responsabilita' umana. Codex puo' proporre il blocco, ma non deve eseguirlo:
@@ -321,6 +324,14 @@ git push -u origin 060-codex-workflow
 ```
 
 La PR viene aperta e revisionata su GitHub. Il merge avviene solo dopo test, CI e review umana.
+
+Codex deve lasciare ad Alberto un riepilogo con:
+
+- file modificati;
+- test eseguiti;
+- controlli non eseguiti;
+- rischi residui;
+- prossimo step consigliato.
 
 ---
 

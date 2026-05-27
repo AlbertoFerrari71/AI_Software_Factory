@@ -1,0 +1,192 @@
+# Verification Gate
+
+## 1. Purpose
+
+The Verification Gate defines what "verified" means before a change enters `main`.
+
+It is a small, repeatable gate between Codex local work, human review, pull request, CI, and merge. It does not replace review and does not approve risky actions automatically.
+
+The gate checks that:
+
+- tests pass;
+- whitespace and patch formatting are clean;
+- Git status is understood;
+- key templates and policies are still present;
+- the pull request documents verification;
+- GitHub Actions confirms the same baseline checks.
+
+---
+
+## 2. Local verification
+
+Local verification is run before commit and before push.
+
+Standard command:
+
+```powershell
+pwsh -NoProfile -ExecutionPolicy Bypass -File .\scripts\verify.ps1
+```
+
+The script runs:
+
+```powershell
+python --version
+python -m pytest --version
+python -m pytest
+git diff --check
+git status --short
+```
+
+The script does not commit, push, create branches, install packages, or modify files.
+
+If `pwsh` is not available, run the commands manually:
+
+```powershell
+python -m pytest
+git diff --check
+git status --short
+```
+
+---
+
+## 3. Git verification
+
+Before commit Alberto checks:
+
+- the branch is the intended branch for the step;
+- `git status --short` contains only expected files;
+- `git diff` is readable and scoped;
+- `git diff --check` passes;
+- no `.env`, secret, generated cache, dependency lock, or unrelated file is present.
+
+`git status --short` may show modified or new files before commit. That is acceptable only when every path is expected by the task packet.
+
+---
+
+## 4. Policy and template verification
+
+The automatic tests protect the lightweight contracts already present in the repository:
+
+- `tests/unit/test_safety_policy.py` checks Safety Model policy invariants;
+- `tests/unit/test_prompt_templates.py` checks prompt and task packet structure;
+- `tests/unit/test_github_workflow.py` checks GitHub workflow templates;
+- `tests/unit/test_codex_workflow.py` checks Codex workflow guardrails;
+- `tests/unit/test_verification_gate.py` checks this Verification Gate.
+
+These tests are intentionally simple. They verify presence, sections, and robust keywords instead of exact long text.
+
+Manual verification remains required for meaning:
+
+- the change matches the step objective;
+- the scope is not broader than requested;
+- documentation and changelog are updated when behavior or workflow changes;
+- rollback is clear.
+
+---
+
+## 5. Pull request verification
+
+Before opening a PR, Alberto checks local verification output and the final diff.
+
+The PR must declare:
+
+- step or issue;
+- safety level;
+- files changed;
+- tests run;
+- checks not run, if any;
+- risks;
+- rollback;
+- Verification Gate checklist.
+
+GitHub Actions must pass before merge unless Alberto records an explicit exception.
+
+---
+
+## 6. Merge verification
+
+Merge is allowed only after:
+
+- local verification passed on the branch;
+- PR diff was reviewed;
+- GitHub Actions passed;
+- documentation and changelog are aligned;
+- rollback is clear;
+- Alberto approves the merge.
+
+After merge, Alberto pulls `main` locally and runs the final baseline:
+
+```powershell
+git checkout main
+git pull origin main
+python -m pytest
+git status --short
+```
+
+---
+
+## 7. Failure handling
+
+If a check fails:
+
+1. stop;
+2. keep the failing output visible;
+3. identify the smallest likely cause;
+4. apply the minimum fix in scope;
+5. rerun the failed check and then the full gate;
+6. do not commit, push, open PR, or merge until the gate is clean.
+
+Do not bypass failed tests, hide failures, or remove tests to make the gate pass.
+
+If the fix requires CI/CD, dependencies, auth, database schema, security policy, destructive actions, or secrets, reclassify the task using the Safety Model before continuing.
+
+---
+
+## 8. Standard output
+
+Codex and human handoffs should report verification in this form:
+
+```text
+Verification Gate
+- python -m pytest: passed / failed / not run
+- git diff --check: passed / failed / not run
+- git status --short: reviewed / not reviewed
+- scripts/verify.ps1: passed / failed / not run
+- GitHub Actions: passed / failed / pending / not applicable
+- Manual checklist: complete / incomplete
+- Residual risks: ...
+```
+
+If a check is not run, the reason must be explicit.
+
+---
+
+## 9. Manual checklist
+
+- [ ] Branch dedicated to the step.
+- [ ] Diff limited to expected files.
+- [ ] No CI/CD change unless explicitly in scope.
+- [ ] No dependency change unless explicitly in scope.
+- [ ] No `src/**` change unless explicitly required.
+- [ ] No `.env`, credential, or secret touched.
+- [ ] `python -m pytest` passed.
+- [ ] `git diff --check` passed.
+- [ ] `git status --short` reviewed.
+- [ ] Documentation and changelog updated if needed.
+- [ ] Rollback path is clear.
+
+---
+
+## 10. Future hardening
+
+Future steps can strengthen the gate with:
+
+- branch protection requiring PR review and status checks;
+- linting;
+- type checking;
+- markdown checks;
+- secret scanning;
+- security scans;
+- stricter path-policy checks.
+
+Branch protection is recommended, but STEP 070 does not configure it automatically and does not claim it is active.

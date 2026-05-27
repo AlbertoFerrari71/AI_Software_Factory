@@ -520,3 +520,32 @@ I controlli automatici proteggono il contratto operativo senza introdurre dipend
 ### Conseguenze
 
 La CI potra' intercettare template mancanti o incompleti con `python -m pytest -q`.
+
+---
+
+## DEC-027 - Verification Gate local-first
+
+**Data:** 2026-05-27
+**Stato:** Accettata
+
+### Contesto
+
+Dopo STEP 060 serve un criterio ripetibile per decidere quando una modifica e' verificata prima di entrare su `main`.
+
+### Decisione
+
+Introdurre un Verification Gate local-first con:
+
+- documento operativo `docs/20_VERIFICATION_GATE.md`;
+- script locale `scripts/verify.ps1`;
+- CI GitHub allineata ai controlli minimi;
+- checklist nel PR template;
+- branch protection raccomandata ma non configurata automaticamente nello STEP 070.
+
+### Motivazione
+
+Il metodo deve rendere esplicito il passaggio tra lavoro Codex locale, verifica umana, PR, CI e merge.
+
+### Conseguenze
+
+Ogni step futuro deve distinguere verifiche locali, CI GitHub, controlli manuali, verifiche non eseguite e rischi residui. L'applicazione automatica della branch protection resta un'azione futura e separata.

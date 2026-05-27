@@ -33,6 +33,15 @@ Es. `040 - Prompt Packet Generator`
 
 Indicare cosa non e' stato eseguito e perche'.
 
+## Verification Gate
+
+- [ ] Ho eseguito i test locali.
+- [ ] Ho eseguito `git diff --check`.
+- [ ] Ho controllato `git status --short`.
+- [ ] Ho verificato che la PR non introduce modifiche fuori scope.
+- [ ] Ho aggiornato documentazione/changelog se necessario.
+- [ ] La CI GitHub e' passata.
+
 ## Documentazione aggiornata
 
 - [ ] `README.md`
