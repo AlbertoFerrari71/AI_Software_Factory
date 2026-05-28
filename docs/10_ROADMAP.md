@@ -38,11 +38,12 @@ Esempio:
 | 110 | Branch Protection Verification and Hardening | Verificare protezione reale e definire fallback soft protection | Required check reale, limite GitHub plan, script hardening | MVP personale | Completato |
 | 120 | Soft Protection Guardrails | Ridurre il rischio di push accidentale su main finche' manca hard protection | Hook locali opt-in, install/check script, runbook | MVP personale | Completato |
 | 130 | Prompt Packet Hardening | Rafforzare task packet e prompt contro errori operativi ricorrenti | Documento hardening, template aggiornati, test documentali | MVP personale | Completato |
-| 140 | Prompt Packet Validation Lite | Validare sezioni minime dei task packet senza schema rigido | Validator leggero, test, checklist | MVP personale | Da fare |
-| 150 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
-| 160 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
-| 170 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
-| 180 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
+| 140 | Prompt Packet Validation Lite | Validare sezioni minime dei task packet senza schema rigido | Validator leggero, documento operativo, test | MVP personale | Completato |
+| 150 | Prompt Packet Examples and Golden Samples | Creare esempi validi e casi negativi per il validatore | Golden samples, esempi, test | MVP personale | Da fare |
+| 160 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
+| 170 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
+| 180 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
+| 190 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
 
 ---
 
@@ -356,17 +357,44 @@ Rafforzare prompt e task packet affinche' i vincoli operativi recenti siano pres
 
 Introdurre una validazione leggera dei task packet senza irrigidire ancora il formato con uno schema completo.
 
-### Output previsti
+### Output realizzati
 
 - controllo sezioni minime;
 - verifica forbidden actions;
 - verifica allowed/forbidden scope;
-- test documentali;
-- nessuna nuova dipendenza pesante.
+- verifica Verification Gate, Documentation Sync e Soft Protection awareness;
+- verifica report finale Codex;
+- script `scripts/validate_task_packet.py`;
+- documento `docs/26_PROMPT_PACKET_VALIDATION_LITE.md`;
+- test automatici leggeri;
+- nessuna nuova dipendenza;
+- nessuna integrazione automatica in CI o `scripts/verify.ps1`.
+
+### Future evolutions
+
+- modalita' strict;
+- schema JSON/YAML;
+- lint/format gate;
+- security scan gate.
 
 ---
 
-## 17. STEP 150 — OpenAI API Adapter
+## 17. STEP 150 — Prompt Packet Examples and Golden Samples
+
+### Obiettivo
+
+Creare esempi validi e casi negativi controllati per rendere il validatore piu' utile senza irrigidire ancora il formato.
+
+### Output previsti
+
+- task packet golden validi;
+- esempi incompleti usati dai test;
+- documentazione d'uso;
+- test del validatore su campioni stabili.
+
+---
+
+## 18. STEP 160 — OpenAI API Adapter
 
 ### Obiettivo
 
@@ -382,7 +410,7 @@ Collegare Responses API e Structured Outputs.
 
 ---
 
-## 18. STEP 160 — MCP Tool Registry
+## 19. STEP 170 — MCP Tool Registry
 
 ### Obiettivo
 
@@ -397,7 +425,7 @@ Gestire tool esterni in modo sicuro.
 
 ---
 
-## 19. STEP 170 — Guided Mode
+## 20. STEP 180 — Guided Mode
 
 ### Obiettivo
 
@@ -412,7 +440,7 @@ Rendere il framework utilizzabile da utenti non tecnici.
 
 ---
 
-## 20. STEP 180 — SaaS Evolution Plan
+## 21. STEP 190 — SaaS Evolution Plan
 
 ### Obiettivo
 

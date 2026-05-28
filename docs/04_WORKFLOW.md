@@ -70,6 +70,8 @@ Ogni work package deve avere:
 
 Prima di ogni step operativo, ChatGPT prepara un task packet strutturato. Da STEP 130 il task packet deve rispettare il Prompt Packet Hardening: scope ammesso, scope vietato, forbidden actions, Verification Gate, Documentation Sync, Soft Protection awareness e report finale standard. Il riferimento e' `docs/25_PROMPT_PACKET_HARDENING.md`.
 
+Da STEP 140, i task packet complessi possono essere controllati con Prompt Packet Validation Lite prima dell'esecuzione Codex. Il validatore e' documentato in `docs/26_PROMPT_PACKET_VALIDATION_LITE.md` e resta un supporto: non sostituisce il giudizio umano, i test o il Verification Gate.
+
 ---
 
 ## 5. Completion rule

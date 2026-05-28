@@ -181,6 +181,6 @@ The task packet should be strict enough to control execution and short enough to
 
 ## 11. Future validation
 
-STEP 140 can introduce a lightweight validator for task packets.
+STEP 140 introduces Prompt Packet Validation Lite in `docs/26_PROMPT_PACKET_VALIDATION_LITE.md` and `scripts/validate_task_packet.py`.
 
-The validator can check that required sections and keywords exist without turning prompt writing into a rigid schema too early.
+The validator checks that required sections and keywords exist without turning prompt writing into a rigid schema too early. It is a support tool for task packet quality, not a replacement for Alberto review, Verification Gate, or tests.
