@@ -4,6 +4,36 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.16.0] - 2026-05-28
+
+### Added
+
+- STEP 160 - Prompt Packet Validation Strict Mode.
+- Flag `--strict` in `scripts/validate_task_packet.py`.
+- `docs/28_PROMPT_PACKET_VALIDATION_STRICT_MODE.md`.
+- Golden sample Strict valido in `examples/task_packets/valid/step_valid_strict_task_packet.md`.
+- Golden sample Strict invalido in `examples/task_packets/invalid/strict_missing_bypass_guard.md`.
+- Test automatici in `tests/unit/test_prompt_packet_validation_strict_mode.py`.
+
+### Changed
+
+- Aggiornati Prompt Packet Validation Lite, golden samples, Prompt Packet Hardening, Prompt Packet Generator, Codex Workflow, Verification Gate e Documentation Sync con riferimenti a Strict Mode.
+- Aggiornata roadmap: STEP 160 completato e STEP 170 consigliato come Prompt Packet Generator CLI Hardening.
+- Aggiornato decision log con la scelta di mantenere Lite default e Strict opt-in.
+- Aggiornato pull request template con controllo opzionale Strict Mode.
+
+### Not included
+
+- Nessuno schema JSON/YAML.
+- Nessuna integrazione automatica in CI o `scripts/verify.ps1`.
+- Nessuna nuova dipendenza.
+- Nessuna modifica a `src/**`, `policies/**`, CI, hook, script Git/GitHub, secret o `.env`.
+- Nessuna installazione hook Git.
+- Nessuna modifica a `git config core.hooksPath`.
+- Nessun commit, push, PR o merge automatico.
+
+---
+
 ## [0.15.0] - 2026-05-28
 
 ### Added

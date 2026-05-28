@@ -85,6 +85,14 @@ examples/task_packets/valid/step_valid_minimal_task_packet.md
 
 Gli esempi invalidi in `examples/task_packets/invalid/` servono solo a mostrare errori tipici da evitare e a testare il validatore. Non vanno copiati come base per task reali.
 
+Da STEP 160, per task packet importanti usare anche la validazione Strict:
+
+```powershell
+python scripts/validate_task_packet.py --strict <task-packet.md>
+```
+
+Lite resta il controllo rapido di default; Strict e' un controllo opzionale piu' severo.
+
 ---
 
 ## 5. Compilazione del Prompt Packet

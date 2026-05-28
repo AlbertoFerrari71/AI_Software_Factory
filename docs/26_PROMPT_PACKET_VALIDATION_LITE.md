@@ -6,6 +6,8 @@ Prompt Packet Validation Lite validates Codex task packets with a small set of r
 
 The goal is to catch incomplete prompts before Codex starts work, without turning task packets into a rigid schema too early.
 
+From STEP 160, the same script also supports optional Strict Mode. Lite remains the default mode.
+
 ---
 
 ## 2. What it checks
@@ -49,7 +51,15 @@ Run the validator against a Markdown or text task packet:
 python scripts/validate_task_packet.py templates/codex_tasks/codex_task_packet_template.md
 ```
 
+Optional Strict Mode:
+
+```powershell
+python scripts/validate_task_packet.py --strict examples/task_packets/valid/step_valid_strict_task_packet.md
+```
+
 The output reports each required check as `PASS` or `FAIL`, optional warnings, and a final result.
+
+Strict Mode is documented in `docs/28_PROMPT_PACKET_VALIDATION_STRICT_MODE.md`.
 
 ---
 
@@ -95,13 +105,11 @@ In STEP 140 and STEP 150 the validator remains a manual support tool. It is not 
 
 ## 7. Future hardening
 
-STEP 150 adds Prompt Packet Examples and Golden Samples.
+STEP 150 adds Prompt Packet Examples and Golden Samples. STEP 160 adds optional Strict Mode.
 
 Future hardening can add:
 
-- strict mode;
 - JSON or YAML schema;
-- golden sample validation;
 - integration with the Verification Gate;
 - CI integration;
 - JSON report output.
