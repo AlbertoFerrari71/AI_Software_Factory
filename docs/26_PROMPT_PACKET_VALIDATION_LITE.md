@@ -73,13 +73,29 @@ Use the validator:
 - when updating the central Codex task packet template;
 - when preparing examples that should become reusable references.
 
-In STEP 140 the validator is a manual support tool. It is not integrated automatically into CI or `scripts/verify.ps1`.
+STEP 150 adds golden samples in `examples/task_packets/` and documents them in `docs/27_PROMPT_PACKET_GOLDEN_SAMPLES.md`.
+
+The valid sample should return exit code `0`:
+
+```powershell
+python scripts/validate_task_packet.py examples/task_packets/valid/step_valid_minimal_task_packet.md
+```
+
+The invalid samples should return exit code `1`:
+
+```powershell
+python scripts/validate_task_packet.py examples/task_packets/invalid/missing_forbidden_actions.md
+python scripts/validate_task_packet.py examples/task_packets/invalid/missing_scope.md
+python scripts/validate_task_packet.py examples/task_packets/invalid/missing_final_report.md
+```
+
+In STEP 140 and STEP 150 the validator remains a manual support tool. It is not integrated automatically into CI or `scripts/verify.ps1`.
 
 ---
 
 ## 7. Future hardening
 
-STEP 150 can add Prompt Packet Examples and Golden Samples.
+STEP 150 adds Prompt Packet Examples and Golden Samples.
 
 Future hardening can add:
 

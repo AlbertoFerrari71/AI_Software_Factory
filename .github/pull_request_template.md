@@ -41,6 +41,7 @@ Indicare cosa non e' stato eseguito e perche'.
 - [ ] Ho verificato che la PR non introduce modifiche fuori scope.
 - [ ] Il task packet Codex rispettava Prompt Packet Hardening oppure la deviazione e' documentata.
 - [ ] Se rilevante, il task packet e' stato validato con Prompt Packet Validation Lite.
+- [ ] Se rilevante, i golden samples del task packet validator sono stati aggiornati o verificati.
 - [ ] Ho verificato se `CHANGELOG.md`, `docs/10_ROADMAP.md` e `docs/11_DECISIONS.md` richiedono aggiornamenti.
 - [ ] Ho aggiornato documentazione/changelog se necessario.
 - [ ] La PR non richiede bypass della Branch Protection Policy.

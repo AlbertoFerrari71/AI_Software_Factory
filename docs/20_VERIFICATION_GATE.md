@@ -98,6 +98,8 @@ python scripts/validate_task_packet.py templates/codex_tasks/codex_task_packet_t
 
 The reference document is `docs/26_PROMPT_PACKET_VALIDATION_LITE.md`. In STEP 140 this check is not yet a required CI check and is not part of `scripts/verify.ps1`; future steps can decide whether to integrate it into the gate.
 
+STEP 150 adds golden samples in `docs/27_PROMPT_PACKET_GOLDEN_SAMPLES.md`. They help verify the behavior of the Lite validator, but they are not a separate required gate check yet.
+
 ### Documentation Sync
 
 The Verification Gate also includes Documentation Sync.

@@ -194,6 +194,8 @@ Da STEP 130, i task packet devono seguire anche `docs/25_PROMPT_PACKET_HARDENING
 
 Da STEP 140, prima di task complessi il task packet puo' essere validato con `scripts/validate_task_packet.py`. Il riferimento e' `docs/26_PROMPT_PACKET_VALIDATION_LITE.md`. Il validatore aiuta a intercettare sezioni mancanti, ma Codex deve comunque rispettare il task packet, lo scope, le forbidden actions e il report finale richiesto.
 
+Da STEP 150, quando si prepara un task packet complesso, usare anche il golden sample valido in `examples/task_packets/valid/step_valid_minimal_task_packet.md` come riferimento pratico. Gli invalid samples in `examples/task_packets/invalid/` mostrano cosa evitare e non devono essere usati come base operativa.
+
 Se uno di questi elementi manca e l'assenza puo' causare danni, Codex deve fermarsi in Ask/Suggest. Se durante l'esecuzione serve uscire dallo scope, Codex deve segnalarlo invece di ampliare autonomamente il diff.
 
 ---
