@@ -53,6 +53,7 @@ Examples:
 - update `docs/15_GITHUB_WORKFLOW.md` when PR, merge, CI, or branch rules change;
 - update `docs/22_BRANCH_PROTECTION_POLICY.md` when branch protection or ruleset policy changes;
 - update `docs/23_BRANCH_PROTECTION_IMPLEMENTATION.md` when GitHub governance scripts or operator sequence change;
+- update `docs/24_SOFT_PROTECTION_GUARDRAILS.md` when local Git hooks or soft guardrail scripts change;
 - update `docs/05_SECURITY_MODEL.md` or `policies/**` only when the Safety Model changes and the risk level is approved.
 
 ### Do not touch unless needed

@@ -1,0 +1,19 @@
+#!/bin/sh
+
+branch="$(git branch --show-current 2>/dev/null || true)"
+
+if [ "$branch" = "main" ]; then
+    if [ "${ASF_ALLOW_MAIN_BYPASS:-}" = "1" ]; then
+        echo "WARNING: ASF_ALLOW_MAIN_BYPASS=1 is set." >&2
+        echo "Emergency commit on main is allowed by explicit bypass." >&2
+        echo "Document the bypass if it is relevant to the project history." >&2
+        exit 0
+    fi
+
+    echo "ERROR: Direct commit on main blocked by AI Software Factory soft guardrails." >&2
+    echo "Create a dedicated branch and use the standard branch -> PR -> CI workflow." >&2
+    echo "Emergency bypass only: set ASF_ALLOW_MAIN_BYPASS=1 intentionally." >&2
+    exit 1
+fi
+
+exit 0

@@ -119,6 +119,14 @@ Before branch protection is applied, the local Verification Gate must pass. Afte
 
 If `verify_branch_protection.ps1` exits with code `2`, GitHub branch protection is not available for the current repository or plan. In that case, no hard protection can be verified and the project must rely on PR, CI, manual Alberto review, and the soft protection policy.
 
+STEP 120 adds an optional local soft guardrail check:
+
+```powershell
+pwsh -NoProfile -ExecutionPolicy Bypass -File .\scripts\git\check_soft_guardrails.ps1
+```
+
+This check is local and read-only. It can return exit code `2` when hook files are present but `core.hooksPath` is not configured. That is a useful local warning, not a CI failure requirement, because Git hook installation is machine-local.
+
 ---
 
 ## 6. Merge verification
@@ -190,6 +198,7 @@ If a check is not run, the reason must be explicit.
 - [ ] `python -m pytest` passed.
 - [ ] `git diff --check` passed.
 - [ ] `git status --short` reviewed.
+- [ ] Soft Protection Guardrails checked or explicitly marked not installed.
 - [ ] Documentation Sync reviewed using `docs/21_DOCUMENTATION_SYNC.md`.
 - [ ] Documentation and changelog updated if needed.
 - [ ] Rollback path is clear.

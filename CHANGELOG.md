@@ -4,6 +4,34 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.12.0] - 2026-05-28
+
+### Added
+
+- STEP 120 - Soft Protection Guardrails.
+- Hook locali opt-in in `.githooks/pre-commit` e `.githooks/pre-push`.
+- Script `scripts/git/install_soft_guardrails.ps1`.
+- Script read-only `scripts/git/check_soft_guardrails.ps1`.
+- Documento `docs/24_SOFT_PROTECTION_GUARDRAILS.md`.
+- Test automatici in `tests/unit/test_soft_protection_guardrails.py`.
+
+### Changed
+
+- Aggiornati Branch Protection Policy, Branch Protection Implementation, GitHub Workflow, Verification Gate, Documentation Sync, Codex Workflow e workflow operativo con i soft guardrails.
+- Aggiornata roadmap: STEP 120 completato e STEP 130 consigliato come Prompt Packet Hardening.
+- Aggiornato decision log con la scelta di hook opt-in e bypass `ASF_ALLOW_MAIN_BYPASS=1`.
+- Aggiornato pull request template con controllo opzionale sui Soft Protection Guardrails.
+
+### Not included
+
+- Nessuna installazione automatica degli hook.
+- Nessuna modifica a `git config core.hooksPath`.
+- Nessun commit, push, PR o merge automatico.
+- Nessuna branch protection o ruleset applicato realmente su GitHub.
+- Nessuna modifica a CI, dipendenze, `src/**`, policy o secret.
+
+---
+
 ## [0.11.0] - 2026-05-28
 
 ### Added

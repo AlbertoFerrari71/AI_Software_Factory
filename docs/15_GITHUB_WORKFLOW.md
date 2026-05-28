@@ -219,6 +219,14 @@ branch dedicato -> PR -> Verification Gate locale -> CI "Verification Gate" verd
 
 Il direct push volontario su `main` resta fuori dal workflow standard anche quando GitHub non lo blocca tecnicamente.
 
+STEP 120 aggiunge soft guardrails locali opt-in:
+
+- hook locale pre-commit contro commit su `main`;
+- hook locale pre-push contro push verso `main`;
+- script PowerShell di installazione e verifica in `scripts/git/`.
+
+Questi guardrail sono documentati in `docs/24_SOFT_PROTECTION_GUARDRAILS.md` e non sostituiscono la branch protection GitHub.
+
 ---
 
 ## 9. Merge policy

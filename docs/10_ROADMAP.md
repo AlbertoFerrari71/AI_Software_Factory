@@ -36,11 +36,12 @@ Esempio:
 | 090 | Branch Protection Policy | Definire protezioni branch e status check richiesti | Policy branch protection, required checks, rollout manuale | MVP personale | Completato |
 | 100 | Branch Protection Implementation | Preparare script e runbook per protezioni main | Script DryRun, verify script, runbook | MVP personale | Completato |
 | 110 | Branch Protection Verification and Hardening | Verificare protezione reale e definire fallback soft protection | Required check reale, limite GitHub plan, script hardening | MVP personale | Completato |
-| 120 | Soft Protection Guardrails | Ridurre il rischio di push accidentale su main finche' manca hard protection | Guardrail locali, controlli pre-push/manuali, workflow hardening | MVP personale | Da fare |
-| 130 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
-| 140 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
-| 150 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
-| 160 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
+| 120 | Soft Protection Guardrails | Ridurre il rischio di push accidentale su main finche' manca hard protection | Hook locali opt-in, install/check script, runbook | MVP personale | Completato |
+| 130 | Prompt Packet Hardening | Rafforzare task packet e prompt contro errori operativi ricorrenti | Template piu' espliciti, guardrail, test documentali | MVP personale | Da fare |
+| 140 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
+| 150 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
+| 160 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
+| 170 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
 
 ---
 
@@ -300,13 +301,15 @@ Verificare la disponibilita' reale della branch protection e definire il fallbac
 
 Ridurre il rischio operativo mentre la hard protection GitHub non e' disponibile sul repository privato.
 
-### Output previsti
+### Output realizzati
 
 - guardrail locali contro push accidentale su `main`;
-- checklist pre-push o pre-merge piu' esplicita;
-- eventuali script read-only o safe-by-default;
-- documentazione del fallback soft protection;
-- nessuna modifica GitHub reale senza approvazione.
+- hook versionati in `.githooks/`;
+- script `scripts/git/install_soft_guardrails.ps1` con `-DryRun`;
+- script read-only `scripts/git/check_soft_guardrails.ps1`;
+- documento `docs/24_SOFT_PROTECTION_GUARDRAILS.md`;
+- bypass esplicito solo con `ASF_ALLOW_MAIN_BYPASS=1`;
+- test automatici leggeri sui guardrail.
 
 ### Future evolutions
 
@@ -318,7 +321,22 @@ Ridurre il rischio operativo mentre la hard protection GitHub non e' disponibile
 
 ---
 
-## 15. STEP 130 — OpenAI API Adapter
+## 15. STEP 130 — Prompt Packet Hardening
+
+### Obiettivo
+
+Rafforzare prompt e task packet affinche' i vincoli operativi recenti siano presenti prima dell'esecuzione Codex.
+
+### Output previsti
+
+- task packet con richiami espliciti a soft guardrails, Documentation Sync e Verification Gate;
+- prompt Codex allineati a no commit/no push/no merge e no hook install automatico;
+- checklist piu' chiara per azioni locali e GitHub;
+- test documentali leggeri.
+
+---
+
+## 16. STEP 140 — OpenAI API Adapter
 
 ### Obiettivo
 
@@ -334,7 +352,7 @@ Collegare Responses API e Structured Outputs.
 
 ---
 
-## 16. STEP 140 — MCP Tool Registry
+## 17. STEP 150 — MCP Tool Registry
 
 ### Obiettivo
 
@@ -349,7 +367,7 @@ Gestire tool esterni in modo sicuro.
 
 ---
 
-## 17. STEP 150 — Guided Mode
+## 18. STEP 160 — Guided Mode
 
 ### Obiettivo
 
@@ -364,7 +382,7 @@ Rendere il framework utilizzabile da utenti non tecnici.
 
 ---
 
-## 18. STEP 160 — SaaS Evolution Plan
+## 19. STEP 170 — SaaS Evolution Plan
 
 ### Obiettivo
 
