@@ -190,7 +190,9 @@ Ogni task Codex deve indicare:
 - output atteso;
 - cosa NON fare.
 
-Se uno di questi elementi manca e l'assenza puo' causare danni, Codex deve fermarsi in Ask/Suggest.
+Da STEP 130, i task packet devono seguire anche `docs/25_PROMPT_PACKET_HARDENING.md`: allowed scope e forbidden scope espliciti, forbidden actions standard, Verification Gate, Documentation Sync, Soft Protection awareness e report finale standard.
+
+Se uno di questi elementi manca e l'assenza puo' causare danni, Codex deve fermarsi in Ask/Suggest. Se durante l'esecuzione serve uscire dallo scope, Codex deve segnalarlo invece di ampliare autonomamente il diff.
 
 ---
 
@@ -199,18 +201,18 @@ Se uno di questi elementi manca e l'assenza puo' causare danni, Codex deve ferma
 Ogni esecuzione controllata deve terminare con questa struttura:
 
 ```text
-1. step eseguito;
-2. stato sintetico;
-3. file creati;
-4. file modificati;
-5. test eseguiti;
-6. esito test;
-7. conferma su CI, policy, src, dipendenze, secret;
-8. rischi residui;
-9. prossimo step consigliato.
+A) STEP ESEGUITO
+B) STATO
+C) FILE CREATI
+D) FILE MODIFICATI
+E) VERIFICHE ESEGUITE
+F) VERIFICHE NON ESEGUITE
+G) RISCHI / NOTE
+H) PROSSIMO STEP CONSIGLIATO
+I) RIEPILOGO FINALE OBBLIGATORIO
 ```
 
-Se i test non sono stati eseguiti, Codex deve dichiararlo e spiegare perche'. Non e' ammesso dichiarare completato un task non verificato.
+La sezione finale deve includere step eseguito, tempo impiegato, stato step e prossimo step. Se i test non sono stati eseguiti, Codex deve dichiararlo e spiegare perche'. Non e' ammesso dichiarare completato un task non verificato.
 
 ---
 
@@ -284,7 +286,7 @@ L'umano fornisce:
 - test autorizzati;
 - output atteso.
 
-Codex lavora solo nel perimetro approvato.
+Codex lavora solo nel perimetro approvato. Il task packet deve dichiarare forbidden actions, allowed scope e forbidden scope secondo `docs/25_PROMPT_PACKET_HARDENING.md`.
 
 ### 030 - Verificare diff
 

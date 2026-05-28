@@ -10,6 +10,8 @@ Correggere il problema minimo necessario senza cambiare architettura fuori scope
 
 La repair e' una modifica controllata: deve partire dalla causa probabile, limitarsi al difetto osservato e rieseguire i test falliti. Non deve trasformarsi in refactor ampio.
 
+La repair deve rispettare `docs/25_PROMPT_PACKET_HARDENING.md`: allowed scope, forbidden scope, forbidden actions, Verification Gate, Documentation Sync, Soft Protection awareness e report finale standard.
+
 ## Livello rischio L0-L4
 
 Livello massimo: L2 - Write controlled.
@@ -31,6 +33,12 @@ Se la riparazione richiede CI/CD, dipendenze, auth, database schema, security po
 
 - Solo i file necessari alla correzione e ammessi dal task packet o dalla richiesta di repair.
 
+## Allowed scope
+
+- Solo file collegati al difetto osservato.
+- Solo correzione minima.
+- Se serve uscire dallo scope, fermarsi e segnalarlo.
+
 ## File vietati / file da non toccare
 
 - `.env`
@@ -39,6 +47,13 @@ Se la riparazione richiede CI/CD, dipendenze, auth, database schema, security po
 - file fuori repository
 - file non collegati al difetto
 - CI/CD, dipendenze e policy senza approval L3
+
+## Forbidden scope
+
+- Refactor non richiesti.
+- Riscritture ampie.
+- File non collegati al test fallito o al difetto osservato.
+- Hook Git, git config, GitHub settings, CI o dipendenze salvo task esplicito.
 
 ## Vincoli
 
@@ -50,15 +65,35 @@ Se la riparazione richiede CI/CD, dipendenze, auth, database schema, security po
 - Non cancellare codice senza motivazione.
 - Non dichiarare completato se i test falliscono.
 
+## Documentation Sync
+
+Aggiornare documentazione solo se la repair cambia comportamento, workflow o decisioni. Dichiarare nel report finale se non era necessario.
+
+## Verification Gate
+
+Rieseguire il test fallito e i controlli pertinenti. Default:
+
+```powershell
+python -m pytest
+git diff --check
+git status --short
+```
+
+## Soft Protection awareness
+
+Codex non deve installare hook Git, non deve eseguire `git config core.hooksPath` e non deve usare `ASF_ALLOW_MAIN_BYPASS`.
+
 ## Output atteso
 
-1. Causa probabile.
-2. Fix applicato.
-3. File modificati.
-4. Test eseguiti.
-5. Esito.
-6. Rischi residui.
-7. Rollback consigliato.
+A) STEP ESEGUITO
+B) STATO
+C) FILE CREATI
+D) FILE MODIFICATI
+E) VERIFICHE ESEGUITE
+F) VERIFICHE NON ESEGUITE
+G) RISCHI / NOTE
+H) PROSSIMO STEP CONSIGLIATO
+I) RIEPILOGO FINALE OBBLIGATORIO con Step eseguito, Tempo impiegato, Stato step e Prossimo step.
 
 ## Criteri di accettazione
 
@@ -88,9 +123,14 @@ Rollback L2: ripristinare i file modificati o abbandonare il branch. Safe stop s
 
 ## Cosa NON fare
 
+## Forbidden actions
+
 - Non fare refactor non richiesti.
 - Non cambiare architettura fuori scope.
 - Non fare commit, push o merge.
 - Regola sintetica: no commit, no push, no merge.
 - Non cancellare file o dati.
 - Non aggirare test o policy.
+- Non installare hook Git.
+- Non modificare git config core.hooksPath.
+- Non usare ASF_ALLOW_MAIN_BYPASS.

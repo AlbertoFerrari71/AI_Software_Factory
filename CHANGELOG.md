@@ -4,6 +4,33 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.13.0] - 2026-05-28
+
+### Added
+
+- STEP 130 - Prompt Packet Hardening.
+- `docs/25_PROMPT_PACKET_HARDENING.md`.
+- Test automatici in `tests/unit/test_prompt_packet_hardening.py`.
+
+### Changed
+
+- Rafforzato `templates/codex_tasks/codex_task_packet_template.md` con allowed scope, forbidden scope, forbidden actions, Verification Gate, Documentation Sync, Soft Protection awareness e report finale standard.
+- Rafforzati i prompt Codex ask/code/review/repair con riferimenti al Prompt Packet Hardening.
+- Aggiornati workflow Codex, workflow operativo, Verification Gate, Documentation Sync e Soft Protection Guardrails.
+- Aggiornata roadmap: STEP 130 completato e STEP 140 consigliato come Prompt Packet Validation Lite.
+- Aggiornato decision log con la scelta di non introdurre ancora schema rigido.
+- Aggiornato pull request template con controllo sul Prompt Packet Hardening.
+
+### Not included
+
+- Nessuno schema rigido o parser dedicato.
+- Nessuna modifica a `src/**`, `policies/**`, CI, dipendenze, script, hook, secret o `.env`.
+- Nessuna installazione hook Git.
+- Nessuna modifica a `git config core.hooksPath`.
+- Nessun commit, push, PR o merge automatico.
+
+---
+
 ## [0.12.0] - 2026-05-28
 
 ### Added

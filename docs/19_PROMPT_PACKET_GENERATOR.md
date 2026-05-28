@@ -67,6 +67,8 @@ Ogni template operativo deve contenere queste sezioni, anche quando il valore e'
 
 Regola pratica: se una sezione non serve, dichiararlo esplicitamente. Non omettere la sezione.
 
+Da STEP 130, i task packet operativi devono seguire anche `docs/25_PROMPT_PACKET_HARDENING.md`, che rafforza scope ammesso, scope vietato, forbidden actions, Verification Gate, Documentation Sync, Soft Protection awareness e report finale standard.
+
 ---
 
 ## 5. Compilazione del Prompt Packet

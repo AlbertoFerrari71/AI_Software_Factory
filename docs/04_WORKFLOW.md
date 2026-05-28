@@ -68,6 +68,8 @@ Ogni work package deve avere:
 - rollback;
 - output atteso.
 
+Prima di ogni step operativo, ChatGPT prepara un task packet strutturato. Da STEP 130 il task packet deve rispettare il Prompt Packet Hardening: scope ammesso, scope vietato, forbidden actions, Verification Gate, Documentation Sync, Soft Protection awareness e report finale standard. Il riferimento e' `docs/25_PROMPT_PACKET_HARDENING.md`.
+
 ---
 
 ## 5. Completion rule
@@ -88,11 +90,14 @@ Il Verification Gate e' il controllo operativo tra lavoro locale e ingresso su `
 
 Flusso standard:
 
-1. Codex lavora localmente su branch dedicato.
-2. Alberto verifica diff, test e stato Git.
-3. Solo dopo verifica locale si procede con commit, push e PR.
-4. PR e CI GitHub sono gate prima del merge.
-5. Dopo il merge si fa pull di `main` e test finale.
+1. ChatGPT prepara un task packet strutturato.
+2. Codex lavora localmente sul branch dedicato indicato.
+3. Alberto verifica diff, test e stato Git.
+4. Solo dopo verifica locale si procede con commit, push e PR.
+5. PR e CI GitHub sono gate prima del merge.
+6. Dopo il merge si fa pull di `main` e test finale.
+
+Commit, push, apertura PR e merge restano responsabilita' di Alberto o di un workflow umano approvato.
 
 Il processo completo e' definito in `docs/20_VERIFICATION_GATE.md`.
 
