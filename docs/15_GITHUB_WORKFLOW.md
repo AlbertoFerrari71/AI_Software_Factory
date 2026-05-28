@@ -186,6 +186,14 @@ Per gli step futuri, la CI potrà essere estesa con:
 
 Lo STEP 070 allinea GitHub Actions al Verification Gate documentato in `docs/20_VERIFICATION_GATE.md`.
 
+Il nome reale del check CI da usare come required check e':
+
+```text
+Verification Gate
+```
+
+Se GitHub non consente branch protection sul repository privato per limiti di piano, questo check resta comunque il riferimento operativo per PR, CI e controllo manuale.
+
 ---
 
 ## 8. Branch protection checklist
@@ -202,6 +210,14 @@ Da valutare manualmente su GitHub quando la CI è stabile:
 - [ ] restrict direct pushes to `main`.
 
 Queste impostazioni sono L3 se applicate automaticamente da tool, perche' modificano regole del repository. Nello STEP 090 la policy e' documentata in `docs/22_BRANCH_PROTECTION_POLICY.md`; l'applicazione concreta puo' avvenire nello STEP 100.
+
+STEP 110 ha rilevato che la branch protection reale puo' non essere applicabile sul repository privato con il piano GitHub attuale. Finche' GitHub non puo' imporre hard protection, il flusso resta:
+
+```text
+branch dedicato -> PR -> Verification Gate locale -> CI "Verification Gate" verde -> controllo manuale Alberto -> merge via PR
+```
+
+Il direct push volontario su `main` resta fuori dal workflow standard anche quando GitHub non lo blocca tecnicamente.
 
 ---
 
@@ -221,6 +237,8 @@ Merge ammesso solo quando:
 Quando la branch protection sara' applicata, GitHub dovra' rendere obbligatoria almeno la PR e la CI verde prima del merge.
 
 STEP 100 prepara gli script locali in `scripts/github/` per applicare e verificare questa protezione. L'esecuzione reale resta manuale e richiede revisione esplicita; il runbook e' in `docs/23_BRANCH_PROTECTION_IMPLEMENTATION.md`.
+
+Se gli script GitHub restituiscono HTTP 403 con richiesta di upgrade a GitHub Pro o repository pubblico, non eseguire `apply_branch_protection.ps1 -Apply`. Usare la soft protection policy in `docs/22_BRANCH_PROTECTION_POLICY.md` finche' il limite di piano non viene risolto.
 
 Dopo il merge:
 

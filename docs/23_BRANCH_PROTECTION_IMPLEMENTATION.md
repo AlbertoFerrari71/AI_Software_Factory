@@ -140,9 +140,10 @@ If the CI check is not found:
 
 If the API returns `403`:
 
-- confirm repository permissions;
-- verify whether admin rights are required;
-- do not retry with broader automation without approval.
+- check whether GitHub reports that branch protection requires GitHub Pro/Team or public repository visibility;
+- if the plan limitation is detected, treat `verify_branch_protection.ps1` exit code `2` as the documented fallback condition;
+- use soft protection and do not run `apply_branch_protection.ps1 -Apply`;
+- if the error is not a plan limitation, confirm repository permissions and admin rights before retrying.
 
 If the API returns `422`:
 
@@ -168,6 +169,29 @@ Recovery sequence:
 2. identify the specific broken setting;
 3. choose UI correction or reviewed script correction;
 4. document emergency bypass or recovery in `docs/11_DECISIONS.md` or `CHANGELOG.md` when relevant.
+
+---
+
+## GitHub plan limitation detected
+
+STEP 110-A detected the real CI required check name:
+
+```text
+Verification Gate
+```
+
+The read-only branch protection verification returned HTTP 403 with a GitHub message requiring an upgrade to GitHub Pro or making the repository public.
+
+While the repository remains private and the current GitHub plan does not support protected branches, hard branch protection cannot be applied or verified for `main`.
+
+In this state:
+
+- do not run `apply_branch_protection.ps1 -Apply`;
+- keep `apply_branch_protection.ps1` in DryRun only;
+- use the soft protection policy documented in `docs/22_BRANCH_PROTECTION_POLICY.md`;
+- continue using PR, CI, Verification Gate, Documentation Sync, and manual Alberto review as the operating gate.
+
+`verify_branch_protection.ps1` exits with code `2` when it detects the known GitHub plan or repository visibility limitation.
 
 ---
 

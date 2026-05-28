@@ -38,12 +38,27 @@ $exitCode = $LASTEXITCODE
 
 if ($exitCode -ne 0) {
     $message = ($raw | Out-String)
+    if (
+        $message -match "403" -or
+        $message -match "Upgrade to GitHub Pro" -or
+        $message -match "make this repository public"
+    ) {
+        Write-Warning "Branch protection not available for the current repository or GitHub plan."
+        Write-Host "GitHub returned HTTP 403 while reading branch protection."
+        Write-Host "The repository may need GitHub Pro/Team or public visibility to use protected branches."
+        Write-Host "No branch protection can be verified in this state."
+        Write-Host "Use the documented soft protection policy until hard protection is available."
+        Write-Host "Exit code 2 means: known GitHub plan or repository visibility limitation."
+        exit 2
+    }
+
     if ($message -match "404" -or $message -match "Not Found") {
         Write-Host "Branch protection is not configured for $Branch."
         exit 0
     }
 
-    throw "Could not read branch protection. gh api exit code: $exitCode. $message"
+    Write-Error "Could not read branch protection. gh api exit code: $exitCode. $message"
+    exit 1
 }
 
 $json = ($raw | Out-String)

@@ -67,6 +67,10 @@ Write-Host "Branch: $Branch"
 Write-Host "Endpoint: PUT $endpoint"
 Write-Host "RequiredCheckName: $RequiredCheckName"
 Write-Host "EnforceAdmins: $([bool]$EnforceAdmins)"
+Write-Host ""
+Write-Warning "GitHub branch protection may be unavailable for private repositories on the current plan."
+Write-Host "If GitHub returns HTTP 403 with an upgrade message, do not apply hard protection."
+Write-Host "Run .\scripts\github\verify_branch_protection.ps1 first and use soft protection if the plan blocks protected branches."
 
 Write-Step "Payload"
 Write-Host $payloadJson
@@ -78,6 +82,9 @@ if (-not $Apply) {
     Write-Host '.\scripts\github\apply_branch_protection.ps1 -RequiredCheckName "<check name>" -Apply -ConfirmApply'
     exit 0
 }
+
+Write-Warning "This command is about to modify GitHub branch protection."
+Write-Host "Confirm that the repository plan supports branch protection and that verify_branch_protection.ps1 did not report exit code 2."
 
 if (-not $ConfirmApply) {
     $answer = Read-Host "Type APPLY to modify GitHub branch protection for $Owner/$Repo $Branch"

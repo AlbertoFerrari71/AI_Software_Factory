@@ -17,6 +17,8 @@ The gate checks that:
 
 Branch protection or rulesets can later make part of this gate mandatory on GitHub. STEP 090 documents the Branch Protection Policy in `docs/22_BRANCH_PROTECTION_POLICY.md`; STEP 100 may apply it.
 
+STEP 110 confirms that the real CI check name is `Verification Gate`. If GitHub cannot enforce branch protection because the private repository or plan returns HTTP 403, this gate becomes the primary soft protection discipline until hard protection is available.
+
 ---
 
 ## 2. Local verification
@@ -115,6 +117,8 @@ Branch protection is the GitHub mechanism that can enforce required PRs and requ
 
 Before branch protection is applied, the local Verification Gate must pass. After application, the result should be checked with `scripts/github/verify_branch_protection.ps1`. The implementation runbook is `docs/23_BRANCH_PROTECTION_IMPLEMENTATION.md`.
 
+If `verify_branch_protection.ps1` exits with code `2`, GitHub branch protection is not available for the current repository or plan. In that case, no hard protection can be verified and the project must rely on PR, CI, manual Alberto review, and the soft protection policy.
+
 ---
 
 ## 6. Merge verification
@@ -205,3 +209,5 @@ Future steps can strengthen the gate with:
 - stricter path-policy checks.
 
 Branch protection is recommended, but STEP 100 only prepares scripts and a runbook unless Alberto explicitly applies them. Future pull requests should respect the protection after it is enabled.
+
+Until hard protection is available, future pull requests should treat the `Verification Gate` CI check as required by process even if GitHub cannot technically require it.
