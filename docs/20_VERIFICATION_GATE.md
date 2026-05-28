@@ -83,8 +83,12 @@ Manual verification remains required for meaning:
 
 - the change matches the step objective;
 - the scope is not broader than requested;
+- the task respected allowed scope, forbidden scope, and forbidden actions;
+- the final Codex report is complete enough for review;
 - documentation and changelog are updated when behavior or workflow changes;
 - rollback is clear.
+
+Prompt Packet Hardening defines the expected task packet and final report structure in `docs/25_PROMPT_PACKET_HARDENING.md`.
 
 ### Documentation Sync
 

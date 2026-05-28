@@ -10,6 +10,8 @@ Valutare correttezza, semplicita', testabilita', sicurezza, documentazione, risc
 
 AI Software Factory richiede review umana e verifiche prima del merge. La review deve privilegiare bug, regressioni, rischi e test mancanti.
 
+La review deve controllare anche il rispetto di `docs/25_PROMPT_PACKET_HARDENING.md`: allowed scope, forbidden scope, forbidden actions, Verification Gate, Documentation Sync e report finale Codex.
+
 ## Livello rischio L0-L4
 
 Livello massimo: L0 - Read only.
@@ -56,6 +58,7 @@ Se la review richiede patch, commit, push, merge, modifica CI/CD o cancellazioni
 3. Test mancanti o non verificati.
 4. Rischi residui.
 5. Verdetto: Approva, Richiede modifiche o Blocca.
+6. Eventuali violazioni di scope, forbidden actions o report finale.
 
 ## Criteri di accettazione
 
@@ -76,8 +79,13 @@ Rollback non necessario per L0. Safe stop se emergono secret, azioni distruttive
 
 ## Cosa NON fare
 
+## Forbidden actions
+
 - Non applicare fix durante la review.
 - Non riscrivere il diff.
 - Non approvare se mancano verifiche critiche.
 - Non ignorare policy L3/L4.
 - Non usare Full Auto.
+- Non installare hook Git.
+- Non modificare git config core.hooksPath.
+- Non usare ASF_ALLOW_MAIN_BYPASS.

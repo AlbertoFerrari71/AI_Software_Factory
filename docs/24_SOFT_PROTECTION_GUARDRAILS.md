@@ -31,6 +31,8 @@ STEP 120 introduces:
 
 The hooks are opt-in. Codex creates and tests them, but does not install them automatically.
 
+Future Codex Task Packets must repeat this constraint when soft guardrails are relevant: Codex does not install hooks, does not run `git config core.hooksPath`, and does not use `ASF_ALLOW_MAIN_BYPASS` during ordinary tasks.
+
 ---
 
 ## 4. Pre-commit guard
@@ -104,6 +106,8 @@ The check script is read-only. It does not change Git configuration.
 ## 8. Emergency bypass
 
 Use bypass only for recovery or emergency work.
+
+The bypass must not appear in normal task execution. If a future task appears to require `ASF_ALLOW_MAIN_BYPASS`, Codex must stop and ask for an explicit emergency/recovery decision.
 
 PowerShell example:
 

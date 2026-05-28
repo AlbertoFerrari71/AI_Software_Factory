@@ -19,6 +19,8 @@ Every completed step must leave the repository in a state where:
 
 If a document does not need changes, leave it unchanged and state that choice in the final report when relevant.
 
+Task packets must explicitly declare which central documents and step-specific documents need evaluation. At minimum, every implementation step must say whether `CHANGELOG.md`, `docs/10_ROADMAP.md`, and `docs/11_DECISIONS.md` were updated or were not necessary.
+
 ---
 
 ## 3. Document update classes

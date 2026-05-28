@@ -450,7 +450,7 @@ I tool remoti possono ricevere dati sensibili o compiere azioni esterne al repos
 
 ### Conseguenze
 
-Lo STEP 130 dovrà implementare un registry tool coerente con questa policy.
+Uno step futuro dovra' implementare un registry tool coerente con questa policy.
 
 ---
 
@@ -713,3 +713,39 @@ I guardrail locali riducono gli errori comuni sul computer operativo senza finge
 ### Conseguenze
 
 Soft protection non sostituisce hard protection GitHub. Quando GitHub Pro/Team o rulesets saranno disponibili, la protezione reale dovra' essere preferita. Lo STEP 130 consigliato e' Prompt Packet Hardening, per portare questi vincoli nei task packet e nei prompt operativi.
+
+---
+
+## DEC-033 - Prompt Packet Hardening
+
+**Data:** 2026-05-28
+**Stato:** Accettata
+
+### Contesto
+
+Dopo Verification Gate, Documentation Sync e Soft Protection Guardrails, i futuri task packet devono rendere questi vincoli espliciti prima dell'esecuzione Codex.
+
+### Decisione
+
+Introdurre `docs/25_PROMPT_PACKET_HARDENING.md` come riferimento centrale.
+
+I task packet futuri devono includere:
+
+- sezioni minime operative;
+- forbidden actions standard;
+- allowed scope esplicito;
+- forbidden scope esplicito;
+- Verification Gate;
+- Documentation Sync;
+- Soft Protection awareness;
+- report finale Codex standard con step, tempo, stato e prossimo step.
+
+Nello STEP 130 non viene introdotto uno schema rigido o un parser dedicato. La validazione leggera e' rimandata allo STEP 140.
+
+### Motivazione
+
+Prompt e task packet troppo liberi aumentano il rischio di modifiche fuori scope, refactor non richiesti, report incompleti e controlli non eseguiti.
+
+### Conseguenze
+
+I template Codex vengono rafforzati, ma restano leggibili e modificabili da Alberto. Lo STEP 140 consigliato e' Prompt Packet Validation Lite.

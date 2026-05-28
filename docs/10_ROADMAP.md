@@ -37,11 +37,12 @@ Esempio:
 | 100 | Branch Protection Implementation | Preparare script e runbook per protezioni main | Script DryRun, verify script, runbook | MVP personale | Completato |
 | 110 | Branch Protection Verification and Hardening | Verificare protezione reale e definire fallback soft protection | Required check reale, limite GitHub plan, script hardening | MVP personale | Completato |
 | 120 | Soft Protection Guardrails | Ridurre il rischio di push accidentale su main finche' manca hard protection | Hook locali opt-in, install/check script, runbook | MVP personale | Completato |
-| 130 | Prompt Packet Hardening | Rafforzare task packet e prompt contro errori operativi ricorrenti | Template piu' espliciti, guardrail, test documentali | MVP personale | Da fare |
-| 140 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
-| 150 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
-| 160 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
-| 170 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
+| 130 | Prompt Packet Hardening | Rafforzare task packet e prompt contro errori operativi ricorrenti | Documento hardening, template aggiornati, test documentali | MVP personale | Completato |
+| 140 | Prompt Packet Validation Lite | Validare sezioni minime dei task packet senza schema rigido | Validator leggero, test, checklist | MVP personale | Da fare |
+| 150 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
+| 160 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
+| 170 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
+| 180 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
 
 ---
 
@@ -327,16 +328,45 @@ Ridurre il rischio operativo mentre la hard protection GitHub non e' disponibile
 
 Rafforzare prompt e task packet affinche' i vincoli operativi recenti siano presenti prima dell'esecuzione Codex.
 
-### Output previsti
+### Output realizzati
 
 - task packet con richiami espliciti a soft guardrails, Documentation Sync e Verification Gate;
 - prompt Codex allineati a no commit/no push/no merge e no hook install automatico;
-- checklist piu' chiara per azioni locali e GitHub;
+- forbidden actions standard;
+- allowed scope e forbidden scope espliciti;
+- report finale Codex standard;
+- documento `docs/25_PROMPT_PACKET_HARDENING.md`;
 - test documentali leggeri.
+
+### Future evolutions
+
+- Prompt Packet Validation Lite;
+- prompt packet schema;
+- lint/format gate;
+- security scan gate;
+- GitHub Pro/Team decision;
+- hard protection real activation;
+- rulesets.
 
 ---
 
-## 16. STEP 140 — OpenAI API Adapter
+## 16. STEP 140 — Prompt Packet Validation Lite
+
+### Obiettivo
+
+Introdurre una validazione leggera dei task packet senza irrigidire ancora il formato con uno schema completo.
+
+### Output previsti
+
+- controllo sezioni minime;
+- verifica forbidden actions;
+- verifica allowed/forbidden scope;
+- test documentali;
+- nessuna nuova dipendenza pesante.
+
+---
+
+## 17. STEP 150 — OpenAI API Adapter
 
 ### Obiettivo
 
@@ -352,7 +382,7 @@ Collegare Responses API e Structured Outputs.
 
 ---
 
-## 17. STEP 150 — MCP Tool Registry
+## 18. STEP 160 — MCP Tool Registry
 
 ### Obiettivo
 
@@ -367,7 +397,7 @@ Gestire tool esterni in modo sicuro.
 
 ---
 
-## 18. STEP 160 — Guided Mode
+## 19. STEP 170 — Guided Mode
 
 ### Obiettivo
 
@@ -382,7 +412,7 @@ Rendere il framework utilizzabile da utenti non tecnici.
 
 ---
 
-## 19. STEP 170 — SaaS Evolution Plan
+## 20. STEP 180 — SaaS Evolution Plan
 
 ### Obiettivo
 

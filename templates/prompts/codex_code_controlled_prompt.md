@@ -10,6 +10,8 @@ Eseguire una modifica piccola, testabile e reversibile rispettando il Codex Task
 
 AI Software Factory consente Auto Edit solo come L2 su branch dedicato, con file consentiti, test e riepilogo. Full Auto non e' ammesso per questo flusso.
 
+Ogni task deve rispettare `docs/25_PROMPT_PACKET_HARDENING.md`: branch dedicato, allowed scope, forbidden scope, forbidden actions, Verification Gate, Documentation Sync, Soft Protection awareness e report finale standard.
+
 ## Livello rischio L0-L4
 
 Livello massimo: L2 - Write controlled.
@@ -31,6 +33,12 @@ Se il task richiede CI/CD, dipendenze, auth, database schema, security policy, c
 
 - Solo i file elencati nel Codex Task Packet.
 
+## Allowed scope
+
+- Solo aree e file dichiarati nel task packet.
+- Solo modifiche richieste dallo step.
+- Se serve uscire dallo scope, fermarsi e segnalarlo.
+
 ## File vietati / file da non toccare
 
 - `.env`
@@ -40,6 +48,13 @@ Se il task richiede CI/CD, dipendenze, auth, database schema, security policy, c
 - file non elencati come modificabili
 - `.github/workflows/**` salvo approval L3
 - policy di sicurezza salvo approval L3
+
+## Forbidden scope
+
+- File non elencati come modificabili.
+- Refactor non richiesti.
+- Documentazione non collegata allo step.
+- Hook Git, git config, GitHub settings, CI o dipendenze salvo task esplicito.
 
 ## Vincoli
 
@@ -51,15 +66,37 @@ Se il task richiede CI/CD, dipendenze, auth, database schema, security policy, c
 - Eseguire i test indicati.
 - Se i test falliscono, non dichiarare completato il task.
 
+## Documentation Sync
+
+Valutare `CHANGELOG.md`, `docs/10_ROADMAP.md`, `docs/11_DECISIONS.md` e i documenti specifici coinvolti. Non aggiornare documenti per zelo.
+
+## Verification Gate
+
+Eseguire o motivare se non eseguiti:
+
+```powershell
+python -m pytest
+git diff --check
+git status --short
+```
+
+Usare `scripts/verify.ps1` quando applicabile.
+
+## Soft Protection awareness
+
+`main` e' trattato come protetto. Codex non deve installare hook Git, non deve eseguire `git config core.hooksPath` e non deve usare `ASF_ALLOW_MAIN_BYPASS`.
+
 ## Output atteso
 
-1. File modificati.
-2. Riepilogo diff.
-3. Test eseguiti.
-4. Test falliti o non eseguiti.
-5. Rischi residui.
-6. Rollback consigliato.
-7. Prossimo passo.
+A) STEP ESEGUITO
+B) STATO
+C) FILE CREATI
+D) FILE MODIFICATI
+E) VERIFICHE ESEGUITE
+F) VERIFICHE NON ESEGUITE
+G) RISCHI / NOTE
+H) PROSSIMO STEP CONSIGLIATO
+I) RIEPILOGO FINALE OBBLIGATORIO con Step eseguito, Tempo impiegato, Stato step e Prossimo step.
 
 ## Criteri di accettazione
 
@@ -90,8 +127,11 @@ Rollback L2: ripristinare i file modificati o abbandonare il branch. Safe stop s
 
 ## Cosa NON fare
 
+## Forbidden actions
+
 - Non fare commit.
 - Non fare push.
+- Non aprire PR.
 - Non fare merge.
 - Regola sintetica: no commit, no push, no merge.
 - Non fare force push.

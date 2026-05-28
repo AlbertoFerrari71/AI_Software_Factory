@@ -10,6 +10,8 @@ Analizzare lo stato del repository o di un task e proporre il prossimo passo piu
 
 AI Software Factory usa il Safety Model L0-L4 e richiede read-only first per attivita' ambigue o complesse. Questa modalita' serve a produrre diagnosi, piano e rischi prima di passare a L2.
 
+Anche in modalita' read-only, verificare che il task packet abbia obiettivo, allowed scope, forbidden scope, forbidden actions e output atteso coerenti con `docs/25_PROMPT_PACKET_HARDENING.md`.
+
 ## Livello rischio L0-L4
 
 Livello massimo: L0 - Read only.
@@ -60,6 +62,7 @@ Se l'analisi richiede scrittura, dipendenze, CI/CD, database, secret o cancellaz
 5. Proposta del prossimo step.
 6. Domande bloccanti.
 7. Test o verifiche consigliate.
+8. Eventuali sezioni mancanti del task packet rispetto a Prompt Packet Hardening.
 
 ## Criteri di accettazione
 
@@ -82,8 +85,13 @@ Rollback non necessario per L0. Safe stop immediato se il task richiede scrittur
 
 ## Cosa NON fare
 
+## Forbidden actions
+
 - Non editare file.
 - Non creare branch.
 - Non installare dipendenze.
 - Non usare Full Auto.
 - Non aggirare vincoli o test.
+- Non installare hook Git.
+- Non modificare git config core.hooksPath.
+- Non usare ASF_ALLOW_MAIN_BYPASS.
