@@ -193,11 +193,19 @@ In this state:
 
 `verify_branch_protection.ps1` exits with code `2` when it detects the known GitHub plan or repository visibility limitation.
 
+After STEP 120, local soft guardrails are available in `.githooks/` and `scripts/git/`. They are opt-in and must be installed manually with `scripts/git/install_soft_guardrails.ps1` after review. The central runbook is `docs/24_SOFT_PROTECTION_GUARDRAILS.md`.
+
+The required check remains:
+
+```text
+Verification Gate
+```
+
 ---
 
 ## 10. Future hardening
 
-STEP 110 - Branch Protection Verification and Hardening can add:
+Future hardening can add:
 
 - GitHub rulesets;
 - required review;

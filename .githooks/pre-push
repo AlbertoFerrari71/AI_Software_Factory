@@ -1,0 +1,22 @@
+#!/bin/sh
+
+while read local_ref local_sha remote_ref remote_sha
+do
+    if [ "$remote_ref" = "refs/heads/main" ]; then
+        if [ "${ASF_ALLOW_MAIN_BYPASS:-}" = "1" ]; then
+            echo "WARNING: ASF_ALLOW_MAIN_BYPASS=1 is set." >&2
+            echo "Emergency push to main is allowed by explicit bypass." >&2
+            echo "Required check remains: Verification Gate." >&2
+            echo "Document the bypass if it is relevant to the project history." >&2
+            continue
+        fi
+
+        echo "ERROR: Direct push to main blocked by AI Software Factory soft guardrails." >&2
+        echo "Use branch + PR + CI before merge." >&2
+        echo "Required check: Verification Gate." >&2
+        echo "Emergency bypass only: set ASF_ALLOW_MAIN_BYPASS=1 intentionally." >&2
+        exit 1
+    fi
+done
+
+exit 0

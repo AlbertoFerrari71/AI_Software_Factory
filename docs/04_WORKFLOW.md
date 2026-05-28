@@ -102,6 +102,8 @@ Il check CI reale rilevato per questo repository e' `Verification Gate`. La poli
 
 Gli script di implementazione sono in `scripts/github/` e il runbook e' in `docs/23_BRANCH_PROTECTION_IMPLEMENTATION.md`. L'applicazione reale della protezione e' manuale e consapevole, non automatica durante il lavoro Codex.
 
+Finche' la hard protection GitHub non e' disponibile, il progetto usa soft guardrails locali opt-in documentati in `docs/24_SOFT_PROTECTION_GUARDRAILS.md`. Gli hook non vengono installati automaticamente da Codex: Alberto puo' installarli consapevolmente con `scripts/git/install_soft_guardrails.ps1` dopo aver eseguito il DryRun.
+
 ---
 
 ## 7. Documentation Sync

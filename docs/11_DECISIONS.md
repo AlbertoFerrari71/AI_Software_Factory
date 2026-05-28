@@ -682,3 +682,34 @@ La sicurezza operativa non deve dipendere da una configurazione GitHub non dispo
 ### Conseguenze
 
 Lo STEP 120 consigliato e' Soft Protection Guardrails, per ridurre il rischio di push accidentale su `main` finche' manca hard protection GitHub.
+
+---
+
+## DEC-032 - Soft protection guardrails opt-in
+
+**Data:** 2026-05-28
+**Stato:** Accettata
+
+### Contesto
+
+Dopo STEP 110, GitHub branch protection reale resta non disponibile sul repository privato con il piano attuale. Serve ridurre il rischio pratico di commit o push accidentali su `main` senza modificare GitHub e senza installare automazioni locali in modo invisibile.
+
+### Decisione
+
+Introdurre soft guardrails locali opt-in:
+
+- hook versionati in `.githooks/`;
+- `pre-commit` che blocca commit su `main`;
+- `pre-push` che blocca push verso `main`;
+- installazione manuale tramite `scripts/git/install_soft_guardrails.ps1`;
+- verifica read-only tramite `scripts/git/check_soft_guardrails.ps1`;
+- bypass solo tramite variabile esplicita `ASF_ALLOW_MAIN_BYPASS=1`;
+- nessuna installazione automatica degli hook da parte di Codex.
+
+### Motivazione
+
+I guardrail locali riducono gli errori comuni sul computer operativo senza fingere che esista hard protection GitHub. L'installazione opt-in mantiene il controllo umano su `git config core.hooksPath`.
+
+### Conseguenze
+
+Soft protection non sostituisce hard protection GitHub. Quando GitHub Pro/Team o rulesets saranno disponibili, la protezione reale dovra' essere preferita. Lo STEP 130 consigliato e' Prompt Packet Hardening, per portare questi vincoli nei task packet e nei prompt operativi.

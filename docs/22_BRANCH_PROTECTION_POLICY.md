@@ -32,6 +32,8 @@ STEP 100 introduces local scripts and the implementation runbook in `docs/23_BRA
 
 STEP 110 records the real verification result: the required CI check is `Verification Gate`, but GitHub returned HTTP 403 for branch protection on the current private repository and plan. Until the plan or repository visibility supports hard protection, the project uses soft protection as an operational fallback.
 
+STEP 120 adds opt-in local guardrails for this fallback: versioned Git hooks and PowerShell install/check scripts. The operating reference is `docs/24_SOFT_PROTECTION_GUARDRAILS.md`.
+
 ---
 
 ## 3. Protection mechanisms
@@ -74,6 +76,8 @@ Soft protection means the same rule is enforced by local-first discipline instea
 - documenting the GitHub plan limitation explicitly.
 
 Soft protection is a fallback, not a replacement for hard protection. When GitHub Pro/Team or public visibility makes protected branches available, hard protection should be reconsidered.
+
+The concrete local guardrails are documented in `docs/24_SOFT_PROTECTION_GUARDRAILS.md`. They reduce accidental commits or pushes to `main`, but they do not provide repository-wide enforcement.
 
 ---
 
