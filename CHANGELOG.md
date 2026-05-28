@@ -4,6 +4,34 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.14.0] - 2026-05-28
+
+### Added
+
+- STEP 140 - Prompt Packet Validation Lite.
+- `scripts/validate_task_packet.py`.
+- `docs/26_PROMPT_PACKET_VALIDATION_LITE.md`.
+- Test automatici in `tests/unit/test_prompt_packet_validation_lite.py`.
+
+### Changed
+
+- Aggiornati Prompt Packet Hardening, Prompt Packet Generator, Codex Workflow, workflow operativo, Verification Gate e Documentation Sync con il riferimento al validatore.
+- Validato il template centrale `templates/codex_tasks/codex_task_packet_template.md` rispetto ai requisiti minimi.
+- Aggiornata roadmap: STEP 140 completato e STEP 150 consigliato come Prompt Packet Examples and Golden Samples.
+- Aggiornato decision log con la scelta di validazione Lite senza schema rigido.
+- Aggiornato pull request template con controllo opzionale sul Prompt Packet Validation Lite.
+
+### Not included
+
+- Nessuna integrazione automatica in CI o `scripts/verify.ps1`.
+- Nessuna nuova dipendenza.
+- Nessuna modifica a `src/**`, `policies/**`, CI, hook, script Git/GitHub, secret o `.env`.
+- Nessuna installazione hook Git.
+- Nessuna modifica a `git config core.hooksPath`.
+- Nessun commit, push, PR o merge automatico.
+
+---
+
 ## [0.13.0] - 2026-05-28
 
 ### Added

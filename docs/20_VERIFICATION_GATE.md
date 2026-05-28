@@ -90,6 +90,14 @@ Manual verification remains required for meaning:
 
 Prompt Packet Hardening defines the expected task packet and final report structure in `docs/25_PROMPT_PACKET_HARDENING.md`.
 
+Prompt Packet Validation Lite can be used as a pre-step support check for task packets:
+
+```powershell
+python scripts/validate_task_packet.py templates/codex_tasks/codex_task_packet_template.md
+```
+
+The reference document is `docs/26_PROMPT_PACKET_VALIDATION_LITE.md`. In STEP 140 this check is not yet a required CI check and is not part of `scripts/verify.ps1`; future steps can decide whether to integrate it into the gate.
+
 ### Documentation Sync
 
 The Verification Gate also includes Documentation Sync.

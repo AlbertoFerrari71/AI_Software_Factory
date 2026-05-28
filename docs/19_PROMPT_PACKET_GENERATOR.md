@@ -69,6 +69,14 @@ Regola pratica: se una sezione non serve, dichiararlo esplicitamente. Non omette
 
 Da STEP 130, i task packet operativi devono seguire anche `docs/25_PROMPT_PACKET_HARDENING.md`, che rafforza scope ammesso, scope vietato, forbidden actions, Verification Gate, Documentation Sync, Soft Protection awareness e report finale standard.
 
+Da STEP 140, un task packet generato puo' essere controllato con:
+
+```powershell
+python scripts/validate_task_packet.py templates/codex_tasks/codex_task_packet_template.md
+```
+
+Il validatore `scripts/validate_task_packet.py` verifica sezioni e concetti minimi. Non sostituisce la revisione umana, la valutazione del rischio o il Verification Gate.
+
 ---
 
 ## 5. Compilazione del Prompt Packet

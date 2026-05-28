@@ -749,3 +749,46 @@ Prompt e task packet troppo liberi aumentano il rischio di modifiche fuori scope
 ### Conseguenze
 
 I template Codex vengono rafforzati, ma restano leggibili e modificabili da Alberto. Lo STEP 140 consigliato e' Prompt Packet Validation Lite.
+
+---
+
+## DEC-034 - Prompt Packet Validation Lite
+
+**Data:** 2026-05-28
+**Stato:** Accettata
+
+### Contesto
+
+Dopo Prompt Packet Hardening serve un controllo leggero per intercettare task packet incompleti prima dell'esecuzione Codex, senza introdurre ancora uno schema rigido.
+
+### Decisione
+
+Introdurre `scripts/validate_task_packet.py` come validatore Python basato solo su standard library.
+
+Il validatore controlla sezioni e concetti minimi:
+
+- project context;
+- branch instructions;
+- allowed scope;
+- forbidden scope;
+- forbidden actions;
+- Verification Gate;
+- Documentation Sync;
+- Soft Protection awareness;
+- report finale Codex.
+
+Gli exit code sono:
+
+- `0` per validazione passata;
+- `1` per validazione fallita;
+- `2` per errore di uso o input.
+
+Nello STEP 140 il validatore non viene integrato automaticamente in CI o nel Verification Gate. Lo schema rigido resta rimandato.
+
+### Motivazione
+
+Un controllo leggero riduce task packet vaghi o incompleti, ma mantiene i prompt modificabili e leggibili. La qualita' semantica resta responsabilita' della revisione umana.
+
+### Conseguenze
+
+I task packet centrali possono essere validati manualmente prima dell'uso. Lo STEP 150 consigliato e' Prompt Packet Examples and Golden Samples, per aggiungere esempi positivi e negativi stabili.

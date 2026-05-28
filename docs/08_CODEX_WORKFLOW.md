@@ -192,6 +192,8 @@ Ogni task Codex deve indicare:
 
 Da STEP 130, i task packet devono seguire anche `docs/25_PROMPT_PACKET_HARDENING.md`: allowed scope e forbidden scope espliciti, forbidden actions standard, Verification Gate, Documentation Sync, Soft Protection awareness e report finale standard.
 
+Da STEP 140, prima di task complessi il task packet puo' essere validato con `scripts/validate_task_packet.py`. Il riferimento e' `docs/26_PROMPT_PACKET_VALIDATION_LITE.md`. Il validatore aiuta a intercettare sezioni mancanti, ma Codex deve comunque rispettare il task packet, lo scope, le forbidden actions e il report finale richiesto.
+
 Se uno di questi elementi manca e l'assenza puo' causare danni, Codex deve fermarsi in Ask/Suggest. Se durante l'esecuzione serve uscire dallo scope, Codex deve segnalarlo invece di ampliare autonomamente il diff.
 
 ---
