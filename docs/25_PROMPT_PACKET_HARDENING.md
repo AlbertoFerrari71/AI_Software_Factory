@@ -184,3 +184,10 @@ The task packet should be strict enough to control execution and short enough to
 STEP 140 introduces Prompt Packet Validation Lite in `docs/26_PROMPT_PACKET_VALIDATION_LITE.md` and `scripts/validate_task_packet.py`.
 
 The validator checks that required sections and keywords exist without turning prompt writing into a rigid schema too early. It is a support tool for task packet quality, not a replacement for Alberto review, Verification Gate, or tests.
+
+STEP 150 adds golden samples in `docs/27_PROMPT_PACKET_GOLDEN_SAMPLES.md`.
+
+- `examples/task_packets/valid/step_valid_minimal_task_packet.md` is the practical reference for a compact valid task packet.
+- `examples/task_packets/invalid/` contains anti-pattern samples that should fail validation.
+
+Use the valid sample as a reference for structure. Do not copy invalid samples into real work.

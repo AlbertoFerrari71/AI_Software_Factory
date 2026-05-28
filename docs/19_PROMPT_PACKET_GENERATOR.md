@@ -77,6 +77,14 @@ python scripts/validate_task_packet.py templates/codex_tasks/codex_task_packet_t
 
 Il validatore `scripts/validate_task_packet.py` verifica sezioni e concetti minimi. Non sostituisce la revisione umana, la valutazione del rischio o il Verification Gate.
 
+Da STEP 150, confrontare i task packet generati con il golden sample valido:
+
+```text
+examples/task_packets/valid/step_valid_minimal_task_packet.md
+```
+
+Gli esempi invalidi in `examples/task_packets/invalid/` servono solo a mostrare errori tipici da evitare e a testare il validatore. Non vanno copiati come base per task reali.
+
 ---
 
 ## 5. Compilazione del Prompt Packet

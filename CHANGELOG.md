@@ -4,6 +4,34 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.15.0] - 2026-05-28
+
+### Added
+
+- STEP 150 - Prompt Packet Examples and Golden Samples.
+- Golden sample valido in `examples/task_packets/valid/step_valid_minimal_task_packet.md`.
+- Golden samples invalidi in `examples/task_packets/invalid/`.
+- `docs/27_PROMPT_PACKET_GOLDEN_SAMPLES.md`.
+- Test automatici in `tests/unit/test_prompt_packet_golden_samples.py`.
+
+### Changed
+
+- Aggiornati Prompt Packet Validation Lite, Prompt Packet Hardening, Prompt Packet Generator, Codex Workflow, Verification Gate e Documentation Sync con riferimenti ai golden samples.
+- Aggiornata roadmap: STEP 150 completato e STEP 160 consigliato come Prompt Packet Validation Strict Mode.
+- Aggiornato decision log con la scelta di golden samples valid/invalid senza introdurre modalita' strict.
+- Aggiornato pull request template con controllo opzionale sui golden samples.
+
+### Not included
+
+- Nessuna modalita' strict.
+- Nessuna nuova dipendenza.
+- Nessuna modifica a `src/**`, `policies/**`, CI, hook, script Git/GitHub, secret o `.env`.
+- Nessuna installazione hook Git.
+- Nessuna modifica a `git config core.hooksPath`.
+- Nessun commit, push, PR o merge automatico.
+
+---
+
 ## [0.14.0] - 2026-05-28
 
 ### Added

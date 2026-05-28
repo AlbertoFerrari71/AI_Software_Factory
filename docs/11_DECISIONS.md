@@ -792,3 +792,33 @@ Un controllo leggero riduce task packet vaghi o incompleti, ma mantiene i prompt
 ### Conseguenze
 
 I task packet centrali possono essere validati manualmente prima dell'uso. Lo STEP 150 consigliato e' Prompt Packet Examples and Golden Samples, per aggiungere esempi positivi e negativi stabili.
+
+---
+
+## DEC-035 - Prompt Packet golden samples
+
+**Data:** 2026-05-28
+**Stato:** Accettata
+
+### Contesto
+
+Dopo il validatore Lite serve un set di esempi stabili per documentare il formato minimo e proteggere il comportamento atteso del validatore.
+
+### Decisione
+
+Introdurre golden samples in `examples/task_packets/`:
+
+- `examples/task_packets/valid/step_valid_minimal_task_packet.md` deve passare la validazione;
+- `examples/task_packets/invalid/missing_forbidden_actions.md` deve fallire;
+- `examples/task_packets/invalid/missing_scope.md` deve fallire;
+- `examples/task_packets/invalid/missing_final_report.md` deve fallire.
+
+Nello STEP 150 non viene introdotta modalita' strict e non viene irrigidito il validatore oltre il comportamento Lite necessario per i campioni.
+
+### Motivazione
+
+I golden samples rendono il validatore piu' mantenibile: un cambiamento futuro puo' essere verificato contro esempi validi e invalidi senza interpretare ogni volta il comportamento desiderato.
+
+### Conseguenze
+
+Le modifiche future al validatore devono preservare il passaggio del sample valido e il fallimento degli invalidi. Lo STEP 160 consigliato e' Prompt Packet Validation Strict Mode.
