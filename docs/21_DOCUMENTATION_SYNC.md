@@ -58,6 +58,7 @@ Examples:
 - update `docs/24_SOFT_PROTECTION_GUARDRAILS.md` when local Git hooks or soft guardrail scripts change;
 - update `docs/25_PROMPT_PACKET_HARDENING.md` and `docs/26_PROMPT_PACKET_VALIDATION_LITE.md` when prompt packet rules, templates or validators change;
 - update `docs/27_PROMPT_PACKET_GOLDEN_SAMPLES.md` when prompt packet golden samples are added or changed;
+- update `docs/28_PROMPT_PACKET_VALIDATION_STRICT_MODE.md` when Strict Mode behavior changes;
 - update `docs/05_SECURITY_MODEL.md` or `policies/**` only when the Safety Model changes and the risk level is approved.
 
 ### Do not touch unless needed

@@ -196,6 +196,14 @@ Da STEP 140, prima di task complessi il task packet puo' essere validato con `sc
 
 Da STEP 150, quando si prepara un task packet complesso, usare anche il golden sample valido in `examples/task_packets/valid/step_valid_minimal_task_packet.md` come riferimento pratico. Gli invalid samples in `examples/task_packets/invalid/` mostrano cosa evitare e non devono essere usati come base operativa.
 
+Da STEP 160, per task complessi o sensibili e' consigliata la validazione Strict:
+
+```powershell
+python scripts/validate_task_packet.py --strict <task-packet.md>
+```
+
+Lite resta sufficiente per controlli rapidi; Strict aggiunge controlli granulari ma non sostituisce review umana o Verification Gate.
+
 Se uno di questi elementi manca e l'assenza puo' causare danni, Codex deve fermarsi in Ask/Suggest. Se durante l'esecuzione serve uscire dallo scope, Codex deve segnalarlo invece di ampliare autonomamente il diff.
 
 ---

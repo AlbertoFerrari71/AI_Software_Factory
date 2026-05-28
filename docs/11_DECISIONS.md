@@ -822,3 +822,51 @@ I golden samples rendono il validatore piu' mantenibile: un cambiamento futuro p
 ### Conseguenze
 
 Le modifiche future al validatore devono preservare il passaggio del sample valido e il fallimento degli invalidi. Lo STEP 160 consigliato e' Prompt Packet Validation Strict Mode.
+
+---
+
+## DEC-036 - Prompt Packet Validation Strict Mode
+
+**Data:** 2026-05-28
+**Stato:** Accettata
+
+### Contesto
+
+Dopo Lite validator e golden samples serve una modalita' opzionale piu' severa per controllare task packet importanti senza rendere rigido il formato di default.
+
+### Decisione
+
+Introdurre il flag `--strict` in `scripts/validate_task_packet.py`.
+
+Lite resta il comportamento di default:
+
+```powershell
+python scripts/validate_task_packet.py <file>
+```
+
+Strict e' esplicito:
+
+```powershell
+python scripts/validate_task_packet.py --strict <file>
+```
+
+Strict usa controlli granulari ma ancora keyword-based su:
+
+- branch e working tree;
+- allowed scope;
+- forbidden scope;
+- forbidden actions complete;
+- Verification Gate;
+- Documentation Sync;
+- Soft Protection;
+- report finale Codex.
+
+Nello STEP 160 non viene introdotto uno schema formale JSON/YAML e Strict non viene integrato automaticamente in CI o nel Verification Gate.
+
+### Motivazione
+
+La modalita' Strict aumenta il controllo sui task packet piu' importanti senza rompere compatibilita' con Lite e senza anticipare un parser formale.
+
+### Conseguenze
+
+I golden samples Strict diventano riferimento per evoluzioni future. Lo STEP 170 consigliato e' Prompt Packet Generator CLI Hardening.

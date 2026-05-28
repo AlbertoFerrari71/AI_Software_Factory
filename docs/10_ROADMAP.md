@@ -40,11 +40,12 @@ Esempio:
 | 130 | Prompt Packet Hardening | Rafforzare task packet e prompt contro errori operativi ricorrenti | Documento hardening, template aggiornati, test documentali | MVP personale | Completato |
 | 140 | Prompt Packet Validation Lite | Validare sezioni minime dei task packet senza schema rigido | Validator leggero, documento operativo, test | MVP personale | Completato |
 | 150 | Prompt Packet Examples and Golden Samples | Creare esempi validi e casi negativi per il validatore | Golden samples, esempi, test | MVP personale | Completato |
-| 160 | Prompt Packet Validation Strict Mode | Rafforzare il validatore con controlli opzionali piu' granulari | Strict mode, controlli mirati, test | MVP personale | Da fare |
-| 170 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
-| 180 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
-| 190 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
-| 200 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
+| 160 | Prompt Packet Validation Strict Mode | Rafforzare il validatore con controlli opzionali piu' granulari | Strict mode, controlli mirati, test | MVP personale | Completato |
+| 170 | Prompt Packet Generator CLI Hardening | Rafforzare il generatore CLI di task packet | CLI hardening, validazione, test | MVP personale | Da fare |
+| 180 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
+| 190 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
+| 200 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
+| 210 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
 
 ---
 
@@ -409,16 +410,41 @@ Creare esempi validi e casi negativi controllati per rendere il validatore piu' 
 
 Introdurre una modalita' opzionale piu' severa per il validatore, senza rompere la validazione Lite.
 
+### Output realizzati
+
+- flag `--strict` nel validatore;
+- controlli piu' granulari su branch, scope, forbidden actions, Verification Gate, Documentation Sync, Soft Protection e report finale;
+- documento `docs/28_PROMPT_PACKET_VALIDATION_STRICT_MODE.md`;
+- golden samples Strict valid/invalid;
+- test automatici sul comportamento Strict;
+- nessuna nuova dipendenza;
+- nessuna integrazione automatica in CI o `scripts/verify.ps1`.
+
+### Future evolutions
+
+- report JSON;
+- schema JSON/YAML;
+- lint/format gate;
+- security scan gate.
+
+---
+
+## 19. STEP 170 — Prompt Packet Generator CLI Hardening
+
+### Obiettivo
+
+Rafforzare il generatore CLI di prompt/task packet usando Lite, Strict e golden samples come riferimenti operativi.
+
 ### Output previsti
 
-- flag o modalita' strict;
-- controlli piu' granulari su sezioni e report;
-- test su golden samples;
+- CLI piu' robusta;
+- integrazione manuale con validatore;
+- test su output generati;
 - nessuna nuova dipendenza pesante.
 
 ---
 
-## 19. STEP 170 — OpenAI API Adapter
+## 20. STEP 180 — OpenAI API Adapter
 
 ### Obiettivo
 
@@ -434,7 +460,7 @@ Collegare Responses API e Structured Outputs.
 
 ---
 
-## 20. STEP 180 — MCP Tool Registry
+## 21. STEP 190 — MCP Tool Registry
 
 ### Obiettivo
 
@@ -449,7 +475,7 @@ Gestire tool esterni in modo sicuro.
 
 ---
 
-## 21. STEP 190 — Guided Mode
+## 22. STEP 200 — Guided Mode
 
 ### Obiettivo
 
@@ -464,7 +490,7 @@ Rendere il framework utilizzabile da utenti non tecnici.
 
 ---
 
-## 22. STEP 200 — SaaS Evolution Plan
+## 23. STEP 210 — SaaS Evolution Plan
 
 ### Obiettivo
 

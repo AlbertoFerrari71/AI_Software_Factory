@@ -100,6 +100,14 @@ The reference document is `docs/26_PROMPT_PACKET_VALIDATION_LITE.md`. In STEP 14
 
 STEP 150 adds golden samples in `docs/27_PROMPT_PACKET_GOLDEN_SAMPLES.md`. They help verify the behavior of the Lite validator, but they are not a separate required gate check yet.
 
+STEP 160 adds optional Strict Mode:
+
+```powershell
+python scripts/validate_task_packet.py --strict <task-packet.md>
+```
+
+Strict Mode can be used as a manual pre-check for important task packets. It is not yet required in CI and is not part of `scripts/verify.ps1`.
+
 ### Documentation Sync
 
 The Verification Gate also includes Documentation Sync.

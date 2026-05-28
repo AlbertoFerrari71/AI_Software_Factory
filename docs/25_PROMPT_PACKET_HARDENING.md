@@ -191,3 +191,11 @@ STEP 150 adds golden samples in `docs/27_PROMPT_PACKET_GOLDEN_SAMPLES.md`.
 - `examples/task_packets/invalid/` contains anti-pattern samples that should fail validation.
 
 Use the valid sample as a reference for structure. Do not copy invalid samples into real work.
+
+STEP 160 adds optional Strict Mode:
+
+```powershell
+python scripts/validate_task_packet.py --strict <task-packet.md>
+```
+
+Use Strict Mode for important, complex or sensitive task packets. Strict Mode is still keyword-based and does not replace Alberto review, Verification Gate, Documentation Sync or tests.
