@@ -42,11 +42,12 @@ Esempio:
 | 150 | Prompt Packet Examples and Golden Samples | Creare esempi validi e casi negativi per il validatore | Golden samples, esempi, test | MVP personale | Completato |
 | 160 | Prompt Packet Validation Strict Mode | Rafforzare il validatore con controlli opzionali piu' granulari | Strict mode, controlli mirati, test | MVP personale | Completato |
 | 170 | Prompt Packet Generator CLI Hardening | Rafforzare il generatore CLI di task packet | CLI hardening, validazione, test | MVP personale | Completato |
-| 180 | Prompt Packet Generator Packaging | Rendere il generatore piu' riusabile e verificabile | Preset, packaging locale, test | MVP personale | Da fare |
-| 190 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
-| 200 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
-| 210 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
-| 220 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
+| 180 | Prompt Packet Generator Packaging | Rendere il generatore piu' riusabile e verificabile | Wrapper PowerShell, packaging locale, sample generato, test | MVP personale | Completato |
+| 190 | Prompt Packet Generator Release Smoke Workflow | Verificare il flusso locale completo del generatore | Smoke workflow documentato, checklist, test mirati | MVP personale | Da fare |
+| 200 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
+| 210 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
+| 220 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
+| 230 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
 
 ---
 
@@ -453,16 +454,34 @@ Rafforzare il generatore CLI di prompt/task packet usando Lite, Strict e golden 
 
 Rendere il generatore piu' riusabile mantenendo il modello local-first e senza introdurre complessita' prematura.
 
-### Output previsti
+### Output realizzati
 
-- preset o profili di generazione;
-- packaging locale leggero;
-- test su output generati;
-- compatibilita' con Lite e Strict.
+- wrapper PowerShell sottile `scripts/generate_task_packet.ps1`;
+- documento `docs/30_PROMPT_PACKET_GENERATOR_PACKAGING.md`;
+- sample generato e validabile in `examples/task_packets/generated/`;
+- test automatici sul packaging locale;
+- compatibilita' con Lite e Strict;
+- nessuna pubblicazione PyPI/registry, nessuna nuova dipendenza, nessuna modifica a CI.
 
 ---
 
-## 21. STEP 190 — OpenAI API Adapter
+## 21. STEP 190 — Prompt Packet Generator Release Smoke Workflow
+
+### Obiettivo
+
+Rendere ripetibile la verifica end-to-end locale del generatore dopo modifiche a CLI, wrapper, sample e documentazione.
+
+### Output previsti
+
+- checklist smoke locale;
+- comandi standard per generazione e validazione;
+- verifica wrapper PowerShell;
+- verifica sample generati;
+- nessuna pubblicazione esterna.
+
+---
+
+## 22. STEP 200 — OpenAI API Adapter
 
 ### Obiettivo
 
@@ -478,7 +497,7 @@ Collegare Responses API e Structured Outputs.
 
 ---
 
-## 22. STEP 200 — MCP Tool Registry
+## 23. STEP 210 — MCP Tool Registry
 
 ### Obiettivo
 
@@ -493,7 +512,7 @@ Gestire tool esterni in modo sicuro.
 
 ---
 
-## 23. STEP 210 — Guided Mode
+## 24. STEP 220 — Guided Mode
 
 ### Obiettivo
 
@@ -508,7 +527,7 @@ Rendere il framework utilizzabile da utenti non tecnici.
 
 ---
 
-## 24. STEP 220 — SaaS Evolution Plan
+## 25. STEP 230 — SaaS Evolution Plan
 
 ### Obiettivo
 

@@ -101,6 +101,16 @@ python scripts/generate_task_packet.py --step 170 --title "Prompt Packet Generat
 
 La CLI genera Markdown leggibile, crea la cartella di output se serve, non chiama GitHub, non esegue comandi Git e non installa hook. Il documento operativo e' `docs/29_PROMPT_PACKET_GENERATOR_CLI_HARDENING.md`.
 
+Da STEP 180, il generatore ha anche un packaging locale prudente documentato in `docs/30_PROMPT_PACKET_GENERATOR_PACKAGING.md`.
+
+Il wrapper PowerShell `scripts/generate_task_packet.ps1` delega alla CLI Python senza duplicare logica:
+
+```powershell
+pwsh -NoProfile -ExecutionPolicy Bypass -File .\scripts\generate_task_packet.ps1 -Step 180 -Title "Prompt Packet Generator Packaging" -Branch "step-180-prompt-packet-generator-packaging" -Objective "Package the prompt packet generator for local-first usage." -Output "tmp\generated_step_180_task_packet.md" -Force -StrictReady
+```
+
+Il packaging resta locale: nessun PyPI, nessun registry, nessuna modifica a PATH, profili PowerShell, hook Git o `core.hooksPath`.
+
 ---
 
 ## 5. Compilazione del Prompt Packet

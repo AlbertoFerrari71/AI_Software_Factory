@@ -128,13 +128,33 @@ The output is a strong starting point, not a guarantee that the task packet is s
 
 ---
 
-## 9. Future hardening
+## 9. STEP 180 packaging relationship
+
+STEP 180 adds local packaging around this CLI without changing the core generation logic.
+
+The Python CLI remains canonical:
+
+```text
+scripts/generate_task_packet.py
+```
+
+The PowerShell wrapper is a thin convenience entry point:
+
+```text
+scripts/generate_task_packet.ps1
+```
+
+The packaging document is `docs/30_PROMPT_PACKET_GENERATOR_PACKAGING.md`, and the generated reference sample is stored under `examples/task_packets/generated/`.
+
+---
+
+## 10. Future hardening
 
 Future steps can add:
 
 - reusable output presets;
 - optional validation directly after generation;
-- packaging-friendly entry points;
+- local release smoke workflow;
 - report JSON;
 - stricter task-type templates;
 - more golden samples for generated output.

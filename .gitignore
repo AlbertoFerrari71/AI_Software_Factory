@@ -54,3 +54,5 @@ desktop.ini
 output/
 artifacts/
 generated/
+!examples/task_packets/generated/
+!examples/task_packets/generated/*.md
