@@ -906,3 +906,33 @@ Un generatore minimale riduce errori ricorrenti nei task packet senza introdurre
 ### Conseguenze
 
 I task packet generati restano bozze da revisionare. Lo STEP 180 consigliato e' Prompt Packet Generator Packaging, per rendere il generatore piu' riusabile senza anticipare integrazioni OpenAI o MCP.
+
+---
+
+## DEC-038 - Prompt Packet Generator Packaging
+
+**Data:** 2026-05-28
+**Stato:** Accettata
+
+### Contesto
+
+Dopo l'hardening della CLI serve rendere il Prompt Packet Generator piu' comodo da usare localmente, senza introdurre pubblicazione esterna o packaging Python prematuro.
+
+### Decisione
+
+Introdurre packaging locale attorno alla CLI esistente:
+
+- `scripts/generate_task_packet.py` resta la fonte della logica;
+- `scripts/generate_task_packet.ps1` e' un wrapper PowerShell sottile;
+- `docs/30_PROMPT_PACKET_GENERATOR_PACKAGING.md` documenta uso, limiti e validazione;
+- `examples/task_packets/generated/step_180_generated_packaging_sample.md` e' il sample generato versionato;
+- non viene pubblicato nulla su PyPI o registry;
+- non vengono modificati PATH, profili PowerShell, hook Git o `core.hooksPath`.
+
+### Motivazione
+
+Un packaging locale riduce attrito d'uso e copia/incolla in PowerShell, ma mantiene il progetto local-first, revisionabile e senza nuove dipendenze.
+
+### Conseguenze
+
+Le evoluzioni future devono continuare a evitare duplicazione della logica del generatore. Lo STEP 190 consigliato e' Prompt Packet Generator Release Smoke Workflow, per rendere ripetibile la verifica end-to-end locale.

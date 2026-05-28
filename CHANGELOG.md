@@ -4,6 +4,37 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.18.0] - 2026-05-28
+
+### Added
+
+- STEP 180 - Prompt Packet Generator Packaging.
+- Wrapper PowerShell `scripts/generate_task_packet.ps1`.
+- Documento `docs/30_PROMPT_PACKET_GENERATOR_PACKAGING.md`.
+- Sample generato `examples/task_packets/generated/step_180_generated_packaging_sample.md`.
+- Test automatici in `tests/unit/test_prompt_packet_generator_packaging.py`.
+
+### Changed
+
+- Aggiornato `docs/19_PROMPT_PACKET_GENERATOR.md` con il packaging locale.
+- Aggiornato `docs/29_PROMPT_PACKET_GENERATOR_CLI_HARDENING.md` con il collegamento allo STEP 180.
+- Aggiornato `docs/21_DOCUMENTATION_SYNC.md` con il documento di packaging locale.
+- Aggiornata roadmap: STEP 180 completato e STEP 190 consigliato come Prompt Packet Generator Release Smoke Workflow.
+- Aggiornato decision log con la scelta di packaging locale senza pubblicazione esterna.
+- Aggiornato `.gitignore` con eccezione mirata per versionare i sample in `examples/task_packets/generated/`.
+
+### Not included
+
+- Nessuna pubblicazione PyPI o registry.
+- Nessuna nuova dipendenza.
+- Nessuna modifica a CI, `src/**`, `policies/**`, hook, script Git/GitHub, secret o `.env`.
+- Nessuna installazione hook Git.
+- Nessuna modifica a `git config core.hooksPath`.
+- Nessuna modifica a PATH o profili PowerShell.
+- Nessun commit, push, PR o merge automatico.
+
+---
+
 ## [0.17.0] - 2026-05-28
 
 ### Added
