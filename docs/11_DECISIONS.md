@@ -870,3 +870,39 @@ La modalita' Strict aumenta il controllo sui task packet piu' importanti senza r
 ### Conseguenze
 
 I golden samples Strict diventano riferimento per evoluzioni future. Lo STEP 170 consigliato e' Prompt Packet Generator CLI Hardening.
+
+---
+
+## DEC-037 - Prompt Packet Generator CLI Hardening
+
+**Data:** 2026-05-28
+**Stato:** Accettata
+
+### Contesto
+
+Dopo Lite, golden samples e Strict Mode, il Prompt Packet Generator deve poter produrre bozze di task packet da parametri espliciti senza dipendere da copia manuale del template.
+
+### Decisione
+
+Introdurre `scripts/generate_task_packet.py` come CLI locale basata solo su standard library.
+
+La CLI supporta:
+
+- `--step`;
+- `--title`;
+- `--branch`;
+- `--objective`;
+- `--output`;
+- `--print`;
+- `--force`;
+- `--strict-ready`.
+
+La CLI valida input essenziali, crea la cartella di output se necessario, non chiama GitHub API, non esegue comandi Git e genera Markdown compatibile con Lite e Strict.
+
+### Motivazione
+
+Un generatore minimale riduce errori ricorrenti nei task packet senza introdurre schema formale, dipendenze esterne o automazione eccessiva.
+
+### Conseguenze
+
+I task packet generati restano bozze da revisionare. Lo STEP 180 consigliato e' Prompt Packet Generator Packaging, per rendere il generatore piu' riusabile senza anticipare integrazioni OpenAI o MCP.

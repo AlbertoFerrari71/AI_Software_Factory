@@ -93,6 +93,14 @@ python scripts/validate_task_packet.py --strict <task-packet.md>
 
 Lite resta il controllo rapido di default; Strict e' un controllo opzionale piu' severo.
 
+Da STEP 170, `scripts/generate_task_packet.py` puo' generare una bozza di Codex Task Packet partendo da parametri espliciti:
+
+```powershell
+python scripts/generate_task_packet.py --step 170 --title "Prompt Packet Generator CLI Hardening" --branch step-170-prompt-packet-generator-cli-hardening --objective "Harden the prompt packet generator CLI." --output tmp/generated_step_170_task_packet.md --force
+```
+
+La CLI genera Markdown leggibile, crea la cartella di output se serve, non chiama GitHub, non esegue comandi Git e non installa hook. Il documento operativo e' `docs/29_PROMPT_PACKET_GENERATOR_CLI_HARDENING.md`.
+
 ---
 
 ## 5. Compilazione del Prompt Packet

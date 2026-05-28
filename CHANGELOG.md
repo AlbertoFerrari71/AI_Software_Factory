@@ -4,6 +4,32 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.17.0] - 2026-05-28
+
+### Added
+
+- STEP 170 - Prompt Packet Generator CLI Hardening.
+- `scripts/generate_task_packet.py`.
+- `docs/29_PROMPT_PACKET_GENERATOR_CLI_HARDENING.md`.
+- Test automatici in `tests/unit/test_prompt_packet_generator_cli_hardening.py`.
+
+### Changed
+
+- Aggiornato `docs/19_PROMPT_PACKET_GENERATOR.md` con uso della CLI locale.
+- Aggiornata roadmap: STEP 170 completato e STEP 180 consigliato come Prompt Packet Generator Packaging.
+- Aggiornato decision log con la scelta di un generatore CLI local-first, standard library only.
+
+### Not included
+
+- Nessuno schema JSON/YAML formale.
+- Nessuna nuova dipendenza.
+- Nessuna modifica a `src/**`, `policies/**`, CI, hook, script Git/GitHub, secret o `.env`.
+- Nessuna installazione hook Git.
+- Nessuna modifica a `git config core.hooksPath`.
+- Nessun commit, push, PR o merge automatico.
+
+---
+
 ## [0.16.0] - 2026-05-28
 
 ### Added
