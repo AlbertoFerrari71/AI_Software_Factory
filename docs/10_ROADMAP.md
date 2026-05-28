@@ -41,11 +41,12 @@ Esempio:
 | 140 | Prompt Packet Validation Lite | Validare sezioni minime dei task packet senza schema rigido | Validator leggero, documento operativo, test | MVP personale | Completato |
 | 150 | Prompt Packet Examples and Golden Samples | Creare esempi validi e casi negativi per il validatore | Golden samples, esempi, test | MVP personale | Completato |
 | 160 | Prompt Packet Validation Strict Mode | Rafforzare il validatore con controlli opzionali piu' granulari | Strict mode, controlli mirati, test | MVP personale | Completato |
-| 170 | Prompt Packet Generator CLI Hardening | Rafforzare il generatore CLI di task packet | CLI hardening, validazione, test | MVP personale | Da fare |
-| 180 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
-| 190 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
-| 200 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
-| 210 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
+| 170 | Prompt Packet Generator CLI Hardening | Rafforzare il generatore CLI di task packet | CLI hardening, validazione, test | MVP personale | Completato |
+| 180 | Prompt Packet Generator Packaging | Rendere il generatore piu' riusabile e verificabile | Preset, packaging locale, test | MVP personale | Da fare |
+| 190 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
+| 200 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
+| 210 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
+| 220 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
 
 ---
 
@@ -435,16 +436,33 @@ Introdurre una modalita' opzionale piu' severa per il validatore, senza rompere 
 
 Rafforzare il generatore CLI di prompt/task packet usando Lite, Strict e golden samples come riferimenti operativi.
 
-### Output previsti
+### Output realizzati
 
 - CLI piu' robusta;
 - integrazione manuale con validatore;
 - test su output generati;
-- nessuna nuova dipendenza pesante.
+- documento `docs/29_PROMPT_PACKET_GENERATOR_CLI_HARDENING.md`;
+- nessuna nuova dipendenza;
+- nessuna modifica a CI o `src/**`.
 
 ---
 
-## 20. STEP 180 — OpenAI API Adapter
+## 20. STEP 180 — Prompt Packet Generator Packaging
+
+### Obiettivo
+
+Rendere il generatore piu' riusabile mantenendo il modello local-first e senza introdurre complessita' prematura.
+
+### Output previsti
+
+- preset o profili di generazione;
+- packaging locale leggero;
+- test su output generati;
+- compatibilita' con Lite e Strict.
+
+---
+
+## 21. STEP 190 — OpenAI API Adapter
 
 ### Obiettivo
 
@@ -460,7 +478,7 @@ Collegare Responses API e Structured Outputs.
 
 ---
 
-## 21. STEP 190 — MCP Tool Registry
+## 22. STEP 200 — MCP Tool Registry
 
 ### Obiettivo
 
@@ -475,7 +493,7 @@ Gestire tool esterni in modo sicuro.
 
 ---
 
-## 22. STEP 200 — Guided Mode
+## 23. STEP 210 — Guided Mode
 
 ### Obiettivo
 
@@ -490,7 +508,7 @@ Rendere il framework utilizzabile da utenti non tecnici.
 
 ---
 
-## 23. STEP 210 — SaaS Evolution Plan
+## 24. STEP 220 — SaaS Evolution Plan
 
 ### Obiettivo
 
