@@ -342,6 +342,8 @@ Codex non deve lavorare direttamente su `main`, aggirare branch protection o usa
 
 Codex puo' creare script di governance GitHub revisionabili, ma non deve eseguire script che modificano GitHub. Ogni script con opzioni come `-Apply` deve essere segnalato chiaramente come modifica remota richiedente approvazione esplicita.
 
+Se GitHub risponde HTTP 403 indicando che branch protection richiede GitHub Pro/Team o repository pubblico, Codex non deve proporre di applicare la protezione reale come se fosse disponibile. Deve segnalare il fallback soft protection, confermare che `apply_branch_protection.ps1 -Apply` non va eseguito senza istruzione esplicita e verifica del piano, e lasciare ad Alberto la decisione su eventuale upgrade o cambio visibilita'.
+
 ---
 
 ## 11. Safe stop

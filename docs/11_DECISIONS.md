@@ -642,3 +642,43 @@ Gli script rendono l'applicazione ripetibile e revisionabile, ma mantengono sepa
 ### Conseguenze
 
 Codex puo' creare e testare documentalmente gli script, ma non deve eseguirli in modalita' applicativa. Alberto dovra' scegliere o confermare il nome reale del required check CI prima dell'applicazione.
+
+---
+
+## DEC-031 - Branch protection plan limit and soft protection fallback
+
+**Data:** 2026-05-28
+**Stato:** Accettata
+
+### Contesto
+
+Durante STEP 110-A gli script STEP 100 hanno rilevato il nome reale del check CI, ma la lettura della branch protection ha restituito HTTP 403 sul repository privato con il piano GitHub attuale.
+
+### Decisione
+
+Il required check CI reale per questo repository e':
+
+```text
+Verification Gate
+```
+
+La branch protection reale non viene applicata nello stato corrente perche' GitHub richiede GitHub Pro/Team oppure repository pubblico per questa funzionalita' sul repo privato.
+
+Il repository non viene reso pubblico solo per ottenere branch protection. Finche' il piano non supporta protected branches o non viene scelto GitHub Pro/Team, il progetto usa una soft protection temporanea:
+
+- branch dedicato;
+- PR verso `main`;
+- Verification Gate locale;
+- CI verde;
+- controllo manuale Alberto;
+- nessun direct push volontario su `main`.
+
+`apply_branch_protection.ps1 -Apply` non deve essere eseguito finche' il limite di piano non e' risolto e la decisione non e' approvata esplicitamente.
+
+### Motivazione
+
+La sicurezza operativa non deve dipendere da una configurazione GitHub non disponibile. Rendere pubblico il repository solo per aggirare il limite introdurrebbe un rischio e una scelta di visibilita' non motivata dal progetto.
+
+### Conseguenze
+
+Lo STEP 120 consigliato e' Soft Protection Guardrails, per ridurre il rischio di push accidentale su `main` finche' manca hard protection GitHub.

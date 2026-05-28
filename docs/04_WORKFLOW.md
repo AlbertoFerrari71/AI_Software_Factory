@@ -96,7 +96,9 @@ Flusso standard:
 
 Il processo completo e' definito in `docs/20_VERIFICATION_GATE.md`.
 
-`main` deve essere considerato branch protetto: il lavoro normale avviene su branch dedicati e il merge verso `main` passa da PR. La policy e' documentata in `docs/22_BRANCH_PROTECTION_POLICY.md`.
+`main` deve essere considerato branch protetto anche se GitHub non puo' imporlo tecnicamente con il piano corrente. Il lavoro normale avviene su branch dedicati, nessun push diretto volontario deve andare su `main`, e il merge verso `main` passa da PR.
+
+Il check CI reale rilevato per questo repository e' `Verification Gate`. La policy e' documentata in `docs/22_BRANCH_PROTECTION_POLICY.md`.
 
 Gli script di implementazione sono in `scripts/github/` e il runbook e' in `docs/23_BRANCH_PROTECTION_IMPLEMENTATION.md`. L'applicazione reale della protezione e' manuale e consapevole, non automatica durante il lavoro Codex.
 

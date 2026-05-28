@@ -30,6 +30,8 @@ STEP 090 documents the policy only. It does not apply branch protection, ruleset
 
 STEP 100 introduces local scripts and the implementation runbook in `docs/23_BRANCH_PROTECTION_IMPLEMENTATION.md`. Real application remains manual and controlled.
 
+STEP 110 records the real verification result: the required CI check is `Verification Gate`, but GitHub returned HTTP 403 for branch protection on the current private repository and plan. Until the plan or repository visibility supports hard protection, the project uses soft protection as an operational fallback.
+
 ---
 
 ## 3. Protection mechanisms
@@ -56,6 +58,22 @@ For AI Software Factory:
 - prefer rulesets as the future evolution;
 - keep classic branch protection as the simplest understandable fallback;
 - do not configure either mechanism in STEP 090.
+
+### Hard protection and soft protection
+
+Hard protection means GitHub enforces branch protection or rulesets directly. It can block direct pushes, require pull requests, require status checks, block force pushes, and block branch deletion. Hard protection is available only when the repository visibility and GitHub plan support it.
+
+Soft protection means the same rule is enforced by local-first discipline instead of GitHub settings. For AI Software Factory, soft protection requires:
+
+- always working on a dedicated branch;
+- always using a pull request for `main`;
+- always running the Verification Gate;
+- waiting for green CI;
+- using the controlled PowerShell workflow;
+- avoiding voluntary direct push to `main`;
+- documenting the GitHub plan limitation explicitly.
+
+Soft protection is a fallback, not a replacement for hard protection. When GitHub Pro/Team or public visibility makes protected branches available, hard protection should be reconsidered.
 
 ---
 

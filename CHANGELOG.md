@@ -4,6 +4,32 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.11.0] - 2026-05-28
+
+### Added
+
+- STEP 110 - Branch Protection Verification and Hardening.
+- Soft protection fallback policy for the current private repository and GitHub plan limitation.
+- Test automatici in `tests/unit/test_branch_protection_verification_hardening.py`.
+
+### Changed
+
+- Documentato il required check CI reale: `Verification Gate`.
+- Documentato il limite GitHub plan: branch protection non disponibile sul repository privato corrente con HTTP 403.
+- Migliorata la gestione di HTTP 403 in `scripts/github/verify_branch_protection.ps1` con exit code `2`.
+- Rafforzato `scripts/github/apply_branch_protection.ps1` con warning sul piano GitHub prima di `-Apply`.
+- Aggiornati GitHub Workflow, Verification Gate, Codex Workflow, workflow operativo, roadmap e decision log.
+
+### Not included
+
+- Nessuna branch protection o ruleset applicato realmente su GitHub.
+- Nessuna esecuzione di `apply_branch_protection.ps1 -Apply`.
+- Nessuna modifica a CI.
+- Nessuna nuova dipendenza.
+- Nessuna modifica a `src/**`, policy o secret.
+
+---
+
 ## [0.10.0] - 2026-05-27
 
 ### Added

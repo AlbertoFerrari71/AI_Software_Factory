@@ -35,11 +35,12 @@ Esempio:
 | 080 | Documentation Sync | Mantenere docs allineate | Changelog, decision log, roadmap update | MVP personale | Completato |
 | 090 | Branch Protection Policy | Definire protezioni branch e status check richiesti | Policy branch protection, required checks, rollout manuale | MVP personale | Completato |
 | 100 | Branch Protection Implementation | Preparare script e runbook per protezioni main | Script DryRun, verify script, runbook | MVP personale | Completato |
-| 110 | Branch Protection Verification and Hardening | Verificare protezione reale e pianificare hardening | Verifica GitHub, required checks, hardening plan | MVP personale | Da fare |
-| 120 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
-| 130 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
-| 140 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
-| 150 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
+| 110 | Branch Protection Verification and Hardening | Verificare protezione reale e definire fallback soft protection | Required check reale, limite GitHub plan, script hardening | MVP personale | Completato |
+| 120 | Soft Protection Guardrails | Ridurre il rischio di push accidentale su main finche' manca hard protection | Guardrail locali, controlli pre-push/manuali, workflow hardening | MVP personale | Da fare |
+| 130 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
+| 140 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
+| 150 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
+| 160 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
 
 ---
 
@@ -280,20 +281,44 @@ Completato nello STEP 100.
 
 ### Obiettivo
 
-Verificare l'applicazione reale della branch protection e definire l'hardening successivo.
+Verificare la disponibilita' reale della branch protection e definire il fallback operativo quando GitHub non puo' imporla.
 
-### Output previsti
+### Output realizzati
 
-- verifica GitHub della protezione di `main`;
-- conferma nome required check CI;
-- eventuale PR di prova;
-- valutazione rulesets;
-- piano per review obbligatorie, conversation resolution, linear history e security scan;
-- rollback e safe stop.
+- required check CI reale confermato: `Verification Gate`;
+- limite GitHub plan documentato per repository privato con HTTP 403;
+- soft protection policy introdotta come fallback;
+- script `verify_branch_protection.ps1` migliorato per gestire HTTP 403 con exit code `2`;
+- script `apply_branch_protection.ps1` rafforzato con warning prima di `-Apply`;
+- workflow, Verification Gate, Codex Workflow, decision log e changelog aggiornati.
 
 ---
 
-## 14. STEP 120 — OpenAI API Adapter
+## 14. STEP 120 — Soft Protection Guardrails
+
+### Obiettivo
+
+Ridurre il rischio operativo mentre la hard protection GitHub non e' disponibile sul repository privato.
+
+### Output previsti
+
+- guardrail locali contro push accidentale su `main`;
+- checklist pre-push o pre-merge piu' esplicita;
+- eventuali script read-only o safe-by-default;
+- documentazione del fallback soft protection;
+- nessuna modifica GitHub reale senza approvazione.
+
+### Future evolutions
+
+- GitHub Pro/Team upgrade;
+- real branch protection activation;
+- rulesets;
+- lint/format gate;
+- security scan gate.
+
+---
+
+## 15. STEP 130 — OpenAI API Adapter
 
 ### Obiettivo
 
@@ -309,7 +334,7 @@ Collegare Responses API e Structured Outputs.
 
 ---
 
-## 15. STEP 130 — MCP Tool Registry
+## 16. STEP 140 — MCP Tool Registry
 
 ### Obiettivo
 
@@ -324,7 +349,7 @@ Gestire tool esterni in modo sicuro.
 
 ---
 
-## 16. STEP 140 — Guided Mode
+## 17. STEP 150 — Guided Mode
 
 ### Obiettivo
 
@@ -339,7 +364,7 @@ Rendere il framework utilizzabile da utenti non tecnici.
 
 ---
 
-## 17. STEP 150 — SaaS Evolution Plan
+## 18. STEP 160 — SaaS Evolution Plan
 
 ### Obiettivo
 
