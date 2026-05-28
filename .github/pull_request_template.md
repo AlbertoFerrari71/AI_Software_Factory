@@ -42,6 +42,7 @@ Indicare cosa non e' stato eseguito e perche'.
 - [ ] Ho verificato se `CHANGELOG.md`, `docs/10_ROADMAP.md` e `docs/11_DECISIONS.md` richiedono aggiornamenti.
 - [ ] Ho aggiornato documentazione/changelog se necessario.
 - [ ] La PR non richiede bypass della Branch Protection Policy.
+- [ ] Eventuali script che modificano GitHub sono DryRun di default e non sono stati eseguiti senza approvazione esplicita.
 - [ ] La CI GitHub e' passata.
 
 ## Documentazione aggiornata

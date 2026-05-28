@@ -113,6 +113,8 @@ GitHub Actions must pass before merge unless Alberto records an explicit excepti
 
 Branch protection is the GitHub mechanism that can enforce required PRs and required status checks. The policy is documented in `docs/22_BRANCH_PROTECTION_POLICY.md`; no real protection is applied by STEP 090.
 
+Before branch protection is applied, the local Verification Gate must pass. After application, the result should be checked with `scripts/github/verify_branch_protection.ps1`. The implementation runbook is `docs/23_BRANCH_PROTECTION_IMPLEMENTATION.md`.
+
 ---
 
 ## 6. Merge verification
@@ -202,4 +204,4 @@ Future steps can strengthen the gate with:
 - security scans;
 - stricter path-policy checks.
 
-Branch protection is recommended, but STEP 090 only documents the policy and does not claim it is active. STEP 100 may apply and verify it.
+Branch protection is recommended, but STEP 100 only prepares scripts and a runbook unless Alberto explicitly applies them. Future pull requests should respect the protection after it is enabled.

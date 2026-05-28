@@ -611,3 +611,34 @@ Il progetto deve proteggere `main` senza introdurre automatismi rischiosi o conf
 ### Conseguenze
 
 Gli step futuri devono trattare modifiche a branch protection e rulesets come azioni GitHub separate, da approvare esplicitamente e verificare dopo applicazione.
+
+---
+
+## DEC-030 - Branch protection scripts safe-by-default
+
+**Data:** 2026-05-27
+**Stato:** Accettata
+
+### Contesto
+
+Dopo la Branch Protection Policy serve preparare strumenti operativi per applicare e verificare la protezione di `main`, senza lasciare a Codex il potere di modificare GitHub durante lo step.
+
+### Decisione
+
+Introdurre script locali in `scripts/github/`:
+
+- `detect_required_checks.ps1` per rilevare candidati read-only;
+- `apply_branch_protection.ps1` per generare payload e applicare solo con `-Apply`;
+- `verify_branch_protection.ps1` per leggere la configurazione corrente.
+
+La branch protection classica viene scelta per semplicità operativa nello STEP 100. GitHub rulesets restano hardening futuro.
+
+`apply_branch_protection.ps1` e' DryRun di default, richiede `-RequiredCheckName`, e l'applicazione reale richiede `-Apply` piu' conferma esplicita.
+
+### Motivazione
+
+Gli script rendono l'applicazione ripetibile e revisionabile, ma mantengono separata la preparazione locale dalla modifica remota effettiva.
+
+### Conseguenze
+
+Codex puo' creare e testare documentalmente gli script, ma non deve eseguirli in modalita' applicativa. Alberto dovra' scegliere o confermare il nome reale del required check CI prima dell'applicazione.

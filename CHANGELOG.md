@@ -4,6 +4,34 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.10.0] - 2026-05-27
+
+### Added
+
+- STEP 100 - Branch Protection Implementation.
+- `docs/23_BRANCH_PROTECTION_IMPLEMENTATION.md`.
+- `scripts/github/detect_required_checks.ps1`.
+- `scripts/github/apply_branch_protection.ps1`.
+- `scripts/github/verify_branch_protection.ps1`.
+- Test automatici in `tests/unit/test_branch_protection_implementation.py`.
+
+### Changed
+
+- Aggiornati Branch Protection Policy, GitHub Workflow, Verification Gate, Documentation Sync, Codex Workflow e workflow operativo con il runbook STEP 100.
+- Aggiornata roadmap: STEP 100 completato e STEP 110 consigliato come Branch Protection Verification and Hardening.
+- Aggiornato decision log con la scelta DryRun di default per gli script GitHub.
+- Aggiornato pull request template con controllo sugli script che modificano GitHub.
+
+### Not included
+
+- Nessuna branch protection o ruleset applicato realmente su GitHub.
+- Nessuna esecuzione di `apply_branch_protection.ps1 -Apply`.
+- Nessuna modifica a CI.
+- Nessuna nuova dipendenza.
+- Nessuna modifica a `src/**`, policy o secret.
+
+---
+
 ## [0.9.0] - 2026-05-27
 
 ### Added
