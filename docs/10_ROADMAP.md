@@ -34,8 +34,8 @@ Esempio:
 | 070 | Verification Gate | Definire test, lint, build, smoke, security | Test strategy, checklist, CI | MVP personale | Completato |
 | 080 | Documentation Sync | Mantenere docs allineate | Changelog, decision log, roadmap update | MVP personale | Completato |
 | 090 | Branch Protection Policy | Definire protezioni branch e status check richiesti | Policy branch protection, required checks, rollout manuale | MVP personale | Completato |
-| 100 | Branch Protection Implementation | Applicare e verificare protezioni main | Ruleset o branch protection, required checks, verifica GitHub | MVP personale | Da fare |
-| 110 | Local Orchestrator MVP | Primo software locale | CLI/API locale per generare pacchetti | MVP software | Da fare |
+| 100 | Branch Protection Implementation | Preparare script e runbook per protezioni main | Script DryRun, verify script, runbook | MVP personale | Completato |
+| 110 | Branch Protection Verification and Hardening | Verificare protezione reale e pianificare hardening | Verifica GitHub, required checks, hardening plan | MVP personale | Da fare |
 | 120 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
 | 130 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
 | 140 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
@@ -246,32 +246,50 @@ Completato nello STEP 090.
 
 ### Obiettivo
 
-Applicare concretamente la Branch Protection Policy su GitHub dopo approvazione esplicita.
+Preparare strumenti locali e runbook per applicare la Branch Protection Policy dopo approvazione esplicita.
 
-### Output previsti
+### Output realizzati
 
 - scelta tra ruleset e branch protection classica;
 - verifica permessi GitHub;
 - identificazione del nome esatto del check CI;
-- applicazione manuale o via `gh api` approvata;
-- verifica che `main` sia protetto;
-- documentazione di output o screenshot di verifica.
+- script DryRun per applicazione branch protection classica;
+- script read-only per rilevare check candidati;
+- script read-only per verifica branch protection;
+- runbook `docs/23_BRANCH_PROTECTION_IMPLEMENTATION.md`;
+- test automatici leggeri su script e documentazione.
+
+### Future evolutions
+
+- rulesets;
+- lint/format gate;
+- security scan gate;
+- prompt packet hardening.
+
+### Criterio di completamento
+
+Completato quando script e runbook sono presenti, safe-by-default, verificati dai test e collegati a workflow, Verification Gate, Documentation Sync e decision log.
+
+### Stato
+
+Completato nello STEP 100.
 
 ---
 
-## 13. STEP 110 — Local Orchestrator MVP
+## 13. STEP 110 — Branch Protection Verification and Hardening
 
 ### Obiettivo
 
-Costruire il primo software locale.
+Verificare l'applicazione reale della branch protection e definire l'hardening successivo.
 
 ### Output previsti
 
-- CLI o FastAPI minimale;
-- project starter;
-- roadmap generator;
-- Codex Task Packet generator;
-- verification checklist.
+- verifica GitHub della protezione di `main`;
+- conferma nome required check CI;
+- eventuale PR di prova;
+- valutazione rulesets;
+- piano per review obbligatorie, conversation resolution, linear history e security scan;
+- rollback e safe stop.
 
 ---
 

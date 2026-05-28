@@ -28,6 +28,8 @@ This policy applies to:
 
 STEP 090 documents the policy only. It does not apply branch protection, rulesets, or any real GitHub repository configuration.
 
+STEP 100 introduces local scripts and the implementation runbook in `docs/23_BRANCH_PROTECTION_IMPLEMENTATION.md`. Real application remains manual and controlled.
+
 ---
 
 ## 3. Protection mechanisms
@@ -166,16 +168,16 @@ Every bypass must be documented in `docs/11_DECISIONS.md` or `CHANGELOG.md` when
 
 ## 11. Implementation guidance for STEP 100
 
-STEP 100 may implement this policy by:
+STEP 100 prepares implementation of this policy by:
 
 - choosing between ruleset and classic branch protection;
 - verifying GitHub permissions;
 - identifying the exact CI check name;
-- applying protection manually or through `gh api` after explicit approval;
-- verifying that `main` is actually protected;
-- documenting screenshots or command output used for verification.
+- preparing scripts under `scripts/github/`;
+- keeping apply behavior in DryRun unless `-Apply` is explicitly passed;
+- documenting how to verify that `main` is actually protected.
 
-STEP 090 does not apply protection. It only defines the policy.
+STEP 100 still does not apply protection automatically. The concrete operator sequence is in `docs/23_BRANCH_PROTECTION_IMPLEMENTATION.md`.
 
 ---
 

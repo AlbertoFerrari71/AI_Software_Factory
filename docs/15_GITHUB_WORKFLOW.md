@@ -220,6 +220,8 @@ Merge ammesso solo quando:
 
 Quando la branch protection sara' applicata, GitHub dovra' rendere obbligatoria almeno la PR e la CI verde prima del merge.
 
+STEP 100 prepara gli script locali in `scripts/github/` per applicare e verificare questa protezione. L'esecuzione reale resta manuale e richiede revisione esplicita; il runbook e' in `docs/23_BRANCH_PROTECTION_IMPLEMENTATION.md`.
+
 Dopo il merge:
 
 ```powershell
