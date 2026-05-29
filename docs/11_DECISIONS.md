@@ -1108,3 +1108,40 @@ Il workflow cresce per documenti e strumenti. Un controllo locale read-only ridu
 ### Conseguenze
 
 Quando cambiano documenti operativi, script workflow o riferimenti centrali, il Workflow Health Check deve essere eseguito insieme al Verification Gate. Lo STEP 240 consigliato e' Workflow Quick Reference.
+
+---
+
+## DEC-044 - Workflow Quick Reference
+
+**Data:** 2026-05-29
+**Stato:** Accettata
+
+### Contesto
+
+Dopo Project Workflow Index e Workflow Health Check serve una scheda compatta per i comandi quotidiani, senza rileggere ogni volta lifecycle, onboarding e documenti lunghi.
+
+### Decisione
+
+Introdurre `docs/36_WORKFLOW_QUICK_REFERENCE.md` come quick reference operativa del workflow AI Software Factory.
+
+La scheda raccoglie:
+
+- generazione task packet strict-ready;
+- validazione Lite Mode e Strict Mode;
+- Release Smoke Workflow;
+- Workflow Health Check;
+- Verification Gate;
+- Soft Protection Guardrails check;
+- pre-commit manuale;
+- PR checks e merge presidiato;
+- verifica finale su `main`.
+
+I comandi di commit, push, PR e merge sono documentati come riferimento presidiato per Alberto, non come automazione per Codex.
+
+### Motivazione
+
+Il workflow e' ormai navigabile, ma l'operatore ha bisogno di una pagina breve per l'uso quotidiano. Una quick reference riduce errori senza duplicare integralmente Project Workflow Index, Lifecycle Checklist o Developer Onboarding.
+
+### Conseguenze
+
+Il Project Workflow Index e il Workflow Health Check includono la quick reference come documento operativo centrale. Lo STEP 250 consigliato e' Step Closure Report, per standardizzare il riepilogo post-merge e la chiusura dello step prima del successivo.

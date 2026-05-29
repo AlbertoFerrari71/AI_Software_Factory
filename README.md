@@ -175,6 +175,12 @@ Controllo locale read-only del workflow:
 docs/35_WORKFLOW_HEALTH_CHECK.md
 ```
 
+Scheda rapida dei comandi operativi:
+
+```text
+docs/36_WORKFLOW_QUICK_REFERENCE.md
+```
+
 ---
 
 ## 8. Setup locale minimo

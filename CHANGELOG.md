@@ -4,6 +4,38 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.24.0] - 2026-05-29
+
+### Added
+
+- STEP 240 - Workflow Quick Reference.
+- Documento `docs/36_WORKFLOW_QUICK_REFERENCE.md`.
+- Test automatici in `tests/unit/test_workflow_quick_reference.py`.
+
+### Changed
+
+- Aggiornato `docs/34_PROJECT_WORKFLOW_INDEX.md` con la quick reference.
+- Aggiornato `docs/35_WORKFLOW_HEALTH_CHECK.md` e `scripts/check_workflow_health.py` per includere la quick reference tra i documenti workflow centrali.
+- Aggiornato `docs/21_DOCUMENTATION_SYNC.md` con il documento STEP 240.
+- Aggiornato `README.md` con un rimando breve alla quick reference.
+- Aggiornata roadmap: STEP 240 completato e STEP 250 consigliato come Step Closure Report.
+- Aggiornato decision log con la scelta della quick reference operativa.
+
+### Not included
+
+- Nessuno script per automatizzare commit, push, PR o merge.
+- Nessuna modifica a GitHub.
+- Nessuna GitHub Release.
+- Nessuna pubblicazione PyPI o registry.
+- Nessuna nuova dipendenza.
+- Nessuna modifica a CI, `src/**`, `policies/**`, hook, script Git/GitHub esistenti, secret o `.env`.
+- Nessuna installazione hook Git.
+- Nessuna modifica a `git config core.hooksPath`.
+- Nessuna modifica a PATH o profili PowerShell.
+- Nessun commit, push, PR o merge automatico.
+
+---
+
 ## [0.23.0] - 2026-05-29
 
 ### Added

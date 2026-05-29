@@ -48,11 +48,12 @@ Esempio:
 | 210 | Prompt Packet Generator Developer Onboarding | Rendere il generatore e la checklist facili da adottare da un operatore locale | Guida onboarding, mappa strumenti, quickstart, troubleshooting | MVP personale | Completato |
 | 220 | Project Workflow Index | Rendere navigabile il metodo operativo completo | Indice workflow, mappa documenti, entry point operativi | MVP personale | Completato |
 | 230 | Workflow Health Check | Controllare coerenza minima dei documenti operativi centrali | Health check documentale, test su link/keyword, runbook leggero | MVP personale | Completato |
-| 240 | Workflow Quick Reference | Offrire una pagina breve di comandi e sequenze operative | Quick reference, comandi essenziali, checklist breve | MVP personale | Da fare |
-| 250 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
-| 260 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
-| 270 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
-| 280 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
+| 240 | Workflow Quick Reference | Offrire una pagina breve di comandi e sequenze operative | Quick reference, comandi essenziali, checklist breve | MVP personale | Completato |
+| 250 | Step Closure Report | Standardizzare il report post-merge e la chiusura operativa dello step | Template/report di chiusura, handoff prossimo step | MVP personale | Da fare |
+| 260 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
+| 270 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
+| 280 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
+| 290 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
 
 ---
 
@@ -561,16 +562,34 @@ Controllare che i documenti operativi centrali restino navigabili e coerenti dop
 
 Creare una pagina breve con i comandi operativi essenziali per il workflow locale.
 
-### Output previsti
+### Output realizzati
 
-- quick reference dei comandi piu' usati;
-- sequenze manuali per prerequisito, generazione, validazione, verifica e handoff;
-- collegamento a Project Workflow Index e Workflow Health Check;
+- documento `docs/36_WORKFLOW_QUICK_REFERENCE.md`;
+- comandi rapidi per generazione task packet, validazione Lite/Strict, smoke workflow, Workflow Health Check, Verification Gate e soft guardrails;
+- sequenze manuali per pre-commit, PR checks, merge presidiato e verifica finale su `main`;
+- collegamento a Project Workflow Index, Workflow Health Check, Lifecycle Checklist e documenti di validazione;
+- test automatici leggeri;
 - nessuna automazione commit/push/PR/merge.
 
 ---
 
-## 27. STEP 250 — OpenAI API Adapter
+## 27. STEP 250 — Step Closure Report
+
+### Obiettivo
+
+Standardizzare il riepilogo post-merge e la conferma che uno step sia davvero chiuso su `main` prima di avviare il successivo.
+
+### Output previsti
+
+- template di step closure report;
+- checklist post-merge;
+- riepilogo stato branch/PR/main;
+- collegamento a Workflow Quick Reference e Lifecycle Checklist;
+- nessuna automazione commit/push/PR/merge.
+
+---
+
+## 28. STEP 260 — OpenAI API Adapter
 
 ### Obiettivo
 
@@ -586,7 +605,7 @@ Collegare Responses API e Structured Outputs.
 
 ---
 
-## 28. STEP 260 — MCP Tool Registry
+## 29. STEP 270 — MCP Tool Registry
 
 ### Obiettivo
 
@@ -601,7 +620,7 @@ Gestire tool esterni in modo sicuro.
 
 ---
 
-## 29. STEP 270 — Guided Mode
+## 30. STEP 280 — Guided Mode
 
 ### Obiettivo
 
@@ -616,7 +635,7 @@ Rendere il framework utilizzabile da utenti non tecnici.
 
 ---
 
-## 30. STEP 280 — SaaS Evolution Plan
+## 31. STEP 290 — SaaS Evolution Plan
 
 ### Obiettivo
 
