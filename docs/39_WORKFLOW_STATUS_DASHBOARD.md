@@ -33,6 +33,8 @@ Lo script `scripts/show_workflow_status.py` mostra:
   - `docs/37_STEP_CLOSURE_REPORT.md`;
   - `docs/38_WORKFLOW_COMMAND_COOKBOOK.md`;
   - `docs/39_WORKFLOW_STATUS_DASHBOARD.md`;
+  - `docs/40_RELEASE_READINESS.md`;
+  - `docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md`;
 - presenza degli script principali:
   - `scripts/check_workflow_health.py`;
   - `scripts/show_workflow_status.py`;
@@ -163,3 +165,4 @@ La dashboard non sostituisce test, Verification Gate, Workflow Health Check, PR 
 - `docs/37_STEP_CLOSURE_REPORT.md`
 - `docs/38_WORKFLOW_COMMAND_COOKBOOK.md`
 - `docs/40_RELEASE_READINESS.md`
+- `docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md`

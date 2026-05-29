@@ -53,11 +53,12 @@ Esempio:
 | 260 | Workflow Command Cookbook | Raccogliere comandi operativi per scenari ricorrenti senza automatizzare Git | Cookbook manuale, esempi sicuri, troubleshooting comandi | MVP personale | Completato |
 | 270 | Workflow Status Dashboard | Rendere visibile lo stato degli step senza automatizzare Git/GitHub | Documento e script dashboard locale read-only | MVP personale | Completato |
 | 280 | Release Readiness | Definire readiness per pilot interno local-first su progetto reale | Checklist GO/WARNING/NO-GO, template readiness, limiti no-release pubblica | MVP personale | Completato |
-| 290 | Existing Project Pilot Onboarding | Preparare l'applicazione del metodo a un progetto reale gia' avviato | Intake progetto, fotografia repo, rischi, primo step pilota | MVP personale | Da fare |
-| 300 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
-| 310 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
-| 320 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
-| 330 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
+| 290 | Existing Project Pilot Onboarding | Preparare l'applicazione del metodo a un progetto reale gia' avviato | Intake progetto, fotografia repo, rischi, primo step pilota | MVP personale | Completato |
+| 300 | First Existing Project Pilot | Applicare il metodo a un primo progetto reale selezionato | Intake compilato, primo task packet pilot, report rischi | MVP personale | Da fare |
+| 310 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
+| 320 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
+| 330 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
+| 340 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
 
 ---
 
@@ -656,17 +657,39 @@ Definire quando AI Software Factory e' pronta per un pilot interno local-first s
 
 Preparare l'applicazione del metodo a un progetto reale gia' avviato.
 
-### Output previsti
+### Output realizzati
 
 - Project Intake;
 - fotografia branch, stato Git, test e documentazione;
 - identificazione rischi e dati sensibili;
 - scelta del primo step pilota sicuro;
-- criteri di stop se il progetto non e' pronto.
+- criteri di stop se il progetto non e' pronto;
+- documento `docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md`;
+- template `templates/codex_tasks/existing_project_intake_template.md`;
+- template `templates/codex_tasks/first_pilot_step_packet_template.md`;
+- test automatici leggeri;
+- nessuna modifica a repository esterne, nessuna automazione cross-repository e nessun refactor massivo.
 
 ---
 
-## 32. STEP 300 — OpenAI API Adapter
+## 32. STEP 300 — First Existing Project Pilot
+
+### Obiettivo
+
+Scegliere un progetto reale e applicare il protocollo di Existing Project Pilot Onboarding.
+
+### Output previsti
+
+- intake compilato;
+- decisione GO/WARNING/NO-GO;
+- branch pilota proposto;
+- primo task packet pilot piccolo e reversibile;
+- report rischi e verifiche;
+- nessun refactor architetturale come primo pilot.
+
+---
+
+## 33. STEP 310 — OpenAI API Adapter
 
 ### Obiettivo
 
@@ -682,7 +705,7 @@ Collegare Responses API e Structured Outputs.
 
 ---
 
-## 33. STEP 310 — MCP Tool Registry
+## 34. STEP 320 — MCP Tool Registry
 
 ### Obiettivo
 
@@ -697,7 +720,7 @@ Gestire tool esterni in modo sicuro.
 
 ---
 
-## 34. STEP 320 — Guided Mode
+## 35. STEP 330 — Guided Mode
 
 ### Obiettivo
 
@@ -712,7 +735,7 @@ Rendere il framework utilizzabile da utenti non tecnici.
 
 ---
 
-## 35. STEP 330 — SaaS Evolution Plan
+## 36. STEP 340 — SaaS Evolution Plan
 
 ### Obiettivo
 

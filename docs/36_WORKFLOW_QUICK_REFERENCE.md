@@ -108,6 +108,16 @@ templates/codex_tasks/release_readiness_checklist.md
 
 Usare questa checklist prima di applicare il metodo a un progetto reale. La readiness vale per pilot interno local-first, non per release pubblica, SaaS o distribuzione esterna.
 
+## 7.3 Preparare existing project pilot onboarding
+
+```text
+docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md
+templates/codex_tasks/existing_project_intake_template.md
+templates/codex_tasks/first_pilot_step_packet_template.md
+```
+
+Usare questi file dopo la readiness e prima del primo pilot reale. Servono a fare Project Intake, fotografare Git, test, documentazione e rischi, poi scegliere un primo step pilota piccolo e reversibile.
+
 ---
 
 ## 8. Eseguire Verification Gate
@@ -223,5 +233,6 @@ Solo dopo questa verifica lo step puo' essere considerato presente su `main`.
 - `docs/38_WORKFLOW_COMMAND_COOKBOOK.md`: ricette operative per casi specifici e troubleshooting.
 - `docs/39_WORKFLOW_STATUS_DASHBOARD.md`: snapshot locale read-only di branch, working tree, commit recenti e file workflow.
 - `docs/40_RELEASE_READINESS.md`: criteri GO/WARNING/NO-GO per pilot interno local-first.
+- `docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md`: intake e primo task packet pilot per progetto esistente.
 - `docs/20_VERIFICATION_GATE.md`: criteri di verifica locale e CI.
 - `docs/28_PROMPT_PACKET_VALIDATION_STRICT_MODE.md`: dettagli della validazione Strict.

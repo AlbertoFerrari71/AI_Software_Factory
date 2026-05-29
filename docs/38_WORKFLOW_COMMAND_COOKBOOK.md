@@ -437,6 +437,47 @@ Non trattare la readiness per pilot come release pubblica, SaaS, installer, PyPI
 
 ---
 
+## 14.3 Ricetta - Preparare Existing Project Pilot Onboarding
+
+### Quando usarla
+
+Dopo Release Readiness e prima del primo pilot reale su un progetto esistente.
+
+### Comandi
+
+Usare il protocollo e i template:
+
+```text
+docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md
+templates/codex_tasks/existing_project_intake_template.md
+templates/codex_tasks/first_pilot_step_packet_template.md
+```
+
+Nel repository del progetto pilota usare solo comandi diagnostici read-only finche' il task packet pilot non e' approvato:
+
+```powershell
+git branch --show-current
+git status --short
+git --no-pager log --oneline --max-count=12
+git branch --list
+git branch -r --list
+git stash list
+```
+
+### Esito atteso
+
+Il Project Intake produce una decisione GO, WARNING, HOLD o NO-GO e un primo step pilota piccolo e reversibile.
+
+### Se qualcosa va storto
+
+Se emergono working tree sporca non compresa, dati sensibili, secret, assenza Git, richiesta di lavoro diretto su `main` o refactor massivo, fermarsi e non modificare il repository esterno.
+
+### Cosa non fare
+
+Non trasformare l'onboarding in refactor architetturale. Non creare automazioni cross-repository. Non modificare CI, secret, dati sensibili o repository esterne durante l'intake.
+
+---
+
 ## 15. Ricetta - Verification Gate fallito
 
 ### Quando usarla
@@ -585,4 +626,5 @@ Codex non deve fare commit, Codex non deve fare push, Codex non deve aprire PR e
 - `docs/37_STEP_CLOSURE_REPORT.md`
 - `docs/39_WORKFLOW_STATUS_DASHBOARD.md`
 - `docs/40_RELEASE_READINESS.md`
+- `docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md`
 - `templates/codex_tasks/step_closure_report_template.md`
