@@ -1185,3 +1185,45 @@ Il metodo deve impedire che un report locale venga scambiato per step chiuso su 
 ### Conseguenze
 
 Lifecycle Checklist, Project Workflow Index, Workflow Quick Reference e Workflow Health Check includono il nuovo riferimento di chiusura. Lo STEP 260 consigliato e' Workflow Command Cookbook, per raccogliere scenari e comandi manuali ricorrenti senza introdurre automazioni Git rischiose.
+
+---
+
+## DEC-046 - Workflow Command Cookbook
+
+**Data:** 2026-05-29
+**Stato:** Accettata
+
+### Contesto
+
+Dopo Quick Reference e Step Closure Report serve un riferimento pratico per scenari operativi specifici, non solo una lista breve di comandi.
+
+### Decisione
+
+Introdurre `docs/38_WORKFLOW_COMMAND_COOKBOOK.md` come ricettario operativo del workflow AI Software Factory.
+
+Il Cookbook raccoglie ricette per:
+
+- stato iniziale prima di uno step;
+- verifica prerequisito su `main`;
+- generazione e validazione task packet;
+- controlli dopo report Codex;
+- commit, push e PR presidiati da Alberto;
+- PR checks non disponibili;
+- merge e verifica finale su `main`;
+- branch remoto assente;
+- modifiche sul branch sbagliato;
+- working tree sporca su `main`;
+- health check e Verification Gate falliti;
+- pulizia riferimenti remoti vecchi;
+- warning CRLF/LF;
+- preparazione dello Step Closure Report.
+
+Il Cookbook documenta comandi manuali, non script. Non introduce automazioni Git, non modifica CI e non cambia GitHub.
+
+### Motivazione
+
+Gli errori operativi piu' probabili avvengono in scenari concreti: branch locale senza remoto, check PR assenti, main non aggiornato, working tree sporca o confusione tra report Codex e merge su `main`. Un ricettario riduce ambiguita' senza aumentare i permessi degli agenti.
+
+### Conseguenze
+
+Project Workflow Index, Workflow Quick Reference, Step Closure Report e Workflow Health Check includono il Cookbook come riferimento operativo centrale. Lo STEP 270 consigliato e' Workflow Status Dashboard, per rendere visibile lo stato degli step usando fonti manuali o read-only.

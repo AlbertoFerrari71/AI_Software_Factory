@@ -50,11 +50,12 @@ Esempio:
 | 230 | Workflow Health Check | Controllare coerenza minima dei documenti operativi centrali | Health check documentale, test su link/keyword, runbook leggero | MVP personale | Completato |
 | 240 | Workflow Quick Reference | Offrire una pagina breve di comandi e sequenze operative | Quick reference, comandi essenziali, checklist breve | MVP personale | Completato |
 | 250 | Step Closure Report | Standardizzare il report post-merge e la chiusura operativa dello step | Template/report di chiusura, handoff prossimo step | MVP personale | Completato |
-| 260 | Workflow Command Cookbook | Raccogliere comandi operativi per scenari ricorrenti senza automatizzare Git | Cookbook manuale, esempi sicuri, troubleshooting comandi | MVP personale | Da fare |
-| 270 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
-| 280 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
-| 290 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
-| 300 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
+| 260 | Workflow Command Cookbook | Raccogliere comandi operativi per scenari ricorrenti senza automatizzare Git | Cookbook manuale, esempi sicuri, troubleshooting comandi | MVP personale | Completato |
+| 270 | Workflow Status Dashboard | Rendere visibile lo stato degli step senza automatizzare Git/GitHub | Documento o bozza dashboard locale, stati e fonti dati | MVP personale | Da fare |
+| 280 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
+| 290 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
+| 300 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
+| 310 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
 
 ---
 
@@ -598,16 +599,33 @@ Standardizzare il riepilogo post-merge e la conferma che uno step sia davvero ch
 
 Raccogliere comandi manuali e sicuri per scenari operativi ricorrenti del workflow senza creare script che automatizzano commit, push, PR o merge.
 
-### Output previsti
+### Output realizzati
 
-- cookbook dei comandi frequenti;
-- varianti PowerShell per diagnosi branch, PR, check, merge e pull `main`;
-- note su comandi read-only, write controlled e azioni da non automatizzare;
-- collegamento a Workflow Quick Reference e Step Closure Report.
+- documento `docs/38_WORKFLOW_COMMAND_COOKBOOK.md`;
+- ricette PowerShell/Git/Python per preparazione step, validazione, post-report Codex, PR checks, merge e verifica finale;
+- troubleshooting per branch remoto assente, branch sbagliato, working tree sporca, health check fallito, Verification Gate fallito, riferimenti remoti vecchi e warning CRLF/LF;
+- collegamento a Workflow Quick Reference, Step Closure Report e Project Workflow Index;
+- test automatici leggeri;
+- nessuna automazione commit/push/PR/merge.
 
 ---
 
-## 29. STEP 270 — OpenAI API Adapter
+## 29. STEP 270 — Workflow Status Dashboard
+
+### Obiettivo
+
+Rendere visibile lo stato degli step e del workflow senza introdurre automazioni Git/GitHub rischiose.
+
+### Output previsti
+
+- modello di dashboard o documento di stato;
+- stati step coerenti con Step Closure Report;
+- fonti dati manuali o read-only;
+- collegamento a Workflow Command Cookbook e Project Workflow Index.
+
+---
+
+## 30. STEP 280 — OpenAI API Adapter
 
 ### Obiettivo
 
@@ -623,7 +641,7 @@ Collegare Responses API e Structured Outputs.
 
 ---
 
-## 30. STEP 280 — MCP Tool Registry
+## 31. STEP 290 — MCP Tool Registry
 
 ### Obiettivo
 
@@ -638,7 +656,7 @@ Gestire tool esterni in modo sicuro.
 
 ---
 
-## 31. STEP 290 — Guided Mode
+## 32. STEP 300 — Guided Mode
 
 ### Obiettivo
 
@@ -653,7 +671,7 @@ Rendere il framework utilizzabile da utenti non tecnici.
 
 ---
 
-## 32. STEP 300 — SaaS Evolution Plan
+## 33. STEP 310 — SaaS Evolution Plan
 
 ### Obiettivo
 

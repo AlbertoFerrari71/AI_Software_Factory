@@ -50,6 +50,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/35_WORKFLOW_HEALTH_CHECK.md",
         "docs/36_WORKFLOW_QUICK_REFERENCE.md",
         "docs/37_STEP_CLOSURE_REPORT.md",
+        "docs/38_WORKFLOW_COMMAND_COOKBOOK.md",
         "scripts/generate_task_packet.py",
         "scripts/generate_task_packet.ps1",
         "scripts/smoke_prompt_packet_release.ps1",
@@ -125,6 +126,7 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             ("Developer Onboarding", ["Developer Onboarding"]),
             ("Workflow Quick Reference", ["Workflow Quick Reference"]),
             ("Step Closure Report", ["Step Closure Report"]),
+            ("Workflow Command Cookbook", ["Workflow Command Cookbook"]),
             ("generate task packet script", ["scripts/generate_task_packet.py"]),
             ("task packet validator script", ["scripts/validate_task_packet.py"]),
             ("verification gate script", ["scripts/verify.ps1"]),
@@ -134,6 +136,7 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             ("Workflow Quick Reference document", ["docs/36_WORKFLOW_QUICK_REFERENCE.md"]),
             ("Step Closure Report document", ["docs/37_STEP_CLOSURE_REPORT.md"]),
             ("Step Closure Report template", ["templates/codex_tasks/step_closure_report_template.md"]),
+            ("Workflow Command Cookbook document", ["docs/38_WORKFLOW_COMMAND_COOKBOOK.md"]),
         ],
     )
 
