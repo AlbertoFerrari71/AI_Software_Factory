@@ -163,6 +163,12 @@ docs/36_WORKFLOW_QUICK_REFERENCE.md
 
 Usarla per recuperare i comandi. Usare questo documento per capire quale stato assegnare allo step e quali evidenze registrare.
 
+Per scenari operativi piu' specifici, inclusi check PR non disponibili, branch remoto assente, working tree sporca su `main` e warning CRLF/LF, usare anche:
+
+```text
+docs/38_WORKFLOW_COMMAND_COOKBOOK.md
+```
+
 ---
 
 ## 10. Anti-pattern

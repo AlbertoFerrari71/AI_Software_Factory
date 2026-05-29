@@ -4,6 +4,40 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.26.0] - 2026-05-29
+
+### Added
+
+- STEP 260 - Workflow Command Cookbook.
+- Documento `docs/38_WORKFLOW_COMMAND_COOKBOOK.md`.
+- Test automatici in `tests/unit/test_workflow_command_cookbook.py`.
+
+### Changed
+
+- Aggiornato `docs/34_PROJECT_WORKFLOW_INDEX.md` con il Workflow Command Cookbook.
+- Aggiornato `docs/36_WORKFLOW_QUICK_REFERENCE.md` con il riferimento al Cookbook per scenari specifici.
+- Aggiornato `docs/37_STEP_CLOSURE_REPORT.md` con il riferimento al Cookbook per troubleshooting operativo.
+- Aggiornato `docs/35_WORKFLOW_HEALTH_CHECK.md` e `scripts/check_workflow_health.py` per includere il Cookbook tra i documenti workflow centrali.
+- Aggiornato `docs/21_DOCUMENTATION_SYNC.md` con il documento STEP 260.
+- Aggiornato `README.md` con un rimando breve al Cookbook.
+- Aggiornata roadmap: STEP 260 completato e STEP 270 consigliato come Workflow Status Dashboard.
+- Aggiornato decision log con la scelta del ricettario operativo.
+
+### Not included
+
+- Nessuno script per automatizzare commit, push, PR o merge.
+- Nessuna modifica a GitHub.
+- Nessuna GitHub Release.
+- Nessuna pubblicazione PyPI o registry.
+- Nessuna nuova dipendenza.
+- Nessuna modifica a CI, `src/**`, `policies/**`, hook, script Git/GitHub esistenti, secret o `.env`.
+- Nessuna installazione hook Git.
+- Nessuna modifica a `git config core.hooksPath`.
+- Nessuna modifica a PATH o profili PowerShell.
+- Nessun commit, push, PR o merge automatico.
+
+---
+
 ## [0.25.0] - 2026-05-29
 
 ### Added

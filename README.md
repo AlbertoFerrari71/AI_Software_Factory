@@ -187,6 +187,12 @@ Report standard di chiusura step:
 docs/37_STEP_CLOSURE_REPORT.md
 ```
 
+Ricettario operativo dei comandi workflow:
+
+```text
+docs/38_WORKFLOW_COMMAND_COOKBOOK.md
+```
+
 ---
 
 ## 8. Setup locale minimo
