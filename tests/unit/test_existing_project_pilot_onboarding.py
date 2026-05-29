@@ -35,7 +35,7 @@ def test_existing_project_pilot_onboarding_document_contains_required_concepts()
         "secret",
         "refactor massivo",
         "primo step pilota",
-        "First Existing Project Pilot",
+        "ASF Next Step Runner",
         "Release Readiness",
         "Workflow Command Cookbook",
     ]
@@ -119,4 +119,4 @@ def test_step_290_changelog_decision_and_next_step_are_present() -> None:
     assert "STEP 290 - Existing Project Pilot Onboarding" in changelog
     assert "DEC-049 - Existing Project Pilot Onboarding" in decisions
     assert "STEP 300" in roadmap
-    assert "First Existing Project Pilot" in roadmap
+    assert "ASF Next Step Runner" in roadmap

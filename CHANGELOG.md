@@ -4,6 +4,45 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.30.0] - 2026-05-29
+
+### Added
+
+- STEP 300 - ASF Next Step Runner.
+- Script `scripts/asf_next_step.py` con `prepare mode` locale e standard library only.
+- Documento `docs/42_ASF_NEXT_STEP_RUNNER.md`.
+- Template `templates/codex_tasks/asf_next_step_runner_handoff_template.md`.
+- Test automatici in `tests/unit/test_asf_next_step_runner.py`.
+
+### Changed
+
+- Aggiornato `docs/34_PROJECT_WORKFLOW_INDEX.md` con il nuovo runner come entry point operativo.
+- Aggiornato `docs/35_WORKFLOW_HEALTH_CHECK.md` e `scripts/check_workflow_health.py` per includere documento, script e template runner tra i riferimenti workflow centrali.
+- Aggiornato `docs/36_WORKFLOW_QUICK_REFERENCE.md`, `docs/38_WORKFLOW_COMMAND_COOKBOOK.md`, `docs/39_WORKFLOW_STATUS_DASHBOARD.md`, `docs/40_RELEASE_READINESS.md` e `docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md` con i riferimenti al runner.
+- Aggiornato `scripts/show_workflow_status.py` per mostrare il runner tra documenti e script centrali.
+- Aggiornato `docs/21_DOCUMENTATION_SYNC.md` con il documento STEP 300.
+- Aggiornato `README.md` con un rimando breve al runner.
+- Aggiornata roadmap: STEP 300 completato e STEP 310 consigliato come ASF Next Step Runner Project Profiles.
+- Aggiornato decision log con la scelta del prepare runner locale e prudente.
+
+### Not included
+
+- Nessuna invocazione automatica di Codex.
+- Nessuna modifica a repository target durante prepare mode.
+- Nessuna creazione branch nel repository target.
+- Nessun commit, push, PR o merge automatico.
+- Nessuna modifica a GitHub.
+- Nessuna GitHub Release.
+- Nessuna modifica a hook Git o `core.hooksPath`.
+- Nessuna modifica a CI.
+- Nessuna modifica a `src/**`.
+- Nessuna modifica a `policies/**`.
+- Nessuna nuova dipendenza.
+- Nessuna modifica a secret, `.env`, PATH o profili PowerShell.
+- Nessuna pubblicazione PyPI o registry.
+
+---
+
 ## [0.29.0] - 2026-05-29
 
 ### Added

@@ -72,6 +72,7 @@ Examples:
 - update `docs/39_WORKFLOW_STATUS_DASHBOARD.md` when local workflow status fields, displayed documents/scripts, or suggested local checks change;
 - update `docs/40_RELEASE_READINESS.md` when pilot readiness levels, go/warning/no-go criteria, pilot scope rules, or readiness templates change;
 - update `docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md` when existing-project intake, pilot risk mapping, first pilot step rules, or pilot templates change;
+- update `docs/42_ASF_NEXT_STEP_RUNNER.md` when runner prepare mode, generated outputs, validation behavior, or handoff rules change;
 - update `docs/05_SECURITY_MODEL.md` or `policies/**` only when the Safety Model changes and the risk level is approved.
 
 ### Do not touch unless needed

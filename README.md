@@ -211,6 +211,12 @@ Protocollo di onboarding per pilot su progetto esistente:
 docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md
 ```
 
+Runner locale per preparare il prossimo step senza invocare Codex o modificare il repo target:
+
+```text
+docs/42_ASF_NEXT_STEP_RUNNER.md
+```
+
 ---
 
 ## 8. Setup locale minimo

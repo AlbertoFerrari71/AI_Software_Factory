@@ -40,6 +40,7 @@ Componenti maturi per un pilot controllato:
 - Step Closure Report;
 - Workflow Command Cookbook;
 - Workflow Status Dashboard;
+- ASF Next Step Runner;
 - Verification Gate;
 - Documentation Sync;
 - soft guardrails locali.
@@ -255,6 +256,7 @@ Riferimenti principali:
 - `docs/37_STEP_CLOSURE_REPORT.md`
 - `docs/38_WORKFLOW_COMMAND_COOKBOOK.md`
 - `docs/39_WORKFLOW_STATUS_DASHBOARD.md`
+- `docs/42_ASF_NEXT_STEP_RUNNER.md`
 
 La readiness non sostituisce questi documenti. Li usa come evidenze operative per decidere se iniziare un pilot.
 
@@ -273,5 +275,7 @@ Scopo: preparare l'applicazione del metodo a un progetto reale gia' avviato, par
 Il prossimo step operativo naturale dopo l'onboarding e':
 
 ```text
-300) First Existing Project Pilot
+300) ASF Next Step Runner
 ```
+
+Scopo: preparare localmente task packet, handoff Codex e report del prossimo step senza modificare repository esterne e senza invocare Codex.

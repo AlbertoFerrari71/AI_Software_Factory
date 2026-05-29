@@ -183,7 +183,19 @@ La readiness non sostituisce la chiusura dello step. Conferma solo se il metodo 
 
 ---
 
-## 11. Anti-pattern
+## 11. Relazione con ASF Next Step Runner
+
+ASF Next Step Runner prepara task packet, handoff Codex e runner report per lo step successivo:
+
+```text
+docs/42_ASF_NEXT_STEP_RUNNER.md
+```
+
+Il runner non chiude lo step e non sostituisce lo Step Closure Report. I file sotto `tmp/asf_next_step/` sono preparazione locale, non prova di commit, push, PR, merge o verifica finale su `main`.
+
+---
+
+## 12. Anti-pattern
 
 - Dichiarare chiuso uno step solo perche' Codex ha finito.
 - Ignorare `git status --short`.

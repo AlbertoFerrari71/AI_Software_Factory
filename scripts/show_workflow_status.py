@@ -18,9 +18,11 @@ CENTRAL_DOCUMENTS = [
     "docs/39_WORKFLOW_STATUS_DASHBOARD.md",
     "docs/40_RELEASE_READINESS.md",
     "docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md",
+    "docs/42_ASF_NEXT_STEP_RUNNER.md",
 ]
 
 MAIN_SCRIPTS = [
+    "scripts/asf_next_step.py",
     "scripts/check_workflow_health.py",
     "scripts/show_workflow_status.py",
     "scripts/generate_task_packet.py",

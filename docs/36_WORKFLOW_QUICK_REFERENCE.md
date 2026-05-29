@@ -118,6 +118,14 @@ templates/codex_tasks/first_pilot_step_packet_template.md
 
 Usare questi file dopo la readiness e prima del primo pilot reale. Servono a fare Project Intake, fotografare Git, test, documentazione e rischi, poi scegliere un primo step pilota piccolo e reversibile.
 
+## 7.4 Preparare ASF Next Step Runner
+
+```powershell
+python scripts/asf_next_step.py --mode prepare --project-name AI_Software_Factory --repo-path . --main-branch main --step 310 --title "ASF Next Step Runner Project Profiles" --branch step-310-asf-next-step-runner-project-profiles --objective "Add project profiles for ASF Next Step Runner." --strict-ready
+```
+
+Il runner genera `task_packet.md`, `codex_handoff.md` e `runner_report.md` sotto `tmp/asf_next_step/`. Non invoca Codex, non modifica il repo target e non fa commit, push, PR o merge.
+
 ---
 
 ## 8. Eseguire Verification Gate
@@ -234,5 +242,6 @@ Solo dopo questa verifica lo step puo' essere considerato presente su `main`.
 - `docs/39_WORKFLOW_STATUS_DASHBOARD.md`: snapshot locale read-only di branch, working tree, commit recenti e file workflow.
 - `docs/40_RELEASE_READINESS.md`: criteri GO/WARNING/NO-GO per pilot interno local-first.
 - `docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md`: intake e primo task packet pilot per progetto esistente.
+- `docs/42_ASF_NEXT_STEP_RUNNER.md`: prepare mode locale per task packet, handoff Codex e report runner.
 - `docs/20_VERIFICATION_GATE.md`: criteri di verifica locale e CI.
 - `docs/28_PROMPT_PACKET_VALIDATION_STRICT_MODE.md`: dettagli della validazione Strict.

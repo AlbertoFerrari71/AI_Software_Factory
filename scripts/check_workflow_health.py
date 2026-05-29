@@ -54,6 +54,8 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/39_WORKFLOW_STATUS_DASHBOARD.md",
         "docs/40_RELEASE_READINESS.md",
         "docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md",
+        "docs/42_ASF_NEXT_STEP_RUNNER.md",
+        "scripts/asf_next_step.py",
         "scripts/generate_task_packet.py",
         "scripts/generate_task_packet.ps1",
         "scripts/smoke_prompt_packet_release.ps1",
@@ -67,6 +69,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "templates/codex_tasks/release_readiness_checklist.md",
         "templates/codex_tasks/existing_project_intake_template.md",
         "templates/codex_tasks/first_pilot_step_packet_template.md",
+        "templates/codex_tasks/asf_next_step_runner_handoff_template.md",
     ]
 
     issues: list[HealthIssue] = []
@@ -137,8 +140,10 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             ("Workflow Status Dashboard", ["Workflow Status Dashboard"]),
             ("Release Readiness", ["Release Readiness"]),
             ("Existing Project Pilot Onboarding", ["Existing Project Pilot Onboarding"]),
+            ("ASF Next Step Runner", ["ASF Next Step Runner"]),
             ("generate task packet script", ["scripts/generate_task_packet.py"]),
             ("task packet validator script", ["scripts/validate_task_packet.py"]),
+            ("ASF Next Step Runner script", ["scripts/asf_next_step.py"]),
             ("verification gate script", ["scripts/verify.ps1"]),
             ("soft guardrails check script", ["scripts/git/check_soft_guardrails.ps1"]),
             ("Workflow Health Check document", ["docs/35_WORKFLOW_HEALTH_CHECK.md"]),
@@ -154,6 +159,11 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             ("Existing Project Pilot Onboarding document", ["docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md"]),
             ("Existing Project Intake template", ["templates/codex_tasks/existing_project_intake_template.md"]),
             ("First Pilot Step Packet template", ["templates/codex_tasks/first_pilot_step_packet_template.md"]),
+            ("ASF Next Step Runner document", ["docs/42_ASF_NEXT_STEP_RUNNER.md"]),
+            (
+                "ASF Next Step Runner handoff template",
+                ["templates/codex_tasks/asf_next_step_runner_handoff_template.md"],
+            ),
         ],
     )
 
@@ -230,6 +240,7 @@ def check_script_safety(root: Path) -> list[HealthIssue]:
         "scripts/smoke_prompt_packet_release.ps1",
         "scripts/show_workflow_status.py",
         "scripts/check_workflow_health.py",
+        "scripts/asf_next_step.py",
     ]
     patterns = forbidden_script_patterns()
     issues: list[HealthIssue] = []
