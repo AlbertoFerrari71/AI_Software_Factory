@@ -4,6 +4,39 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.21.0] - 2026-05-29
+
+### Added
+
+- STEP 210 - Prompt Packet Generator Developer Onboarding.
+- Documento `docs/33_PROMPT_PACKET_GENERATOR_DEVELOPER_ONBOARDING.md`.
+- Test automatici in `tests/unit/test_prompt_packet_generator_developer_onboarding.py`.
+
+### Changed
+
+- Aggiornato `docs/19_PROMPT_PACKET_GENERATOR.md` con il riferimento alla guida onboarding.
+- Aggiornato `docs/30_PROMPT_PACKET_GENERATOR_PACKAGING.md` con l'entry point onboarding.
+- Aggiornato `docs/31_PROMPT_PACKET_GENERATOR_RELEASE_SMOKE_WORKFLOW.md` con il collegamento alla guida.
+- Aggiornato `docs/32_PROMPT_PACKET_LIFECYCLE_CHECKLIST.md` con il riferimento onboarding.
+- Aggiornato `docs/21_DOCUMENTATION_SYNC.md` con il documento STEP 210.
+- Aggiornata roadmap: STEP 210 completato e STEP 220 consigliato come Project Workflow Index.
+- Aggiornato decision log con la scelta della guida onboarding.
+
+### Not included
+
+- Nessuno script per automatizzare commit, push, PR o merge.
+- Nessuna modifica a GitHub.
+- Nessuna GitHub Release.
+- Nessuna pubblicazione PyPI o registry.
+- Nessuna nuova dipendenza.
+- Nessuna modifica a CI, `src/**`, `policies/**`, hook, script Git/GitHub, secret o `.env`.
+- Nessuna installazione hook Git.
+- Nessuna modifica a `git config core.hooksPath`.
+- Nessuna modifica a PATH o profili PowerShell.
+- Nessun commit, push, PR o merge automatico.
+
+---
+
 ## [0.20.0] - 2026-05-29
 
 ### Added

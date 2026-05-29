@@ -15,6 +15,8 @@ Serve a evitare errori pratici come:
 
 Questa checklist non automatizza commit, push, PR o merge. Codex la usa come riferimento operativo; Alberto esegue le azioni Git/GitHub che cambiano stato remoto o history.
 
+Per una guida introduttiva agli strumenti del Prompt Packet Generator, usare anche `docs/33_PROMPT_PACKET_GENERATOR_DEVELOPER_ONBOARDING.md`.
+
 ---
 
 ## 2. Quando usarla

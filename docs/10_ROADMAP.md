@@ -45,11 +45,12 @@ Esempio:
 | 180 | Prompt Packet Generator Packaging | Rendere il generatore piu' riusabile e verificabile | Wrapper PowerShell, packaging locale, sample generato, test | MVP personale | Completato |
 | 190 | Prompt Packet Generator Release Smoke Workflow | Verificare il flusso locale completo del generatore | Smoke workflow locale, documento, test | MVP personale | Completato |
 | 200 | Prompt Packet Lifecycle Checklist | Formalizzare il ciclo completo da task packet a step mergiato su main | Checklist lifecycle, template spuntabile, test | MVP personale | Completato |
-| 210 | Prompt Packet Generator Developer Onboarding | Rendere il generatore e la checklist facili da adottare da un operatore locale | Onboarding, esempi operativi, workflow guidato | MVP personale | Da fare |
-| 220 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
-| 230 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
-| 240 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
-| 250 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
+| 210 | Prompt Packet Generator Developer Onboarding | Rendere il generatore e la checklist facili da adottare da un operatore locale | Guida onboarding, mappa strumenti, quickstart, troubleshooting | MVP personale | Completato |
+| 220 | Project Workflow Index | Rendere navigabile il metodo operativo completo | Indice workflow, mappa documenti, entry point operativi | MVP personale | Da fare |
+| 230 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
+| 240 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
+| 250 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
+| 260 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
 
 ---
 
@@ -507,17 +508,34 @@ Formalizzare il ciclo operativo completo dal prompt packet allo step confermato 
 
 Rendere il generatore piu' facile da adottare e usare in modo coerente da un operatore locale.
 
-### Output previsti
+### Output realizzati
 
-- guida onboarding del generatore;
-- checklist operativa per creare, validare e consegnare task packet;
-- ciclo di vita di un prompt packet;
-- esempi di uso quotidiano;
-- nessuna pubblicazione esterna.
+- guida onboarding `docs/33_PROMPT_PACKET_GENERATOR_DEVELOPER_ONBOARDING.md`;
+- mappa degli strumenti del Prompt Packet Generator;
+- quickstart PowerShell per generazione, Lite Mode, Strict Mode e smoke workflow;
+- ruoli e responsabilita' di ChatGPT, Codex e Alberto;
+- errori comuni e troubleshooting operativo;
+- test automatici leggeri.
 
 ---
 
-## 24. STEP 220 — OpenAI API Adapter
+## 24. STEP 220 — Project Workflow Index
+
+### Obiettivo
+
+Rendere navigabile il metodo operativo completo senza dover conoscere tutta la storia degli step.
+
+### Output previsti
+
+- indice centrale dei workflow;
+- mappa dei documenti principali;
+- collegamenti a onboarding, lifecycle checklist, Verification Gate, Documentation Sync e soft guardrails;
+- entry point operativi per nuovi step;
+- nessuna nuova automazione rischiosa.
+
+---
+
+## 25. STEP 230 — OpenAI API Adapter
 
 ### Obiettivo
 
@@ -533,7 +551,7 @@ Collegare Responses API e Structured Outputs.
 
 ---
 
-## 25. STEP 230 — MCP Tool Registry
+## 26. STEP 240 — MCP Tool Registry
 
 ### Obiettivo
 
@@ -548,7 +566,7 @@ Gestire tool esterni in modo sicuro.
 
 ---
 
-## 26. STEP 240 — Guided Mode
+## 27. STEP 250 — Guided Mode
 
 ### Obiettivo
 
@@ -563,7 +581,7 @@ Rendere il framework utilizzabile da utenti non tecnici.
 
 ---
 
-## 27. STEP 250 — SaaS Evolution Plan
+## 28. STEP 260 — SaaS Evolution Plan
 
 ### Obiettivo
 

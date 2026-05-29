@@ -1000,3 +1000,38 @@ Il rischio principale emerso non e' solo tecnico, ma di handoff: uno step puo' e
 ### Conseguenze
 
 Ogni step futuro puo' usare la checklist per verificare prerequisiti, task packet, report Codex, pre-commit, PR/merge e avvio dello step successivo. Lo STEP 210 consigliato e' Prompt Packet Generator Developer Onboarding.
+
+---
+
+## DEC-041 - Prompt Packet Generator Developer Onboarding
+
+**Data:** 2026-05-29
+**Stato:** Accettata
+
+### Contesto
+
+Dopo generator, packaging, smoke workflow e lifecycle checklist serve una guida rapida per chi deve usare il Prompt Packet Generator senza conoscere tutta la storia del progetto.
+
+### Decisione
+
+Introdurre `docs/33_PROMPT_PACKET_GENERATOR_DEVELOPER_ONBOARDING.md` come guida onboarding per sviluppatori e utilizzatori interni.
+
+La guida raccoglie:
+
+- contesto minimo di AI Software Factory e Codex Alchemy Method;
+- mappa degli strumenti del generatore;
+- Quickstart PowerShell;
+- Lite Mode, Strict Mode, Verification Gate e Release Smoke Workflow;
+- Prompt Packet Lifecycle Checklist;
+- ruoli di ChatGPT, Codex e Alberto;
+- errori comuni e troubleshooting rapido.
+
+Non vengono introdotti script per automatizzare commit, push, PR o merge.
+
+### Motivazione
+
+Il workflow e' ormai utile, ma distribuito tra piu' documenti. Una guida onboarding riduce il costo di ingresso e previene errori operativi come partire dallo step successivo prima che il precedente sia su `main`.
+
+### Conseguenze
+
+I documenti del generatore possono rimandare alla guida come entry point pratico. Lo STEP 220 consigliato e' Project Workflow Index, per costruire un indice operativo piu' ampio del metodo.

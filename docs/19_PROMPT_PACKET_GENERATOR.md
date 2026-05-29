@@ -123,6 +123,10 @@ Da STEP 200, il ciclo completo del prompt packet e dello step operativo e' forma
 
 Il template spuntabile e' `templates/codex_tasks/prompt_packet_lifecycle_checklist.md` e copre preparazione, task packet, validazione, Codex report, pre-commit, PR/merge, pull di `main` e scelta dello step successivo.
 
+Da STEP 210, la guida onboarding per sviluppatori e utilizzatori interni e' `docs/33_PROMPT_PACKET_GENERATOR_DEVELOPER_ONBOARDING.md`.
+
+Usarla come primo punto di orientamento quando una persona deve capire rapidamente strumenti, ruoli, Quickstart, validazioni, Release Smoke Workflow, Lifecycle Checklist, errori comuni e troubleshooting del Prompt Packet Generator.
+
 ---
 
 ## 5. Compilazione del Prompt Packet
