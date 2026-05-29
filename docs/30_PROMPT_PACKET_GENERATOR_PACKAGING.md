@@ -113,7 +113,21 @@ It is generated from the Python CLI with `--strict-ready` and should pass both L
 
 ---
 
-## 9. Current limits
+## 9. Release smoke workflow
+
+STEP 190 adds a local smoke workflow for the packaged generator:
+
+```powershell
+pwsh -NoProfile -ExecutionPolicy Bypass -File .\scripts\smoke_prompt_packet_release.ps1
+```
+
+The smoke workflow uses `scripts/generate_task_packet.ps1`, writes a temporary packet under `tmp/`, and validates it with both Lite Mode and Strict Mode.
+
+The detailed reference is `docs/31_PROMPT_PACKET_GENERATOR_RELEASE_SMOKE_WORKFLOW.md`.
+
+---
+
+## 10. Current limits
 
 The packaging surface is intentionally small.
 
@@ -130,11 +144,10 @@ These limits keep the generator easy to review and keep operational control with
 
 ---
 
-## 10. Future work
+## 11. Future work
 
 Future steps can add:
 
-- a release smoke workflow for the generator;
 - onboarding documentation for local users;
 - optional validation after generation;
 - package metadata only if local usage proves stable;

@@ -936,3 +936,35 @@ Un packaging locale riduce attrito d'uso e copia/incolla in PowerShell, ma manti
 ### Conseguenze
 
 Le evoluzioni future devono continuare a evitare duplicazione della logica del generatore. Lo STEP 190 consigliato e' Prompt Packet Generator Release Smoke Workflow, per rendere ripetibile la verifica end-to-end locale.
+
+---
+
+## DEC-039 - Prompt Packet Generator Release Smoke Workflow
+
+**Data:** 2026-05-28
+**Stato:** Accettata
+
+### Contesto
+
+Dopo il packaging locale del generatore serve una verifica rapida e ripetibile per confermare che il tool funzioni come strumento operativo interno.
+
+### Decisione
+
+Introdurre uno smoke workflow locale:
+
+- script `scripts/smoke_prompt_packet_release.ps1`;
+- generazione di un task packet temporaneo sotto `tmp/`;
+- uso del wrapper `scripts/generate_task_packet.ps1`;
+- validazione Lite con `scripts/validate_task_packet.py`;
+- validazione Strict con `scripts/validate_task_packet.py --strict`;
+- documento `docs/31_PROMPT_PACKET_GENERATOR_RELEASE_SMOKE_WORKFLOW.md`.
+
+Lo smoke workflow non crea release pubbliche, non pubblica su PyPI o registry, non modifica CI, non modifica GitHub e non installa nulla.
+
+### Motivazione
+
+Il generatore deve essere controllabile localmente prima di essere considerato pronto dopo modifiche a CLI, wrapper, packaging o documentazione.
+
+### Conseguenze
+
+Lo smoke workflow affianca il Verification Gate ma non lo sostituisce. Lo STEP 200 consigliato e' Prompt Packet Generator Developer Onboarding, per trasformare CLI, packaging e smoke workflow in una procedura di uso quotidiano.
