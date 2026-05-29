@@ -193,6 +193,12 @@ Ricettario operativo dei comandi workflow:
 docs/38_WORKFLOW_COMMAND_COOKBOOK.md
 ```
 
+Dashboard locale read-only dello stato workflow:
+
+```text
+docs/39_WORKFLOW_STATUS_DASHBOARD.md
+```
+
 ---
 
 ## 8. Setup locale minimo

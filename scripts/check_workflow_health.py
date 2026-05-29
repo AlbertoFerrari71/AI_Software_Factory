@@ -51,9 +51,11 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/36_WORKFLOW_QUICK_REFERENCE.md",
         "docs/37_STEP_CLOSURE_REPORT.md",
         "docs/38_WORKFLOW_COMMAND_COOKBOOK.md",
+        "docs/39_WORKFLOW_STATUS_DASHBOARD.md",
         "scripts/generate_task_packet.py",
         "scripts/generate_task_packet.ps1",
         "scripts/smoke_prompt_packet_release.ps1",
+        "scripts/show_workflow_status.py",
         "scripts/validate_task_packet.py",
         "scripts/verify.ps1",
         "scripts/git/check_soft_guardrails.ps1",
@@ -127,6 +129,7 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             ("Workflow Quick Reference", ["Workflow Quick Reference"]),
             ("Step Closure Report", ["Step Closure Report"]),
             ("Workflow Command Cookbook", ["Workflow Command Cookbook"]),
+            ("Workflow Status Dashboard", ["Workflow Status Dashboard"]),
             ("generate task packet script", ["scripts/generate_task_packet.py"]),
             ("task packet validator script", ["scripts/validate_task_packet.py"]),
             ("verification gate script", ["scripts/verify.ps1"]),
@@ -137,6 +140,8 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             ("Step Closure Report document", ["docs/37_STEP_CLOSURE_REPORT.md"]),
             ("Step Closure Report template", ["templates/codex_tasks/step_closure_report_template.md"]),
             ("Workflow Command Cookbook document", ["docs/38_WORKFLOW_COMMAND_COOKBOOK.md"]),
+            ("Workflow Status Dashboard document", ["docs/39_WORKFLOW_STATUS_DASHBOARD.md"]),
+            ("Workflow Status Dashboard script", ["scripts/show_workflow_status.py"]),
         ],
     )
 
@@ -211,6 +216,7 @@ def check_script_safety(root: Path) -> list[HealthIssue]:
         "scripts/generate_task_packet.py",
         "scripts/generate_task_packet.ps1",
         "scripts/smoke_prompt_packet_release.ps1",
+        "scripts/show_workflow_status.py",
         "scripts/check_workflow_health.py",
     ]
     patterns = forbidden_script_patterns()

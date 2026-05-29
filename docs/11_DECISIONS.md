@@ -1227,3 +1227,37 @@ Gli errori operativi piu' probabili avvengono in scenari concreti: branch locale
 ### Conseguenze
 
 Project Workflow Index, Workflow Quick Reference, Step Closure Report e Workflow Health Check includono il Cookbook come riferimento operativo centrale. Lo STEP 270 consigliato e' Workflow Status Dashboard, per rendere visibile lo stato degli step usando fonti manuali o read-only.
+
+---
+
+## DEC-047 - Workflow Status Dashboard
+
+**Data:** 2026-05-29
+**Stato:** Accettata
+
+### Contesto
+
+Dopo Workflow Command Cookbook serve una vista rapida dello stato locale del workflow senza aprire tutti i documenti operativi.
+
+### Decisione
+
+Introdurre `scripts/show_workflow_status.py` e `docs/39_WORKFLOW_STATUS_DASHBOARD.md`.
+
+La dashboard e' locale, read-only e basata su Python standard library. Mostra:
+
+- branch corrente;
+- stato working tree CLEAN/DIRTY;
+- ultimi commit;
+- documenti centrali presenti;
+- script principali presenti;
+- controlli locali suggeriti.
+
+La dashboard non usa GitHub API, non richiede rete, non modifica file o configurazioni, non fa commit, push, PR o merge e non sostituisce Verification Gate, Workflow Health Check o PR checks.
+
+### Motivazione
+
+Serve uno snapshot operativo rapido per ridurre il costo di orientamento e riconoscere subito se si e' sul branch corretto, con working tree pulita o sporca, e se i riferimenti workflow principali sono presenti.
+
+### Conseguenze
+
+Project Workflow Index, Workflow Health Check, Workflow Quick Reference e Workflow Command Cookbook includono la dashboard. Lo STEP 280 consigliato e' Release Readiness.

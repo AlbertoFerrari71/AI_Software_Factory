@@ -51,11 +51,12 @@ Esempio:
 | 240 | Workflow Quick Reference | Offrire una pagina breve di comandi e sequenze operative | Quick reference, comandi essenziali, checklist breve | MVP personale | Completato |
 | 250 | Step Closure Report | Standardizzare il report post-merge e la chiusura operativa dello step | Template/report di chiusura, handoff prossimo step | MVP personale | Completato |
 | 260 | Workflow Command Cookbook | Raccogliere comandi operativi per scenari ricorrenti senza automatizzare Git | Cookbook manuale, esempi sicuri, troubleshooting comandi | MVP personale | Completato |
-| 270 | Workflow Status Dashboard | Rendere visibile lo stato degli step senza automatizzare Git/GitHub | Documento o bozza dashboard locale, stati e fonti dati | MVP personale | Da fare |
-| 280 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
-| 290 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
-| 300 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
-| 310 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
+| 270 | Workflow Status Dashboard | Rendere visibile lo stato degli step senza automatizzare Git/GitHub | Documento e script dashboard locale read-only | MVP personale | Completato |
+| 280 | Release Readiness | Definire controlli manuali prima di considerare una release interna pronta | Checklist readiness, evidenze locali, limiti no-release pubblica | MVP personale | Da fare |
+| 290 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
+| 300 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
+| 310 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
+| 320 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
 
 ---
 
@@ -616,16 +617,34 @@ Raccogliere comandi manuali e sicuri per scenari operativi ricorrenti del workfl
 
 Rendere visibile lo stato degli step e del workflow senza introdurre automazioni Git/GitHub rischiose.
 
-### Output previsti
+### Output realizzati
 
-- modello di dashboard o documento di stato;
-- stati step coerenti con Step Closure Report;
-- fonti dati manuali o read-only;
-- collegamento a Workflow Command Cookbook e Project Workflow Index.
+- script read-only `scripts/show_workflow_status.py`;
+- documento `docs/39_WORKFLOW_STATUS_DASHBOARD.md`;
+- output locale con branch corrente, working tree CLEAN/DIRTY, ultimi commit, documenti centrali e script principali;
+- suggerimento dei prossimi controlli locali;
+- integrazione in Workflow Health Check, Project Workflow Index, Quick Reference e Command Cookbook;
+- test automatici leggeri;
+- nessuna GitHub API, nessuna rete, nessuna automazione commit/push/PR/merge.
 
 ---
 
-## 30. STEP 280 — OpenAI API Adapter
+## 30. STEP 280 — Release Readiness
+
+### Obiettivo
+
+Definire quando il workflow locale e' pronto per una release interna o milestone operativa, senza creare release pubbliche o automazioni remote.
+
+### Output previsti
+
+- checklist release readiness;
+- evidenze locali richieste;
+- collegamento a Workflow Status Dashboard, Step Closure Report e Verification Gate;
+- limiti espliciti: nessuna GitHub Release, nessun PyPI, nessuna CI nuova.
+
+---
+
+## 31. STEP 290 — OpenAI API Adapter
 
 ### Obiettivo
 
@@ -641,7 +660,7 @@ Collegare Responses API e Structured Outputs.
 
 ---
 
-## 31. STEP 290 — MCP Tool Registry
+## 32. STEP 300 — MCP Tool Registry
 
 ### Obiettivo
 
@@ -656,7 +675,7 @@ Gestire tool esterni in modo sicuro.
 
 ---
 
-## 32. STEP 300 — Guided Mode
+## 33. STEP 310 — Guided Mode
 
 ### Obiettivo
 
@@ -671,7 +690,7 @@ Rendere il framework utilizzabile da utenti non tecnici.
 
 ---
 
-## 33. STEP 310 — SaaS Evolution Plan
+## 34. STEP 320 — SaaS Evolution Plan
 
 ### Obiettivo
 

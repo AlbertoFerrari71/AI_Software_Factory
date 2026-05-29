@@ -380,6 +380,34 @@ Non ignorare il failure solo perche' `python -m pytest` passa.
 
 ---
 
+## 14.1 Ricetta - Dashboard stato workflow
+
+### Quando usarla
+
+Quando serve una vista rapida di branch corrente, working tree, commit recenti e file workflow centrali senza aprire tutti i documenti.
+
+### Comandi
+
+```powershell
+python scripts/show_workflow_status.py
+```
+
+### Esito atteso
+
+La Workflow Status Dashboard mostra stato locale e prossimi controlli consigliati.
+
+### Se qualcosa va storto
+
+Se mancano documenti o script centrali, correggere il riferimento o ripristinare il file prima di proseguire.
+
+### Cosa non fare
+
+Non usare la dashboard come sostituto di Workflow Health Check, Verification Gate o PR checks.
+
+Documento: `docs/39_WORKFLOW_STATUS_DASHBOARD.md`.
+
+---
+
 ## 15. Ricetta - Verification Gate fallito
 
 ### Quando usarla
@@ -526,4 +554,5 @@ Codex non deve fare commit, Codex non deve fare push, Codex non deve aprire PR e
 - `docs/35_WORKFLOW_HEALTH_CHECK.md`
 - `docs/36_WORKFLOW_QUICK_REFERENCE.md`
 - `docs/37_STEP_CLOSURE_REPORT.md`
+- `docs/39_WORKFLOW_STATUS_DASHBOARD.md`
 - `templates/codex_tasks/step_closure_report_template.md`
