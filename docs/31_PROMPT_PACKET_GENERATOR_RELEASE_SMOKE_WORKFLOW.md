@@ -61,6 +61,8 @@ Use both when the generator changes:
 1. run the release smoke workflow for generator usability;
 2. run the Verification Gate for repository readiness.
 
+For the full operating sequence from task packet preparation to merge on `main`, use `docs/32_PROMPT_PACKET_LIFECYCLE_CHECKLIST.md`.
+
 ---
 
 ## 6. Difference from CI
@@ -143,8 +145,7 @@ These limits are intentional for STEP 190.
 
 Future steps can add:
 
-- a developer onboarding checklist for the generator;
-- a prompt packet lifecycle document;
+- a developer onboarding guide for the generator;
 - optional smoke checks for generated examples;
 - release checklist wording for local-only tool updates;
 - eventual CI opt-in if the workflow proves stable.
