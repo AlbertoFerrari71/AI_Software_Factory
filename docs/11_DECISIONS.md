@@ -1073,3 +1073,38 @@ Serve un punto di ingresso unico per capire quale documento leggere e quale coma
 ### Conseguenze
 
 I futuri cambiamenti a workflow, script, template o checklist devono valutare se aggiornare l'indice. Lo STEP 230 consigliato e' Workflow Health Check, per controllare che documenti operativi e riferimenti restino coerenti.
+
+---
+
+## DEC-043 - Workflow Health Check locale read-only
+
+**Data:** 2026-05-29
+**Stato:** Accettata
+
+### Contesto
+
+Dopo Project Workflow Index serve un controllo leggero per verificare che documenti, script, template e riferimenti principali del workflow restino presenti e navigabili.
+
+### Decisione
+
+Introdurre `scripts/check_workflow_health.py` come controllo locale read-only del workflow.
+
+Il check verifica:
+
+- file principali presenti;
+- riferimenti critici in `docs/34_PROJECT_WORKFLOW_INDEX.md`;
+- riferimenti critici in `docs/33_PROMPT_PACKET_GENERATOR_DEVELOPER_ONBOARDING.md`;
+- passaggi critici in `docs/32_PROMPT_PACKET_LIFECYCLE_CHECKLIST.md`;
+- assenza di pattern Git/GitHub pericolosi negli script workflow operativi.
+
+Il runbook e' `docs/35_WORKFLOW_HEALTH_CHECK.md`.
+
+Nello STEP 230 il check non viene integrato in CI e non viene aggiunto a `scripts/verify.ps1`.
+
+### Motivazione
+
+Il workflow cresce per documenti e strumenti. Un controllo locale read-only riduce regressioni di navigabilita' senza introdurre nuove automazioni Git o dipendenze.
+
+### Conseguenze
+
+Quando cambiano documenti operativi, script workflow o riferimenti centrali, il Workflow Health Check deve essere eseguito insieme al Verification Gate. Lo STEP 240 consigliato e' Workflow Quick Reference.

@@ -27,6 +27,7 @@ L'indice orienta il lavoro. Non sostituisce i documenti specifici, il Verificati
 | Eseguire Verification Gate | `docs/20_VERIFICATION_GATE.md` | `scripts/verify.ps1` | Prima di commit/push/PR e dopo merge quando richiesto | Include test, `git diff --check`, `git status --short` |
 | Controllare Documentation Sync | `docs/21_DOCUMENTATION_SYNC.md` | Nessuno | Ogni step documentale o operativo | Valuta changelog, roadmap, decisions e documenti specifici |
 | Controllare Soft Protection Guardrails | `docs/24_SOFT_PROTECTION_GUARDRAILS.md` | `scripts/git/check_soft_guardrails.ps1` | Prima del commit o come controllo locale | Read-only; non installa hook |
+| Eseguire Workflow Health Check | `docs/35_WORKFLOW_HEALTH_CHECK.md` | `scripts/check_workflow_health.py` | Quando workflow docs, script o riferimenti centrali cambiano | Read-only; non sostituisce Verification Gate |
 | Gestire troubleshooting Git/PR/merge | `docs/32_PROMPT_PACKET_LIFECYCLE_CHECKLIST.md` | `git status --short`, `gh pr status`, `gh pr checks --watch` | Quando branch, PR o `main` non sono nello stato atteso | Non usare reset distruttivi senza diagnosi |
 
 ---
@@ -67,6 +68,7 @@ Regole operative:
 - `docs/31_PROMPT_PACKET_GENERATOR_RELEASE_SMOKE_WORKFLOW.md`: smoke workflow locale del generatore.
 - `docs/32_PROMPT_PACKET_LIFECYCLE_CHECKLIST.md`: ciclo operativo completo fino allo step su `main`.
 - `docs/33_PROMPT_PACKET_GENERATOR_DEVELOPER_ONBOARDING.md`: onboarding per sviluppatori e utilizzatori interni.
+- `docs/35_WORKFLOW_HEALTH_CHECK.md`: controllo locale read-only sulla navigabilita' del workflow.
 
 ---
 
@@ -78,6 +80,7 @@ Regole operative:
 - `scripts/smoke_prompt_packet_release.ps1`: release smoke workflow locale del generatore.
 - `scripts/verify.ps1`: Verification Gate locale.
 - `scripts/git/check_soft_guardrails.ps1`: controllo read-only dei Soft Protection Guardrails.
+- `scripts/check_workflow_health.py`: controllo read-only di documenti, riferimenti e script operativi del workflow.
 
 Questi script non devono essere usati per automatizzare commit, push, PR o merge.
 
@@ -120,6 +123,12 @@ Eseguire il Verification Gate:
 
 ```powershell
 pwsh -NoProfile -ExecutionPolicy Bypass -File .\scripts\verify.ps1
+```
+
+Eseguire il Workflow Health Check:
+
+```powershell
+python scripts/check_workflow_health.py
 ```
 
 Controllare Soft Protection Guardrails:
@@ -242,6 +251,7 @@ Usarlo solo come pulizia dei riferimenti remoti, non come sostituto di diagnosi 
 - Far fare commit, push, PR o merge a Codex.
 - Saltare PR checks o `gh pr checks --watch`.
 - Saltare Verification Gate.
+- Saltare Workflow Health Check quando cambiano documenti o script del workflow.
 - Saltare Documentation Sync perche' i test passano.
 - Usare il Release Smoke Workflow come sostituto della suite `python -m pytest`.
 

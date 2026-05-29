@@ -169,6 +169,12 @@ docs/34_PROJECT_WORKFLOW_INDEX.md
 
 Usarlo per orientarsi tra Prompt Packet Generator, Verification Gate, Documentation Sync, Soft Protection Guardrails, lifecycle checklist, onboarding e script locali.
 
+Controllo locale read-only del workflow:
+
+```text
+docs/35_WORKFLOW_HEALTH_CHECK.md
+```
+
 ---
 
 ## 8. Setup locale minimo
