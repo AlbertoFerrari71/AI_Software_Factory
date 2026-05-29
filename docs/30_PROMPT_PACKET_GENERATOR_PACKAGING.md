@@ -145,7 +145,19 @@ templates/codex_tasks/prompt_packet_lifecycle_checklist.md
 
 ---
 
-## 11. Current limits
+## 11. Developer onboarding
+
+STEP 210 adds a developer onboarding guide for local generator users:
+
+```text
+docs/33_PROMPT_PACKET_GENERATOR_DEVELOPER_ONBOARDING.md
+```
+
+Use it when a new operator needs a compact map of the Python CLI, PowerShell wrapper, Lite Mode, Strict Mode, Release Smoke Workflow, Lifecycle Checklist, roles, common errors, and troubleshooting.
+
+---
+
+## 12. Current limits
 
 The packaging surface is intentionally small.
 
@@ -162,11 +174,10 @@ These limits keep the generator easy to review and keep operational control with
 
 ---
 
-## 12. Future work
+## 13. Future work
 
 Future steps can add:
 
-- onboarding documentation for local users;
 - optional validation after generation;
 - package metadata only if local usage proves stable;
 - a documented local release checklist.

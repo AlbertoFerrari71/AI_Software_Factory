@@ -63,6 +63,8 @@ Use both when the generator changes:
 
 For the full operating sequence from task packet preparation to merge on `main`, use `docs/32_PROMPT_PACKET_LIFECYCLE_CHECKLIST.md`.
 
+For a quick operator-oriented introduction to generator, validation, smoke workflow and lifecycle, use `docs/33_PROMPT_PACKET_GENERATOR_DEVELOPER_ONBOARDING.md`.
+
 ---
 
 ## 6. Difference from CI
@@ -145,7 +147,6 @@ These limits are intentional for STEP 190.
 
 Future steps can add:
 
-- a developer onboarding guide for the generator;
 - optional smoke checks for generated examples;
 - release checklist wording for local-only tool updates;
 - eventual CI opt-in if the workflow proves stable.
