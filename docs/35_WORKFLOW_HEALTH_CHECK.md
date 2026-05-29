@@ -29,6 +29,7 @@ The script `scripts/check_workflow_health.py` checks:
 - `docs/38_WORKFLOW_COMMAND_COOKBOOK.md` is present and linked from the Project Workflow Index;
 - `docs/39_WORKFLOW_STATUS_DASHBOARD.md` and `scripts/show_workflow_status.py` are present and linked from the Project Workflow Index;
 - `docs/40_RELEASE_READINESS.md` and `templates/codex_tasks/release_readiness_checklist.md` are present and linked from the Project Workflow Index;
+- `docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md`, `templates/codex_tasks/existing_project_intake_template.md` and `templates/codex_tasks/first_pilot_step_packet_template.md` are present and linked from the Project Workflow Index;
 - operational scripts do not contain dangerous Git/GitHub command patterns.
 
 The covered areas include:
@@ -47,6 +48,7 @@ The covered areas include:
 - Workflow Command Cookbook;
 - Workflow Status Dashboard;
 - Release Readiness;
+- Existing Project Pilot Onboarding;
 - Project Workflow Index.
 
 ---
@@ -182,3 +184,5 @@ After STEP 260, it also treats `docs/38_WORKFLOW_COMMAND_COOKBOOK.md` as a core 
 After STEP 270, it also treats `docs/39_WORKFLOW_STATUS_DASHBOARD.md` and `scripts/show_workflow_status.py` as core workflow status references because they provide a local read-only snapshot of branch, working tree, recent commits and workflow files.
 
 After STEP 280, it also treats `docs/40_RELEASE_READINESS.md` and `templates/codex_tasks/release_readiness_checklist.md` as core readiness references because they define go/warning/no-go criteria for a local-first pilot.
+
+After STEP 290, it also treats `docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md`, `templates/codex_tasks/existing_project_intake_template.md` and `templates/codex_tasks/first_pilot_step_packet_template.md` as core pilot onboarding references because they define intake, risk mapping and the first reversible pilot task packet for an existing project.

@@ -4,6 +4,47 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.29.0] - 2026-05-29
+
+### Added
+
+- STEP 290 - Existing Project Pilot Onboarding.
+- Documento `docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md`.
+- Template `templates/codex_tasks/existing_project_intake_template.md`.
+- Template `templates/codex_tasks/first_pilot_step_packet_template.md`.
+- Test automatici in `tests/unit/test_existing_project_pilot_onboarding.py`.
+
+### Changed
+
+- Aggiornato `docs/34_PROJECT_WORKFLOW_INDEX.md` con il protocollo Existing Project Pilot Onboarding.
+- Aggiornato `docs/38_WORKFLOW_COMMAND_COOKBOOK.md` con la ricetta di intake per progetto esistente.
+- Aggiornato `docs/40_RELEASE_READINESS.md` con il collegamento allo STEP 290 e al prossimo pilot reale.
+- Aggiornato `docs/35_WORKFLOW_HEALTH_CHECK.md` e `scripts/check_workflow_health.py` per includere documento e template pilot onboarding tra i riferimenti workflow centrali.
+- Aggiornato `docs/36_WORKFLOW_QUICK_REFERENCE.md` e `docs/39_WORKFLOW_STATUS_DASHBOARD.md` con i riferimenti al nuovo onboarding.
+- Aggiornato `scripts/show_workflow_status.py` per mostrare i documenti readiness e pilot onboarding tra i documenti centrali.
+- Aggiornato `docs/21_DOCUMENTATION_SYNC.md` con il documento STEP 290.
+- Aggiornato `README.md` con un rimando breve al protocollo di onboarding.
+- Aggiornata roadmap: STEP 290 completato e STEP 300 consigliato come First Existing Project Pilot.
+- Aggiornato decision log con la scelta dell'onboarding specifico per progetti esistenti.
+
+### Not included
+
+- Nessuna applicazione del metodo a repository esterne.
+- Nessuna modifica a repository esterne.
+- Nessuna automazione cross-repository.
+- Nessun refactor o migrazione.
+- Nessuna modifica a CI.
+- Nessuna modifica a `src/**`.
+- Nessuna modifica a `policies/**`.
+- Nessuna nuova dipendenza.
+- Nessuna modifica a secret o `.env`.
+- Nessun commit, push, PR o merge automatico.
+- Nessuna modifica a GitHub.
+- Nessuna GitHub Release.
+- Nessuna pubblicazione PyPI o registry.
+
+---
+
 ## [0.28.0] - 2026-05-29
 
 ### Added

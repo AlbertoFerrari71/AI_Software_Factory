@@ -262,10 +262,16 @@ La readiness non sostituisce questi documenti. Li usa come evidenze operative pe
 
 ## 13. Prossimo step dopo readiness
 
-Il prossimo step naturale e':
+Lo step successivo alla readiness e' il protocollo di onboarding per progetti esistenti:
 
 ```text
-290) Existing Project Pilot Onboarding
+docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md
 ```
 
 Scopo: preparare l'applicazione del metodo a un progetto reale gia' avviato, partendo da intake, fotografia del repository, rischi e primo step pilota sicuro.
+
+Il prossimo step operativo naturale dopo l'onboarding e':
+
+```text
+300) First Existing Project Pilot
+```

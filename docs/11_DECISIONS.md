@@ -1297,3 +1297,51 @@ Il metodo deve poter essere provato su un progetto reale senza confondere pilot 
 ### Conseguenze
 
 Project Workflow Index, Workflow Health Check, Workflow Quick Reference, Workflow Command Cookbook e Workflow Status Dashboard includono Release Readiness. Lo STEP 290 consigliato e' Existing Project Pilot Onboarding.
+
+---
+
+## DEC-049 - Existing Project Pilot Onboarding
+
+**Data:** 2026-05-29
+**Stato:** Accettata
+
+### Contesto
+
+Dopo Release Readiness serve una procedura pratica per applicare AI Software Factory a un progetto reale gia' avviato senza trattarlo come un progetto nuovo e senza modificare subito repository esterne.
+
+Un progetto esistente puo' avere branch, working tree, test, documentazione, dati sensibili, secret, debito tecnico, CI e decisioni pregresse gia' presenti.
+
+### Decisione
+
+Introdurre `docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md` come protocollo di Existing Project Pilot Onboarding.
+
+Il protocollo definisce:
+
+- Project Intake;
+- fotografia dello stato Git;
+- lettura della documentazione;
+- mappa file/cartelle;
+- stato test;
+- rischi;
+- decisione GO/WARNING/NO-GO;
+- scelta del primo step pilota piccolo e reversibile;
+- produzione del primo task packet pilot.
+
+Vengono introdotti anche:
+
+- `templates/codex_tasks/existing_project_intake_template.md`;
+- `templates/codex_tasks/first_pilot_step_packet_template.md`.
+
+Lo step non applica ancora il metodo a repository esterne e non crea automazioni cross-repository.
+
+### Motivazione
+
+Il primo pilot reale deve aumentare controllo e comprensione, non entrare subito con refactor massivo, migrazioni, modifiche CI o modifiche a dati sensibili.
+
+Un onboarding esplicito riduce il rischio di partire dal task sbagliato e rende verificabile la scelta GO, WARNING o NO-GO prima di Codex.
+
+### Conseguenze
+
+Project Workflow Index, Workflow Health Check, Workflow Quick Reference, Workflow Command Cookbook, Workflow Status Dashboard e Release Readiness includono Existing Project Pilot Onboarding.
+
+Lo STEP 300 consigliato e' First Existing Project Pilot: scegliere un progetto reale, compilare l'intake e produrre il primo task packet pilot.

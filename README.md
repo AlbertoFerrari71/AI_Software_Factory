@@ -205,6 +205,12 @@ Checklist di readiness per pilot interno local-first:
 docs/40_RELEASE_READINESS.md
 ```
 
+Protocollo di onboarding per pilot su progetto esistente:
+
+```text
+docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md
+```
+
 ---
 
 ## 8. Setup locale minimo
