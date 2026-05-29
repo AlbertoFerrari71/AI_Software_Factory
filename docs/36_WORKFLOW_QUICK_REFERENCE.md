@@ -89,6 +89,16 @@ Il Workflow Health Check e' read-only e controlla documenti, riferimenti central
 
 ---
 
+## 7.1 Mostrare workflow status dashboard
+
+```powershell
+python scripts/show_workflow_status.py
+```
+
+La dashboard mostra branch corrente, working tree, commit recenti, documenti/script centrali e prossimi controlli locali.
+
+---
+
 ## 8. Eseguire Verification Gate
 
 ```powershell
@@ -200,5 +210,6 @@ Solo dopo questa verifica lo step puo' essere considerato presente su `main`.
 - `docs/35_WORKFLOW_HEALTH_CHECK.md`: controllo locale read-only del workflow.
 - `docs/37_STEP_CLOSURE_REPORT.md`: standard per distinguere lavoro locale da step chiuso su `main`.
 - `docs/38_WORKFLOW_COMMAND_COOKBOOK.md`: ricette operative per casi specifici e troubleshooting.
+- `docs/39_WORKFLOW_STATUS_DASHBOARD.md`: snapshot locale read-only di branch, working tree, commit recenti e file workflow.
 - `docs/20_VERIFICATION_GATE.md`: criteri di verifica locale e CI.
 - `docs/28_PROMPT_PACKET_VALIDATION_STRICT_MODE.md`: dettagli della validazione Strict.

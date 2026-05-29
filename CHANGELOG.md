@@ -4,6 +4,44 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.27.0] - 2026-05-29
+
+### Added
+
+- STEP 270 - Workflow Status Dashboard.
+- Script read-only `scripts/show_workflow_status.py`.
+- Documento `docs/39_WORKFLOW_STATUS_DASHBOARD.md`.
+- Test automatici in `tests/unit/test_workflow_status_dashboard.py`.
+
+### Changed
+
+- Aggiornato `docs/34_PROJECT_WORKFLOW_INDEX.md` con la Workflow Status Dashboard.
+- Aggiornato `docs/38_WORKFLOW_COMMAND_COOKBOOK.md` con la ricetta dashboard.
+- Aggiornato `docs/35_WORKFLOW_HEALTH_CHECK.md` e `scripts/check_workflow_health.py` per includere documento e script dashboard tra i controlli workflow centrali.
+- Aggiornato `docs/36_WORKFLOW_QUICK_REFERENCE.md` con il comando dashboard.
+- Aggiornato `docs/21_DOCUMENTATION_SYNC.md` con il documento STEP 270.
+- Aggiornato `README.md` con un rimando breve alla dashboard.
+- Aggiornata roadmap: STEP 270 completato e STEP 280 consigliato come Release Readiness.
+- Aggiornato decision log con la scelta della dashboard locale read-only.
+
+### Not included
+
+- Nessuna GitHub API.
+- Nessuna connessione internet richiesta.
+- Nessuna integrazione in CI.
+- Nessuna modifica a `scripts/verify.ps1`.
+- Nessuno script per automatizzare commit, push, PR o merge.
+- Nessuna modifica a GitHub.
+- Nessuna GitHub Release.
+- Nessuna pubblicazione PyPI o registry.
+- Nessuna nuova dipendenza.
+- Nessuna modifica a CI, `src/**`, `policies/**`, hook, script Git/GitHub esistenti, secret o `.env`.
+- Nessuna installazione hook Git.
+- Nessuna modifica a `git config core.hooksPath`.
+- Nessuna modifica a PATH o profili PowerShell.
+
+---
+
 ## [0.26.0] - 2026-05-29
 
 ### Added

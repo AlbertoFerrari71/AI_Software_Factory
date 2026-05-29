@@ -27,6 +27,7 @@ The script `scripts/check_workflow_health.py` checks:
 - `docs/36_WORKFLOW_QUICK_REFERENCE.md` is present and linked from the Project Workflow Index;
 - `docs/37_STEP_CLOSURE_REPORT.md` and `templates/codex_tasks/step_closure_report_template.md` are present and linked from the Project Workflow Index;
 - `docs/38_WORKFLOW_COMMAND_COOKBOOK.md` is present and linked from the Project Workflow Index;
+- `docs/39_WORKFLOW_STATUS_DASHBOARD.md` and `scripts/show_workflow_status.py` are present and linked from the Project Workflow Index;
 - operational scripts do not contain dangerous Git/GitHub command patterns.
 
 The covered areas include:
@@ -43,6 +44,7 @@ The covered areas include:
 - Workflow Quick Reference;
 - Step Closure Report;
 - Workflow Command Cookbook;
+- Workflow Status Dashboard;
 - Project Workflow Index.
 
 ---
@@ -174,3 +176,5 @@ After STEP 240, the health check also treats `docs/36_WORKFLOW_QUICK_REFERENCE.m
 After STEP 250, it also treats `docs/37_STEP_CLOSURE_REPORT.md` and `templates/codex_tasks/step_closure_report_template.md` as core closure references because they distinguish local Codex completion from a step closed and verified on `main`.
 
 After STEP 260, it also treats `docs/38_WORKFLOW_COMMAND_COOKBOOK.md` as a core workflow document because it captures recurring command scenarios and troubleshooting without creating new automation.
+
+After STEP 270, it also treats `docs/39_WORKFLOW_STATUS_DASHBOARD.md` and `scripts/show_workflow_status.py` as core workflow status references because they provide a local read-only snapshot of branch, working tree, recent commits and workflow files.
