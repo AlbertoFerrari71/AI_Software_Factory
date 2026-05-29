@@ -46,11 +46,12 @@ Esempio:
 | 190 | Prompt Packet Generator Release Smoke Workflow | Verificare il flusso locale completo del generatore | Smoke workflow locale, documento, test | MVP personale | Completato |
 | 200 | Prompt Packet Lifecycle Checklist | Formalizzare il ciclo completo da task packet a step mergiato su main | Checklist lifecycle, template spuntabile, test | MVP personale | Completato |
 | 210 | Prompt Packet Generator Developer Onboarding | Rendere il generatore e la checklist facili da adottare da un operatore locale | Guida onboarding, mappa strumenti, quickstart, troubleshooting | MVP personale | Completato |
-| 220 | Project Workflow Index | Rendere navigabile il metodo operativo completo | Indice workflow, mappa documenti, entry point operativi | MVP personale | Da fare |
-| 230 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
-| 240 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
-| 250 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
-| 260 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
+| 220 | Project Workflow Index | Rendere navigabile il metodo operativo completo | Indice workflow, mappa documenti, entry point operativi | MVP personale | Completato |
+| 230 | Workflow Health Check | Controllare coerenza minima dei documenti operativi centrali | Health check documentale, test su link/keyword, runbook leggero | MVP personale | Da fare |
+| 240 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
+| 250 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
+| 260 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
+| 270 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
 
 ---
 
@@ -525,17 +526,34 @@ Rendere il generatore piu' facile da adottare e usare in modo coerente da un ope
 
 Rendere navigabile il metodo operativo completo senza dover conoscere tutta la storia degli step.
 
-### Output previsti
+### Output realizzati
 
-- indice centrale dei workflow;
-- mappa dei documenti principali;
-- collegamenti a onboarding, lifecycle checklist, Verification Gate, Documentation Sync e soft guardrails;
-- entry point operativi per nuovi step;
-- nessuna nuova automazione rischiosa.
+- indice centrale `docs/34_PROJECT_WORKFLOW_INDEX.md`;
+- mappa rapida "devo fare X";
+- elenco documenti, script e template principali;
+- sequenze operative PowerShell non distruttive;
+- troubleshooting rapido e anti-pattern;
+- test automatici leggeri.
 
 ---
 
-## 25. STEP 230 — OpenAI API Adapter
+## 25. STEP 230 — Workflow Health Check
+
+### Obiettivo
+
+Controllare che i documenti operativi centrali restino navigabili e coerenti dopo l'espansione del workflow.
+
+### Output previsti
+
+- health check documentale leggero;
+- controlli su link e keyword operative;
+- runbook di verifica manuale;
+- nessuna automazione Git rischiosa;
+- nessuna modifica a CI salvo step futuro dedicato.
+
+---
+
+## 26. STEP 240 — OpenAI API Adapter
 
 ### Obiettivo
 
@@ -551,7 +569,7 @@ Collegare Responses API e Structured Outputs.
 
 ---
 
-## 26. STEP 240 — MCP Tool Registry
+## 27. STEP 250 — MCP Tool Registry
 
 ### Obiettivo
 
@@ -566,7 +584,7 @@ Gestire tool esterni in modo sicuro.
 
 ---
 
-## 27. STEP 250 — Guided Mode
+## 28. STEP 260 — Guided Mode
 
 ### Obiettivo
 
@@ -581,7 +599,7 @@ Rendere il framework utilizzabile da utenti non tecnici.
 
 ---
 
-## 28. STEP 260 — SaaS Evolution Plan
+## 29. STEP 270 — SaaS Evolution Plan
 
 ### Obiettivo
 

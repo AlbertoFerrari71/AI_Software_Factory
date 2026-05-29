@@ -64,6 +64,7 @@ Examples:
 - update `docs/31_PROMPT_PACKET_GENERATOR_RELEASE_SMOKE_WORKFLOW.md` when local generator smoke workflow behavior changes;
 - update `docs/32_PROMPT_PACKET_LIFECYCLE_CHECKLIST.md` when the prompt packet lifecycle, handoff checklist, or step completion sequence changes;
 - update `docs/33_PROMPT_PACKET_GENERATOR_DEVELOPER_ONBOARDING.md` when generator onboarding, operator Quickstart, roles, or troubleshooting guidance changes;
+- update `docs/34_PROJECT_WORKFLOW_INDEX.md` when workflow navigation, document map, script map, or operational entry points change;
 - update `docs/05_SECURITY_MODEL.md` or `policies/**` only when the Safety Model changes and the risk level is approved.
 
 ### Do not touch unless needed

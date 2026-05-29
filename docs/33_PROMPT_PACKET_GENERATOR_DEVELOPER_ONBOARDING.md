@@ -16,6 +16,8 @@ Il metodo e' local-first: ChatGPT prepara il Prompt Operativo o Codex Task Packe
 
 Il Prompt Packet Generator aiuta a produrre task packet coerenti con il metodo, ma non sostituisce la revisione umana, il Verification Gate o la Prompt Packet Lifecycle Checklist.
 
+Per una mappa centrale di documenti, script, template e verifiche usare anche `docs/34_PROJECT_WORKFLOW_INDEX.md`.
+
 ---
 
 ## 3. Mappa degli strumenti
@@ -238,3 +240,4 @@ Questi comandi non devono essere racchiusi in uno script che automatizza commit,
 - `docs/30_PROMPT_PACKET_GENERATOR_PACKAGING.md`
 - `docs/31_PROMPT_PACKET_GENERATOR_RELEASE_SMOKE_WORKFLOW.md`
 - `docs/32_PROMPT_PACKET_LIFECYCLE_CHECKLIST.md`
+- `docs/34_PROJECT_WORKFLOW_INDEX.md`

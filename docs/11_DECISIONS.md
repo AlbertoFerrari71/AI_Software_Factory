@@ -1035,3 +1035,41 @@ Il workflow e' ormai utile, ma distribuito tra piu' documenti. Una guida onboard
 ### Conseguenze
 
 I documenti del generatore possono rimandare alla guida come entry point pratico. Lo STEP 220 consigliato e' Project Workflow Index, per costruire un indice operativo piu' ampio del metodo.
+
+---
+
+## DEC-042 - Project Workflow Index
+
+**Data:** 2026-05-29
+**Stato:** Accettata
+
+### Contesto
+
+Dopo onboarding, lifecycle checklist, smoke workflow, validation e Documentation Sync, il metodo ha molti documenti operativi utili ma distribuiti.
+
+### Decisione
+
+Introdurre `docs/34_PROJECT_WORKFLOW_INDEX.md` come indice operativo centrale del workflow AI Software Factory.
+
+L'indice collega:
+
+- Prompt Packet Generator;
+- Lite Mode e Strict Mode;
+- Verification Gate;
+- Documentation Sync;
+- Soft Protection Guardrails;
+- Release Smoke Workflow;
+- Lifecycle Checklist;
+- Developer Onboarding;
+- script e template principali;
+- troubleshooting Git, PR e merge.
+
+L'indice non duplica integralmente i documenti specifici e non introduce automazioni Git.
+
+### Motivazione
+
+Serve un punto di ingresso unico per capire quale documento leggere e quale comando usare senza rileggere tutta la storia degli step.
+
+### Conseguenze
+
+I futuri cambiamenti a workflow, script, template o checklist devono valutare se aggiornare l'indice. Lo STEP 230 consigliato e' Workflow Health Check, per controllare che documenti operativi e riferimenti restino coerenti.
