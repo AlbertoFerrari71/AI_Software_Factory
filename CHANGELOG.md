@@ -4,6 +4,36 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.33.0] - 2026-05-29
+
+### Added
+
+- MEGA-STEP 310-330 - ASF Runner Upgrade Pack.
+- Config `config/asf_project_profiles.json` con profili iniziali `AI_Software_Factory` e `Family_Photo_Organizer`.
+- Documenti `docs/43_ASF_RUNNER_PROJECT_PROFILES.md`, `docs/44_ASF_RUNNER_CODEX_HANDOFF_IMPROVEMENTS.md` e `docs/45_ASF_RUNNER_VERIFICATION_PACK.md`.
+- Template `templates/codex_tasks/asf_runner_verification_pack_template.md`.
+- Test automatici per profili progetto, handoff Codex migliorato e Verification Pack.
+
+### Changed
+
+- Potenziato `scripts/asf_next_step.py` con `--profile`, override manuali, handoff piu' completo e generazione di `verification_pack.md`.
+- Aggiornato `templates/codex_tasks/asf_next_step_runner_handoff_template.md` con FASE 1, FASE 2, stato Git, note safety e Step Closure Report.
+- Aggiornati Project Workflow Index, Health Check, Quick Reference, Cookbook, Dashboard, Readiness e Existing Project Pilot Onboarding con i nuovi riferimenti runner.
+- Aggiornati `scripts/check_workflow_health.py` e `scripts/show_workflow_status.py` per includere documenti e config del runner upgrade nei controlli locali read-only.
+- Aggiornata roadmap: STEP 310, 320 e 330 completati; STEP 340 consigliato come ASF Runner Verification Pack Hardening.
+- Aggiornato decision log con la scelta di mantenere il runner local-first, read-only verso repository target e senza automazione Codex/GitHub.
+
+### Not included
+
+- Nessuna invocazione automatica di Codex.
+- Nessuna modifica a repository target.
+- Nessuna creazione branch nel repository target.
+- Nessun commit, push, PR o merge automatico.
+- Nessuna modifica a GitHub o GitHub API.
+- Nessuna modifica a CI, hook Git, `core.hooksPath`, dipendenze, secret, `.env`, PATH o profili PowerShell.
+
+---
+
 ## [0.30.0] - 2026-05-29
 
 ### Added

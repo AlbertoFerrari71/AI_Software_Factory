@@ -276,6 +276,7 @@ Il prossimo step operativo naturale dopo l'onboarding e':
 
 ```text
 300) ASF Next Step Runner
+310-330) ASF Runner Upgrade Pack
 ```
 
-Scopo: preparare localmente task packet, handoff Codex e report del prossimo step senza modificare repository esterne e senza invocare Codex.
+Scopo: preparare localmente task packet, handoff Codex, report e Verification Pack del prossimo step senza modificare repository esterne e senza invocare Codex.

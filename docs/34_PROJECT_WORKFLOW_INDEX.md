@@ -30,7 +30,10 @@ L'indice orienta il lavoro. Non sostituisce i documenti specifici, il Verificati
 | Usare Workflow Status Dashboard | `docs/39_WORKFLOW_STATUS_DASHBOARD.md` | `scripts/show_workflow_status.py` | Quando serve vedere branch, working tree, commit recenti e file workflow presenti | Read-only; non usa GitHub API |
 | Valutare Release Readiness | `docs/40_RELEASE_READINESS.md` | `templates/codex_tasks/release_readiness_checklist.md` | Prima di applicare il metodo a un progetto pilota reale | Readiness per pilot interno, non release pubblica o SaaS |
 | Preparare Existing Project Pilot Onboarding | `docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md` | `templates/codex_tasks/existing_project_intake_template.md`, `templates/codex_tasks/first_pilot_step_packet_template.md` | Dopo readiness e prima del primo pilot reale | Intake, fotografia repo, rischi e primo task packet pilot |
-| Preparare ASF Next Step Runner | `docs/42_ASF_NEXT_STEP_RUNNER.md` | `scripts/asf_next_step.py`, `templates/codex_tasks/asf_next_step_runner_handoff_template.md` | Quando step, titolo, branch e obiettivo sono chiari | Prepara task packet, handoff e report senza invocare Codex |
+| Preparare ASF Next Step Runner | `docs/42_ASF_NEXT_STEP_RUNNER.md` | `scripts/asf_next_step.py`, `templates/codex_tasks/asf_next_step_runner_handoff_template.md` | Quando step, titolo, branch e obiettivo sono chiari | Prepara task packet, handoff, report e Verification Pack senza invocare Codex |
+| Usare ASF Runner Project Profiles | `docs/43_ASF_RUNNER_PROJECT_PROFILES.md` | `config/asf_project_profiles.json` | Quando il progetto target ha default riusabili | Riduce argomenti ripetitivi e porta note safety nel packet |
+| Interpretare ASF Runner Codex Handoff Improvements | `docs/44_ASF_RUNNER_CODEX_HANDOFF_IMPROVEMENTS.md` | `templates/codex_tasks/asf_next_step_runner_handoff_template.md` | Quando si copia l'handoff generato verso Codex | Mantiene FASE 1, FASE 2 e Human gate espliciti |
+| Usare ASF Runner Verification Pack | `docs/45_ASF_RUNNER_VERIFICATION_PACK.md` | `templates/codex_tasks/asf_runner_verification_pack_template.md` | Quando si vogliono controlli read-only prima e dopo Codex | Non contiene automazione commit, push, PR o merge |
 | Eseguire Verification Gate | `docs/20_VERIFICATION_GATE.md` | `scripts/verify.ps1` | Prima di commit/push/PR e dopo merge quando richiesto | Include test, `git diff --check`, `git status --short` |
 | Controllare Documentation Sync | `docs/21_DOCUMENTATION_SYNC.md` | Nessuno | Ogni step documentale o operativo | Valuta changelog, roadmap, decisions e documenti specifici |
 | Controllare Soft Protection Guardrails | `docs/24_SOFT_PROTECTION_GUARDRAILS.md` | `scripts/git/check_soft_guardrails.ps1` | Prima del commit o come controllo locale | Read-only; non installa hook |
@@ -83,6 +86,9 @@ Regole operative:
 - `docs/40_RELEASE_READINESS.md`: checklist go/warning/no-go per pilot interno local-first su un progetto reale.
 - `docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md`: protocollo di intake per applicare il metodo a un progetto esistente gia' avviato.
 - `docs/42_ASF_NEXT_STEP_RUNNER.md`: runner locale prepare mode per generare task packet, handoff Codex e report senza modificare il repo target.
+- `docs/43_ASF_RUNNER_PROJECT_PROFILES.md`: profili progetto locali per il runner.
+- `docs/44_ASF_RUNNER_CODEX_HANDOFF_IMPROVEMENTS.md`: struttura dell'handoff Codex migliorato.
+- `docs/45_ASF_RUNNER_VERIFICATION_PACK.md`: pacchetto di verifiche read-only consigliate dal runner.
 
 ---
 
@@ -100,6 +106,10 @@ Regole operative:
 
 Questi script non devono essere usati per automatizzare commit, push, PR o merge.
 
+Config centrale:
+
+- `config/asf_project_profiles.json`: profili locali per ASF Next Step Runner, senza secret e senza autorizzare azioni aggiuntive.
+
 ---
 
 ## 6. Template principali
@@ -111,6 +121,7 @@ Questi script non devono essere usati per automatizzare commit, push, PR o merge
 - `templates/codex_tasks/existing_project_intake_template.md`: template compilabile per Project Intake di un progetto esistente.
 - `templates/codex_tasks/first_pilot_step_packet_template.md`: template per creare il primo task packet pilot piccolo e reversibile.
 - `templates/codex_tasks/asf_next_step_runner_handoff_template.md`: struttura handoff manuale da copiare in Codex.
+- `templates/codex_tasks/asf_runner_verification_pack_template.md`: struttura del Verification Pack read-only del runner.
 
 ---
 

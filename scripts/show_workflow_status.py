@@ -19,6 +19,9 @@ CENTRAL_DOCUMENTS = [
     "docs/40_RELEASE_READINESS.md",
     "docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md",
     "docs/42_ASF_NEXT_STEP_RUNNER.md",
+    "docs/43_ASF_RUNNER_PROJECT_PROFILES.md",
+    "docs/44_ASF_RUNNER_CODEX_HANDOFF_IMPROVEMENTS.md",
+    "docs/45_ASF_RUNNER_VERIFICATION_PACK.md",
 ]
 
 MAIN_SCRIPTS = [
@@ -29,6 +32,10 @@ MAIN_SCRIPTS = [
     "scripts/validate_task_packet.py",
     "scripts/verify.ps1",
     "scripts/git/check_soft_guardrails.ps1",
+]
+
+CENTRAL_CONFIGS = [
+    "config/asf_project_profiles.json",
 ]
 
 NEXT_CHECKS = [
@@ -126,9 +133,11 @@ def main() -> int:
     print()
 
     docs_present, docs_missing = path_status(root, CENTRAL_DOCUMENTS)
+    configs_present, configs_missing = path_status(root, CENTRAL_CONFIGS)
     scripts_present, scripts_missing = path_status(root, MAIN_SCRIPTS)
 
     print_path_section("Central documents:", docs_present, docs_missing)
+    print_path_section("Central configs:", configs_present, configs_missing)
     print_path_section("Main scripts:", scripts_present, scripts_missing)
 
     print("Next suggested local checks:")
@@ -138,7 +147,7 @@ def main() -> int:
 
     print("Note: this dashboard does not replace Verification Gate, Workflow Health Check, or PR checks.")
 
-    if docs_missing or scripts_missing:
+    if docs_missing or configs_missing or scripts_missing:
         return EXIT_FAILURE
     return EXIT_SUCCESS
 

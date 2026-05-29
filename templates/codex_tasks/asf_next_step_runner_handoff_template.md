@@ -1,84 +1,123 @@
 # ASF Next Step Runner Handoff Template
-
-Usare questo template come struttura di handoff manuale da ChatGPT/Alberto verso Codex.
-
-## 1. Progetto
-
-- Progetto:
-- Repo path:
-- Branch principale:
-- Branch corrente rilevato:
-- Working tree: CLEAN / DIRTY-WARNING
-
-## 2. Step
+TBD.
+Questo handoff e' generato dal runner, ma deve comunque essere revisionato da Alberto/ChatGPT prima dell'uso.
+TBD.
+## 1. Titolo step
 
 - Step:
 - Titolo:
-- Branch previsto:
-- Obiettivo:
 
-## 3. Prerequisito
+## 2. Contesto progetto target
 
-- [ ] Task packet letto.
-- [ ] Branch principale verificato.
-- [ ] Branch di lavoro previsto verificato.
+- Progetto:
+- Repository:
+- Repo path:
+- Branch principale:
+- Branch di lavoro previsto:
+- Profilo runner:
+
+## 3. Stato Git letto dal runner
+
+- Branch corrente target:
+- Working tree: CLEAN / DIRTY-WARNING
+- Ultimi commit:
+
+```text
+
+```
+
+## 4. Prerequisito
+
+- [ ] Step precedente su main verificato.
+- [ ] Se non deducibile, prerequisito controllato manualmente.
 - [ ] Working tree compresa.
 - [ ] Alberto ha deciso se proseguire in caso di DIRTY-WARNING.
 
-## 4. Vincoli
-
-- Usare branch dedicato.
-- Mantenere diff piccolo, reversibile e testabile.
-- Non modificare repository target fuori dallo scope.
-- Non modificare CI.
-- Non modificare dipendenze.
-- Non modificare secret, `.env` o dati sensibili.
-- Non installare hook Git.
-- Non modificare `core.hooksPath`.
-
-## 5. Forbidden actions
-
-- Nessun commit/push/PR/merge da parte di Codex.
-- Non fare commit.
-- Non fare push.
-- Non creare PR.
-- Non fare merge.
-- Non modificare GitHub.
-- Non creare release.
-- Non eseguire reset distruttivi.
-- Non cancellare dati.
-- Non invocare altri agenti o Codex automaticamente.
-
-## 6. Test
-
-Test automatici richiesti:
+## 5. Obiettivo
 
 ```text
 
 ```
 
-Verifiche manuali richieste:
+## 6. FASE 1 - Allineamento sintetico
+
+### Riepilogo
 
 ```text
 
 ```
 
-Verifiche non eseguibili e motivo:
+### Assunzioni
 
-```text
+- [100]
+- [101]
+- [102]
 
+### Domande chiuse
+
+- A) Procedere dopo review umana. Default A.
+- B) Rigenerare task packet con scope piu' stretto.
+- C) Fermarsi per working tree non chiara.
+- D) Fermarsi per prerequisito non verificato.
+
+### Criticita'
+
+- TBD.
+
+## 7. FASE 2 - Istruzioni operative per Codex
+
+### Istruzioni
+
+- Leggere il task packet.
+- Usare il verification pack come checklist.
+- Lavorare solo sul branch previsto dopo conferma umana.
+- Fermarsi se serve allargare scope.
+
+### File da ispezionare
+
+- README.md
+- AGENTS.md se presente
+- docs rilevanti
+- test rilevanti
+
+### Scope incluso
+
+- TBD.
+
+### Scope escluso
+
+- CI.
+- Dipendenze.
+- Secret e `.env`.
+- Dati sensibili.
+- Produzione.
+
+### Forbidden actions
+
+- Codex non deve fare commit/push/PR/merge.
+- Codex non deve modificare GitHub.
+- Codex non deve modificare hook/core.hooksPath.
+- Codex non deve toccare secret/.env.
+- Codex non deve allargare scope.
+
+### Comandi di verifica
+
+```powershell
+git branch --show-current
+git status --short
+git --no-pager log --oneline --max-count=10
+python -m pytest
+git --no-pager diff --stat
+git --no-pager diff --check
 ```
 
-## 7. Report finale
-
-Il report finale deve indicare:
+### Output finale richiesto
 
 - step eseguito;
 - stato;
 - branch corrente;
 - file creati;
 - file modificati;
-- descrizione tecnica sintetica;
 - comandi eseguiti e risultati;
 - verifiche non eseguite;
 - rischi o note;
@@ -86,9 +125,16 @@ Il report finale deve indicare:
 - prossimo step consigliato;
 - richiesta Step Closure Report.
 
-## 8. Conferma nessun commit/push/PR/merge
+## 8. Note safety dal profilo
 
 ```text
-Confermato: Codex non deve fare commit, push, PR o merge.
+
 ```
 
+## 9. Step Closure Report
+
+Richiedere esplicitamente la compilazione di:
+
+```text
+templates/codex_tasks/step_closure_report_template.md
+```

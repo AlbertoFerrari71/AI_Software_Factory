@@ -489,7 +489,13 @@ Quando step, titolo, branch e obiettivo del prossimo step sono gia' chiari e ser
 Esempio locale su AI Software Factory:
 
 ```powershell
-python scripts/asf_next_step.py --mode prepare --project-name AI_Software_Factory --repo-path . --main-branch main --step 310 --title "ASF Next Step Runner Project Profiles" --branch step-310-asf-next-step-runner-project-profiles --objective "Add project profiles for ASF Next Step Runner." --strict-ready
+python scripts/asf_next_step.py --mode prepare --profile AI_Software_Factory --step 340 --title "ASF Runner Verification Pack Hardening" --branch step-340-asf-runner-verification-pack-hardening --objective "Harden verification pack generation for the ASF runner."
+```
+
+Esempio con override manuale del profilo:
+
+```powershell
+python scripts/asf_next_step.py --mode prepare --profile AI_Software_Factory --repo-path . --step 340 --title "ASF Runner Verification Pack Hardening" --branch step-340-asf-runner-verification-pack-hardening --objective "Harden verification pack generation for the ASF runner."
 ```
 
 ### Esito atteso
@@ -498,13 +504,14 @@ Il runner crea sotto `tmp/asf_next_step/`:
 
 - `task_packet.md`;
 - `codex_handoff.md`;
-- `runner_report.md`.
+- `runner_report.md`;
+- `verification_pack.md`.
 
-Il report indica branch target, working tree `CLEAN` o `DIRTY/WARNING`, ultimi commit, validazione Lite, validazione Strict e prossimo comando consigliato.
+Il report indica profilo usato o argomenti manuali, branch target, working tree `CLEAN` o `DIRTY/WARNING`, ultimi commit, validazione Lite, validazione Strict, stato degli handoff improvements, path Verification Pack e prossimo comando consigliato.
 
 ### Se qualcosa va storto
 
-Se il repo target non esiste, non contiene `.git`, lo step non e' numerico, lo step non e' multiplo di 10 o il branch contiene spazi, correggere l'input e rilanciare.
+Se il repo target non esiste, non contiene `.git`, lo step non e' numerico, lo step non e' multiplo di 10, il branch contiene spazi, il profilo non esiste o il JSON profili e' malformato, correggere l'input e rilanciare.
 
 Se la working tree target e' `DIRTY/WARNING`, non e' un fallimento automatico: Alberto deve decidere se proseguire.
 
@@ -512,7 +519,12 @@ Se la working tree target e' `DIRTY/WARNING`, non e' un fallimento automatico: A
 
 Non usare il runner come sostituto di review ChatGPT/Alberto, Codex, test, PR, merge o Step Closure Report. Il runner non invoca Codex, non crea branch nel repository target e non fa commit, push, PR o merge.
 
-Documento: `docs/42_ASF_NEXT_STEP_RUNNER.md`.
+Documenti:
+
+- `docs/42_ASF_NEXT_STEP_RUNNER.md`;
+- `docs/43_ASF_RUNNER_PROJECT_PROFILES.md`;
+- `docs/44_ASF_RUNNER_CODEX_HANDOFF_IMPROVEMENTS.md`;
+- `docs/45_ASF_RUNNER_VERIFICATION_PACK.md`.
 
 ---
 

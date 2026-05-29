@@ -1374,3 +1374,43 @@ Gli output del runner sono temporanei e ignorati da Git. Il task packet generato
 - 310) ASF Next Step Runner Project Profiles;
 - 320) ASF Runner Codex Handoff Improvements;
 - 330) ASF Runner Verification Pack.
+
+---
+
+## DEC-051 - ASF Runner Upgrade Pack
+
+**Data:** 2026-05-29
+**Stato:** Accettata
+
+### Contesto
+
+Dopo il primo ASF Next Step Runner serve ridurre ulteriore copia/incolla senza trasformare il runner in un orchestratore automatico.
+
+I bisogni emersi sono:
+
+- riusare informazioni progetto tramite profili locali;
+- produrre un handoff Codex piu' vicino al metodo FASE 1 / FASE 2;
+- preparare controlli consigliati prima e dopo Codex senza automatizzare Git o GitHub.
+
+### Decisione
+
+Introdurre l'ASF Runner Upgrade Pack:
+
+- `config/asf_project_profiles.json` per profili progetto locali;
+- supporto `--profile` in `scripts/asf_next_step.py` con override manuali;
+- handoff Codex migliorato con stato Git target, FASE 1, FASE 2, note safety e Step Closure Report;
+- generazione di `verification_pack.md`;
+- documenti `docs/43_ASF_RUNNER_PROJECT_PROFILES.md`, `docs/44_ASF_RUNNER_CODEX_HANDOFF_IMPROVEMENTS.md` e `docs/45_ASF_RUNNER_VERIFICATION_PACK.md`;
+- template `templates/codex_tasks/asf_runner_verification_pack_template.md`.
+
+Il runner resta standard library only, local-first e read-only verso repository target. Non invoca Codex, non usa GitHub API, non modifica repository target e non automatizza commit, push, PR o merge.
+
+### Motivazione
+
+I profili riducono errori ripetitivi su repo path, branch principale, test command e note safety. L'handoff migliorato rende piu' chiaro cosa Codex deve fare e cosa resta gate umano. Il Verification Pack separa le verifiche consigliate dal ciclo Git presidiato.
+
+### Conseguenze
+
+Il runner genera quattro output temporanei sotto `tmp/asf_next_step/`: `task_packet.md`, `codex_handoff.md`, `runner_report.md` e `verification_pack.md`.
+
+Gli output restano bozze da rivedere da Alberto/ChatGPT. Lo STEP 340 consigliato e' ASF Runner Verification Pack Hardening.
