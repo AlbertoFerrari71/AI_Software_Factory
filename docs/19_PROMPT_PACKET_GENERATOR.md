@@ -119,6 +119,10 @@ pwsh -NoProfile -ExecutionPolicy Bypass -File .\scripts\smoke_prompt_packet_rele
 
 Lo smoke workflow genera un task packet temporaneo in `tmp/` tramite il wrapper PowerShell e lo valida sia in Lite Mode sia in Strict Mode. Il documento operativo e' `docs/31_PROMPT_PACKET_GENERATOR_RELEASE_SMOKE_WORKFLOW.md`.
 
+Da STEP 200, il ciclo completo del prompt packet e dello step operativo e' formalizzato in `docs/32_PROMPT_PACKET_LIFECYCLE_CHECKLIST.md`.
+
+Il template spuntabile e' `templates/codex_tasks/prompt_packet_lifecycle_checklist.md` e copre preparazione, task packet, validazione, Codex report, pre-commit, PR/merge, pull di `main` e scelta dello step successivo.
+
 ---
 
 ## 5. Compilazione del Prompt Packet

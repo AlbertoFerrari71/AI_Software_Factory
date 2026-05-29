@@ -127,7 +127,25 @@ The detailed reference is `docs/31_PROMPT_PACKET_GENERATOR_RELEASE_SMOKE_WORKFLO
 
 ---
 
-## 10. Current limits
+## 10. Lifecycle checklist
+
+STEP 200 adds the Prompt Packet Lifecycle Checklist:
+
+```text
+docs/32_PROMPT_PACKET_LIFECYCLE_CHECKLIST.md
+```
+
+Use it with the packaging and smoke workflow to avoid common handoff errors: generated packet not validated, local step not pushed, missing PR, missing merge, stale `main`, or next step started before the prerequisite is on `main`.
+
+The copyable checklist template is:
+
+```text
+templates/codex_tasks/prompt_packet_lifecycle_checklist.md
+```
+
+---
+
+## 11. Current limits
 
 The packaging surface is intentionally small.
 
@@ -144,7 +162,7 @@ These limits keep the generator easy to review and keep operational control with
 
 ---
 
-## 11. Future work
+## 12. Future work
 
 Future steps can add:
 

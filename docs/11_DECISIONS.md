@@ -968,3 +968,35 @@ Il generatore deve essere controllabile localmente prima di essere considerato p
 ### Conseguenze
 
 Lo smoke workflow affianca il Verification Gate ma non lo sostituisce. Lo STEP 200 consigliato e' Prompt Packet Generator Developer Onboarding, per trasformare CLI, packaging e smoke workflow in una procedura di uso quotidiano.
+
+---
+
+## DEC-040 - Prompt Packet Lifecycle Checklist
+
+**Data:** 2026-05-29
+**Stato:** Accettata
+
+### Contesto
+
+Dopo generator, packaging e smoke workflow serve una checklist unica che copra l'intero ciclo operativo dello step, non solo la produzione del task packet.
+
+### Decisione
+
+Introdurre la Prompt Packet Lifecycle Checklist:
+
+- documento `docs/32_PROMPT_PACKET_LIFECYCLE_CHECKLIST.md`;
+- template spuntabile `templates/codex_tasks/prompt_packet_lifecycle_checklist.md`;
+- fasi da preparazione step a verifica che il merge sia su `main`;
+- distinzione esplicita tra azioni Codex e azioni Alberto;
+- troubleshooting per errori operativi comuni;
+- anti-pattern, incluso trattare il report Codex come merge gia' avvenuto.
+
+La checklist resta manuale: non vengono creati script per automatizzare commit, push, PR o merge.
+
+### Motivazione
+
+Il rischio principale emerso non e' solo tecnico, ma di handoff: uno step puo' essere completato localmente senza essere pushato, senza PR, senza merge o senza `main` aggiornato prima dello step successivo.
+
+### Conseguenze
+
+Ogni step futuro puo' usare la checklist per verificare prerequisiti, task packet, report Codex, pre-commit, PR/merge e avvio dello step successivo. Lo STEP 210 consigliato e' Prompt Packet Generator Developer Onboarding.

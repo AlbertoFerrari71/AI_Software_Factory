@@ -4,6 +4,39 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.20.0] - 2026-05-29
+
+### Added
+
+- STEP 200 - Prompt Packet Lifecycle Checklist.
+- Documento `docs/32_PROMPT_PACKET_LIFECYCLE_CHECKLIST.md`.
+- Template spuntabile `templates/codex_tasks/prompt_packet_lifecycle_checklist.md`.
+- Test automatici in `tests/unit/test_prompt_packet_lifecycle_checklist.py`.
+
+### Changed
+
+- Aggiornato `docs/19_PROMPT_PACKET_GENERATOR.md` con il riferimento alla lifecycle checklist.
+- Aggiornato `docs/30_PROMPT_PACKET_GENERATOR_PACKAGING.md` con il collegamento alla checklist.
+- Aggiornato `docs/31_PROMPT_PACKET_GENERATOR_RELEASE_SMOKE_WORKFLOW.md` con il riferimento alla sequenza completa.
+- Aggiornato `docs/21_DOCUMENTATION_SYNC.md` con il documento STEP 200.
+- Aggiornata roadmap: STEP 200 completato e STEP 210 consigliato come Prompt Packet Generator Developer Onboarding.
+- Aggiornato decision log con la scelta della checklist lifecycle manuale.
+
+### Not included
+
+- Nessuno script per automatizzare commit, push, PR o merge.
+- Nessuna modifica a GitHub.
+- Nessuna GitHub Release.
+- Nessuna pubblicazione PyPI o registry.
+- Nessuna nuova dipendenza.
+- Nessuna modifica a CI, `src/**`, `policies/**`, hook, script Git/GitHub, secret o `.env`.
+- Nessuna installazione hook Git.
+- Nessuna modifica a `git config core.hooksPath`.
+- Nessuna modifica a PATH o profili PowerShell.
+- Nessun commit, push, PR o merge automatico.
+
+---
+
 ## [0.19.0] - 2026-05-28
 
 ### Added
