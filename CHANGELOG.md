@@ -4,6 +4,40 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.23.0] - 2026-05-29
+
+### Added
+
+- STEP 230 - Workflow Health Check.
+- Script read-only `scripts/check_workflow_health.py`.
+- Documento `docs/35_WORKFLOW_HEALTH_CHECK.md`.
+- Test automatici in `tests/unit/test_workflow_health_check.py`.
+
+### Changed
+
+- Aggiornato `docs/34_PROJECT_WORKFLOW_INDEX.md` con il Workflow Health Check.
+- Aggiornato `docs/21_DOCUMENTATION_SYNC.md` con il documento STEP 230.
+- Aggiornato `README.md` con un rimando breve al Workflow Health Check.
+- Aggiornata roadmap: STEP 230 completato e STEP 240 consigliato come Workflow Quick Reference.
+- Aggiornato decision log con la scelta del controllo locale read-only.
+
+### Not included
+
+- Nessuna integrazione in CI.
+- Nessuna modifica a `scripts/verify.ps1`.
+- Nessuno script per automatizzare commit, push, PR o merge.
+- Nessuna modifica a GitHub.
+- Nessuna GitHub Release.
+- Nessuna pubblicazione PyPI o registry.
+- Nessuna nuova dipendenza.
+- Nessuna modifica a CI, `src/**`, `policies/**`, hook, script Git/GitHub esistenti, secret o `.env`.
+- Nessuna installazione hook Git.
+- Nessuna modifica a `git config core.hooksPath`.
+- Nessuna modifica a PATH o profili PowerShell.
+- Nessun commit, push, PR o merge automatico.
+
+---
+
 ## [0.22.0] - 2026-05-29
 
 ### Added
