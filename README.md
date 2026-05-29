@@ -217,6 +217,14 @@ Runner locale per preparare il prossimo step senza invocare Codex o modificare i
 docs/42_ASF_NEXT_STEP_RUNNER.md
 ```
 
+Upgrade del runner con profili progetto, handoff Codex migliorato e Verification Pack:
+
+```text
+docs/43_ASF_RUNNER_PROJECT_PROFILES.md
+docs/44_ASF_RUNNER_CODEX_HANDOFF_IMPROVEMENTS.md
+docs/45_ASF_RUNNER_VERIFICATION_PACK.md
+```
+
 ---
 
 ## 8. Setup locale minimo

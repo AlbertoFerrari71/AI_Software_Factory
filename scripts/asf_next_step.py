@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import subprocess
 import sys
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Any
 
 
 EXIT_SUCCESS = 0
@@ -29,6 +31,36 @@ class GitSnapshot:
 
 
 @dataclass(frozen=True)
+class ProjectProfile:
+    name: str
+    project_name: str
+    repo_path: str
+    main_branch: str
+    test_command: str
+    health_command: str
+    notes: tuple[str, ...]
+    default_forbidden_notes: tuple[str, ...]
+    recommended_inspection: tuple[str, ...]
+
+
+@dataclass(frozen=True)
+class RunnerSettings:
+    profile_name: str | None
+    project_name: str
+    repo_path: str
+    main_branch: str
+    test_command: str
+    health_command: str
+    notes: tuple[str, ...]
+    default_forbidden_notes: tuple[str, ...]
+    recommended_inspection: tuple[str, ...]
+
+    @property
+    def profile_label(self) -> str:
+        return self.profile_name or "manual arguments"
+
+
+@dataclass(frozen=True)
 class ValidationResult:
     mode: str
     returncode: int
@@ -48,10 +80,16 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Prepare a local ASF next-step handoff without running Codex or changing the target repo.",
     )
-    parser.add_argument("--mode", required=True, help="Runner mode. STEP 300 supports only: prepare.")
-    parser.add_argument("--project-name", required=True, help="Logical target project name.")
-    parser.add_argument("--repo-path", required=True, help="Local path of the target repository.")
-    parser.add_argument("--main-branch", default="main", help="Target repository main branch. Default: main.")
+    parser.add_argument("--mode", required=True, help="Runner mode. STEP 310-330 supports only: prepare.")
+    parser.add_argument("--profile", help="Project profile name from config/asf_project_profiles.json.")
+    parser.add_argument(
+        "--profiles-config",
+        default="config/asf_project_profiles.json",
+        help="Profiles JSON path. Default: config/asf_project_profiles.json.",
+    )
+    parser.add_argument("--project-name", help="Logical target project name. Overrides profile value.")
+    parser.add_argument("--repo-path", help="Local path of the target repository. Overrides profile value.")
+    parser.add_argument("--main-branch", help="Target repository main branch. Overrides profile value.")
     parser.add_argument("--step", required=True, help="Next step number. Must be numeric and a multiple of 10.")
     parser.add_argument("--title", required=True, help="Next step title.")
     parser.add_argument("--branch", required=True, help="Expected dedicated working branch for the next step.")
@@ -77,12 +115,110 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     return parser.parse_args(argv)
 
 
+def string_list(value: Any, *, field: str, profile_name: str) -> tuple[str, ...]:
+    if value is None:
+        return ()
+    if not isinstance(value, list) or not all(isinstance(item, str) for item in value):
+        raise InputError(f"profile '{profile_name}' field '{field}' must be a list of strings.")
+    return tuple(item.strip() for item in value if item.strip())
+
+
+def optional_string(profile: dict[str, Any], key: str, *, default: str = "") -> str:
+    value = profile.get(key, default)
+    if value is None:
+        return default
+    if not isinstance(value, str):
+        raise InputError(f"profile field '{key}' must be a string.")
+    return value.strip()
+
+
+def load_profile(root: Path, config_path: str, profile_name: str) -> ProjectProfile:
+    path = Path(config_path).expanduser()
+    if not path.is_absolute():
+        path = root / path
+
+    if not path.is_file():
+        raise InputError(f"profile config not found: {path}")
+
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise InputError(f"profile config is not valid JSON: {path}: {exc.msg}") from exc
+
+    if not isinstance(data, dict) or not isinstance(data.get("profiles"), dict):
+        raise InputError("profile config must contain an object field named 'profiles'.")
+
+    raw_profile = data["profiles"].get(profile_name)
+    if raw_profile is None:
+        raise InputError(f"profile not found: {profile_name}")
+    if not isinstance(raw_profile, dict):
+        raise InputError(f"profile '{profile_name}' must be a JSON object.")
+
+    project_name = optional_string(raw_profile, "project_name")
+    repo_path = optional_string(raw_profile, "repo_path")
+    main_branch = optional_string(raw_profile, "main_branch", default="main") or "main"
+
+    if not project_name:
+        raise InputError(f"profile '{profile_name}' field 'project_name' is required.")
+    if not repo_path:
+        raise InputError(f"profile '{profile_name}' field 'repo_path' is required.")
+
+    return ProjectProfile(
+        name=profile_name,
+        project_name=project_name,
+        repo_path=repo_path,
+        main_branch=main_branch,
+        test_command=optional_string(raw_profile, "test_command", default="python -m pytest") or "python -m pytest",
+        health_command=optional_string(raw_profile, "health_command"),
+        notes=string_list(raw_profile.get("notes"), field="notes", profile_name=profile_name),
+        default_forbidden_notes=string_list(
+            raw_profile.get("default_forbidden_notes"),
+            field="default_forbidden_notes",
+            profile_name=profile_name,
+        ),
+        recommended_inspection=string_list(
+            raw_profile.get("recommended_inspection"),
+            field="recommended_inspection",
+            profile_name=profile_name,
+        ),
+    )
+
+
+def resolve_settings(args: argparse.Namespace, root: Path) -> RunnerSettings:
+    profile: ProjectProfile | None = None
+    if args.profile:
+        profile = load_profile(root, args.profiles_config, args.profile.strip())
+
+    project_name = (args.project_name or (profile.project_name if profile else "")).strip()
+    repo_path = (args.repo_path or (profile.repo_path if profile else "")).strip()
+    main_branch = (args.main_branch or (profile.main_branch if profile else "main")).strip() or "main"
+    test_command = profile.test_command if profile else "python -m pytest"
+    health_command = profile.health_command if profile else ""
+    notes = profile.notes if profile else ()
+    default_forbidden_notes = profile.default_forbidden_notes if profile else ()
+    recommended_inspection = profile.recommended_inspection if profile else ()
+
+    if not project_name:
+        raise InputError("--project-name is required unless --profile provides project_name.")
+    if not repo_path:
+        raise InputError("--repo-path is required unless --profile provides repo_path.")
+
+    return RunnerSettings(
+        profile_name=profile.name if profile else None,
+        project_name=project_name,
+        repo_path=repo_path,
+        main_branch=main_branch,
+        test_command=test_command,
+        health_command=health_command,
+        notes=notes,
+        default_forbidden_notes=default_forbidden_notes,
+        recommended_inspection=recommended_inspection,
+    )
+
+
 def validate_args(args: argparse.Namespace) -> None:
     if args.mode.strip() != "prepare":
-        raise InputError("--mode supports only 'prepare' in STEP 300.")
-
-    if not args.project_name.strip():
-        raise InputError("--project-name must not be empty.")
+        raise InputError("--mode supports only 'prepare' in STEP 310-330.")
 
     step = args.step.strip()
     if not step.isdigit():
@@ -120,11 +256,11 @@ def safe_path_component(value: str) -> str:
     return cleaned or "project"
 
 
-def output_step_dir(args: argparse.Namespace, root: Path) -> Path:
+def output_step_dir(args: argparse.Namespace, settings: RunnerSettings, root: Path) -> Path:
     base = Path(args.output_dir).expanduser()
     if not base.is_absolute():
         base = root / base
-    return base / safe_path_component(args.project_name) / f"step_{args.step.strip()}"
+    return base / safe_path_component(settings.project_name) / f"step_{args.step.strip()}"
 
 
 def run_command(command: list[str], *, cwd: Path) -> subprocess.CompletedProcess[str]:
@@ -147,7 +283,11 @@ def read_git_snapshot(target_repo: Path) -> GitSnapshot:
         ("working tree", status_result),
         ("recent commits", log_result),
     ]
-    failed = [f"{label}: {result.stderr.strip() or result.stdout.strip()}" for label, result in failures if result.returncode != 0]
+    failed = [
+        f"{label}: {result.stderr.strip() or result.stdout.strip()}"
+        for label, result in failures
+        if result.returncode != 0
+    ]
     if failed:
         raise RuntimeError("Unable to read target Git status: " + " | ".join(failed))
 
@@ -162,7 +302,37 @@ def markdown_block(value: str) -> str:
     return value.strip() if value.strip() else "(none)"
 
 
-def build_task_packet(args: argparse.Namespace, target_repo: Path, snapshot: GitSnapshot) -> str:
+def bullet_lines(values: tuple[str, ...], *, fallback: str) -> str:
+    if not values:
+        return f"- {fallback}"
+    return "\n".join(f"- {value}" for value in values)
+
+
+def inspection_lines(settings: RunnerSettings) -> str:
+    defaults = (
+        "README.md",
+        "AGENTS.md se presente",
+        "CHANGELOG.md se presente",
+        "docs/** rilevanti",
+        "tests/** rilevanti",
+        "script di verifica documentati dal progetto",
+        "file specifici indicati da Alberto per lo step",
+    )
+    merged = [*defaults, *settings.recommended_inspection]
+    return "\n".join(f"- `{item}`" if "/" in item or "." in item else f"- {item}" for item in merged)
+
+
+def previous_step_note(step: str) -> str:
+    try:
+        previous = int(step) - 10
+    except ValueError:
+        return "Prerequisito non deducibile automaticamente; controllare manualmente lo step precedente su main."
+    if previous <= 0:
+        return "Prerequisito non deducibile automaticamente; controllare manualmente lo stato di main."
+    return f"Controllare manualmente che lo step {previous} risulti gia' su main prima di procedere."
+
+
+def build_task_packet(args: argparse.Namespace, settings: RunnerSettings, target_repo: Path, snapshot: GitSnapshot) -> str:
     step = args.step.strip()
     title = args.title.strip()
     branch = args.branch.strip()
@@ -173,11 +343,13 @@ def build_task_packet(args: argparse.Namespace, target_repo: Path, snapshot: Git
 
 ## Project context
 
-Repository target: `{args.project_name.strip()}`.
+Repository target: `{settings.project_name}`.
+
+Profilo runner: `{settings.profile_label}`.
 
 Cartella locale target: `{target_repo}`.
 
-Branch principale: `{args.main_branch.strip()}`.
+Branch principale: `{settings.main_branch}`.
 
 Branch corrente rilevato nel target: `{snapshot.branch}`.
 
@@ -187,8 +359,9 @@ Metodo operativo: ChatGPT prepara e rivede il task packet, Codex lavora solo dop
 
 ## Prerequisito
 
+- {previous_step_note(step)}
 - Verificare che il repository target sia quello atteso.
-- Verificare che il branch principale sia `{args.main_branch.strip()}`.
+- Verificare che il branch principale sia `{settings.main_branch}`.
 - Verificare che il branch di lavoro previsto sia `{branch}`.
 - Se la working tree e' `DIRTY/WARNING`, Alberto deve decidere se proseguire, integrare lo stato esistente o fermarsi.
 
@@ -244,16 +417,15 @@ Se il progetto target richiede scope diverso, fermarsi e chiedere conferma prima
 - Non modificare secret, `.env`, dati sensibili, CI o dipendenze.
 - Non invocare Codex da script.
 - Non automatizzare commit/push/PR/merge.
+{bullet_lines(settings.default_forbidden_notes, fallback="Nessuna nota vietata aggiuntiva dal profilo.")}
 
 ## File da ispezionare
 
-- `README.md`
-- `AGENTS.md` se presente
-- `CHANGELOG.md` se presente
-- `docs/**` rilevanti
-- `tests/**` rilevanti
-- script di verifica documentati dal progetto
-- file specifici indicati da Alberto per lo step
+{inspection_lines(settings)}
+
+## Note safety dal profilo
+
+{bullet_lines(settings.notes, fallback="Nessuna nota safety di profilo.")}
 
 ## Stato Git target rilevato read-only
 
@@ -293,7 +465,7 @@ Ultimi commit:
 Eseguire o motivare se non eseguiti:
 
 ```powershell
-python -m pytest
+{settings.test_command}
 git diff --check
 git status --short
 ```
@@ -377,68 +549,270 @@ Safe stop se:
 """
 
 
-def build_handoff(args: argparse.Namespace, target_repo: Path, task_packet: Path, report: Path, snapshot: GitSnapshot) -> str:
-    return f"""# ASF Next Step Runner - Codex Handoff
+def build_handoff(
+    args: argparse.Namespace,
+    settings: RunnerSettings,
+    target_repo: Path,
+    task_packet: Path,
+    report: Path,
+    verification_pack: Path,
+    snapshot: GitSnapshot,
+) -> str:
+    step = args.step.strip()
+    title = args.title.strip()
+    branch = args.branch.strip()
+    objective = args.objective.strip()
 
-## Progetto
+    return f"""# STEP {step} - {title}
 
-- Nome: `{args.project_name.strip()}`
-- Repo path: `{target_repo}`
-- Branch principale: `{args.main_branch.strip()}`
-- Branch corrente rilevato: `{snapshot.branch}`
+Questo handoff e' stato generato dal runner; deve comunque essere revisionato da Alberto/ChatGPT prima dell'uso.
+
+## Contesto progetto target
+
+- Repository: `{settings.project_name}`
+- Cartella locale: `{target_repo}`
+- Branch principale: `{settings.main_branch}`
+- Branch di lavoro previsto: `{branch}`
+- Profilo runner: `{settings.profile_label}`
+
+## Stato Git letto dal runner
+
+- Branch corrente target: `{snapshot.branch}`
 - Working tree: `{snapshot.working_tree_state}`
 
-## Step
+Ultimi commit:
 
-- Step: {args.step.strip()}
-- Titolo: {args.title.strip()}
-- Branch previsto: `{args.branch.strip()}`
-- Obiettivo: {args.objective.strip()}
+```text
+{markdown_block(snapshot.recent_commits)}
+```
+
+Dettaglio working tree:
+
+```text
+{markdown_block(snapshot.status)}
+```
 
 ## Prerequisito
 
-Leggere il task packet generato prima di qualsiasi modifica:
+- {previous_step_note(step)}
+- Se il prerequisito non e' chiaro, controllarlo manualmente prima di modificare file.
+- Se la working tree e' `DIRTY/WARNING`, Alberto deve decidere se proseguire.
+
+## Obiettivo
+
+{objective}
+
+## FASE 1 - Allineamento sintetico
+
+### Riepilogo
+
+Preparare lo step {step} sul repository target mantenendo gate umano, branch dedicato, scope controllato e verifiche esplicite.
+
+### Assunzioni
+
+- [100] Il repository target e' quello indicato sopra.
+- [101] Il branch di lavoro previsto e' `{branch}`.
+- [102] Codex lavora solo dopo conferma di Alberto.
+- [103] Il task packet generato e' una bozza da revisionare.
+
+### Domande chiuse
+
+- A) Procedere con il task packet generato dopo review umana. Default A.
+- B) Rigenerare il task packet con obiettivo piu' stretto.
+- C) Fermarsi per working tree `DIRTY/WARNING`.
+- D) Fermarsi per prerequisito non verificato su main.
+
+### Criticita'
+
+- Verificare prerequisito su main.
+- Verificare scope incluso ed escluso.
+- Verificare eventuali note safety del profilo.
+- Non trattare il report runner come Step Closure Report.
+
+## FASE 2 - Istruzioni operative per Codex
+
+### Istruzioni
+
+- Leggere prima il task packet:
 
 ```text
 {task_packet}
 ```
 
-Se la working tree e' `DIRTY/WARNING`, fermarsi e chiedere conferma ad Alberto prima di modificare file.
+- Usare il verification pack come checklist locale:
 
-## Vincoli
+```text
+{verification_pack}
+```
 
-- Lavorare solo dopo conferma umana.
-- Usare branch dedicato.
-- Mantenere diff piccolo, testabile e reversibile.
-- Non modificare repository target fuori dallo scope del task packet.
-- Non modificare CI, dipendenze, secret, `.env`, dati sensibili o produzione.
+- Lavorare solo sul branch previsto dopo conferma umana.
+- Se serve allargare scope, fermarsi e chiedere conferma.
 
-## Forbidden actions
+### File da ispezionare
 
-- Nessun commit/push/PR/merge da parte di Codex.
-- Non fare commit.
-- Non fare push.
-- Non aprire PR.
-- Non fare merge.
-- Non modificare direttamente GitHub.
-- Non creare release.
-- Non installare hook Git.
-- Non modificare git config core.hooksPath.
-- Non invocare altri agenti o Codex automaticamente.
+{inspection_lines(settings)}
 
-## Test
+### Scope incluso
 
-Eseguire i test e le verifiche indicate dal task packet. Se una verifica non e' eseguita, dichiarare motivo e rischio residuo.
+- File e cartelle indicati dal task packet.
+- Documentazione e test coerenti con lo step.
+- Piccole modifiche reversibili e verificabili.
 
-## Report finale
+### Scope escluso
 
-Il report finale deve includere file creati, file modificati, comandi eseguiti, risultati, verifiche non eseguite, rischi, conferme vincoli e prossimo step consigliato.
+- CI.
+- Dipendenze.
+- Secret e `.env`.
+- Dati sensibili.
+- Produzione.
+- Repository target fuori dallo scope.
 
-Runner report operativo:
+### Forbidden actions
+
+- Codex non deve fare commit/push/PR/merge.
+- Codex non deve modificare direttamente GitHub.
+- Codex non deve modificare hook/core.hooksPath.
+- Codex non deve toccare secret/.env.
+- Codex non deve allargare scope.
+- Codex non deve invocare altri agenti o Codex automaticamente.
+
+### Note safety dal profilo
+
+{bullet_lines(settings.notes, fallback="Nessuna nota safety di profilo.")}
+
+### Comandi di verifica
+
+```powershell
+git branch --show-current
+git status --short
+git --no-pager log --oneline --max-count=10
+{settings.test_command}
+git --no-pager diff --stat
+git --no-pager diff --check
+```
+
+### Output finale richiesto
+
+- step eseguito;
+- stato;
+- branch corrente;
+- file creati;
+- file modificati;
+- descrizione tecnica sintetica;
+- comandi eseguiti e risultati;
+- verifiche non eseguite;
+- rischi o note;
+- conferme vincoli;
+- prossimo step consigliato;
+- richiesta esplicita di Step Closure Report.
+
+## Step Closure Report
+
+Dopo lavoro locale, commit/push/PR/merge eventualmente eseguiti manualmente da Alberto e verifica finale su main, compilare lo Step Closure Report:
+
+```text
+templates/codex_tasks/step_closure_report_template.md
+```
+
+## Report runner
 
 ```text
 {report}
 ```
+"""
+
+
+def build_verification_pack(
+    args: argparse.Namespace,
+    settings: RunnerSettings,
+    target_repo: Path,
+    snapshot: GitSnapshot,
+    task_packet: Path,
+    report: Path,
+) -> str:
+    return f"""# ASF Runner Verification Pack
+
+## Progetto target
+
+- Progetto: `{settings.project_name}`
+- Repo path: `{target_repo}`
+- Profilo runner: `{settings.profile_label}`
+
+## Step
+
+- Step: `{args.step.strip()}`
+- Titolo: `{args.title.strip()}`
+- Branch previsto: `{args.branch.strip()}`
+
+## Stato Git target letto dal runner
+
+- Branch corrente target: `{snapshot.branch}`
+- Working tree: `{snapshot.working_tree_state}`
+
+Ultimi commit:
+
+```text
+{markdown_block(snapshot.recent_commits)}
+```
+
+Dettaglio working tree:
+
+```text
+{markdown_block(snapshot.status)}
+```
+
+## Pre-Codex checks consigliati
+
+Eseguire nel repository target:
+
+```powershell
+git branch --show-current
+git status --short
+git --no-pager log --oneline --max-count=10
+```
+
+## Post-Codex local checks consigliati
+
+Eseguire nel repository target:
+
+```powershell
+git status --short
+git --no-pager diff --stat
+git --no-pager diff --check
+{settings.test_command}
+```
+
+## ASF checks lato AI_Software_Factory
+
+```powershell
+python scripts/validate_task_packet.py "{task_packet}"
+python scripts/validate_task_packet.py --strict "{task_packet}"
+```
+
+Runner report review:
+
+```text
+{report}
+```
+
+## Human gates
+
+- Review diff.
+- Verificare scope incluso.
+- Verificare scope escluso.
+- Verificare vincoli e forbidden actions.
+- Verificare note safety del profilo.
+- Solo dopo procedere manualmente al ciclo Git presidiato usando Quick Reference e Command Cookbook.
+
+## Riferimenti
+
+- `docs/36_WORKFLOW_QUICK_REFERENCE.md`
+- `docs/37_STEP_CLOSURE_REPORT.md`
+- `docs/38_WORKFLOW_COMMAND_COOKBOOK.md`
+
+## Nota
+
+Il Verification Pack non sostituisce test, review umana, PR checks o Step Closure Report. Non contiene comandi per automatizzare commit, push, PR o merge.
 """
 
 
@@ -480,10 +854,12 @@ Errors:
 
 def build_report(
     args: argparse.Namespace,
+    settings: RunnerSettings,
     target_repo: Path,
     output_dir: Path,
     task_packet: Path,
     handoff: Path,
+    verification_pack: Path,
     report: Path,
     snapshot: GitSnapshot,
     validations: list[ValidationResult],
@@ -500,13 +876,15 @@ def build_report(
 
 ## Summary
 
-- project-name: `{args.project_name.strip()}`
+- project-name: `{settings.project_name}`
+- profile: `{settings.profile_label}`
 - repo-path: `{target_repo}`
 - mode: `prepare`
 - step: `{args.step.strip()}`
 - title: `{args.title.strip()}`
 - branch previsto: `{args.branch.strip()}`
 - output-dir: `{output_dir}`
+- handoff improvements active: yes
 
 ## Target Git status
 
@@ -530,6 +908,7 @@ Ultimi commit:
 - `task_packet.md`: `{task_packet}`
 - `codex_handoff.md`: `{handoff}`
 - `runner_report.md`: `{report}`
+- `verification_pack.md`: `{verification_pack}`
 
 ## Validazione
 
@@ -565,30 +944,52 @@ def write_text(path: Path, content: str) -> None:
 
 def prepare(args: argparse.Namespace) -> int:
     root = repo_root()
-    target_repo = resolve_target_repo(args.repo_path)
+    settings = resolve_settings(args, root)
+    target_repo = resolve_target_repo(settings.repo_path)
     snapshot = read_git_snapshot(target_repo)
 
-    out_dir = output_step_dir(args, root)
+    out_dir = output_step_dir(args, settings, root)
     task_packet_path = out_dir / "task_packet.md"
     handoff_path = out_dir / "codex_handoff.md"
     report_path = out_dir / "runner_report.md"
+    verification_pack_path = out_dir / "verification_pack.md"
 
-    task_packet = build_task_packet(args, target_repo, snapshot)
+    task_packet = build_task_packet(args, settings, target_repo, snapshot)
     write_text(task_packet_path, task_packet)
 
     validations = [run_validation(root, task_packet_path, strict=False)]
     if args.strict_ready:
         validations.append(run_validation(root, task_packet_path, strict=True))
 
-    handoff = build_handoff(args, target_repo, task_packet_path, report_path, snapshot)
+    verification_pack = build_verification_pack(
+        args,
+        settings,
+        target_repo,
+        snapshot,
+        task_packet_path,
+        report_path,
+    )
+    write_text(verification_pack_path, verification_pack)
+
+    handoff = build_handoff(
+        args,
+        settings,
+        target_repo,
+        task_packet_path,
+        report_path,
+        verification_pack_path,
+        snapshot,
+    )
     write_text(handoff_path, handoff)
 
     report = build_report(
         args,
+        settings,
         target_repo,
         out_dir,
         task_packet_path,
         handoff_path,
+        verification_pack_path,
         report_path,
         snapshot,
         validations,

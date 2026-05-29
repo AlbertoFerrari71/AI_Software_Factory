@@ -99,9 +99,9 @@ La dashboard puo' aiutare a raccogliere evidenze, ma non sostituisce il report d
 
 ### ASF Next Step Runner
 
-ASF Next Step Runner prepara task packet, handoff Codex e runner report per lo step successivo.
+ASF Next Step Runner prepara task packet, handoff Codex, runner report e Verification Pack per lo step successivo.
 
-La dashboard mostra se il documento e lo script del runner sono presenti, ma non esegue il runner e non invoca Codex.
+La dashboard mostra se documenti, config e script del runner sono presenti, ma non esegue il runner e non invoca Codex.
 
 ---
 
@@ -161,6 +161,7 @@ Limiti intenzionali:
 - nessuna integrazione in CI;
 - nessuna modifica a `scripts/verify.ps1`.
 - nessuna invocazione di ASF Next Step Runner.
+- nessuna validazione semantica dei profili progetto.
 
 La dashboard non sostituisce test, Verification Gate, Workflow Health Check, PR checks o Step Closure Report.
 
@@ -173,6 +174,10 @@ La dashboard non sostituisce test, Verification Gate, Workflow Health Check, PR 
 - `docs/36_WORKFLOW_QUICK_REFERENCE.md`
 - `docs/37_STEP_CLOSURE_REPORT.md`
 - `docs/38_WORKFLOW_COMMAND_COOKBOOK.md`
+- `docs/42_ASF_NEXT_STEP_RUNNER.md`
+- `docs/43_ASF_RUNNER_PROJECT_PROFILES.md`
+- `docs/44_ASF_RUNNER_CODEX_HANDOFF_IMPROVEMENTS.md`
+- `docs/45_ASF_RUNNER_VERIFICATION_PACK.md`
 - `docs/40_RELEASE_READINESS.md`
 - `docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md`
 - `docs/42_ASF_NEXT_STEP_RUNNER.md`

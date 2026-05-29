@@ -1,0 +1,53 @@
+{
+  "profiles": {
+    "AI_Software_Factory": {
+      "project_name": "AI_Software_Factory",
+      "repo_path": "C:\\Users\\alberto.ferrari\\source\\repos\\AI_Software_Factory",
+      "main_branch": "main",
+      "test_command": "python -m pytest",
+      "health_command": "python scripts/check_workflow_health.py",
+      "notes": [
+        "Local-first framework repository.",
+        "Do not bypass human gate.",
+        "Keep runner outputs under tmp/ and ignored by Git."
+      ],
+      "default_forbidden_notes": [
+        "Do not invoke Codex automatically.",
+        "Do not modify target repositories from the runner."
+      ],
+      "recommended_inspection": [
+        "README.md",
+        "CHANGELOG.md",
+        "docs/10_ROADMAP.md",
+        "docs/11_DECISIONS.md",
+        "docs/42_ASF_NEXT_STEP_RUNNER.md",
+        "scripts/asf_next_step.py",
+        "tests/unit/test_asf_next_step_runner.py"
+      ]
+    },
+    "Family_Photo_Organizer": {
+      "project_name": "Family_Photo_Organizer",
+      "repo_path": "C:\\Users\\alberto.ferrari\\source\\repos\\Family_Photo_Organizer",
+      "main_branch": "main",
+      "test_command": "python -m pytest",
+      "notes": [
+        "Safety-first photo organizer demo.",
+        "No real archives.",
+        "No delete/move/rename physical operations.",
+        "No export/download unless explicitly authorized by a future gate."
+      ],
+      "default_forbidden_notes": [
+        "Do not perform physical photo archive operations.",
+        "Do not expand beyond static or demo-safe behavior without a future gate."
+      ],
+      "recommended_inspection": [
+        "README.md",
+        "docs/ROADMAP.md",
+        "docs/DECISIONS.md",
+        "docs/SAFETY_BOUNDARY_CURRENT.md",
+        "docs/SAFETY_POLICY.md",
+        "backend/app/core/safety.py"
+      ]
+    }
+  }
+}

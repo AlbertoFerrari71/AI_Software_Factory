@@ -55,6 +55,10 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/40_RELEASE_READINESS.md",
         "docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md",
         "docs/42_ASF_NEXT_STEP_RUNNER.md",
+        "docs/43_ASF_RUNNER_PROJECT_PROFILES.md",
+        "docs/44_ASF_RUNNER_CODEX_HANDOFF_IMPROVEMENTS.md",
+        "docs/45_ASF_RUNNER_VERIFICATION_PACK.md",
+        "config/asf_project_profiles.json",
         "scripts/asf_next_step.py",
         "scripts/generate_task_packet.py",
         "scripts/generate_task_packet.ps1",
@@ -70,6 +74,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "templates/codex_tasks/existing_project_intake_template.md",
         "templates/codex_tasks/first_pilot_step_packet_template.md",
         "templates/codex_tasks/asf_next_step_runner_handoff_template.md",
+        "templates/codex_tasks/asf_runner_verification_pack_template.md",
     ]
 
     issues: list[HealthIssue] = []
@@ -141,6 +146,9 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             ("Release Readiness", ["Release Readiness"]),
             ("Existing Project Pilot Onboarding", ["Existing Project Pilot Onboarding"]),
             ("ASF Next Step Runner", ["ASF Next Step Runner"]),
+            ("ASF Runner Project Profiles", ["ASF Runner Project Profiles"]),
+            ("ASF Runner Codex Handoff Improvements", ["ASF Runner Codex Handoff Improvements"]),
+            ("ASF Runner Verification Pack", ["ASF Runner Verification Pack"]),
             ("generate task packet script", ["scripts/generate_task_packet.py"]),
             ("task packet validator script", ["scripts/validate_task_packet.py"]),
             ("ASF Next Step Runner script", ["scripts/asf_next_step.py"]),
@@ -160,9 +168,20 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             ("Existing Project Intake template", ["templates/codex_tasks/existing_project_intake_template.md"]),
             ("First Pilot Step Packet template", ["templates/codex_tasks/first_pilot_step_packet_template.md"]),
             ("ASF Next Step Runner document", ["docs/42_ASF_NEXT_STEP_RUNNER.md"]),
+            ("ASF Runner Project Profiles document", ["docs/43_ASF_RUNNER_PROJECT_PROFILES.md"]),
+            (
+                "ASF Runner Codex Handoff Improvements document",
+                ["docs/44_ASF_RUNNER_CODEX_HANDOFF_IMPROVEMENTS.md"],
+            ),
+            ("ASF Runner Verification Pack document", ["docs/45_ASF_RUNNER_VERIFICATION_PACK.md"]),
+            ("ASF project profiles config", ["config/asf_project_profiles.json"]),
             (
                 "ASF Next Step Runner handoff template",
                 ["templates/codex_tasks/asf_next_step_runner_handoff_template.md"],
+            ),
+            (
+                "ASF Runner Verification Pack template",
+                ["templates/codex_tasks/asf_runner_verification_pack_template.md"],
             ),
         ],
     )

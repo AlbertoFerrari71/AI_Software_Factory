@@ -40,6 +40,7 @@ Il livello attuale e' il Livello 2, chiamato `prepare mode`.
 
 In `prepare mode`, `scripts/asf_next_step.py`:
 
+- puo' usare `--profile` da `config/asf_project_profiles.json`;
 - controlla che il repo target esista e contenga `.git`;
 - legge il repo target con soli comandi Git read-only;
 - rileva branch corrente;
@@ -48,6 +49,7 @@ In `prepare mode`, `scripts/asf_next_step.py`:
 - genera `task_packet.md`;
 - genera `codex_handoff.md`;
 - genera `runner_report.md`;
+- genera `verification_pack.md`;
 - valida il task packet in Lite Mode;
 - valida il task packet in Strict Mode quando `--strict-ready` e' attivo;
 - indica il prossimo comando consigliato.
@@ -107,8 +109,9 @@ Parametri principali:
 - `CLEAN`: `git status --short` non ha restituito righe.
 - `DIRTY/WARNING`: il repository target ha modifiche locali o file non tracciati; Alberto deve decidere se proseguire.
 - `task_packet.md`: task packet generato e validato.
-- `codex_handoff.md`: testo pronto da copiare manualmente in Codex.
+- `codex_handoff.md`: testo pronto da rivedere e copiare manualmente in Codex, con FASE 1 / FASE 2, stato Git, prerequisito, scope, vincoli e note safety.
 - `runner_report.md`: report operativo del runner.
+- `verification_pack.md`: checklist read-only di controlli consigliati prima e dopo Codex.
 - `Lite PASS`: il task packet passa `scripts/validate_task_packet.py`.
 - `Strict PASS`: il task packet passa `scripts/validate_task_packet.py --strict`.
 
@@ -139,25 +142,31 @@ Mostrare help:
 python scripts/asf_next_step.py --help
 ```
 
-Prova locale sul repository AI Software Factory:
+Uso con profilo sul repository AI Software Factory:
 
 ```powershell
-python scripts/asf_next_step.py --mode prepare --project-name AI_Software_Factory --repo-path . --main-branch main --step 310 --title "ASF Next Step Runner Project Profiles" --branch step-310-asf-next-step-runner-project-profiles --objective "Add project profiles for ASF Next Step Runner." --strict-ready
+python scripts/asf_next_step.py --mode prepare --profile AI_Software_Factory --step 340 --title "ASF Runner Verification Pack Hardening" --branch step-340-asf-runner-verification-pack-hardening --objective "Harden verification pack generation for the ASF runner."
 ```
 
 Aprire il report:
 
 ```powershell
-Get-Content -Raw .\tmp\asf_next_step\AI_Software_Factory\step_310\runner_report.md
+Get-Content -Raw .\tmp\asf_next_step\AI_Software_Factory\step_340\runner_report.md
 ```
 
 ---
 
-## 10. Prossimi sviluppi
+## 10. Documenti upgrade runner
+
+- `docs/43_ASF_RUNNER_PROJECT_PROFILES.md`
+- `docs/44_ASF_RUNNER_CODEX_HANDOFF_IMPROVEMENTS.md`
+- `docs/45_ASF_RUNNER_VERIFICATION_PACK.md`
+
+---
+
+## 11. Prossimi sviluppi
 
 Possibili step futuri:
 
-- 310. ASF Next Step Runner Project Profiles;
-- 320. ASF Runner Codex Handoff Improvements;
-- 330. ASF Runner Verification Pack.
-
+- 340. ASF Runner Verification Pack Hardening;
+- OpenAI API Adapter in uno step successivo separato.

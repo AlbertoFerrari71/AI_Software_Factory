@@ -31,6 +31,7 @@ The script `scripts/check_workflow_health.py` checks:
 - `docs/40_RELEASE_READINESS.md` and `templates/codex_tasks/release_readiness_checklist.md` are present and linked from the Project Workflow Index;
 - `docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md`, `templates/codex_tasks/existing_project_intake_template.md` and `templates/codex_tasks/first_pilot_step_packet_template.md` are present and linked from the Project Workflow Index;
 - `docs/42_ASF_NEXT_STEP_RUNNER.md`, `scripts/asf_next_step.py` and `templates/codex_tasks/asf_next_step_runner_handoff_template.md` are present and linked from the Project Workflow Index;
+- `docs/43_ASF_RUNNER_PROJECT_PROFILES.md`, `docs/44_ASF_RUNNER_CODEX_HANDOFF_IMPROVEMENTS.md`, `docs/45_ASF_RUNNER_VERIFICATION_PACK.md`, `config/asf_project_profiles.json` and `templates/codex_tasks/asf_runner_verification_pack_template.md` are present and linked from the Project Workflow Index;
 - operational scripts do not contain dangerous Git/GitHub command patterns.
 
 The covered areas include:
@@ -51,6 +52,9 @@ The covered areas include:
 - Release Readiness;
 - Existing Project Pilot Onboarding;
 - ASF Next Step Runner;
+- ASF Runner Project Profiles;
+- ASF Runner Codex Handoff Improvements;
+- ASF Runner Verification Pack;
 - Project Workflow Index.
 
 ---

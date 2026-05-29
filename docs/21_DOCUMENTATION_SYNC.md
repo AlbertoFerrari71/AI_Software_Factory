@@ -73,6 +73,11 @@ Examples:
 - update `docs/40_RELEASE_READINESS.md` when pilot readiness levels, go/warning/no-go criteria, pilot scope rules, or readiness templates change;
 - update `docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md` when existing-project intake, pilot risk mapping, first pilot step rules, or pilot templates change;
 - update `docs/42_ASF_NEXT_STEP_RUNNER.md` when runner prepare mode, generated outputs, validation behavior, or handoff rules change;
+- update `docs/43_ASF_RUNNER_PROJECT_PROFILES.md` when project profiles, config format, override behavior, or profile safety rules change;
+- update `docs/44_ASF_RUNNER_CODEX_HANDOFF_IMPROVEMENTS.md` when generated handoff structure, FASE 1 / FASE 2 content, or Human gate wording changes;
+- update `docs/45_ASF_RUNNER_VERIFICATION_PACK.md` when verification pack output, recommended checks, or manual gate references change;
+- update `config/asf_project_profiles.json` only when profile defaults need to change and no secrets are introduced;
+- update `templates/codex_tasks/asf_runner_verification_pack_template.md` when the Verification Pack structure changes;
 - update `docs/05_SECURITY_MODEL.md` or `policies/**` only when the Safety Model changes and the risk level is approved.
 
 ### Do not touch unless needed

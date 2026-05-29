@@ -169,10 +169,12 @@ def test_prepare_mode_creates_outputs_with_temporary_git_repo(tmp_path: Path) ->
     task_packet = step_dir / "task_packet.md"
     handoff = step_dir / "codex_handoff.md"
     report = step_dir / "runner_report.md"
+    verification_pack = step_dir / "verification_pack.md"
 
     assert task_packet.exists()
     assert handoff.exists()
     assert report.exists()
+    assert verification_pack.exists()
 
     report_content = read(report)
     task_content = read(task_packet)
@@ -180,6 +182,7 @@ def test_prepare_mode_creates_outputs_with_temporary_git_repo(tmp_path: Path) ->
     assert "CLEAN" in report_content or "DIRTY" in report_content
     assert "Lite: PASS" in report_content
     assert "Strict: PASS" in report_content
+    assert "verification_pack.md" in report_content
 
     required_task_fragments = [
         "580",

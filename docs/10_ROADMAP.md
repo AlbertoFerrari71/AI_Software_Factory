@@ -55,13 +55,14 @@ Esempio:
 | 280 | Release Readiness | Definire readiness per pilot interno local-first su progetto reale | Checklist GO/WARNING/NO-GO, template readiness, limiti no-release pubblica | MVP personale | Completato |
 | 290 | Existing Project Pilot Onboarding | Preparare l'applicazione del metodo a un progetto reale gia' avviato | Intake progetto, fotografia repo, rischi, primo step pilota | MVP personale | Completato |
 | 300 | ASF Next Step Runner | Preparare localmente il prossimo step senza saltare i gate umani | Runner prepare mode, handoff Codex, report, validazione Lite/Strict | MVP personale | Completato |
-| 310 | ASF Next Step Runner Project Profiles | Aggiungere profili progetto riusabili per il runner | Project profiles locali, default per repo target, test | MVP personale | Da fare |
-| 320 | ASF Runner Codex Handoff Improvements | Migliorare handoff e task packet generati dal runner | Handoff piu' ricco, template evoluto, test | MVP personale | Da fare |
-| 330 | ASF Runner Verification Pack | Rafforzare verifiche e report del runner senza CI automatica | Verification pack locale, controlli output, runbook | MVP personale | Da fare |
-| 340 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
-| 350 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
-| 360 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
-| 370 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
+| 310 | ASF Next Step Runner Project Profiles | Aggiungere profili progetto riusabili per il runner | Config profili, override manuali, note safety, test | MVP personale | Completato |
+| 320 | ASF Runner Codex Handoff Improvements | Migliorare handoff e task packet generati dal runner | Handoff FASE 1/FASE 2, stato Git, note safety, template evoluto | MVP personale | Completato |
+| 330 | ASF Runner Verification Pack | Rafforzare verifiche e report del runner senza CI automatica | Verification pack locale, controlli consigliati, runbook | MVP personale | Completato |
+| 340 | ASF Runner Verification Pack Hardening | Rafforzare output e controlli del Verification Pack dopo uso reale | Hardening contenuti, casi limite, verifiche read-only | MVP personale | Da fare |
+| 350 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
+| 360 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
+| 370 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
+| 380 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
 
 ---
 
@@ -700,12 +701,14 @@ Preparare localmente il prossimo step del workflow senza saltare i gate umani.
 
 Aggiungere profili progetto locali per ridurre gli argomenti ripetitivi del runner.
 
-### Output previsti
+### Output realizzati
 
-- profili progetto standard library only;
-- default per repo path, main branch e controlli;
+- config `config/asf_project_profiles.json`;
+- profili iniziali per `AI_Software_Factory` e `Family_Photo_Organizer`;
+- supporto CLI `--profile` con override manuali;
+- note safety, default forbidden notes e file consigliati da ispezionare;
 - nessuna modifica automatica ai repository target;
-- test su parsing e override dei profili.
+- test su parsing, override, profilo mancante e JSON malformato.
 
 ---
 
@@ -715,10 +718,13 @@ Aggiungere profili progetto locali per ridurre gli argomenti ripetitivi del runn
 
 Migliorare il formato dell'handoff Codex prodotto dal runner.
 
-### Output previsti
+### Output realizzati
 
-- template handoff piu' completo;
-- migliori sezioni per rischi, file da ispezionare e output finale;
+- `codex_handoff.md` piu' completo;
+- template handoff aggiornato;
+- sezioni FASE 1 e FASE 2;
+- stato Git target, prerequisito, scope incluso/escluso e note safety;
+- richiesta esplicita di Step Closure Report;
 - compatibilita' con Lite e Strict;
 - nessuna invocazione automatica di Codex.
 
@@ -730,16 +736,34 @@ Migliorare il formato dell'handoff Codex prodotto dal runner.
 
 Rafforzare verifiche e report del runner senza integrare nuovi check in CI.
 
-### Output previsti
+### Output realizzati
 
-- controlli locali sugli output del runner;
-- report piu' strutturato;
-- runbook per verifica manuale;
+- generazione `verification_pack.md` sotto `tmp/asf_next_step/<project>/step_<step>/`;
+- template `templates/codex_tasks/asf_runner_verification_pack_template.md`;
+- controlli Pre-Codex e Post-Codex consigliati;
+- riferimenti a Quick Reference, Command Cookbook e Step Closure Report;
+- report runner aggiornato con path Verification Pack e stato handoff improvements;
 - nessuna automazione commit/push/PR/merge.
 
 ---
 
-## 36. STEP 340 - OpenAI API Adapter
+## 36. STEP 340 - ASF Runner Verification Pack Hardening
+
+### Obiettivo
+
+Rafforzare Verification Pack e report del runner dopo uso reale su piu' profili.
+
+### Output previsti
+
+- casi limite su profili e repo target;
+- messaggi operativi piu' chiari;
+- controlli read-only aggiuntivi se utili;
+- nessuna integrazione CI;
+- nessuna automazione commit/push/PR/merge.
+
+---
+
+## 37. STEP 350 - OpenAI API Adapter
 
 ### Obiettivo
 
@@ -755,7 +779,7 @@ Collegare Responses API e Structured Outputs.
 
 ---
 
-## 37. STEP 350 - MCP Tool Registry
+## 38. STEP 360 - MCP Tool Registry
 
 ### Obiettivo
 
@@ -770,7 +794,7 @@ Gestire tool esterni in modo sicuro.
 
 ---
 
-## 38. STEP 360 - Guided Mode
+## 39. STEP 370 - Guided Mode
 
 ### Obiettivo
 
@@ -785,7 +809,7 @@ Rendere il framework utilizzabile da utenti non tecnici.
 
 ---
 
-## 39. STEP 370 - SaaS Evolution Plan
+## 40. STEP 380 - SaaS Evolution Plan
 
 ### Obiettivo
 

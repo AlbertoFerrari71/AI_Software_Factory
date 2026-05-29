@@ -121,10 +121,12 @@ Usare questi file dopo la readiness e prima del primo pilot reale. Servono a far
 ## 7.4 Preparare ASF Next Step Runner
 
 ```powershell
-python scripts/asf_next_step.py --mode prepare --project-name AI_Software_Factory --repo-path . --main-branch main --step 310 --title "ASF Next Step Runner Project Profiles" --branch step-310-asf-next-step-runner-project-profiles --objective "Add project profiles for ASF Next Step Runner." --strict-ready
+python scripts/asf_next_step.py --mode prepare --profile AI_Software_Factory --step 340 --title "ASF Runner Verification Pack Hardening" --branch step-340-asf-runner-verification-pack-hardening --objective "Harden verification pack generation for the ASF runner."
 ```
 
-Il runner genera `task_packet.md`, `codex_handoff.md` e `runner_report.md` sotto `tmp/asf_next_step/`. Non invoca Codex, non modifica il repo target e non fa commit, push, PR o merge.
+Il runner genera `task_packet.md`, `codex_handoff.md`, `runner_report.md` e `verification_pack.md` sotto `tmp/asf_next_step/`.
+
+`--profile` legge default locali da `config/asf_project_profiles.json`. Non invoca Codex, non modifica il repo target e non fa commit, push, PR o merge.
 
 ---
 
