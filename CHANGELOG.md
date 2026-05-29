@@ -4,6 +4,37 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.22.0] - 2026-05-29
+
+### Added
+
+- STEP 220 - Project Workflow Index.
+- Documento `docs/34_PROJECT_WORKFLOW_INDEX.md`.
+- Test automatici in `tests/unit/test_project_workflow_index.py`.
+
+### Changed
+
+- Aggiornato `README.md` con un rimando breve all'indice operativo.
+- Aggiornato `docs/33_PROMPT_PACKET_GENERATOR_DEVELOPER_ONBOARDING.md` con il collegamento al Project Workflow Index.
+- Aggiornato `docs/21_DOCUMENTATION_SYNC.md` con il documento STEP 220.
+- Aggiornata roadmap: STEP 220 completato e STEP 230 consigliato come Workflow Health Check.
+- Aggiornato decision log con la scelta dell'indice operativo centrale.
+
+### Not included
+
+- Nessuno script per automatizzare commit, push, PR o merge.
+- Nessuna modifica a GitHub.
+- Nessuna GitHub Release.
+- Nessuna pubblicazione PyPI o registry.
+- Nessuna nuova dipendenza.
+- Nessuna modifica a CI, `src/**`, `policies/**`, hook, script Git/GitHub, secret o `.env`.
+- Nessuna installazione hook Git.
+- Nessuna modifica a `git config core.hooksPath`.
+- Nessuna modifica a PATH o profili PowerShell.
+- Nessun commit, push, PR o merge automatico.
+
+---
+
 ## [0.21.0] - 2026-05-29
 
 ### Added

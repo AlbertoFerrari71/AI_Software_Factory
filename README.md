@@ -161,6 +161,14 @@ tests/                         Smoke/unit/integration tests
 .github/                       Workflow CI e template GitHub
 ```
 
+Indice operativo centrale:
+
+```text
+docs/34_PROJECT_WORKFLOW_INDEX.md
+```
+
+Usarlo per orientarsi tra Prompt Packet Generator, Verification Gate, Documentation Sync, Soft Protection Guardrails, lifecycle checklist, onboarding e script locali.
+
 ---
 
 ## 8. Setup locale minimo
