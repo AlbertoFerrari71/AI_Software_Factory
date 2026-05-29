@@ -24,6 +24,7 @@ The script `scripts/check_workflow_health.py` checks:
 - `docs/34_PROJECT_WORKFLOW_INDEX.md` links the core workflow areas;
 - `docs/33_PROMPT_PACKET_GENERATOR_DEVELOPER_ONBOARDING.md` still contains Quickstart, roles and validation references;
 - `docs/32_PROMPT_PACKET_LIFECYCLE_CHECKLIST.md` still contains the critical handoff sequence;
+- `docs/36_WORKFLOW_QUICK_REFERENCE.md` is present and linked from the Project Workflow Index;
 - operational scripts do not contain dangerous Git/GitHub command patterns.
 
 The covered areas include:
@@ -37,6 +38,7 @@ The covered areas include:
 - Release Smoke Workflow;
 - Lifecycle Checklist;
 - Developer Onboarding;
+- Workflow Quick Reference;
 - Project Workflow Index.
 
 ---
@@ -162,3 +164,5 @@ A future step can decide whether to include it in CI or `scripts/verify.ps1`.
 `docs/34_PROJECT_WORKFLOW_INDEX.md` is the central navigation document.
 
 The Workflow Health Check protects that index by checking that it still references the main workflow areas and scripts. If the index changes substantially, update this health check only when the operational entry points change.
+
+After STEP 240, the health check also treats `docs/36_WORKFLOW_QUICK_REFERENCE.md` as a core workflow document because it is the compact command entry point for daily use.

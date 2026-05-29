@@ -24,6 +24,7 @@ L'indice orienta il lavoro. Non sostituisce i documenti specifici, il Verificati
 | Eseguire il Release Smoke Workflow | `docs/31_PROMPT_PACKET_GENERATOR_RELEASE_SMOKE_WORKFLOW.md` | `scripts/smoke_prompt_packet_release.ps1` | Dopo modifiche a generator, wrapper o packaging | Verifica generazione, Lite Mode e Strict Mode |
 | Seguire il lifecycle completo | `docs/32_PROMPT_PACKET_LIFECYCLE_CHECKLIST.md` | `templates/codex_tasks/prompt_packet_lifecycle_checklist.md` | Da preparazione step a merge su `main` | Alberto esegue commit, push, PR e merge |
 | Fare Developer Onboarding | `docs/33_PROMPT_PACKET_GENERATOR_DEVELOPER_ONBOARDING.md` | Comandi PowerShell documentati | Quando una persona interna deve iniziare a usare il workflow | Entry point pratico per generator e checklist |
+| Consultare Workflow Quick Reference | `docs/36_WORKFLOW_QUICK_REFERENCE.md` | Comandi PowerShell documentati | Quando serve una scheda breve per uso quotidiano | Non sostituisce la lifecycle checklist |
 | Eseguire Verification Gate | `docs/20_VERIFICATION_GATE.md` | `scripts/verify.ps1` | Prima di commit/push/PR e dopo merge quando richiesto | Include test, `git diff --check`, `git status --short` |
 | Controllare Documentation Sync | `docs/21_DOCUMENTATION_SYNC.md` | Nessuno | Ogni step documentale o operativo | Valuta changelog, roadmap, decisions e documenti specifici |
 | Controllare Soft Protection Guardrails | `docs/24_SOFT_PROTECTION_GUARDRAILS.md` | `scripts/git/check_soft_guardrails.ps1` | Prima del commit o come controllo locale | Read-only; non installa hook |
@@ -69,6 +70,7 @@ Regole operative:
 - `docs/32_PROMPT_PACKET_LIFECYCLE_CHECKLIST.md`: ciclo operativo completo fino allo step su `main`.
 - `docs/33_PROMPT_PACKET_GENERATOR_DEVELOPER_ONBOARDING.md`: onboarding per sviluppatori e utilizzatori interni.
 - `docs/35_WORKFLOW_HEALTH_CHECK.md`: controllo locale read-only sulla navigabilita' del workflow.
+- `docs/36_WORKFLOW_QUICK_REFERENCE.md`: scheda breve con comandi quotidiani e handoff presidiato.
 
 ---
 
@@ -143,6 +145,8 @@ Controllare stato Git finale:
 git status --short
 git diff --check
 ```
+
+Per una scheda compatta con i comandi piu' usati, usare `docs/36_WORKFLOW_QUICK_REFERENCE.md`.
 
 I comandi di commit, push, PR e merge restano azioni manuali di Alberto e non sono raccolti qui in una sequenza automatica.
 

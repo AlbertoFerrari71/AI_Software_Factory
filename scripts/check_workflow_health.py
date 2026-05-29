@@ -48,6 +48,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/33_PROMPT_PACKET_GENERATOR_DEVELOPER_ONBOARDING.md",
         "docs/34_PROJECT_WORKFLOW_INDEX.md",
         "docs/35_WORKFLOW_HEALTH_CHECK.md",
+        "docs/36_WORKFLOW_QUICK_REFERENCE.md",
         "scripts/generate_task_packet.py",
         "scripts/generate_task_packet.ps1",
         "scripts/smoke_prompt_packet_release.ps1",
@@ -120,12 +121,14 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             ("Release Smoke Workflow", ["Release Smoke Workflow"]),
             ("Lifecycle Checklist", ["Lifecycle Checklist"]),
             ("Developer Onboarding", ["Developer Onboarding"]),
+            ("Workflow Quick Reference", ["Workflow Quick Reference"]),
             ("generate task packet script", ["scripts/generate_task_packet.py"]),
             ("task packet validator script", ["scripts/validate_task_packet.py"]),
             ("verification gate script", ["scripts/verify.ps1"]),
             ("soft guardrails check script", ["scripts/git/check_soft_guardrails.ps1"]),
             ("Workflow Health Check document", ["docs/35_WORKFLOW_HEALTH_CHECK.md"]),
             ("Workflow Health Check script", ["scripts/check_workflow_health.py"]),
+            ("Workflow Quick Reference document", ["docs/36_WORKFLOW_QUICK_REFERENCE.md"]),
         ],
     )
 
