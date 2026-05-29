@@ -1145,3 +1145,43 @@ Il workflow e' ormai navigabile, ma l'operatore ha bisogno di una pagina breve p
 ### Conseguenze
 
 Il Project Workflow Index e il Workflow Health Check includono la quick reference come documento operativo centrale. Lo STEP 250 consigliato e' Step Closure Report, per standardizzare il riepilogo post-merge e la chiusura dello step prima del successivo.
+
+---
+
+## DEC-045 - Step Closure Report
+
+**Data:** 2026-05-29
+**Stato:** Accettata
+
+### Contesto
+
+Dopo Workflow Quick Reference serve uno standard per dichiarare quando uno step e' davvero chiuso. Il report Codex locale non basta: uno step puo' essere completato sul branch ma non ancora pushato, senza PR, senza merge o senza verifica finale su `main`.
+
+### Decisione
+
+Introdurre `docs/37_STEP_CLOSURE_REPORT.md` e `templates/codex_tasks/step_closure_report_template.md`.
+
+Lo Step Closure Report distingue:
+
+- completamento locale Codex;
+- commit sul branch;
+- push;
+- PR;
+- check PR;
+- merge;
+- pull di `main`;
+- test finali;
+- Verification Gate;
+- Workflow Health Check;
+- working tree pulita;
+- prossimo step.
+
+Il report documenta anche il caso in cui `gh pr checks --watch` restituisce `no checks reported on the branch`: va registrato come attenzione da verificare, non come prova automatica di fallimento del codice.
+
+### Motivazione
+
+Il metodo deve impedire che un report locale venga scambiato per step chiuso su `main`. Separare stati e prove riduce errori operativi prima dello step successivo.
+
+### Conseguenze
+
+Lifecycle Checklist, Project Workflow Index, Workflow Quick Reference e Workflow Health Check includono il nuovo riferimento di chiusura. Lo STEP 260 consigliato e' Workflow Command Cookbook, per raccogliere scenari e comandi manuali ricorrenti senza introdurre automazioni Git rischiose.

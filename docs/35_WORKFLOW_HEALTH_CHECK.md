@@ -25,6 +25,7 @@ The script `scripts/check_workflow_health.py` checks:
 - `docs/33_PROMPT_PACKET_GENERATOR_DEVELOPER_ONBOARDING.md` still contains Quickstart, roles and validation references;
 - `docs/32_PROMPT_PACKET_LIFECYCLE_CHECKLIST.md` still contains the critical handoff sequence;
 - `docs/36_WORKFLOW_QUICK_REFERENCE.md` is present and linked from the Project Workflow Index;
+- `docs/37_STEP_CLOSURE_REPORT.md` and `templates/codex_tasks/step_closure_report_template.md` are present and linked from the Project Workflow Index;
 - operational scripts do not contain dangerous Git/GitHub command patterns.
 
 The covered areas include:
@@ -39,6 +40,7 @@ The covered areas include:
 - Lifecycle Checklist;
 - Developer Onboarding;
 - Workflow Quick Reference;
+- Step Closure Report;
 - Project Workflow Index.
 
 ---
@@ -166,3 +168,5 @@ A future step can decide whether to include it in CI or `scripts/verify.ps1`.
 The Workflow Health Check protects that index by checking that it still references the main workflow areas and scripts. If the index changes substantially, update this health check only when the operational entry points change.
 
 After STEP 240, the health check also treats `docs/36_WORKFLOW_QUICK_REFERENCE.md` as a core workflow document because it is the compact command entry point for daily use.
+
+After STEP 250, it also treats `docs/37_STEP_CLOSURE_REPORT.md` and `templates/codex_tasks/step_closure_report_template.md` as core closure references because they distinguish local Codex completion from a step closed and verified on `main`.

@@ -23,6 +23,7 @@ L'indice orienta il lavoro. Non sostituisce i documenti specifici, il Verificati
 | Usare golden samples | `docs/27_PROMPT_PACKET_GOLDEN_SAMPLES.md` | `examples/task_packets/valid/`, `examples/task_packets/invalid/` | Quando si modifica validatore o template | Copiare solo i sample validi come riferimento |
 | Eseguire il Release Smoke Workflow | `docs/31_PROMPT_PACKET_GENERATOR_RELEASE_SMOKE_WORKFLOW.md` | `scripts/smoke_prompt_packet_release.ps1` | Dopo modifiche a generator, wrapper o packaging | Verifica generazione, Lite Mode e Strict Mode |
 | Seguire il lifecycle completo | `docs/32_PROMPT_PACKET_LIFECYCLE_CHECKLIST.md` | `templates/codex_tasks/prompt_packet_lifecycle_checklist.md` | Da preparazione step a merge su `main` | Alberto esegue commit, push, PR e merge |
+| Compilare Step Closure Report | `docs/37_STEP_CLOSURE_REPORT.md` | `templates/codex_tasks/step_closure_report_template.md` | Dopo merge, pull di `main` e test finale | Distingue report Codex locale da step chiuso su `main` |
 | Fare Developer Onboarding | `docs/33_PROMPT_PACKET_GENERATOR_DEVELOPER_ONBOARDING.md` | Comandi PowerShell documentati | Quando una persona interna deve iniziare a usare il workflow | Entry point pratico per generator e checklist |
 | Consultare Workflow Quick Reference | `docs/36_WORKFLOW_QUICK_REFERENCE.md` | Comandi PowerShell documentati | Quando serve una scheda breve per uso quotidiano | Non sostituisce la lifecycle checklist |
 | Eseguire Verification Gate | `docs/20_VERIFICATION_GATE.md` | `scripts/verify.ps1` | Prima di commit/push/PR e dopo merge quando richiesto | Include test, `git diff --check`, `git status --short` |
@@ -71,6 +72,7 @@ Regole operative:
 - `docs/33_PROMPT_PACKET_GENERATOR_DEVELOPER_ONBOARDING.md`: onboarding per sviluppatori e utilizzatori interni.
 - `docs/35_WORKFLOW_HEALTH_CHECK.md`: controllo locale read-only sulla navigabilita' del workflow.
 - `docs/36_WORKFLOW_QUICK_REFERENCE.md`: scheda breve con comandi quotidiani e handoff presidiato.
+- `docs/37_STEP_CLOSURE_REPORT.md`: standard per dichiarare uno step chiuso e verificato su `main`.
 
 ---
 
@@ -92,6 +94,7 @@ Questi script non devono essere usati per automatizzare commit, push, PR o merge
 
 - `templates/codex_tasks/codex_task_packet_template.md`: template centrale del Codex Task Packet.
 - `templates/codex_tasks/prompt_packet_lifecycle_checklist.md`: checklist spuntabile per seguire il lifecycle operativo.
+- `templates/codex_tasks/step_closure_report_template.md`: template compilabile per chiusura step e conferma su `main`.
 
 ---
 
@@ -147,6 +150,8 @@ git diff --check
 ```
 
 Per una scheda compatta con i comandi piu' usati, usare `docs/36_WORKFLOW_QUICK_REFERENCE.md`.
+
+Per formalizzare la chiusura dello step, usare `docs/37_STEP_CLOSURE_REPORT.md`.
 
 I comandi di commit, push, PR e merge restano azioni manuali di Alberto e non sono raccolti qui in una sequenza automatica.
 

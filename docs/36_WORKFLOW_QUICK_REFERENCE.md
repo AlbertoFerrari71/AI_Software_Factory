@@ -165,6 +165,13 @@ git status --short
 git --no-pager log --oneline --max-count=10
 ```
 
+Compilare lo Step Closure Report:
+
+```text
+docs/37_STEP_CLOSURE_REPORT.md
+templates/codex_tasks/step_closure_report_template.md
+```
+
 Solo dopo questa verifica lo step puo' essere considerato presente su `main`.
 
 ---
@@ -189,5 +196,6 @@ Solo dopo questa verifica lo step puo' essere considerato presente su `main`.
 - `docs/33_PROMPT_PACKET_GENERATOR_DEVELOPER_ONBOARDING.md`: onboarding pratico per generator, validazione e ruoli.
 - `docs/34_PROJECT_WORKFLOW_INDEX.md`: mappa centrale di documenti, script e template.
 - `docs/35_WORKFLOW_HEALTH_CHECK.md`: controllo locale read-only del workflow.
+- `docs/37_STEP_CLOSURE_REPORT.md`: standard per distinguere lavoro locale da step chiuso su `main`.
 - `docs/20_VERIFICATION_GATE.md`: criteri di verifica locale e CI.
 - `docs/28_PROMPT_PACKET_VALIDATION_STRICT_MODE.md`: dettagli della validazione Strict.

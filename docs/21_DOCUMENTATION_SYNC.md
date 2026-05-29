@@ -67,6 +67,7 @@ Examples:
 - update `docs/34_PROJECT_WORKFLOW_INDEX.md` when workflow navigation, document map, script map, or operational entry points change;
 - update `docs/35_WORKFLOW_HEALTH_CHECK.md` when the local workflow health check behavior, coverage, or interpretation changes;
 - update `docs/36_WORKFLOW_QUICK_REFERENCE.md` when daily workflow commands, supervised handoff commands, or final `main` verification commands change;
+- update `docs/37_STEP_CLOSURE_REPORT.md` when step closure states, final report fields, PR check interpretation, or post-merge evidence requirements change;
 - update `docs/05_SECURITY_MODEL.md` or `policies/**` only when the Safety Model changes and the risk level is approved.
 
 ### Do not touch unless needed
