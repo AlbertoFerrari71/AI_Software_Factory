@@ -28,6 +28,7 @@ L'indice orienta il lavoro. Non sostituisce i documenti specifici, il Verificati
 | Consultare Workflow Quick Reference | `docs/36_WORKFLOW_QUICK_REFERENCE.md` | Comandi PowerShell documentati | Quando serve una scheda breve per uso quotidiano | Non sostituisce la lifecycle checklist |
 | Consultare Workflow Command Cookbook | `docs/38_WORKFLOW_COMMAND_COOKBOOK.md` | Ricette PowerShell/Git/Python documentate | Quando serve gestire scenari specifici o troubleshooting | Non automatizza commit, push, PR o merge |
 | Usare Workflow Status Dashboard | `docs/39_WORKFLOW_STATUS_DASHBOARD.md` | `scripts/show_workflow_status.py` | Quando serve vedere branch, working tree, commit recenti e file workflow presenti | Read-only; non usa GitHub API |
+| Valutare Release Readiness | `docs/40_RELEASE_READINESS.md` | `templates/codex_tasks/release_readiness_checklist.md` | Prima di applicare il metodo a un progetto pilota reale | Readiness per pilot interno, non release pubblica o SaaS |
 | Eseguire Verification Gate | `docs/20_VERIFICATION_GATE.md` | `scripts/verify.ps1` | Prima di commit/push/PR e dopo merge quando richiesto | Include test, `git diff --check`, `git status --short` |
 | Controllare Documentation Sync | `docs/21_DOCUMENTATION_SYNC.md` | Nessuno | Ogni step documentale o operativo | Valuta changelog, roadmap, decisions e documenti specifici |
 | Controllare Soft Protection Guardrails | `docs/24_SOFT_PROTECTION_GUARDRAILS.md` | `scripts/git/check_soft_guardrails.ps1` | Prima del commit o come controllo locale | Read-only; non installa hook |
@@ -77,6 +78,7 @@ Regole operative:
 - `docs/37_STEP_CLOSURE_REPORT.md`: standard per dichiarare uno step chiuso e verificato su `main`.
 - `docs/38_WORKFLOW_COMMAND_COOKBOOK.md`: ricettario di comandi per scenari operativi e troubleshooting.
 - `docs/39_WORKFLOW_STATUS_DASHBOARD.md`: dashboard locale read-only per branch, working tree, commit recenti e file workflow centrali.
+- `docs/40_RELEASE_READINESS.md`: checklist go/warning/no-go per pilot interno local-first su un progetto reale.
 
 ---
 
@@ -100,6 +102,7 @@ Questi script non devono essere usati per automatizzare commit, push, PR o merge
 - `templates/codex_tasks/codex_task_packet_template.md`: template centrale del Codex Task Packet.
 - `templates/codex_tasks/prompt_packet_lifecycle_checklist.md`: checklist spuntabile per seguire il lifecycle operativo.
 - `templates/codex_tasks/step_closure_report_template.md`: template compilabile per chiusura step e conferma su `main`.
+- `templates/codex_tasks/release_readiness_checklist.md`: template compilabile per valutare GO, WARNING o NO-GO di un pilot.
 
 ---
 
@@ -161,6 +164,8 @@ Per formalizzare la chiusura dello step, usare `docs/37_STEP_CLOSURE_REPORT.md`.
 Per scenari operativi specifici e troubleshooting, usare `docs/38_WORKFLOW_COMMAND_COOKBOOK.md`.
 
 Per uno snapshot locale rapido del workflow, usare `docs/39_WORKFLOW_STATUS_DASHBOARD.md`.
+
+Per decidere se avviare un pilot interno su un progetto reale, usare `docs/40_RELEASE_READINESS.md`.
 
 I comandi di commit, push, PR e merge restano azioni manuali di Alberto e non sono raccolti qui in una sequenza automatica.
 

@@ -199,6 +199,12 @@ Dashboard locale read-only dello stato workflow:
 docs/39_WORKFLOW_STATUS_DASHBOARD.md
 ```
 
+Checklist di readiness per pilot interno local-first:
+
+```text
+docs/40_RELEASE_READINESS.md
+```
+
 ---
 
 ## 8. Setup locale minimo

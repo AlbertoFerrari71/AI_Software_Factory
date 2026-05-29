@@ -171,7 +171,19 @@ docs/38_WORKFLOW_COMMAND_COOKBOOK.md
 
 ---
 
-## 10. Anti-pattern
+## 10. Relazione con Release Readiness
+
+Release Readiness usa Step Closure Report come evidenza quando si valuta se il workflow e' abbastanza controllato per un pilot interno:
+
+```text
+docs/40_RELEASE_READINESS.md
+```
+
+La readiness non sostituisce la chiusura dello step. Conferma solo se il metodo e' adatto a partire su un progetto pilota con criteri GO, WARNING o NO-GO.
+
+---
+
+## 11. Anti-pattern
 
 - Dichiarare chiuso uno step solo perche' Codex ha finito.
 - Ignorare `git status --short`.
