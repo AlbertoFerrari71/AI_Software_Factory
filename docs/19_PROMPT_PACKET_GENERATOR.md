@@ -111,6 +111,14 @@ pwsh -NoProfile -ExecutionPolicy Bypass -File .\scripts\generate_task_packet.ps1
 
 Il packaging resta locale: nessun PyPI, nessun registry, nessuna modifica a PATH, profili PowerShell, hook Git o `core.hooksPath`.
 
+Da STEP 190, il generatore ha anche uno smoke workflow locale:
+
+```powershell
+pwsh -NoProfile -ExecutionPolicy Bypass -File .\scripts\smoke_prompt_packet_release.ps1
+```
+
+Lo smoke workflow genera un task packet temporaneo in `tmp/` tramite il wrapper PowerShell e lo valida sia in Lite Mode sia in Strict Mode. Il documento operativo e' `docs/31_PROMPT_PACKET_GENERATOR_RELEASE_SMOKE_WORKFLOW.md`.
+
 ---
 
 ## 5. Compilazione del Prompt Packet

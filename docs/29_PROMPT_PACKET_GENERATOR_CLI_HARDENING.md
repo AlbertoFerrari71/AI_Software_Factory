@@ -146,6 +146,8 @@ scripts/generate_task_packet.ps1
 
 The packaging document is `docs/30_PROMPT_PACKET_GENERATOR_PACKAGING.md`, and the generated reference sample is stored under `examples/task_packets/generated/`.
 
+STEP 190 adds a local release smoke workflow in `scripts/smoke_prompt_packet_release.ps1` and documents it in `docs/31_PROMPT_PACKET_GENERATOR_RELEASE_SMOKE_WORKFLOW.md`.
+
 ---
 
 ## 10. Future hardening
@@ -154,7 +156,7 @@ Future steps can add:
 
 - reusable output presets;
 - optional validation directly after generation;
-- local release smoke workflow;
+- developer onboarding for generator users;
 - report JSON;
 - stricter task-type templates;
 - more golden samples for generated output.

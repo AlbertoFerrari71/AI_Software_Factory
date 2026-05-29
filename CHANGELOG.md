@@ -4,6 +4,38 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.19.0] - 2026-05-28
+
+### Added
+
+- STEP 190 - Prompt Packet Generator Release Smoke Workflow.
+- Script locale `scripts/smoke_prompt_packet_release.ps1`.
+- Documento `docs/31_PROMPT_PACKET_GENERATOR_RELEASE_SMOKE_WORKFLOW.md`.
+- Test automatici in `tests/unit/test_prompt_packet_generator_release_smoke_workflow.py`.
+
+### Changed
+
+- Aggiornato `docs/19_PROMPT_PACKET_GENERATOR.md` con il comando smoke locale.
+- Aggiornato `docs/29_PROMPT_PACKET_GENERATOR_CLI_HARDENING.md` con il riferimento allo smoke workflow.
+- Aggiornato `docs/30_PROMPT_PACKET_GENERATOR_PACKAGING.md` con il collegamento al release smoke workflow.
+- Aggiornato `docs/21_DOCUMENTATION_SYNC.md` con il documento STEP 190.
+- Aggiornata roadmap: STEP 190 completato e STEP 200 consigliato come Prompt Packet Generator Developer Onboarding.
+- Aggiornato decision log con la scelta di smoke workflow locale.
+
+### Not included
+
+- Nessuna release pubblica.
+- Nessuna GitHub Release.
+- Nessuna pubblicazione PyPI o registry.
+- Nessuna nuova dipendenza.
+- Nessuna modifica a CI, `src/**`, `policies/**`, hook, script Git/GitHub, secret o `.env`.
+- Nessuna installazione hook Git.
+- Nessuna modifica a `git config core.hooksPath`.
+- Nessuna modifica a PATH o profili PowerShell.
+- Nessun commit, push, PR o merge automatico.
+
+---
+
 ## [0.18.0] - 2026-05-28
 
 ### Added
