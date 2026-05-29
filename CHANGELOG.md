@@ -4,6 +4,41 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.25.0] - 2026-05-29
+
+### Added
+
+- STEP 250 - Step Closure Report.
+- Documento `docs/37_STEP_CLOSURE_REPORT.md`.
+- Template `templates/codex_tasks/step_closure_report_template.md`.
+- Test automatici in `tests/unit/test_step_closure_report.py`.
+
+### Changed
+
+- Aggiornato `docs/32_PROMPT_PACKET_LIFECYCLE_CHECKLIST.md` con il riferimento alla chiusura step.
+- Aggiornato `docs/34_PROJECT_WORKFLOW_INDEX.md` con documento e template Step Closure Report.
+- Aggiornato `docs/36_WORKFLOW_QUICK_REFERENCE.md` con il passaggio di compilazione closure report.
+- Aggiornato `docs/35_WORKFLOW_HEALTH_CHECK.md` e `scripts/check_workflow_health.py` per includere documento e template di closure.
+- Aggiornato `docs/21_DOCUMENTATION_SYNC.md` con il documento STEP 250.
+- Aggiornato `README.md` con un rimando breve allo Step Closure Report.
+- Aggiornata roadmap: STEP 250 completato e STEP 260 consigliato come Workflow Command Cookbook.
+- Aggiornato decision log con la scelta dello standard di chiusura step.
+
+### Not included
+
+- Nessuno script per automatizzare commit, push, PR o merge.
+- Nessuna modifica a GitHub.
+- Nessuna GitHub Release.
+- Nessuna pubblicazione PyPI o registry.
+- Nessuna nuova dipendenza.
+- Nessuna modifica a CI, `src/**`, `policies/**`, hook, script Git/GitHub esistenti, secret o `.env`.
+- Nessuna installazione hook Git.
+- Nessuna modifica a `git config core.hooksPath`.
+- Nessuna modifica a PATH o profili PowerShell.
+- Nessun commit, push, PR o merge automatico.
+
+---
+
 ## [0.24.0] - 2026-05-29
 
 ### Added

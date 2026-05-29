@@ -49,6 +49,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/34_PROJECT_WORKFLOW_INDEX.md",
         "docs/35_WORKFLOW_HEALTH_CHECK.md",
         "docs/36_WORKFLOW_QUICK_REFERENCE.md",
+        "docs/37_STEP_CLOSURE_REPORT.md",
         "scripts/generate_task_packet.py",
         "scripts/generate_task_packet.ps1",
         "scripts/smoke_prompt_packet_release.ps1",
@@ -57,6 +58,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "scripts/git/check_soft_guardrails.ps1",
         "templates/codex_tasks/codex_task_packet_template.md",
         "templates/codex_tasks/prompt_packet_lifecycle_checklist.md",
+        "templates/codex_tasks/step_closure_report_template.md",
     ]
 
     issues: list[HealthIssue] = []
@@ -122,6 +124,7 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             ("Lifecycle Checklist", ["Lifecycle Checklist"]),
             ("Developer Onboarding", ["Developer Onboarding"]),
             ("Workflow Quick Reference", ["Workflow Quick Reference"]),
+            ("Step Closure Report", ["Step Closure Report"]),
             ("generate task packet script", ["scripts/generate_task_packet.py"]),
             ("task packet validator script", ["scripts/validate_task_packet.py"]),
             ("verification gate script", ["scripts/verify.ps1"]),
@@ -129,6 +132,8 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             ("Workflow Health Check document", ["docs/35_WORKFLOW_HEALTH_CHECK.md"]),
             ("Workflow Health Check script", ["scripts/check_workflow_health.py"]),
             ("Workflow Quick Reference document", ["docs/36_WORKFLOW_QUICK_REFERENCE.md"]),
+            ("Step Closure Report document", ["docs/37_STEP_CLOSURE_REPORT.md"]),
+            ("Step Closure Report template", ["templates/codex_tasks/step_closure_report_template.md"]),
         ],
     )
 

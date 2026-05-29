@@ -17,6 +17,8 @@ Questa checklist non automatizza commit, push, PR o merge. Codex la usa come rif
 
 Per una guida introduttiva agli strumenti del Prompt Packet Generator, usare anche `docs/33_PROMPT_PACKET_GENERATOR_DEVELOPER_ONBOARDING.md`.
 
+Per formalizzare la chiusura finale dello step dopo merge e verifica su `main`, usare anche `docs/37_STEP_CLOSURE_REPORT.md`.
+
 ---
 
 ## 2. Quando usarla
@@ -211,6 +213,8 @@ Confermare:
 - `main` locale aggiornato;
 - test finale passato;
 - working tree pulita.
+
+Compilare lo Step Closure Report in `docs/37_STEP_CLOSURE_REPORT.md` o nel template `templates/codex_tasks/step_closure_report_template.md`.
 
 Solo dopo questa conferma lo step puo' essere considerato su `main`.
 

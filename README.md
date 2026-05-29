@@ -181,6 +181,12 @@ Scheda rapida dei comandi operativi:
 docs/36_WORKFLOW_QUICK_REFERENCE.md
 ```
 
+Report standard di chiusura step:
+
+```text
+docs/37_STEP_CLOSURE_REPORT.md
+```
+
 ---
 
 ## 8. Setup locale minimo
