@@ -52,6 +52,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/37_STEP_CLOSURE_REPORT.md",
         "docs/38_WORKFLOW_COMMAND_COOKBOOK.md",
         "docs/39_WORKFLOW_STATUS_DASHBOARD.md",
+        "docs/40_RELEASE_READINESS.md",
         "scripts/generate_task_packet.py",
         "scripts/generate_task_packet.ps1",
         "scripts/smoke_prompt_packet_release.ps1",
@@ -62,6 +63,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "templates/codex_tasks/codex_task_packet_template.md",
         "templates/codex_tasks/prompt_packet_lifecycle_checklist.md",
         "templates/codex_tasks/step_closure_report_template.md",
+        "templates/codex_tasks/release_readiness_checklist.md",
     ]
 
     issues: list[HealthIssue] = []
@@ -130,6 +132,7 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             ("Step Closure Report", ["Step Closure Report"]),
             ("Workflow Command Cookbook", ["Workflow Command Cookbook"]),
             ("Workflow Status Dashboard", ["Workflow Status Dashboard"]),
+            ("Release Readiness", ["Release Readiness"]),
             ("generate task packet script", ["scripts/generate_task_packet.py"]),
             ("task packet validator script", ["scripts/validate_task_packet.py"]),
             ("verification gate script", ["scripts/verify.ps1"]),
@@ -142,6 +145,8 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             ("Workflow Command Cookbook document", ["docs/38_WORKFLOW_COMMAND_COOKBOOK.md"]),
             ("Workflow Status Dashboard document", ["docs/39_WORKFLOW_STATUS_DASHBOARD.md"]),
             ("Workflow Status Dashboard script", ["scripts/show_workflow_status.py"]),
+            ("Release Readiness document", ["docs/40_RELEASE_READINESS.md"]),
+            ("Release Readiness template", ["templates/codex_tasks/release_readiness_checklist.md"]),
         ],
     )
 

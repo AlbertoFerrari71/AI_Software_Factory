@@ -4,6 +4,47 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.28.0] - 2026-05-29
+
+### Added
+
+- STEP 280 - Release Readiness.
+- Documento `docs/40_RELEASE_READINESS.md`.
+- Template `templates/codex_tasks/release_readiness_checklist.md`.
+- Test automatici in `tests/unit/test_release_readiness.py`.
+
+### Changed
+
+- Aggiornato `docs/34_PROJECT_WORKFLOW_INDEX.md` con Release Readiness.
+- Aggiornato `docs/36_WORKFLOW_QUICK_REFERENCE.md` con il riferimento alla readiness per pilot.
+- Aggiornato `docs/38_WORKFLOW_COMMAND_COOKBOOK.md` con la ricetta Release Readiness.
+- Aggiornato `docs/39_WORKFLOW_STATUS_DASHBOARD.md` con il link alla readiness.
+- Aggiornato `docs/37_STEP_CLOSURE_REPORT.md` con la relazione tra closure e readiness.
+- Aggiornato `docs/35_WORKFLOW_HEALTH_CHECK.md` e `scripts/check_workflow_health.py` per includere documento e template readiness tra i riferimenti workflow centrali.
+- Aggiornato `docs/21_DOCUMENTATION_SYNC.md` con il documento STEP 280.
+- Aggiornato `README.md` con un rimando breve alla checklist readiness.
+- Aggiornata roadmap: STEP 280 completato e STEP 290 consigliato come Existing Project Pilot Onboarding.
+- Aggiornato decision log con la scelta della readiness per pilot interno local-first.
+
+### Not included
+
+- Nessuna dichiarazione di readiness pubblica o SaaS.
+- Nessuna GitHub API.
+- Nessuna connessione internet richiesta.
+- Nessuna integrazione in CI.
+- Nessuna modifica a `scripts/verify.ps1`.
+- Nessuno script per automatizzare commit, push, PR o merge.
+- Nessuna modifica a GitHub.
+- Nessuna GitHub Release.
+- Nessuna pubblicazione PyPI o registry.
+- Nessuna nuova dipendenza.
+- Nessuna modifica a CI, `src/**`, `policies/**`, hook, script Git/GitHub esistenti, secret o `.env`.
+- Nessuna installazione hook Git.
+- Nessuna modifica a `git config core.hooksPath`.
+- Nessuna modifica a PATH o profili PowerShell.
+
+---
+
 ## [0.27.0] - 2026-05-29
 
 ### Added

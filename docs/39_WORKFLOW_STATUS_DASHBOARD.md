@@ -162,3 +162,4 @@ La dashboard non sostituisce test, Verification Gate, Workflow Health Check, PR 
 - `docs/36_WORKFLOW_QUICK_REFERENCE.md`
 - `docs/37_STEP_CLOSURE_REPORT.md`
 - `docs/38_WORKFLOW_COMMAND_COOKBOOK.md`
+- `docs/40_RELEASE_READINESS.md`

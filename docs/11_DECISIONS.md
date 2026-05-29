@@ -1261,3 +1261,39 @@ Serve uno snapshot operativo rapido per ridurre il costo di orientamento e ricon
 ### Conseguenze
 
 Project Workflow Index, Workflow Health Check, Workflow Quick Reference e Workflow Command Cookbook includono la dashboard. Lo STEP 280 consigliato e' Release Readiness.
+
+---
+
+## DEC-048 - Release Readiness
+
+**Data:** 2026-05-29
+**Stato:** Accettata
+
+### Contesto
+
+Dopo Workflow Status Dashboard il framework ha abbastanza elementi operativi per valutare un primo pilot interno su un progetto reale. Serve pero' distinguere readiness per pilot local-first da release pubblica, SaaS, packaging esterno o automazione remota.
+
+### Decisione
+
+Introdurre `docs/40_RELEASE_READINESS.md` e `templates/codex_tasks/release_readiness_checklist.md`.
+
+La readiness definisce:
+
+- livelli di maturita' da Experimental a Public/SaaS ready;
+- stato corrente come Beta operativa local-first / Pilot ready da valutare;
+- componenti gia' pronti;
+- componenti beta da usare con attenzione;
+- componenti non ancora disponibili;
+- criteri GO, WARNING e NO-GO per un pilot;
+- criteri per progetti esistenti gia' a meta' sviluppo;
+- primo step pilota consigliato piccolo e reversibile.
+
+La decisione non dichiara AI Software Factory pronta come prodotto pubblico o SaaS.
+
+### Motivazione
+
+Il metodo deve poter essere provato su un progetto reale senza confondere pilot interno con release esterna. La checklist rende espliciti rischi, requisiti minimi, dati sensibili, test, branch dedicato, owner umano e criteri di chiusura.
+
+### Conseguenze
+
+Project Workflow Index, Workflow Health Check, Workflow Quick Reference, Workflow Command Cookbook e Workflow Status Dashboard includono Release Readiness. Lo STEP 290 consigliato e' Existing Project Pilot Onboarding.

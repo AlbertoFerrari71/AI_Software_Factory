@@ -408,6 +408,35 @@ Documento: `docs/39_WORKFLOW_STATUS_DASHBOARD.md`.
 
 ---
 
+## 14.2 Ricetta - Valutare Release Readiness
+
+### Quando usarla
+
+Prima di applicare AI Software Factory a un progetto reale, soprattutto se il progetto e' gia' avviato o a meta' sviluppo.
+
+### Comandi
+
+Usare la checklist:
+
+```text
+docs/40_RELEASE_READINESS.md
+templates/codex_tasks/release_readiness_checklist.md
+```
+
+### Esito atteso
+
+La decisione finale e' una tra `GO pilot`, `GO pilot with warnings`, `HOLD` o `NO-GO`.
+
+### Se qualcosa va storto
+
+Se emergono dati sensibili, working tree non compresa, refactor massivo o assenza di Git, fermarsi e preparare un Project Intake prima di proseguire.
+
+### Cosa non fare
+
+Non trattare la readiness per pilot come release pubblica, SaaS, installer, PyPI package o GitHub Release.
+
+---
+
 ## 15. Ricetta - Verification Gate fallito
 
 ### Quando usarla
@@ -555,4 +584,5 @@ Codex non deve fare commit, Codex non deve fare push, Codex non deve aprire PR e
 - `docs/36_WORKFLOW_QUICK_REFERENCE.md`
 - `docs/37_STEP_CLOSURE_REPORT.md`
 - `docs/39_WORKFLOW_STATUS_DASHBOARD.md`
+- `docs/40_RELEASE_READINESS.md`
 - `templates/codex_tasks/step_closure_report_template.md`

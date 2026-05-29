@@ -52,11 +52,12 @@ Esempio:
 | 250 | Step Closure Report | Standardizzare il report post-merge e la chiusura operativa dello step | Template/report di chiusura, handoff prossimo step | MVP personale | Completato |
 | 260 | Workflow Command Cookbook | Raccogliere comandi operativi per scenari ricorrenti senza automatizzare Git | Cookbook manuale, esempi sicuri, troubleshooting comandi | MVP personale | Completato |
 | 270 | Workflow Status Dashboard | Rendere visibile lo stato degli step senza automatizzare Git/GitHub | Documento e script dashboard locale read-only | MVP personale | Completato |
-| 280 | Release Readiness | Definire controlli manuali prima di considerare una release interna pronta | Checklist readiness, evidenze locali, limiti no-release pubblica | MVP personale | Da fare |
-| 290 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
-| 300 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
-| 310 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
-| 320 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
+| 280 | Release Readiness | Definire readiness per pilot interno local-first su progetto reale | Checklist GO/WARNING/NO-GO, template readiness, limiti no-release pubblica | MVP personale | Completato |
+| 290 | Existing Project Pilot Onboarding | Preparare l'applicazione del metodo a un progetto reale gia' avviato | Intake progetto, fotografia repo, rischi, primo step pilota | MVP personale | Da fare |
+| 300 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
+| 310 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
+| 320 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
+| 330 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
 
 ---
 
@@ -633,18 +634,39 @@ Rendere visibile lo stato degli step e del workflow senza introdurre automazioni
 
 ### Obiettivo
 
-Definire quando il workflow locale e' pronto per una release interna o milestone operativa, senza creare release pubbliche o automazioni remote.
+Definire quando AI Software Factory e' pronta per un pilot interno local-first su un progetto reale, anche gia' avviato, senza dichiarare readiness pubblica o SaaS.
 
-### Output previsti
+### Output realizzati
 
-- checklist release readiness;
-- evidenze locali richieste;
-- collegamento a Workflow Status Dashboard, Step Closure Report e Verification Gate;
-- limiti espliciti: nessuna GitHub Release, nessun PyPI, nessuna CI nuova.
+- documento `docs/40_RELEASE_READINESS.md`;
+- template spuntabile `templates/codex_tasks/release_readiness_checklist.md`;
+- livelli di maturita' da Experimental a Public/SaaS ready;
+- checklist GO/WARNING/NO-GO per pilot interno;
+- criteri per progetti esistenti gia' a meta' sviluppo;
+- primo step pilota consigliato piccolo, reversibile e non distruttivo;
+- integrazione in Project Workflow Index, Workflow Health Check, Quick Reference, Command Cookbook e Workflow Status Dashboard;
+- test automatici leggeri;
+- nessuna GitHub Release, nessun PyPI, nessuna CI nuova, nessuna dichiarazione di readiness pubblica o SaaS.
 
 ---
 
-## 31. STEP 290 — OpenAI API Adapter
+## 31. STEP 290 — Existing Project Pilot Onboarding
+
+### Obiettivo
+
+Preparare l'applicazione del metodo a un progetto reale gia' avviato.
+
+### Output previsti
+
+- Project Intake;
+- fotografia branch, stato Git, test e documentazione;
+- identificazione rischi e dati sensibili;
+- scelta del primo step pilota sicuro;
+- criteri di stop se il progetto non e' pronto.
+
+---
+
+## 32. STEP 300 — OpenAI API Adapter
 
 ### Obiettivo
 
@@ -660,7 +682,7 @@ Collegare Responses API e Structured Outputs.
 
 ---
 
-## 32. STEP 300 — MCP Tool Registry
+## 33. STEP 310 — MCP Tool Registry
 
 ### Obiettivo
 
@@ -675,7 +697,7 @@ Gestire tool esterni in modo sicuro.
 
 ---
 
-## 33. STEP 310 — Guided Mode
+## 34. STEP 320 — Guided Mode
 
 ### Obiettivo
 
@@ -690,7 +712,7 @@ Rendere il framework utilizzabile da utenti non tecnici.
 
 ---
 
-## 34. STEP 320 — SaaS Evolution Plan
+## 35. STEP 330 — SaaS Evolution Plan
 
 ### Obiettivo
 

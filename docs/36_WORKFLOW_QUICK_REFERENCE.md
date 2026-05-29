@@ -99,6 +99,17 @@ La dashboard mostra branch corrente, working tree, commit recenti, documenti/scr
 
 ---
 
+## 7.2 Valutare release readiness per pilot
+
+```text
+docs/40_RELEASE_READINESS.md
+templates/codex_tasks/release_readiness_checklist.md
+```
+
+Usare questa checklist prima di applicare il metodo a un progetto reale. La readiness vale per pilot interno local-first, non per release pubblica, SaaS o distribuzione esterna.
+
+---
+
 ## 8. Eseguire Verification Gate
 
 ```powershell
@@ -211,5 +222,6 @@ Solo dopo questa verifica lo step puo' essere considerato presente su `main`.
 - `docs/37_STEP_CLOSURE_REPORT.md`: standard per distinguere lavoro locale da step chiuso su `main`.
 - `docs/38_WORKFLOW_COMMAND_COOKBOOK.md`: ricette operative per casi specifici e troubleshooting.
 - `docs/39_WORKFLOW_STATUS_DASHBOARD.md`: snapshot locale read-only di branch, working tree, commit recenti e file workflow.
+- `docs/40_RELEASE_READINESS.md`: criteri GO/WARNING/NO-GO per pilot interno local-first.
 - `docs/20_VERIFICATION_GATE.md`: criteri di verifica locale e CI.
 - `docs/28_PROMPT_PACKET_VALIDATION_STRICT_MODE.md`: dettagli della validazione Strict.

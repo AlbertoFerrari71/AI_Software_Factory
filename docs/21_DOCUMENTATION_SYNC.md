@@ -70,6 +70,7 @@ Examples:
 - update `docs/37_STEP_CLOSURE_REPORT.md` when step closure states, final report fields, PR check interpretation, or post-merge evidence requirements change;
 - update `docs/38_WORKFLOW_COMMAND_COOKBOOK.md` when recurring workflow command recipes, troubleshooting cases, or command interpretation rules change;
 - update `docs/39_WORKFLOW_STATUS_DASHBOARD.md` when local workflow status fields, displayed documents/scripts, or suggested local checks change;
+- update `docs/40_RELEASE_READINESS.md` when pilot readiness levels, go/warning/no-go criteria, pilot scope rules, or readiness templates change;
 - update `docs/05_SECURITY_MODEL.md` or `policies/**` only when the Safety Model changes and the risk level is approved.
 
 ### Do not touch unless needed

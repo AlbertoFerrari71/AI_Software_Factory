@@ -28,6 +28,7 @@ The script `scripts/check_workflow_health.py` checks:
 - `docs/37_STEP_CLOSURE_REPORT.md` and `templates/codex_tasks/step_closure_report_template.md` are present and linked from the Project Workflow Index;
 - `docs/38_WORKFLOW_COMMAND_COOKBOOK.md` is present and linked from the Project Workflow Index;
 - `docs/39_WORKFLOW_STATUS_DASHBOARD.md` and `scripts/show_workflow_status.py` are present and linked from the Project Workflow Index;
+- `docs/40_RELEASE_READINESS.md` and `templates/codex_tasks/release_readiness_checklist.md` are present and linked from the Project Workflow Index;
 - operational scripts do not contain dangerous Git/GitHub command patterns.
 
 The covered areas include:
@@ -45,6 +46,7 @@ The covered areas include:
 - Step Closure Report;
 - Workflow Command Cookbook;
 - Workflow Status Dashboard;
+- Release Readiness;
 - Project Workflow Index.
 
 ---
@@ -178,3 +180,5 @@ After STEP 250, it also treats `docs/37_STEP_CLOSURE_REPORT.md` and `templates/c
 After STEP 260, it also treats `docs/38_WORKFLOW_COMMAND_COOKBOOK.md` as a core workflow document because it captures recurring command scenarios and troubleshooting without creating new automation.
 
 After STEP 270, it also treats `docs/39_WORKFLOW_STATUS_DASHBOARD.md` and `scripts/show_workflow_status.py` as core workflow status references because they provide a local read-only snapshot of branch, working tree, recent commits and workflow files.
+
+After STEP 280, it also treats `docs/40_RELEASE_READINESS.md` and `templates/codex_tasks/release_readiness_checklist.md` as core readiness references because they define go/warning/no-go criteria for a local-first pilot.
