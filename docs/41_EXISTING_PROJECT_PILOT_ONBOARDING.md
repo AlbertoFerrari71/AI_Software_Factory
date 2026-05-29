@@ -303,7 +303,7 @@ Usarlo per recuperare sequenze Git diagnostiche e troubleshooting. Non usarlo pe
 Il prossimo step naturale e':
 
 ```text
-300) First Existing Project Pilot
+300) ASF Next Step Runner
 ```
 
-In quello step si sceglie un progetto reale, si compila il template di intake e si produce il primo task packet pilot senza refactor ampi e senza modifiche premature a repository esterne.
+In quello step si introduce un runner locale prudente per preparare task packet, handoff Codex e report del prossimo step senza refactor ampi, senza invocare Codex e senza modifiche premature a repository esterne.

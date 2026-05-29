@@ -35,7 +35,9 @@ Lo script `scripts/show_workflow_status.py` mostra:
   - `docs/39_WORKFLOW_STATUS_DASHBOARD.md`;
   - `docs/40_RELEASE_READINESS.md`;
   - `docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md`;
+  - `docs/42_ASF_NEXT_STEP_RUNNER.md`;
 - presenza degli script principali:
+  - `scripts/asf_next_step.py`;
   - `scripts/check_workflow_health.py`;
   - `scripts/show_workflow_status.py`;
   - `scripts/generate_task_packet.py`;
@@ -95,6 +97,12 @@ Lo Step Closure Report formalizza la chiusura reale di uno step su `main`.
 
 La dashboard puo' aiutare a raccogliere evidenze, ma non sostituisce il report di chiusura.
 
+### ASF Next Step Runner
+
+ASF Next Step Runner prepara task packet, handoff Codex e runner report per lo step successivo.
+
+La dashboard mostra se il documento e lo script del runner sono presenti, ma non esegue il runner e non invoca Codex.
+
 ---
 
 ## 6. Uso
@@ -152,6 +160,7 @@ Limiti intenzionali:
 - nessun JSON report;
 - nessuna integrazione in CI;
 - nessuna modifica a `scripts/verify.ps1`.
+- nessuna invocazione di ASF Next Step Runner.
 
 La dashboard non sostituisce test, Verification Gate, Workflow Health Check, PR checks o Step Closure Report.
 
@@ -166,3 +175,4 @@ La dashboard non sostituisce test, Verification Gate, Workflow Health Check, PR 
 - `docs/38_WORKFLOW_COMMAND_COOKBOOK.md`
 - `docs/40_RELEASE_READINESS.md`
 - `docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md`
+- `docs/42_ASF_NEXT_STEP_RUNNER.md`

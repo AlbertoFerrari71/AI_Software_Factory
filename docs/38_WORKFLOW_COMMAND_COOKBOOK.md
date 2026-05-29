@@ -478,6 +478,44 @@ Non trasformare l'onboarding in refactor architetturale. Non creare automazioni 
 
 ---
 
+## 14.4 Ricetta - Preparare ASF Next Step Runner
+
+### Quando usarla
+
+Quando step, titolo, branch e obiettivo del prossimo step sono gia' chiari e serve preparare un handoff Codex senza modificare il repository target.
+
+### Comandi
+
+Esempio locale su AI Software Factory:
+
+```powershell
+python scripts/asf_next_step.py --mode prepare --project-name AI_Software_Factory --repo-path . --main-branch main --step 310 --title "ASF Next Step Runner Project Profiles" --branch step-310-asf-next-step-runner-project-profiles --objective "Add project profiles for ASF Next Step Runner." --strict-ready
+```
+
+### Esito atteso
+
+Il runner crea sotto `tmp/asf_next_step/`:
+
+- `task_packet.md`;
+- `codex_handoff.md`;
+- `runner_report.md`.
+
+Il report indica branch target, working tree `CLEAN` o `DIRTY/WARNING`, ultimi commit, validazione Lite, validazione Strict e prossimo comando consigliato.
+
+### Se qualcosa va storto
+
+Se il repo target non esiste, non contiene `.git`, lo step non e' numerico, lo step non e' multiplo di 10 o il branch contiene spazi, correggere l'input e rilanciare.
+
+Se la working tree target e' `DIRTY/WARNING`, non e' un fallimento automatico: Alberto deve decidere se proseguire.
+
+### Cosa non fare
+
+Non usare il runner come sostituto di review ChatGPT/Alberto, Codex, test, PR, merge o Step Closure Report. Il runner non invoca Codex, non crea branch nel repository target e non fa commit, push, PR o merge.
+
+Documento: `docs/42_ASF_NEXT_STEP_RUNNER.md`.
+
+---
+
 ## 15. Ricetta - Verification Gate fallito
 
 ### Quando usarla
@@ -627,4 +665,5 @@ Codex non deve fare commit, Codex non deve fare push, Codex non deve aprire PR e
 - `docs/39_WORKFLOW_STATUS_DASHBOARD.md`
 - `docs/40_RELEASE_READINESS.md`
 - `docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md`
+- `docs/42_ASF_NEXT_STEP_RUNNER.md`
 - `templates/codex_tasks/step_closure_report_template.md`

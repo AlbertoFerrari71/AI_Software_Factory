@@ -30,6 +30,7 @@ L'indice orienta il lavoro. Non sostituisce i documenti specifici, il Verificati
 | Usare Workflow Status Dashboard | `docs/39_WORKFLOW_STATUS_DASHBOARD.md` | `scripts/show_workflow_status.py` | Quando serve vedere branch, working tree, commit recenti e file workflow presenti | Read-only; non usa GitHub API |
 | Valutare Release Readiness | `docs/40_RELEASE_READINESS.md` | `templates/codex_tasks/release_readiness_checklist.md` | Prima di applicare il metodo a un progetto pilota reale | Readiness per pilot interno, non release pubblica o SaaS |
 | Preparare Existing Project Pilot Onboarding | `docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md` | `templates/codex_tasks/existing_project_intake_template.md`, `templates/codex_tasks/first_pilot_step_packet_template.md` | Dopo readiness e prima del primo pilot reale | Intake, fotografia repo, rischi e primo task packet pilot |
+| Preparare ASF Next Step Runner | `docs/42_ASF_NEXT_STEP_RUNNER.md` | `scripts/asf_next_step.py`, `templates/codex_tasks/asf_next_step_runner_handoff_template.md` | Quando step, titolo, branch e obiettivo sono chiari | Prepara task packet, handoff e report senza invocare Codex |
 | Eseguire Verification Gate | `docs/20_VERIFICATION_GATE.md` | `scripts/verify.ps1` | Prima di commit/push/PR e dopo merge quando richiesto | Include test, `git diff --check`, `git status --short` |
 | Controllare Documentation Sync | `docs/21_DOCUMENTATION_SYNC.md` | Nessuno | Ogni step documentale o operativo | Valuta changelog, roadmap, decisions e documenti specifici |
 | Controllare Soft Protection Guardrails | `docs/24_SOFT_PROTECTION_GUARDRAILS.md` | `scripts/git/check_soft_guardrails.ps1` | Prima del commit o come controllo locale | Read-only; non installa hook |
@@ -81,6 +82,7 @@ Regole operative:
 - `docs/39_WORKFLOW_STATUS_DASHBOARD.md`: dashboard locale read-only per branch, working tree, commit recenti e file workflow centrali.
 - `docs/40_RELEASE_READINESS.md`: checklist go/warning/no-go per pilot interno local-first su un progetto reale.
 - `docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md`: protocollo di intake per applicare il metodo a un progetto esistente gia' avviato.
+- `docs/42_ASF_NEXT_STEP_RUNNER.md`: runner locale prepare mode per generare task packet, handoff Codex e report senza modificare il repo target.
 
 ---
 
@@ -94,6 +96,7 @@ Regole operative:
 - `scripts/git/check_soft_guardrails.ps1`: controllo read-only dei Soft Protection Guardrails.
 - `scripts/check_workflow_health.py`: controllo read-only di documenti, riferimenti e script operativi del workflow.
 - `scripts/show_workflow_status.py`: dashboard read-only dello stato workflow locale.
+- `scripts/asf_next_step.py`: runner prepare mode locale per il prossimo step.
 
 Questi script non devono essere usati per automatizzare commit, push, PR o merge.
 
@@ -107,6 +110,7 @@ Questi script non devono essere usati per automatizzare commit, push, PR o merge
 - `templates/codex_tasks/release_readiness_checklist.md`: template compilabile per valutare GO, WARNING o NO-GO di un pilot.
 - `templates/codex_tasks/existing_project_intake_template.md`: template compilabile per Project Intake di un progetto esistente.
 - `templates/codex_tasks/first_pilot_step_packet_template.md`: template per creare il primo task packet pilot piccolo e reversibile.
+- `templates/codex_tasks/asf_next_step_runner_handoff_template.md`: struttura handoff manuale da copiare in Codex.
 
 ---
 
@@ -172,6 +176,8 @@ Per uno snapshot locale rapido del workflow, usare `docs/39_WORKFLOW_STATUS_DASH
 Per decidere se avviare un pilot interno su un progetto reale, usare `docs/40_RELEASE_READINESS.md`.
 
 Per preparare intake, rischio e primo task packet pilot su un progetto esistente, usare `docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md`.
+
+Per preparare automaticamente task packet, handoff e report temporanei del prossimo step senza invocare Codex, usare `docs/42_ASF_NEXT_STEP_RUNNER.md`.
 
 I comandi di commit, push, PR e merge restano azioni manuali di Alberto e non sono raccolti qui in una sequenza automatica.
 

@@ -1344,4 +1344,33 @@ Un onboarding esplicito riduce il rischio di partire dal task sbagliato e rende 
 
 Project Workflow Index, Workflow Health Check, Workflow Quick Reference, Workflow Command Cookbook, Workflow Status Dashboard e Release Readiness includono Existing Project Pilot Onboarding.
 
-Lo STEP 300 consigliato e' First Existing Project Pilot: scegliere un progetto reale, compilare l'intake e produrre il primo task packet pilot.
+Lo STEP 300 consigliato e' ASF Next Step Runner: preparare localmente il prossimo task packet pilot e l'handoff Codex senza modificare repository esterne.
+
+---
+
+## DEC-050 - ASF Next Step Runner
+
+**Data:** 2026-05-29
+**Stato:** Accettata
+
+### Contesto
+
+Dopo Existing Project Pilot Onboarding serve ridurre i passaggi ripetitivi tra ChatGPT, Codex, Git e Step Closure Report senza trasformare il metodo in automazione remota o cross-repository.
+
+### Decisione
+
+Introdurre `scripts/asf_next_step.py` come runner locale standard library only con una prima modalita' `prepare`.
+
+Il runner legge in modo read-only lo stato Git del repository target, genera `task_packet.md`, `codex_handoff.md` e `runner_report.md` sotto `tmp/asf_next_step/`, valida il task packet in Lite e Strict e si ferma prima di qualunque invocazione Codex o modifica al repository target.
+
+### Motivazione
+
+Il workflow manuale resta corretto ma contiene molti passaggi ripetitivi e soggetti a errore. Un prepare runner locale accelera la preparazione mantenendo Human gate, review umana, no commit, no push, no PR e no merge automatici.
+
+### Conseguenze
+
+Gli output del runner sono temporanei e ignorati da Git. Il task packet generato resta una bozza da rivedere. Le evoluzioni naturali sono:
+
+- 310) ASF Next Step Runner Project Profiles;
+- 320) ASF Runner Codex Handoff Improvements;
+- 330) ASF Runner Verification Pack.
