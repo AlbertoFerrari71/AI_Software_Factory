@@ -225,6 +225,14 @@ docs/44_ASF_RUNNER_CODEX_HANDOFF_IMPROVEMENTS.md
 docs/45_ASF_RUNNER_VERIFICATION_PACK.md
 ```
 
+Automation readiness pack con hardening verifiche, intake report Codex e closure pack human-gated:
+
+```text
+docs/46_ASF_RUNNER_VERIFICATION_PACK_HARDENING.md
+docs/47_ASF_CODEX_REPORT_INTAKE.md
+docs/48_ASF_HUMAN_GATED_CLOSURE_PACK.md
+```
+
 ---
 
 ## 8. Setup locale minimo

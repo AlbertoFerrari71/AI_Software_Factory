@@ -128,6 +128,24 @@ Il runner genera `task_packet.md`, `codex_handoff.md`, `runner_report.md` e `ver
 
 `--profile` legge default locali da `config/asf_project_profiles.json`. Non invoca Codex, non modifica il repo target e non fa commit, push, PR o merge.
 
+## 7.5 Fare intake del report Codex
+
+Salvare manualmente il report finale Codex in un file Markdown, poi eseguire:
+
+```powershell
+python scripts/asf_codex_report_intake.py --report-path tmp/asf_codex_reports/step_340_codex_report.md --project-name AI_Software_Factory --repo-path . --step 340
+```
+
+L'intake genera `codex_report_intake.md` sotto `tmp/asf_codex_intake/`. Classifica il report come `PASS`, `WARNING` o `FAIL`, ma non equivale ad approval.
+
+## 7.6 Generare closure pack human-gated
+
+```powershell
+python scripts/asf_generate_closure_pack.py --project-name AI_Software_Factory --repo-path . --step 340 --branch step-340-360-asf-runner-automation-readiness-pack --commit-message "340-360) add ASF runner automation readiness pack" --pr-title "340-360) ASF Runner Automation Readiness Pack"
+```
+
+Il closure pack genera `closure_pack.md` sotto `tmp/asf_closure_pack/`. I comandi di commit, push, PR e merge sono testo manuale human-gated e non vengono eseguiti dallo script.
+
 ---
 
 ## 8. Eseguire Verification Gate

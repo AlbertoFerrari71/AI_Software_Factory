@@ -305,6 +305,7 @@ Il prossimo step naturale e':
 ```text
 300) ASF Next Step Runner
 310-330) ASF Runner Upgrade Pack
+340-360) ASF Runner Automation Readiness Pack
 ```
 
-In questi step si introduce e si potenzia un runner locale prudente per preparare task packet, handoff Codex, report e Verification Pack del prossimo step senza refactor ampi, senza invocare Codex e senza modifiche premature a repository esterne.
+In questi step si introduce e si potenzia un runner locale prudente per preparare task packet, handoff Codex, report, Verification Pack, intake report e closure pack del prossimo step senza refactor ampi, senza invocare Codex, senza eseguire commit/push/PR/merge e senza modifiche premature a repository esterne.

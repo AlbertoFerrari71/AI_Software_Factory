@@ -111,7 +111,7 @@ Parametri principali:
 - `task_packet.md`: task packet generato e validato.
 - `codex_handoff.md`: testo pronto da rivedere e copiare manualmente in Codex, con FASE 1 / FASE 2, stato Git, prerequisito, scope, vincoli e note safety.
 - `runner_report.md`: report operativo del runner.
-- `verification_pack.md`: checklist read-only di controlli consigliati prima e dopo Codex.
+- `verification_pack.md`: checklist read-only hardened con controlli prima di Codex, dopo Codex, prima di commit/push/PR/merge manuali e dopo il pull finale di `main`.
 - `Lite PASS`: il task packet passa `scripts/validate_task_packet.py`.
 - `Strict PASS`: il task packet passa `scripts/validate_task_packet.py --strict`.
 
@@ -130,6 +130,8 @@ Il runner:
 - non fa cross-repo writes;
 - non garantisce correttezza semantica del task packet senza review ChatGPT/Alberto;
 - non decide se un `DIRTY/WARNING` e' accettabile;
+- non legge automaticamente il report Codex;
+- non genera closure pack automaticamente;
 - non sostituisce Step Closure Report.
 
 ---
@@ -161,6 +163,9 @@ Get-Content -Raw .\tmp\asf_next_step\AI_Software_Factory\step_340\runner_report.
 - `docs/43_ASF_RUNNER_PROJECT_PROFILES.md`
 - `docs/44_ASF_RUNNER_CODEX_HANDOFF_IMPROVEMENTS.md`
 - `docs/45_ASF_RUNNER_VERIFICATION_PACK.md`
+- `docs/46_ASF_RUNNER_VERIFICATION_PACK_HARDENING.md`
+- `docs/47_ASF_CODEX_REPORT_INTAKE.md`
+- `docs/48_ASF_HUMAN_GATED_CLOSURE_PACK.md`
 
 ---
 
@@ -168,5 +173,5 @@ Get-Content -Raw .\tmp\asf_next_step\AI_Software_Factory\step_340\runner_report.
 
 Possibili step futuri:
 
-- 340. ASF Runner Verification Pack Hardening;
+- 370. ASF Runner Human Approval Gate;
 - OpenAI API Adapter in uno step successivo separato.

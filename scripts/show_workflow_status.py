@@ -22,10 +22,15 @@ CENTRAL_DOCUMENTS = [
     "docs/43_ASF_RUNNER_PROJECT_PROFILES.md",
     "docs/44_ASF_RUNNER_CODEX_HANDOFF_IMPROVEMENTS.md",
     "docs/45_ASF_RUNNER_VERIFICATION_PACK.md",
+    "docs/46_ASF_RUNNER_VERIFICATION_PACK_HARDENING.md",
+    "docs/47_ASF_CODEX_REPORT_INTAKE.md",
+    "docs/48_ASF_HUMAN_GATED_CLOSURE_PACK.md",
 ]
 
 MAIN_SCRIPTS = [
     "scripts/asf_next_step.py",
+    "scripts/asf_codex_report_intake.py",
+    "scripts/asf_generate_closure_pack.py",
     "scripts/check_workflow_health.py",
     "scripts/show_workflow_status.py",
     "scripts/generate_task_packet.py",

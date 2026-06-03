@@ -4,7 +4,7 @@
 
 Il Verification Pack e' un file generato da `scripts/asf_next_step.py` in `prepare mode`.
 
-Serve come checklist read-only di controlli consigliati prima e dopo l'uso di Codex.
+Serve come checklist read-only di controlli consigliati prima e dopo l'uso di Codex, prima della pubblicazione manuale e dopo la verifica finale su `main`.
 
 ---
 
@@ -34,6 +34,10 @@ Il Verification Pack contiene:
 - stato Git target letto dal runner;
 - Pre-Codex checks consigliati;
 - Post-Codex local checks consigliati;
+- scope checks;
+- Codex report checks;
+- PR checks handling;
+- LF/CRLF handling;
 - validazione task packet Lite;
 - validazione task packet Strict;
 - runner report review;
@@ -52,6 +56,12 @@ Il Verification Pack non contiene comandi per automatizzare:
 - merge.
 
 Non sostituisce test, review umana, PR checks o Step Closure Report.
+
+Per il hardening dettagliato vedere:
+
+```text
+docs/46_ASF_RUNNER_VERIFICATION_PACK_HARDENING.md
+```
 
 ---
 
@@ -107,4 +117,6 @@ Prima di procedere manualmente con il ciclo Git presidiato, verificare:
 - note safety;
 - test;
 - Step Closure Report richiesto.
+
+I gate umani includono approvazione commit, push, PR e merge. Il Verification Pack puo' citare `gh pr checks --watch`, ma tratta check non disponibili come attenzione da registrare.
 

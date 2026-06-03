@@ -58,7 +58,12 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/43_ASF_RUNNER_PROJECT_PROFILES.md",
         "docs/44_ASF_RUNNER_CODEX_HANDOFF_IMPROVEMENTS.md",
         "docs/45_ASF_RUNNER_VERIFICATION_PACK.md",
+        "docs/46_ASF_RUNNER_VERIFICATION_PACK_HARDENING.md",
+        "docs/47_ASF_CODEX_REPORT_INTAKE.md",
+        "docs/48_ASF_HUMAN_GATED_CLOSURE_PACK.md",
         "config/asf_project_profiles.json",
+        "scripts/asf_codex_report_intake.py",
+        "scripts/asf_generate_closure_pack.py",
         "scripts/asf_next_step.py",
         "scripts/generate_task_packet.py",
         "scripts/generate_task_packet.ps1",
@@ -75,6 +80,8 @@ def check_files(root: Path) -> list[HealthIssue]:
         "templates/codex_tasks/first_pilot_step_packet_template.md",
         "templates/codex_tasks/asf_next_step_runner_handoff_template.md",
         "templates/codex_tasks/asf_runner_verification_pack_template.md",
+        "templates/codex_tasks/asf_codex_report_intake_template.md",
+        "templates/codex_tasks/asf_human_gated_closure_pack_template.md",
     ]
 
     issues: list[HealthIssue] = []
@@ -149,9 +156,14 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             ("ASF Runner Project Profiles", ["ASF Runner Project Profiles"]),
             ("ASF Runner Codex Handoff Improvements", ["ASF Runner Codex Handoff Improvements"]),
             ("ASF Runner Verification Pack", ["ASF Runner Verification Pack"]),
+            ("ASF Runner Verification Pack Hardening", ["ASF Runner Verification Pack Hardening"]),
+            ("ASF Codex Report Intake", ["ASF Codex Report Intake"]),
+            ("ASF Human-Gated Closure Pack", ["ASF Human-Gated Closure Pack"]),
             ("generate task packet script", ["scripts/generate_task_packet.py"]),
             ("task packet validator script", ["scripts/validate_task_packet.py"]),
             ("ASF Next Step Runner script", ["scripts/asf_next_step.py"]),
+            ("ASF Codex Report Intake script", ["scripts/asf_codex_report_intake.py"]),
+            ("ASF Human-Gated Closure Pack script", ["scripts/asf_generate_closure_pack.py"]),
             ("verification gate script", ["scripts/verify.ps1"]),
             ("soft guardrails check script", ["scripts/git/check_soft_guardrails.ps1"]),
             ("Workflow Health Check document", ["docs/35_WORKFLOW_HEALTH_CHECK.md"]),
@@ -174,6 +186,12 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                 ["docs/44_ASF_RUNNER_CODEX_HANDOFF_IMPROVEMENTS.md"],
             ),
             ("ASF Runner Verification Pack document", ["docs/45_ASF_RUNNER_VERIFICATION_PACK.md"]),
+            (
+                "ASF Runner Verification Pack Hardening document",
+                ["docs/46_ASF_RUNNER_VERIFICATION_PACK_HARDENING.md"],
+            ),
+            ("ASF Codex Report Intake document", ["docs/47_ASF_CODEX_REPORT_INTAKE.md"]),
+            ("ASF Human-Gated Closure Pack document", ["docs/48_ASF_HUMAN_GATED_CLOSURE_PACK.md"]),
             ("ASF project profiles config", ["config/asf_project_profiles.json"]),
             (
                 "ASF Next Step Runner handoff template",
@@ -182,6 +200,14 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             (
                 "ASF Runner Verification Pack template",
                 ["templates/codex_tasks/asf_runner_verification_pack_template.md"],
+            ),
+            (
+                "ASF Codex Report Intake template",
+                ["templates/codex_tasks/asf_codex_report_intake_template.md"],
+            ),
+            (
+                "ASF Human-Gated Closure Pack template",
+                ["templates/codex_tasks/asf_human_gated_closure_pack_template.md"],
             ),
         ],
     )
@@ -260,6 +286,8 @@ def check_script_safety(root: Path) -> list[HealthIssue]:
         "scripts/show_workflow_status.py",
         "scripts/check_workflow_health.py",
         "scripts/asf_next_step.py",
+        "scripts/asf_codex_report_intake.py",
+        "scripts/asf_generate_closure_pack.py",
     ]
     patterns = forbidden_script_patterns()
     issues: list[HealthIssue] = []

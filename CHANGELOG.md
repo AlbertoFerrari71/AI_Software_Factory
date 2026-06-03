@@ -4,6 +4,34 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.36.0] - 2026-05-29
+
+### Added
+
+- MEGA-STEP 340-360 - ASF Runner Automation Readiness Pack.
+- Script read-only `scripts/asf_codex_report_intake.py`.
+- Script `scripts/asf_generate_closure_pack.py` per generare closure pack Markdown human-gated.
+- Documenti `docs/46_ASF_RUNNER_VERIFICATION_PACK_HARDENING.md`, `docs/47_ASF_CODEX_REPORT_INTAKE.md` e `docs/48_ASF_HUMAN_GATED_CLOSURE_PACK.md`.
+- Template `templates/codex_tasks/asf_codex_report_intake_template.md` e `templates/codex_tasks/asf_human_gated_closure_pack_template.md`.
+- Test automatici per hardening Verification Pack, Codex Report Intake e Human-Gated Closure Pack.
+
+### Changed
+
+- Rafforzato `verification_pack.md` generato da `scripts/asf_next_step.py` con controlli Pre-Codex, Post-Codex, scope checks, report checks, PR checks handling, LF/CRLF handling e human gates.
+- Aggiornati Workflow Health Check, Workflow Status Dashboard, Project Workflow Index, Quick Reference e Cookbook con i nuovi strumenti.
+- Aggiornata roadmap: STEP 340, 350 e 360 completati; STEP 370 consigliato come ASF Runner Human Approval Gate.
+- Aggiornato decision log con la scelta dell'automation readiness pack senza automazione Codex/Git/GitHub.
+
+### Not included
+
+- Nessuna invocazione automatica di Codex.
+- Nessuna esecuzione automatica di commit, push, PR o merge.
+- Nessuna modifica a repository target esterni.
+- Nessuna modifica a GitHub o GitHub API.
+- Nessuna modifica a CI, hook Git, `core.hooksPath`, dipendenze, secret, `.env`, PATH o profili PowerShell.
+
+---
+
 ## [0.33.0] - 2026-05-29
 
 ### Added

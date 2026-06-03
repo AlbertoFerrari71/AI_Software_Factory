@@ -1,7 +1,7 @@
 # ASF Next Step Runner Handoff Template
-TBD.
+
 Questo handoff e' generato dal runner, ma deve comunque essere revisionato da Alberto/ChatGPT prima dell'uso.
-TBD.
+
 ## 1. Titolo step
 
 - Step:

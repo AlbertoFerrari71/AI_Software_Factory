@@ -1414,3 +1414,50 @@ I profili riducono errori ripetitivi su repo path, branch principale, test comma
 Il runner genera quattro output temporanei sotto `tmp/asf_next_step/`: `task_packet.md`, `codex_handoff.md`, `runner_report.md` e `verification_pack.md`.
 
 Gli output restano bozze da rivedere da Alberto/ChatGPT. Lo STEP 340 consigliato e' ASF Runner Verification Pack Hardening.
+
+---
+
+## DEC-052 - ASF Runner Automation Readiness Pack
+
+**Data:** 2026-05-29
+**Stato:** Accettata
+
+### Contesto
+
+Dopo profili, handoff migliorato e Verification Pack serve avvicinare il runner all'automazione completa senza saltare gate umani.
+
+Il flusso desiderato e':
+
+- ASF Runner prepara task packet, handoff e verification pack;
+- Alberto incolla l'handoff in Codex;
+- Codex lavora localmente e produce report;
+- Alberto salva il report Codex in Markdown;
+- ASF legge il report e produce un intake;
+- ASF genera un closure pack;
+- Alberto verifica ed esegue manualmente i comandi finali.
+
+### Decisione
+
+Introdurre l'ASF Runner Automation Readiness Pack:
+
+- hardening del `verification_pack.md` generato da `scripts/asf_next_step.py`;
+- script read-only `scripts/asf_codex_report_intake.py`;
+- script `scripts/asf_generate_closure_pack.py` che genera solo Markdown;
+- documenti `docs/46_ASF_RUNNER_VERIFICATION_PACK_HARDENING.md`, `docs/47_ASF_CODEX_REPORT_INTAKE.md` e `docs/48_ASF_HUMAN_GATED_CLOSURE_PACK.md`;
+- template `templates/codex_tasks/asf_codex_report_intake_template.md` e `templates/codex_tasks/asf_human_gated_closure_pack_template.md`.
+
+Gli script operativi non invocano Codex, non usano GitHub API, non modificano repository target esterni e non eseguono commit, push, PR o merge.
+
+I comandi Git/GitHub di chiusura possono comparire solo nel closure pack Markdown come istruzioni manuali human-gated.
+
+### Motivazione
+
+Separare intake e closure pack riduce passaggi ripetitivi e rende verificabile la qualita' del report Codex prima della pubblicazione manuale.
+
+Il closure pack prepara comandi e checklist, ma lascia ad Alberto l'approvazione esplicita di commit, push, PR e merge.
+
+### Conseguenze
+
+Gli output restano sotto `tmp/` e sono ignorati da Git.
+
+Il prossimo step consigliato e' 370) ASF Runner Human Approval Gate, per rendere ancora piu' esplicite le approvazioni tra report intake, closure pack e pubblicazione manuale.

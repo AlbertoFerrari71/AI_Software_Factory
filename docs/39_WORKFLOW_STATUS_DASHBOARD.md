@@ -36,8 +36,16 @@ Lo script `scripts/show_workflow_status.py` mostra:
   - `docs/40_RELEASE_READINESS.md`;
   - `docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md`;
   - `docs/42_ASF_NEXT_STEP_RUNNER.md`;
+  - `docs/43_ASF_RUNNER_PROJECT_PROFILES.md`;
+  - `docs/44_ASF_RUNNER_CODEX_HANDOFF_IMPROVEMENTS.md`;
+  - `docs/45_ASF_RUNNER_VERIFICATION_PACK.md`;
+  - `docs/46_ASF_RUNNER_VERIFICATION_PACK_HARDENING.md`;
+  - `docs/47_ASF_CODEX_REPORT_INTAKE.md`;
+  - `docs/48_ASF_HUMAN_GATED_CLOSURE_PACK.md`;
 - presenza degli script principali:
   - `scripts/asf_next_step.py`;
+  - `scripts/asf_codex_report_intake.py`;
+  - `scripts/asf_generate_closure_pack.py`;
   - `scripts/check_workflow_health.py`;
   - `scripts/show_workflow_status.py`;
   - `scripts/generate_task_packet.py`;
@@ -101,7 +109,7 @@ La dashboard puo' aiutare a raccogliere evidenze, ma non sostituisce il report d
 
 ASF Next Step Runner prepara task packet, handoff Codex, runner report e Verification Pack per lo step successivo.
 
-La dashboard mostra se documenti, config e script del runner sono presenti, ma non esegue il runner e non invoca Codex.
+La dashboard mostra se documenti, config e script del runner sono presenti, inclusi report intake e closure pack, ma non esegue il runner e non invoca Codex.
 
 ---
 
@@ -162,6 +170,7 @@ Limiti intenzionali:
 - nessuna modifica a `scripts/verify.ps1`.
 - nessuna invocazione di ASF Next Step Runner.
 - nessuna validazione semantica dei profili progetto.
+- nessuna generazione automatica di closure pack.
 
 La dashboard non sostituisce test, Verification Gate, Workflow Health Check, PR checks o Step Closure Report.
 
@@ -178,6 +187,9 @@ La dashboard non sostituisce test, Verification Gate, Workflow Health Check, PR 
 - `docs/43_ASF_RUNNER_PROJECT_PROFILES.md`
 - `docs/44_ASF_RUNNER_CODEX_HANDOFF_IMPROVEMENTS.md`
 - `docs/45_ASF_RUNNER_VERIFICATION_PACK.md`
+- `docs/46_ASF_RUNNER_VERIFICATION_PACK_HARDENING.md`
+- `docs/47_ASF_CODEX_REPORT_INTAKE.md`
+- `docs/48_ASF_HUMAN_GATED_CLOSURE_PACK.md`
 - `docs/40_RELEASE_READINESS.md`
 - `docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md`
 - `docs/42_ASF_NEXT_STEP_RUNNER.md`
