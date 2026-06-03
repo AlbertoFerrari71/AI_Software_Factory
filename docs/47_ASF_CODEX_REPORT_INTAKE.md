@@ -74,3 +74,11 @@ Legge solo file e stato Git locale con comandi read-only.
 L'intake non approva lo step. Segnala solo se il report Codex ha struttura sufficiente per continuare con review umana.
 
 Alberto/ChatGPT devono ancora verificare diff, scope, test, vincoli, rischi e gate umani.
+
+Dal mega-step 370-390, l'intake puo' essere fornito a:
+
+```text
+scripts/asf_human_approval_gate.py
+```
+
+Il Human Approval Gate usa l'intake come evidenza per proporre `GO`, `WARNING`, `HOLD` o `NO-GO`, ma la decisione finale resta di Alberto.

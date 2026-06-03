@@ -1461,3 +1461,58 @@ Il closure pack prepara comandi e checklist, ma lascia ad Alberto l'approvazione
 Gli output restano sotto `tmp/` e sono ignorati da Git.
 
 Il prossimo step consigliato e' 370) ASF Runner Human Approval Gate, per rendere ancora piu' esplicite le approvazioni tra report intake, closure pack e pubblicazione manuale.
+
+---
+
+## DEC-053 - ASF Automation Bridge Pack
+
+**Data:** 2026-06-03
+**Stato:** Accettata
+
+### Contesto
+
+Dopo l'Automation Readiness Pack serve costruire il ponte verso una futura invocazione Codex controllata, senza saltare Human gate, review, verifiche e branch dedicato.
+
+Il flusso desiderato diventa:
+
+- ASF Runner prepara task packet, handoff e Verification Pack;
+- Codex report intake e closure pack restano human-gated;
+- Human Approval Gate produce una decisione `GO`, `WARNING`, `HOLD` o `NO-GO`;
+- ASF puo' generare una preview dry-run di futura invocazione Codex;
+- l'esecuzione reale resta fuori scope finche' non esiste un prototipo read-only approvato.
+
+### Decisione
+
+Introdurre l'ASF Automation Bridge Pack:
+
+- `scripts/asf_human_approval_gate.py`;
+- `scripts/asf_codex_invocation_dry_run.py`;
+- `docs/49_ASF_HUMAN_APPROVAL_GATE.md`;
+- `docs/50_ASF_CODEX_INVOCATION_DESIGN.md`;
+- `docs/51_ASF_CODEX_INVOCATION_DRY_RUN_PACK.md`;
+- template per approval gate e dry-run invocation pack.
+
+`codex exec` puo' comparire solo come testo di preview. Lo script Python non invoca Codex e il `.ps1` generato stampa la preview senza eseguirla.
+
+### Motivazione
+
+Il passaggio da handoff manuale a invocazione controllata e' rischioso se fatto in un salto unico. Serve prima rendere verificabili:
+
+- stato Git target;
+- decisione umana;
+- sandbox proposta;
+- stop condition;
+- comando preview;
+- blocchi `HOLD` e `NO-GO`.
+
+### Conseguenze
+
+Il livello attivo diventa Level 1: dry-run command preview.
+
+Il prossimo step consigliato e':
+
+```text
+400) ASF Codex Invocation Read-Only Prototype
+```
+
+Solo dopo un prototipo read-only verificato si potra' valutare una futura esecuzione `workspace-write`, sempre su branch dedicato e con approval esplicita.

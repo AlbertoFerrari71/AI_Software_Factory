@@ -233,6 +233,14 @@ docs/47_ASF_CODEX_REPORT_INTAKE.md
 docs/48_ASF_HUMAN_GATED_CLOSURE_PACK.md
 ```
 
+Automation bridge pack verso futura invocazione Codex controllata, ancora senza esecuzione automatica:
+
+```text
+docs/49_ASF_HUMAN_APPROVAL_GATE.md
+docs/50_ASF_CODEX_INVOCATION_DESIGN.md
+docs/51_ASF_CODEX_INVOCATION_DRY_RUN_PACK.md
+```
+
 ---
 
 ## 8. Setup locale minimo

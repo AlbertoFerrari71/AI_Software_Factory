@@ -117,6 +117,13 @@ Parametri principali:
 
 Un PASS tecnico non sostituisce review ChatGPT/Alberto.
 
+Dopo il runner, gli step 370-390 aggiungono:
+
+- `human_approval_gate.md` sotto `tmp/asf_approval_gate/`;
+- `codex_invocation_dry_run.md` e `codex_exec_preview.ps1` sotto `tmp/asf_codex_invocation/`.
+
+Questi output restano separati: il runner continua a non invocare Codex.
+
 ---
 
 ## 8. Limiti attuali
@@ -166,6 +173,9 @@ Get-Content -Raw .\tmp\asf_next_step\AI_Software_Factory\step_340\runner_report.
 - `docs/46_ASF_RUNNER_VERIFICATION_PACK_HARDENING.md`
 - `docs/47_ASF_CODEX_REPORT_INTAKE.md`
 - `docs/48_ASF_HUMAN_GATED_CLOSURE_PACK.md`
+- `docs/49_ASF_HUMAN_APPROVAL_GATE.md`
+- `docs/50_ASF_CODEX_INVOCATION_DESIGN.md`
+- `docs/51_ASF_CODEX_INVOCATION_DRY_RUN_PACK.md`
 
 ---
 
@@ -173,5 +183,5 @@ Get-Content -Raw .\tmp\asf_next_step\AI_Software_Factory\step_340\runner_report.
 
 Possibili step futuri:
 
-- 370. ASF Runner Human Approval Gate;
+- 400. ASF Codex Invocation Read-Only Prototype;
 - OpenAI API Adapter in uno step successivo separato.
