@@ -60,6 +60,8 @@ Prima di ogni fase servono gate separati:
 
 Il closure pack non approva nulla e non sostituisce Alberto/ChatGPT.
 
+Dal mega-step 370-390, un closure pack puo' essere letto dal Human Approval Gate come evidenza opzionale. Questo non trasforma i comandi manuali del closure pack in automazione.
+
 ---
 
 ## 5. Gestione PR checks
@@ -94,3 +96,9 @@ Il closure pack non:
 - esegue test automaticamente;
 - esegue commit, push, PR o merge;
 - sostituisce PR checks, review umana o Step Closure Report.
+
+Riferimento successivo:
+
+```text
+docs/49_ASF_HUMAN_APPROVAL_GATE.md
+```

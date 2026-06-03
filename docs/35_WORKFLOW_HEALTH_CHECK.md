@@ -33,6 +33,7 @@ The script `scripts/check_workflow_health.py` checks:
 - `docs/42_ASF_NEXT_STEP_RUNNER.md`, `scripts/asf_next_step.py` and `templates/codex_tasks/asf_next_step_runner_handoff_template.md` are present and linked from the Project Workflow Index;
 - `docs/43_ASF_RUNNER_PROJECT_PROFILES.md`, `docs/44_ASF_RUNNER_CODEX_HANDOFF_IMPROVEMENTS.md`, `docs/45_ASF_RUNNER_VERIFICATION_PACK.md`, `config/asf_project_profiles.json` and `templates/codex_tasks/asf_runner_verification_pack_template.md` are present and linked from the Project Workflow Index;
 - `docs/46_ASF_RUNNER_VERIFICATION_PACK_HARDENING.md`, `docs/47_ASF_CODEX_REPORT_INTAKE.md`, `docs/48_ASF_HUMAN_GATED_CLOSURE_PACK.md`, `scripts/asf_codex_report_intake.py`, `scripts/asf_generate_closure_pack.py`, `templates/codex_tasks/asf_codex_report_intake_template.md` and `templates/codex_tasks/asf_human_gated_closure_pack_template.md` are present and linked from the Project Workflow Index;
+- `docs/49_ASF_HUMAN_APPROVAL_GATE.md`, `docs/50_ASF_CODEX_INVOCATION_DESIGN.md`, `docs/51_ASF_CODEX_INVOCATION_DRY_RUN_PACK.md`, `scripts/asf_human_approval_gate.py`, `scripts/asf_codex_invocation_dry_run.py`, `templates/codex_tasks/asf_human_approval_gate_template.md` and `templates/codex_tasks/asf_codex_invocation_dry_run_template.md` are present and linked from the Project Workflow Index;
 - operational scripts do not contain dangerous Git/GitHub command patterns.
 
 The covered areas include:
@@ -59,6 +60,9 @@ The covered areas include:
 - ASF Runner Verification Pack Hardening;
 - ASF Codex Report Intake;
 - ASF Human-Gated Closure Pack;
+- ASF Human Approval Gate;
+- ASF Codex Invocation Design;
+- ASF Codex Invocation Dry Run Pack;
 - Project Workflow Index.
 
 ---
@@ -200,3 +204,5 @@ After STEP 290, it also treats `docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md`, `
 After STEP 300, it also treats `docs/42_ASF_NEXT_STEP_RUNNER.md`, `scripts/asf_next_step.py` and `templates/codex_tasks/asf_next_step_runner_handoff_template.md` as core runner references because they prepare task packet, Codex handoff and runner report without invoking Codex or modifying the target repository.
 
 After STEP 340-360, it also treats the Automation Readiness Pack documents, scripts and templates as core runner references because they add hardened verification, Codex report intake and human-gated closure pack generation without executing commit, push, PR or merge.
+
+After STEP 370-390, it also treats the Automation Bridge Pack documents, scripts and templates as core runner references because they add a Human Approval Gate, Codex invocation design and dry-run preview pack without executing Codex or modifying repository targets.

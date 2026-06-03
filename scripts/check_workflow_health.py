@@ -61,9 +61,14 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/46_ASF_RUNNER_VERIFICATION_PACK_HARDENING.md",
         "docs/47_ASF_CODEX_REPORT_INTAKE.md",
         "docs/48_ASF_HUMAN_GATED_CLOSURE_PACK.md",
+        "docs/49_ASF_HUMAN_APPROVAL_GATE.md",
+        "docs/50_ASF_CODEX_INVOCATION_DESIGN.md",
+        "docs/51_ASF_CODEX_INVOCATION_DRY_RUN_PACK.md",
         "config/asf_project_profiles.json",
+        "scripts/asf_codex_invocation_dry_run.py",
         "scripts/asf_codex_report_intake.py",
         "scripts/asf_generate_closure_pack.py",
+        "scripts/asf_human_approval_gate.py",
         "scripts/asf_next_step.py",
         "scripts/generate_task_packet.py",
         "scripts/generate_task_packet.ps1",
@@ -82,6 +87,8 @@ def check_files(root: Path) -> list[HealthIssue]:
         "templates/codex_tasks/asf_runner_verification_pack_template.md",
         "templates/codex_tasks/asf_codex_report_intake_template.md",
         "templates/codex_tasks/asf_human_gated_closure_pack_template.md",
+        "templates/codex_tasks/asf_human_approval_gate_template.md",
+        "templates/codex_tasks/asf_codex_invocation_dry_run_template.md",
     ]
 
     issues: list[HealthIssue] = []
@@ -159,11 +166,16 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             ("ASF Runner Verification Pack Hardening", ["ASF Runner Verification Pack Hardening"]),
             ("ASF Codex Report Intake", ["ASF Codex Report Intake"]),
             ("ASF Human-Gated Closure Pack", ["ASF Human-Gated Closure Pack"]),
+            ("ASF Human Approval Gate", ["ASF Human Approval Gate"]),
+            ("ASF Codex Invocation Design", ["ASF Codex Invocation Design"]),
+            ("ASF Codex Invocation Dry Run Pack", ["ASF Codex Invocation Dry Run Pack"]),
             ("generate task packet script", ["scripts/generate_task_packet.py"]),
             ("task packet validator script", ["scripts/validate_task_packet.py"]),
             ("ASF Next Step Runner script", ["scripts/asf_next_step.py"]),
             ("ASF Codex Report Intake script", ["scripts/asf_codex_report_intake.py"]),
             ("ASF Human-Gated Closure Pack script", ["scripts/asf_generate_closure_pack.py"]),
+            ("ASF Human Approval Gate script", ["scripts/asf_human_approval_gate.py"]),
+            ("ASF Codex Invocation Dry Run script", ["scripts/asf_codex_invocation_dry_run.py"]),
             ("verification gate script", ["scripts/verify.ps1"]),
             ("soft guardrails check script", ["scripts/git/check_soft_guardrails.ps1"]),
             ("Workflow Health Check document", ["docs/35_WORKFLOW_HEALTH_CHECK.md"]),
@@ -192,6 +204,9 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             ),
             ("ASF Codex Report Intake document", ["docs/47_ASF_CODEX_REPORT_INTAKE.md"]),
             ("ASF Human-Gated Closure Pack document", ["docs/48_ASF_HUMAN_GATED_CLOSURE_PACK.md"]),
+            ("ASF Human Approval Gate document", ["docs/49_ASF_HUMAN_APPROVAL_GATE.md"]),
+            ("ASF Codex Invocation Design document", ["docs/50_ASF_CODEX_INVOCATION_DESIGN.md"]),
+            ("ASF Codex Invocation Dry Run Pack document", ["docs/51_ASF_CODEX_INVOCATION_DRY_RUN_PACK.md"]),
             ("ASF project profiles config", ["config/asf_project_profiles.json"]),
             (
                 "ASF Next Step Runner handoff template",
@@ -208,6 +223,14 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             (
                 "ASF Human-Gated Closure Pack template",
                 ["templates/codex_tasks/asf_human_gated_closure_pack_template.md"],
+            ),
+            (
+                "ASF Human Approval Gate template",
+                ["templates/codex_tasks/asf_human_approval_gate_template.md"],
+            ),
+            (
+                "ASF Codex Invocation Dry Run template",
+                ["templates/codex_tasks/asf_codex_invocation_dry_run_template.md"],
             ),
         ],
     )
@@ -288,6 +311,8 @@ def check_script_safety(root: Path) -> list[HealthIssue]:
         "scripts/asf_next_step.py",
         "scripts/asf_codex_report_intake.py",
         "scripts/asf_generate_closure_pack.py",
+        "scripts/asf_human_approval_gate.py",
+        "scripts/asf_codex_invocation_dry_run.py",
     ]
     patterns = forbidden_script_patterns()
     issues: list[HealthIssue] = []

@@ -37,6 +37,9 @@ L'indice orienta il lavoro. Non sostituisce i documenti specifici, il Verificati
 | Usare ASF Runner Verification Pack Hardening | `docs/46_ASF_RUNNER_VERIFICATION_PACK_HARDENING.md` | `scripts/asf_next_step.py` | Quando serve seguire tutto il ciclo prima/dopo Codex e prima/dopo PR | Aggiunge report checks, PR checks handling, LF/CRLF handling e human gates |
 | Fare ASF Codex Report Intake | `docs/47_ASF_CODEX_REPORT_INTAKE.md` | `scripts/asf_codex_report_intake.py`, `templates/codex_tasks/asf_codex_report_intake_template.md` | Dopo aver salvato il report finale Codex in Markdown | Produce intake read-only, non approval |
 | Generare ASF Human-Gated Closure Pack | `docs/48_ASF_HUMAN_GATED_CLOSURE_PACK.md` | `scripts/asf_generate_closure_pack.py`, `templates/codex_tasks/asf_human_gated_closure_pack_template.md` | Dopo report intake e review umana | Genera comandi manuali, non li esegue |
+| Generare ASF Human Approval Gate | `docs/49_ASF_HUMAN_APPROVAL_GATE.md` | `scripts/asf_human_approval_gate.py`, `templates/codex_tasks/asf_human_approval_gate_template.md` | Dopo intake, verification pack o closure pack, prima di preview/chiusura | Produce GO/WARNING/HOLD/NO-GO, non approval automatica |
+| Leggere ASF Codex Invocation Design | `docs/50_ASF_CODEX_INVOCATION_DESIGN.md` | Nessuno | Prima di progettare invocazioni Codex controllate | Definisce livelli, sandbox, input/output e stop condition |
+| Generare ASF Codex Invocation Dry Run Pack | `docs/51_ASF_CODEX_INVOCATION_DRY_RUN_PACK.md` | `scripts/asf_codex_invocation_dry_run.py`, `templates/codex_tasks/asf_codex_invocation_dry_run_template.md` | Dopo Human Approval Gate e prima di qualunque prototipo Codex | Genera preview `codex exec`, non la esegue |
 | Eseguire Verification Gate | `docs/20_VERIFICATION_GATE.md` | `scripts/verify.ps1` | Prima di commit/push/PR e dopo merge quando richiesto | Include test, `git diff --check`, `git status --short` |
 | Controllare Documentation Sync | `docs/21_DOCUMENTATION_SYNC.md` | Nessuno | Ogni step documentale o operativo | Valuta changelog, roadmap, decisions e documenti specifici |
 | Controllare Soft Protection Guardrails | `docs/24_SOFT_PROTECTION_GUARDRAILS.md` | `scripts/git/check_soft_guardrails.ps1` | Prima del commit o come controllo locale | Read-only; non installa hook |
@@ -95,6 +98,9 @@ Regole operative:
 - `docs/46_ASF_RUNNER_VERIFICATION_PACK_HARDENING.md`: hardening del Verification Pack lungo tutto il ciclo.
 - `docs/47_ASF_CODEX_REPORT_INTAKE.md`: intake read-only del report finale Codex.
 - `docs/48_ASF_HUMAN_GATED_CLOSURE_PACK.md`: closure pack con comandi manuali e gate umani.
+- `docs/49_ASF_HUMAN_APPROVAL_GATE.md`: approval gate read-only con decisione GO/WARNING/HOLD/NO-GO.
+- `docs/50_ASF_CODEX_INVOCATION_DESIGN.md`: design dei livelli di futura invocazione Codex controllata.
+- `docs/51_ASF_CODEX_INVOCATION_DRY_RUN_PACK.md`: dry-run pack con preview `codex exec` non eseguita.
 
 ---
 
@@ -111,6 +117,8 @@ Regole operative:
 - `scripts/asf_next_step.py`: runner prepare mode locale per il prossimo step.
 - `scripts/asf_codex_report_intake.py`: intake read-only di un report finale Codex salvato in Markdown.
 - `scripts/asf_generate_closure_pack.py`: generatore di closure pack Markdown human-gated.
+- `scripts/asf_human_approval_gate.py`: gate read-only per classificare GO/WARNING/HOLD/NO-GO.
+- `scripts/asf_codex_invocation_dry_run.py`: generatore di preview dry-run per futura invocazione Codex controllata.
 
 Questi script non devono essere usati per automatizzare commit, push, PR o merge.
 
@@ -132,6 +140,8 @@ Config centrale:
 - `templates/codex_tasks/asf_runner_verification_pack_template.md`: struttura del Verification Pack read-only del runner.
 - `templates/codex_tasks/asf_codex_report_intake_template.md`: struttura dell'intake report Codex.
 - `templates/codex_tasks/asf_human_gated_closure_pack_template.md`: struttura del closure pack human-gated.
+- `templates/codex_tasks/asf_human_approval_gate_template.md`: struttura del report Human Approval Gate.
+- `templates/codex_tasks/asf_codex_invocation_dry_run_template.md`: struttura del dry-run pack per preview Codex.
 
 ---
 
@@ -199,6 +209,10 @@ Per decidere se avviare un pilot interno su un progetto reale, usare `docs/40_RE
 Per preparare intake, rischio e primo task packet pilot su un progetto esistente, usare `docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md`.
 
 Per preparare automaticamente task packet, handoff e report temporanei del prossimo step senza invocare Codex, usare `docs/42_ASF_NEXT_STEP_RUNNER.md`.
+
+Per valutare l'approvazione umana prima della preview di invocazione, usare `docs/49_ASF_HUMAN_APPROVAL_GATE.md`.
+
+Per generare una preview dry-run non eseguita di futura invocazione Codex, usare `docs/51_ASF_CODEX_INVOCATION_DRY_RUN_PACK.md`.
 
 I comandi di commit, push, PR e merge restano azioni manuali di Alberto e non sono raccolti qui in una sequenza automatica.
 

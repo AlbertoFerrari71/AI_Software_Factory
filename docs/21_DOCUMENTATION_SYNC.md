@@ -79,10 +79,15 @@ Examples:
 - update `docs/46_ASF_RUNNER_VERIFICATION_PACK_HARDENING.md` when hardened verification stages, report checks, PR checks, or LF/CRLF handling change;
 - update `docs/47_ASF_CODEX_REPORT_INTAKE.md` when Codex report intake inputs, outputs, section checks, or PASS/WARNING/FAIL behavior change;
 - update `docs/48_ASF_HUMAN_GATED_CLOSURE_PACK.md` when closure pack generation, manual command guidance, PR checks handling, or human gate rules change;
+- update `docs/49_ASF_HUMAN_APPROVAL_GATE.md` when approval gate inputs, outputs, decision logic, evidence rules or Alberto responsibility change;
+- update `docs/50_ASF_CODEX_INVOCATION_DESIGN.md` when Codex invocation levels, sandbox rules, input/output contract or stop conditions change;
+- update `docs/51_ASF_CODEX_INVOCATION_DRY_RUN_PACK.md` when dry-run pack generation, preview PowerShell behavior, sandbox options or approval interpretation change;
 - update `config/asf_project_profiles.json` only when profile defaults need to change and no secrets are introduced;
 - update `templates/codex_tasks/asf_runner_verification_pack_template.md` when the Verification Pack structure changes;
 - update `templates/codex_tasks/asf_codex_report_intake_template.md` when intake report structure changes;
 - update `templates/codex_tasks/asf_human_gated_closure_pack_template.md` when closure pack structure changes;
+- update `templates/codex_tasks/asf_human_approval_gate_template.md` when approval gate report structure changes;
+- update `templates/codex_tasks/asf_codex_invocation_dry_run_template.md` when dry-run invocation pack structure changes;
 - update `docs/05_SECURITY_MODEL.md` or `policies/**` only when the Safety Model changes and the risk level is approved.
 
 ### Do not touch unless needed

@@ -61,11 +61,14 @@ Esempio:
 | 340 | ASF Runner Verification Pack Hardening | Rafforzare output e controlli del Verification Pack dopo uso reale | Pre/Post Codex checks, report checks, PR/LF handling, human gates | MVP personale | Completato |
 | 350 | ASF Codex Report Intake | Leggere report Codex salvati e produrre intake report read-only | Script intake, template, PASS/WARNING/FAIL, test | MVP personale | Completato |
 | 360 | ASF Human-Gated Closure Pack | Generare pacchetto chiusura manuale senza eseguire comandi Git/GitHub | Closure pack Markdown, template human-gated, test | MVP personale | Completato |
-| 370 | ASF Runner Human Approval Gate | Rafforzare gate umano prima di closure e pubblicazione manuale | Approval checklist, evidenze minime, blocchi espliciti | MVP personale | Da fare |
-| 380 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
-| 390 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
-| 400 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
-| 410 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
+| 370 | ASF Runner Human Approval Gate | Rafforzare gate umano prima di preview, closure e pubblicazione manuale | Approval gate GO/WARNING/HOLD/NO-GO, evidenze Git, report Markdown | MVP personale | Completato |
+| 380 | ASF Runner Codex Invocation Design | Documentare livelli e limiti della futura invocazione Codex controllata | Design livelli 0-5, sandbox, input/output e stop condition | MVP personale | Completato |
+| 390 | ASF Runner Codex Invocation Dry Run Pack | Generare preview dry-run di futura invocazione Codex senza eseguirla | Dry-run Markdown, preview PowerShell inertizzata, test | MVP personale | Completato |
+| 400 | ASF Codex Invocation Read-Only Prototype | Primo prototipo di invocazione Codex solo read-only e human-approved | Esecuzione read-only controllata, log, exit code, report | MVP personale | Da fare |
+| 410 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
+| 420 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
+| 430 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
+| 440 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
 
 ---
 
@@ -806,18 +809,70 @@ Generare un pacchetto di chiusura step con comandi consigliati ma non eseguiti.
 
 ### Obiettivo
 
-Rendere esplicita l'approvazione umana tra intake, closure pack e pubblicazione manuale.
+Rendere esplicita l'approvazione umana tra intake, verification pack, closure pack e futura preview Codex.
 
-### Output previsti
+### Output realizzati
 
-- checklist approval;
-- evidenze minime;
-- stop condition;
+- script `scripts/asf_human_approval_gate.py`;
+- documento `docs/49_ASF_HUMAN_APPROVAL_GATE.md`;
+- template `templates/codex_tasks/asf_human_approval_gate_template.md`;
+- decisione `GO`, `WARNING`, `HOLD` o `NO-GO`;
+- lettura Git target read-only;
+- output `human_approval_gate.md` sotto `tmp/asf_approval_gate/`;
 - nessuna automazione commit/push/PR/merge.
 
 ---
 
-## 40. STEP 380 - OpenAI API Adapter
+## 40. STEP 380 - ASF Runner Codex Invocation Design
+
+### Obiettivo
+
+Documentare il design della futura invocazione Codex controllata.
+
+### Output realizzati
+
+- documento `docs/50_ASF_CODEX_INVOCATION_DESIGN.md`;
+- livelli 0-5 di invocazione;
+- regole sandbox read-only, workspace-write e divieto danger-full-access;
+- input, output e stop condition;
+- chiarimento che `codex exec` non viene eseguito in questo step.
+
+---
+
+## 41. STEP 390 - ASF Runner Codex Invocation Dry Run Pack
+
+### Obiettivo
+
+Generare un pacchetto dry-run per futura invocazione Codex controllata.
+
+### Output realizzati
+
+- script `scripts/asf_codex_invocation_dry_run.py`;
+- documento `docs/51_ASF_CODEX_INVOCATION_DRY_RUN_PACK.md`;
+- template `templates/codex_tasks/asf_codex_invocation_dry_run_template.md`;
+- output `codex_invocation_dry_run.md` e `codex_exec_preview.ps1` sotto `tmp/asf_codex_invocation/`;
+- preview `codex exec` solo come testo, marcata dry-run e manual review required.
+
+---
+
+## 42. STEP 400 - ASF Codex Invocation Read-Only Prototype
+
+### Obiettivo
+
+Verificare una prima invocazione Codex controllata in sola analisi read-only.
+
+### Output previsti
+
+- prototipo read-only human-approved;
+- lettura handoff da file;
+- log stdout/stderr;
+- exit code;
+- report Codex salvato;
+- nessuna modifica al repository target.
+
+---
+
+## 43. STEP 410 - OpenAI API Adapter
 
 ### Obiettivo
 
@@ -833,7 +888,7 @@ Collegare Responses API e Structured Outputs.
 
 ---
 
-## 41. STEP 390 - MCP Tool Registry
+## 44. STEP 420 - MCP Tool Registry
 
 ### Obiettivo
 
@@ -848,7 +903,7 @@ Gestire tool esterni in modo sicuro.
 
 ---
 
-## 42. STEP 400 - Guided Mode
+## 45. STEP 430 - Guided Mode
 
 ### Obiettivo
 
@@ -863,7 +918,7 @@ Rendere il framework utilizzabile da utenti non tecnici.
 
 ---
 
-## 43. STEP 410 - SaaS Evolution Plan
+## 46. STEP 440 - SaaS Evolution Plan
 
 ### Obiettivo
 

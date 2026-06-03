@@ -146,6 +146,22 @@ python scripts/asf_generate_closure_pack.py --project-name AI_Software_Factory -
 
 Il closure pack genera `closure_pack.md` sotto `tmp/asf_closure_pack/`. I comandi di commit, push, PR e merge sono testo manuale human-gated e non vengono eseguiti dallo script.
 
+## 7.7 Generare Human Approval Gate
+
+```powershell
+python scripts/asf_human_approval_gate.py --project-name AI_Software_Factory --repo-path . --step 390 --branch step-370-390-asf-automation-bridge-pack --codex-report-intake tmp/asf_codex_intake/AI_Software_Factory/step_390/codex_report_intake.md --verification-pack tmp/asf_next_step/AI_Software_Factory/step_390/verification_pack.md --output-dir tmp/asf_approval_gate
+```
+
+Il gate genera `human_approval_gate.md` sotto `tmp/asf_approval_gate/` e propone `GO`, `WARNING`, `HOLD` o `NO-GO`. Non approva automaticamente lo step.
+
+## 7.8 Generare Codex invocation dry-run pack
+
+```powershell
+python scripts/asf_codex_invocation_dry_run.py --project-name AI_Software_Factory --repo-path . --step 390 --branch step-370-390-asf-automation-bridge-pack --handoff-path tmp/asf_next_step/AI_Software_Factory/step_390/codex_handoff.md --approval-gate tmp/asf_approval_gate/AI_Software_Factory/step_390/human_approval_gate.md --output-dir tmp/asf_codex_invocation
+```
+
+Il dry-run pack genera `codex_invocation_dry_run.md` e `codex_exec_preview.ps1` sotto `tmp/asf_codex_invocation/`. Il comando `codex exec` e' solo testo di preview e non viene eseguito.
+
 ---
 
 ## 8. Eseguire Verification Gate
@@ -263,5 +279,8 @@ Solo dopo questa verifica lo step puo' essere considerato presente su `main`.
 - `docs/40_RELEASE_READINESS.md`: criteri GO/WARNING/NO-GO per pilot interno local-first.
 - `docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md`: intake e primo task packet pilot per progetto esistente.
 - `docs/42_ASF_NEXT_STEP_RUNNER.md`: prepare mode locale per task packet, handoff Codex e report runner.
+- `docs/49_ASF_HUMAN_APPROVAL_GATE.md`: gate GO/WARNING/HOLD/NO-GO prima di preview o closure.
+- `docs/50_ASF_CODEX_INVOCATION_DESIGN.md`: design della futura invocazione Codex controllata.
+- `docs/51_ASF_CODEX_INVOCATION_DRY_RUN_PACK.md`: dry-run pack con preview `codex exec` non eseguita.
 - `docs/20_VERIFICATION_GATE.md`: criteri di verifica locale e CI.
 - `docs/28_PROMPT_PACKET_VALIDATION_STRICT_MODE.md`: dettagli della validazione Strict.

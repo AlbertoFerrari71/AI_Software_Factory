@@ -42,10 +42,15 @@ Lo script `scripts/show_workflow_status.py` mostra:
   - `docs/46_ASF_RUNNER_VERIFICATION_PACK_HARDENING.md`;
   - `docs/47_ASF_CODEX_REPORT_INTAKE.md`;
   - `docs/48_ASF_HUMAN_GATED_CLOSURE_PACK.md`;
+  - `docs/49_ASF_HUMAN_APPROVAL_GATE.md`;
+  - `docs/50_ASF_CODEX_INVOCATION_DESIGN.md`;
+  - `docs/51_ASF_CODEX_INVOCATION_DRY_RUN_PACK.md`;
 - presenza degli script principali:
   - `scripts/asf_next_step.py`;
   - `scripts/asf_codex_report_intake.py`;
   - `scripts/asf_generate_closure_pack.py`;
+  - `scripts/asf_human_approval_gate.py`;
+  - `scripts/asf_codex_invocation_dry_run.py`;
   - `scripts/check_workflow_health.py`;
   - `scripts/show_workflow_status.py`;
   - `scripts/generate_task_packet.py`;
@@ -109,7 +114,7 @@ La dashboard puo' aiutare a raccogliere evidenze, ma non sostituisce il report d
 
 ASF Next Step Runner prepara task packet, handoff Codex, runner report e Verification Pack per lo step successivo.
 
-La dashboard mostra se documenti, config e script del runner sono presenti, inclusi report intake e closure pack, ma non esegue il runner e non invoca Codex.
+La dashboard mostra se documenti, config e script del runner sono presenti, inclusi report intake, closure pack, Human Approval Gate e dry-run invocation pack, ma non esegue il runner e non invoca Codex.
 
 ---
 
@@ -171,6 +176,9 @@ Limiti intenzionali:
 - nessuna invocazione di ASF Next Step Runner.
 - nessuna validazione semantica dei profili progetto.
 - nessuna generazione automatica di closure pack.
+- nessuna generazione automatica di Human Approval Gate.
+- nessuna generazione automatica di Codex invocation dry-run pack.
+- nessuna esecuzione di `codex exec`.
 
 La dashboard non sostituisce test, Verification Gate, Workflow Health Check, PR checks o Step Closure Report.
 
@@ -190,6 +198,9 @@ La dashboard non sostituisce test, Verification Gate, Workflow Health Check, PR 
 - `docs/46_ASF_RUNNER_VERIFICATION_PACK_HARDENING.md`
 - `docs/47_ASF_CODEX_REPORT_INTAKE.md`
 - `docs/48_ASF_HUMAN_GATED_CLOSURE_PACK.md`
+- `docs/49_ASF_HUMAN_APPROVAL_GATE.md`
+- `docs/50_ASF_CODEX_INVOCATION_DESIGN.md`
+- `docs/51_ASF_CODEX_INVOCATION_DRY_RUN_PACK.md`
 - `docs/40_RELEASE_READINESS.md`
 - `docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md`
 - `docs/42_ASF_NEXT_STEP_RUNNER.md`

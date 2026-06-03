@@ -4,6 +4,37 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.39.0] - 2026-06-03
+
+### Added
+
+- MEGA-STEP 370-390 - ASF Automation Bridge Pack.
+- Script read-only `scripts/asf_human_approval_gate.py`.
+- Script `scripts/asf_codex_invocation_dry_run.py` per generare solo preview dry-run di futura invocazione Codex.
+- Documenti `docs/49_ASF_HUMAN_APPROVAL_GATE.md`, `docs/50_ASF_CODEX_INVOCATION_DESIGN.md` e `docs/51_ASF_CODEX_INVOCATION_DRY_RUN_PACK.md`.
+- Template `templates/codex_tasks/asf_human_approval_gate_template.md` e `templates/codex_tasks/asf_codex_invocation_dry_run_template.md`.
+- Test automatici per Human Approval Gate, Codex Invocation Dry Run Pack e copertura Automation Bridge Pack.
+
+### Changed
+
+- Aggiornati Workflow Health Check e Workflow Status Dashboard per includere i nuovi documenti, script e template.
+- Aggiornati Project Workflow Index, Quick Reference, Command Cookbook, Release Readiness, Existing Project Pilot Onboarding e documenti runner con il nuovo ponte verso l'invocazione Codex controllata.
+- Aggiornata roadmap: STEP 370, 380 e 390 completati; STEP 400 consigliato come ASF Codex Invocation Read-Only Prototype.
+- Aggiornato decision log con la scelta di mantenere l'invocazione Codex al livello dry-run preview.
+
+### Not included
+
+- Nessuna invocazione automatica di Codex.
+- Nessuna esecuzione di `codex exec`.
+- Nessuna esecuzione automatica di commit, push, PR o merge.
+- Nessuna modifica a repository target esterni.
+- Nessuna modifica a GitHub o GitHub API.
+- Nessuna modifica a CI, hook Git, `core.hooksPath`, dipendenze, secret, `.env`, PATH o profili PowerShell.
+- Nessuna modifica a `src/**` o `policies/**`.
+- Nessuna pubblicazione PyPI o registry.
+
+---
+
 ## [0.36.0] - 2026-05-29
 
 ### Added

@@ -25,12 +25,17 @@ CENTRAL_DOCUMENTS = [
     "docs/46_ASF_RUNNER_VERIFICATION_PACK_HARDENING.md",
     "docs/47_ASF_CODEX_REPORT_INTAKE.md",
     "docs/48_ASF_HUMAN_GATED_CLOSURE_PACK.md",
+    "docs/49_ASF_HUMAN_APPROVAL_GATE.md",
+    "docs/50_ASF_CODEX_INVOCATION_DESIGN.md",
+    "docs/51_ASF_CODEX_INVOCATION_DRY_RUN_PACK.md",
 ]
 
 MAIN_SCRIPTS = [
     "scripts/asf_next_step.py",
     "scripts/asf_codex_report_intake.py",
     "scripts/asf_generate_closure_pack.py",
+    "scripts/asf_human_approval_gate.py",
+    "scripts/asf_codex_invocation_dry_run.py",
     "scripts/check_workflow_health.py",
     "scripts/show_workflow_status.py",
     "scripts/generate_task_packet.py",

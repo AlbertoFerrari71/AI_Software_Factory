@@ -572,6 +572,55 @@ Non eseguire il closure pack come script. I comandi contenuti sono manuali e hum
 
 ---
 
+## 14.7 Ricetta - Generare Human Approval Gate
+
+### Quando usarla
+
+Dopo intake report, verification pack o closure pack, quando serve una decisione esplicita prima di preview o chiusura.
+
+### Comandi
+
+```powershell
+python scripts/asf_human_approval_gate.py --project-name AI_Software_Factory --repo-path . --step 390 --branch step-370-390-asf-automation-bridge-pack --codex-report-intake tmp/asf_codex_intake/AI_Software_Factory/step_390/codex_report_intake.md --verification-pack tmp/asf_next_step/AI_Software_Factory/step_390/verification_pack.md --output-dir tmp/asf_approval_gate
+```
+
+### Esito atteso
+
+Lo script crea `human_approval_gate.md` sotto `tmp/asf_approval_gate/` con decisione `GO`, `WARNING`, `HOLD` o `NO-GO`.
+
+### Cosa non fare
+
+Non trattare `GO` come automazione. Alberto deve comunque leggere il gate e approvare le azioni successive.
+
+---
+
+## 14.8 Ricetta - Generare Codex invocation dry-run pack
+
+### Quando usarla
+
+Dopo Human Approval Gate, quando serve revisionare una futura invocazione Codex senza eseguirla.
+
+### Comandi
+
+```powershell
+python scripts/asf_codex_invocation_dry_run.py --project-name AI_Software_Factory --repo-path . --step 390 --branch step-370-390-asf-automation-bridge-pack --handoff-path tmp/asf_next_step/AI_Software_Factory/step_390/codex_handoff.md --approval-gate tmp/asf_approval_gate/AI_Software_Factory/step_390/human_approval_gate.md --output-dir tmp/asf_codex_invocation
+```
+
+### Esito atteso
+
+Lo script crea:
+
+- `codex_invocation_dry_run.md`;
+- `codex_exec_preview.ps1`.
+
+Il comando `codex exec` compare solo come testo di preview. Non viene eseguito.
+
+### Cosa non fare
+
+Non eseguire il preview senza approval esplicita di Alberto. Non usare `workspace-write-preview` come autorizzazione implicita a modificare repository target.
+
+---
+
 ## 15. Ricetta - Verification Gate fallito
 
 ### Quando usarla
@@ -722,4 +771,7 @@ Codex non deve fare commit, Codex non deve fare push, Codex non deve aprire PR e
 - `docs/40_RELEASE_READINESS.md`
 - `docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md`
 - `docs/42_ASF_NEXT_STEP_RUNNER.md`
+- `docs/49_ASF_HUMAN_APPROVAL_GATE.md`
+- `docs/50_ASF_CODEX_INVOCATION_DESIGN.md`
+- `docs/51_ASF_CODEX_INVOCATION_DRY_RUN_PACK.md`
 - `templates/codex_tasks/step_closure_report_template.md`

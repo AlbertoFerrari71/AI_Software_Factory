@@ -42,6 +42,7 @@ Il Verification Pack contiene:
 - validazione task packet Strict;
 - runner report review;
 - Human gates;
+- collegamento al futuro Human Approval Gate;
 - riferimenti a Quick Reference, Command Cookbook e Step Closure Report.
 
 ---
@@ -70,6 +71,8 @@ docs/46_ASF_RUNNER_VERIFICATION_PACK_HARDENING.md
 Il workflow AI Software Factory mantiene il gate umano sulle azioni Git che cambiano storia locale, remoto o stato GitHub.
 
 Il runner prepara contesto e checklist. Non deve trasformarsi in un orchestratore automatico che decide quando pubblicare o chiudere uno step.
+
+Dal mega-step 370-390, il Verification Pack puo' essere una delle evidenze lette da `scripts/asf_human_approval_gate.py`. Questo non cambia il suo ruolo: resta una checklist read-only e non autorizza esecuzioni.
 
 La fase Git presidiata resta documentata in:
 
@@ -119,4 +122,10 @@ Prima di procedere manualmente con il ciclo Git presidiato, verificare:
 - Step Closure Report richiesto.
 
 I gate umani includono approvazione commit, push, PR e merge. Il Verification Pack puo' citare `gh pr checks --watch`, ma tratta check non disponibili come attenzione da registrare.
+
+Per il gate esplicito prima della preview Codex vedere:
+
+```text
+docs/49_ASF_HUMAN_APPROVAL_GATE.md
+```
 

@@ -43,6 +43,8 @@ Componenti maturi per un pilot controllato:
 - ASF Next Step Runner;
 - ASF Codex Report Intake;
 - ASF Human-Gated Closure Pack;
+- ASF Human Approval Gate;
+- ASF Codex Invocation Dry Run Pack;
 - Verification Gate;
 - Documentation Sync;
 - soft guardrails locali.
@@ -280,6 +282,7 @@ Il prossimo step operativo naturale dopo l'onboarding e':
 300) ASF Next Step Runner
 310-330) ASF Runner Upgrade Pack
 340-360) ASF Runner Automation Readiness Pack
+370-390) ASF Automation Bridge Pack
 ```
 
-Scopo: preparare localmente task packet, handoff Codex, report, Verification Pack, report intake e closure pack senza modificare repository esterne, senza invocare Codex e senza eseguire automaticamente commit/push/PR/merge.
+Scopo: preparare localmente task packet, handoff Codex, report, Verification Pack, report intake, closure pack, Human Approval Gate e dry-run preview senza modificare repository esterne, senza invocare Codex e senza eseguire automaticamente commit/push/PR/merge.
