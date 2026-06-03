@@ -80,7 +80,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Prepare a local ASF next-step handoff without running Codex or changing the target repo.",
     )
-    parser.add_argument("--mode", required=True, help="Runner mode. STEP 310-330 supports only: prepare.")
+    parser.add_argument("--mode", required=True, help="Runner mode. Current runner supports only: prepare.")
     parser.add_argument("--profile", help="Project profile name from config/asf_project_profiles.json.")
     parser.add_argument(
         "--profiles-config",
@@ -218,7 +218,7 @@ def resolve_settings(args: argparse.Namespace, root: Path) -> RunnerSettings:
 
 def validate_args(args: argparse.Namespace) -> None:
     if args.mode.strip() != "prepare":
-        raise InputError("--mode supports only 'prepare' in STEP 310-330.")
+        raise InputError("--mode supports only 'prepare'.")
 
     step = args.step.strip()
     if not step.isdigit():
@@ -730,6 +730,8 @@ def build_verification_pack(
     task_packet: Path,
     report: Path,
 ) -> str:
+    health_command = settings.health_command or "# Nessun health command configurato nel profilo."
+
     return f"""# ASF Runner Verification Pack
 
 ## Progetto target
@@ -763,13 +765,19 @@ Dettaglio working tree:
 
 ## Pre-Codex checks consigliati
 
-Eseguire nel repository target:
+Eseguire o verificare nel repository target prima di incollare l'handoff in Codex:
 
 ```powershell
 git branch --show-current
 git status --short
 git --no-pager log --oneline --max-count=10
 ```
+
+- Controllare che il branch corrente sia coerente con il task.
+- Controllare che la working tree sia `CLEAN` oppure che `DIRTY/WARNING` sia compreso e accettato da Alberto.
+- Controllare che gli ultimi commit includano il prerequisito dello step precedente.
+- Leggere `codex_handoff.md` e `task_packet.md`.
+- Confermare Human gate prima di usare Codex.
 
 ## Post-Codex local checks consigliati
 
@@ -780,7 +788,36 @@ git status --short
 git --no-pager diff --stat
 git --no-pager diff --check
 {settings.test_command}
+{health_command}
 ```
+
+- Verificare che i file temporanei restino sotto `tmp/` o in percorsi ignorati.
+- Verificare che il report Codex sia salvato come file Markdown prima dell'intake.
+
+## Scope checks
+
+- Elencare file creati e modificati.
+- Confermare nessun file fuori scope.
+- Confermare nessuna modifica a secret o `.env`.
+- Confermare nessuna modifica a CI salvo autorizzazione esplicita.
+- Confermare nessuna operazione vietata.
+- Confermare nessuna modifica a repository target esterni non richiesta.
+
+## Codex report checks
+
+Il report Codex finale deve essere presente e includere almeno:
+
+- STEP ESEGUITO;
+- STATO;
+- BRANCH CORRENTE;
+- FILE CREATI;
+- FILE MODIFICATI;
+- COMANDI ESEGUITI;
+- VERIFICHE NON ESEGUITE;
+- RISCHI / NOTE;
+- CONFERME VINCOLI;
+- PROSSIMO STEP;
+- RIEPILOGO FINALE.
 
 ## ASF checks lato AI_Software_Factory
 
@@ -802,13 +839,41 @@ Runner report review:
 - Verificare scope escluso.
 - Verificare vincoli e forbidden actions.
 - Verificare note safety del profilo.
-- Solo dopo procedere manualmente al ciclo Git presidiato usando Quick Reference e Command Cookbook.
+- Approvazione commit.
+- Approvazione push.
+- Approvazione PR.
+- Approvazione merge.
+- Solo dopo procedere manualmente al ciclo Git presidiato usando Quick Reference e Workflow Command Cookbook.
+
+## PR checks handling
+
+Comando di riferimento manuale:
+
+```powershell
+gh pr checks --watch
+```
+
+Se i check non sono disponibili o viene riportato `no checks reported`, trattare il caso come attenzione da registrare, non come fallimento automatico. Registrare l'attenzione nello Step Closure Report insieme ai controlli locali eseguiti.
+
+## LF/CRLF handling
+
+I warning LF/CRLF non sono bloccanti se `git diff --check`, test e Verification Gate passano con exit code 0.
+
+## Closure stages da presidiare
+
+- Prima di Codex: branch, working tree, prerequisito, handoff e Human gate.
+- Dopo Codex: diff, test, health command e report Codex.
+- Prima del commit: scope, secret, CI, operazioni vietate e Verification Gate.
+- Prima del push: branch corretto e commit revisionato da Alberto.
+- Prima della PR: titolo, body, scope e rischi coerenti.
+- Prima del merge: PR checks, review e assenza di blocchi aperti.
+- Dopo il pull finale di main: dashboard, health check, test, Verification Gate e Step Closure Report.
 
 ## Riferimenti
 
-- `docs/36_WORKFLOW_QUICK_REFERENCE.md`
-- `docs/37_STEP_CLOSURE_REPORT.md`
-- `docs/38_WORKFLOW_COMMAND_COOKBOOK.md`
+- Quick Reference: `docs/36_WORKFLOW_QUICK_REFERENCE.md`
+- Step Closure Report: `docs/37_STEP_CLOSURE_REPORT.md`
+- Workflow Command Cookbook: `docs/38_WORKFLOW_COMMAND_COOKBOOK.md`
 
 ## Nota
 

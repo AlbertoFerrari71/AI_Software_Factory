@@ -34,6 +34,9 @@ L'indice orienta il lavoro. Non sostituisce i documenti specifici, il Verificati
 | Usare ASF Runner Project Profiles | `docs/43_ASF_RUNNER_PROJECT_PROFILES.md` | `config/asf_project_profiles.json` | Quando il progetto target ha default riusabili | Riduce argomenti ripetitivi e porta note safety nel packet |
 | Interpretare ASF Runner Codex Handoff Improvements | `docs/44_ASF_RUNNER_CODEX_HANDOFF_IMPROVEMENTS.md` | `templates/codex_tasks/asf_next_step_runner_handoff_template.md` | Quando si copia l'handoff generato verso Codex | Mantiene FASE 1, FASE 2 e Human gate espliciti |
 | Usare ASF Runner Verification Pack | `docs/45_ASF_RUNNER_VERIFICATION_PACK.md` | `templates/codex_tasks/asf_runner_verification_pack_template.md` | Quando si vogliono controlli read-only prima e dopo Codex | Non contiene automazione commit, push, PR o merge |
+| Usare ASF Runner Verification Pack Hardening | `docs/46_ASF_RUNNER_VERIFICATION_PACK_HARDENING.md` | `scripts/asf_next_step.py` | Quando serve seguire tutto il ciclo prima/dopo Codex e prima/dopo PR | Aggiunge report checks, PR checks handling, LF/CRLF handling e human gates |
+| Fare ASF Codex Report Intake | `docs/47_ASF_CODEX_REPORT_INTAKE.md` | `scripts/asf_codex_report_intake.py`, `templates/codex_tasks/asf_codex_report_intake_template.md` | Dopo aver salvato il report finale Codex in Markdown | Produce intake read-only, non approval |
+| Generare ASF Human-Gated Closure Pack | `docs/48_ASF_HUMAN_GATED_CLOSURE_PACK.md` | `scripts/asf_generate_closure_pack.py`, `templates/codex_tasks/asf_human_gated_closure_pack_template.md` | Dopo report intake e review umana | Genera comandi manuali, non li esegue |
 | Eseguire Verification Gate | `docs/20_VERIFICATION_GATE.md` | `scripts/verify.ps1` | Prima di commit/push/PR e dopo merge quando richiesto | Include test, `git diff --check`, `git status --short` |
 | Controllare Documentation Sync | `docs/21_DOCUMENTATION_SYNC.md` | Nessuno | Ogni step documentale o operativo | Valuta changelog, roadmap, decisions e documenti specifici |
 | Controllare Soft Protection Guardrails | `docs/24_SOFT_PROTECTION_GUARDRAILS.md` | `scripts/git/check_soft_guardrails.ps1` | Prima del commit o come controllo locale | Read-only; non installa hook |
@@ -89,6 +92,9 @@ Regole operative:
 - `docs/43_ASF_RUNNER_PROJECT_PROFILES.md`: profili progetto locali per il runner.
 - `docs/44_ASF_RUNNER_CODEX_HANDOFF_IMPROVEMENTS.md`: struttura dell'handoff Codex migliorato.
 - `docs/45_ASF_RUNNER_VERIFICATION_PACK.md`: pacchetto di verifiche read-only consigliate dal runner.
+- `docs/46_ASF_RUNNER_VERIFICATION_PACK_HARDENING.md`: hardening del Verification Pack lungo tutto il ciclo.
+- `docs/47_ASF_CODEX_REPORT_INTAKE.md`: intake read-only del report finale Codex.
+- `docs/48_ASF_HUMAN_GATED_CLOSURE_PACK.md`: closure pack con comandi manuali e gate umani.
 
 ---
 
@@ -103,6 +109,8 @@ Regole operative:
 - `scripts/check_workflow_health.py`: controllo read-only di documenti, riferimenti e script operativi del workflow.
 - `scripts/show_workflow_status.py`: dashboard read-only dello stato workflow locale.
 - `scripts/asf_next_step.py`: runner prepare mode locale per il prossimo step.
+- `scripts/asf_codex_report_intake.py`: intake read-only di un report finale Codex salvato in Markdown.
+- `scripts/asf_generate_closure_pack.py`: generatore di closure pack Markdown human-gated.
 
 Questi script non devono essere usati per automatizzare commit, push, PR o merge.
 
@@ -122,6 +130,8 @@ Config centrale:
 - `templates/codex_tasks/first_pilot_step_packet_template.md`: template per creare il primo task packet pilot piccolo e reversibile.
 - `templates/codex_tasks/asf_next_step_runner_handoff_template.md`: struttura handoff manuale da copiare in Codex.
 - `templates/codex_tasks/asf_runner_verification_pack_template.md`: struttura del Verification Pack read-only del runner.
+- `templates/codex_tasks/asf_codex_report_intake_template.md`: struttura dell'intake report Codex.
+- `templates/codex_tasks/asf_human_gated_closure_pack_template.md`: struttura del closure pack human-gated.
 
 ---
 

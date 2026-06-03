@@ -58,11 +58,14 @@ Esempio:
 | 310 | ASF Next Step Runner Project Profiles | Aggiungere profili progetto riusabili per il runner | Config profili, override manuali, note safety, test | MVP personale | Completato |
 | 320 | ASF Runner Codex Handoff Improvements | Migliorare handoff e task packet generati dal runner | Handoff FASE 1/FASE 2, stato Git, note safety, template evoluto | MVP personale | Completato |
 | 330 | ASF Runner Verification Pack | Rafforzare verifiche e report del runner senza CI automatica | Verification pack locale, controlli consigliati, runbook | MVP personale | Completato |
-| 340 | ASF Runner Verification Pack Hardening | Rafforzare output e controlli del Verification Pack dopo uso reale | Hardening contenuti, casi limite, verifiche read-only | MVP personale | Da fare |
-| 350 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
-| 360 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
-| 370 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
-| 380 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
+| 340 | ASF Runner Verification Pack Hardening | Rafforzare output e controlli del Verification Pack dopo uso reale | Pre/Post Codex checks, report checks, PR/LF handling, human gates | MVP personale | Completato |
+| 350 | ASF Codex Report Intake | Leggere report Codex salvati e produrre intake report read-only | Script intake, template, PASS/WARNING/FAIL, test | MVP personale | Completato |
+| 360 | ASF Human-Gated Closure Pack | Generare pacchetto chiusura manuale senza eseguire comandi Git/GitHub | Closure pack Markdown, template human-gated, test | MVP personale | Completato |
+| 370 | ASF Runner Human Approval Gate | Rafforzare gate umano prima di closure e pubblicazione manuale | Approval checklist, evidenze minime, blocchi espliciti | MVP personale | Da fare |
+| 380 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
+| 390 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
+| 400 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
+| 410 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
 
 ---
 
@@ -753,17 +756,68 @@ Rafforzare verifiche e report del runner senza integrare nuovi check in CI.
 
 Rafforzare Verification Pack e report del runner dopo uso reale su piu' profili.
 
-### Output previsti
+### Output realizzati
 
-- casi limite su profili e repo target;
-- messaggi operativi piu' chiari;
-- controlli read-only aggiuntivi se utili;
+- controlli Pre-Codex e Post-Codex rafforzati;
+- scope checks e report checks;
+- gestione PR checks non disponibili;
+- gestione warning LF/CRLF;
+- human gates per commit, push, PR e merge;
 - nessuna integrazione CI;
 - nessuna automazione commit/push/PR/merge.
 
 ---
 
-## 37. STEP 350 - OpenAI API Adapter
+## 37. STEP 350 - ASF Codex Report Intake
+
+### Obiettivo
+
+Leggere un report finale Codex salvato in Markdown e produrre un intake report locale.
+
+### Output realizzati
+
+- script `scripts/asf_codex_report_intake.py`;
+- template `templates/codex_tasks/asf_codex_report_intake_template.md`;
+- output `codex_report_intake.md` sotto `tmp/asf_codex_intake/`;
+- classificazione PASS/WARNING/FAIL;
+- lettura Git target read-only;
+- nessuna approval automatica.
+
+---
+
+## 38. STEP 360 - ASF Human-Gated Closure Pack
+
+### Obiettivo
+
+Generare un pacchetto di chiusura step con comandi consigliati ma non eseguiti.
+
+### Output realizzati
+
+- script `scripts/asf_generate_closure_pack.py`;
+- template `templates/codex_tasks/asf_human_gated_closure_pack_template.md`;
+- output `closure_pack.md` sotto `tmp/asf_closure_pack/`;
+- comandi manuali e human-gated;
+- gestione `gh pr checks --watch`;
+- Step Closure Report finale.
+
+---
+
+## 39. STEP 370 - ASF Runner Human Approval Gate
+
+### Obiettivo
+
+Rendere esplicita l'approvazione umana tra intake, closure pack e pubblicazione manuale.
+
+### Output previsti
+
+- checklist approval;
+- evidenze minime;
+- stop condition;
+- nessuna automazione commit/push/PR/merge.
+
+---
+
+## 40. STEP 380 - OpenAI API Adapter
 
 ### Obiettivo
 
@@ -779,7 +833,7 @@ Collegare Responses API e Structured Outputs.
 
 ---
 
-## 38. STEP 360 - MCP Tool Registry
+## 41. STEP 390 - MCP Tool Registry
 
 ### Obiettivo
 
@@ -794,7 +848,7 @@ Gestire tool esterni in modo sicuro.
 
 ---
 
-## 39. STEP 370 - Guided Mode
+## 42. STEP 400 - Guided Mode
 
 ### Obiettivo
 
@@ -809,7 +863,7 @@ Rendere il framework utilizzabile da utenti non tecnici.
 
 ---
 
-## 40. STEP 380 - SaaS Evolution Plan
+## 43. STEP 410 - SaaS Evolution Plan
 
 ### Obiettivo
 

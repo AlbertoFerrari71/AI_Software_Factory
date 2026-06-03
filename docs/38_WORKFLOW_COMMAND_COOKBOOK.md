@@ -528,6 +528,50 @@ Documenti:
 
 ---
 
+## 14.5 Ricetta - Fare intake report Codex
+
+### Quando usarla
+
+Quando Codex ha prodotto un report finale e Alberto lo ha salvato in Markdown.
+
+### Comandi
+
+```powershell
+python scripts/asf_codex_report_intake.py --report-path tmp/asf_codex_reports/step_340_codex_report.md --project-name AI_Software_Factory --repo-path . --step 340
+```
+
+### Esito atteso
+
+Lo script crea `codex_report_intake.md` sotto `tmp/asf_codex_intake/` con sezioni trovate, sezioni mancanti, stato Git target e classificazione `PASS`, `WARNING` o `FAIL`.
+
+### Cosa non fare
+
+Non trattare l'intake come approval. Non saltare review diff, test, Verification Gate o Step Closure Report.
+
+---
+
+## 14.6 Ricetta - Generare closure pack human-gated
+
+### Quando usarla
+
+Dopo intake report, review umana e verifiche locali positive, quando serve preparare una sequenza manuale di chiusura step.
+
+### Comandi
+
+```powershell
+python scripts/asf_generate_closure_pack.py --project-name AI_Software_Factory --repo-path . --step 340 --branch step-340-360-asf-runner-automation-readiness-pack --commit-message "340-360) add ASF runner automation readiness pack" --pr-title "340-360) ASF Runner Automation Readiness Pack"
+```
+
+### Esito atteso
+
+Lo script crea `closure_pack.md` sotto `tmp/asf_closure_pack/` con checklist, comandi verifica, comandi Git/GitHub manuali, gestione `gh pr checks --watch`, test finale main e Step Closure Report.
+
+### Cosa non fare
+
+Non eseguire il closure pack come script. I comandi contenuti sono manuali e human-gated.
+
+---
+
 ## 15. Ricetta - Verification Gate fallito
 
 ### Quando usarla
