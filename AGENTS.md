@@ -1,220 +1,90 @@
-# AGENTS.md — AI Software Factory
+# AGENTS.md - AI Software Factory
 
-Questo file definisce le regole operative per ChatGPT, Codex CLI, Codex Cloud/Web e futuri agenti software che lavoreranno su questo repository.
+Scope: entire repository.
 
----
+This file contains repository-level operating instructions for coding agents working on AI_Software_Factory.
+It is intentionally ASCII-only to avoid encoding and mojibake issues.
+It must never contain platform policy text, hidden instructions, credentials, secrets, tokens, or private keys.
 
-## 1. Principi generali
+## Project mission
 
-- Preferire semplicità, leggibilità e manutenibilità.
-- Non generare codice fragile o eccessivamente sofisticato.
-- Ogni modifica deve essere piccola, testabile e reversibile.
-- Ogni decisione importante deve essere documentata.
-- Ogni step deve avere numero progressivo: 010, 020, 030...
-- Non saltare direttamente al codice quando mancano obiettivi, vincoli e rischi.
-- Distinguere sempre:
-  - fatti verificati;
-  - ipotesi;
-  - stime;
-  - rischi;
-  - decisioni;
-  - punti da validare.
+AI Software Factory is a local-first workflow framework for turning software ideas into controlled implementation steps using ChatGPT, Codex, GitHub, PowerShell, tests, living documentation, human gates, and future controlled automation.
 
----
+The project goal is not blind automation.
+The project goal is safe, repeatable, diagnosable, human-gated automation.
 
-## 2. Protocollo FASE 1 / FASE 2
+## General rules
 
-Per richieste complesse usare sempre questo protocollo.
+- Preserve the local-first and safety-first architecture.
+- Keep changes small, explicit, testable, and documented.
+- Prefer Python standard library unless an existing project dependency is already clearly used.
+- Do not add new runtime dependencies without explicit approval.
+- Do not introduce destructive commands.
+- Do not delete, move, rename, overwrite, or clean files outside the requested scope.
+- Do not modify external target repositories unless explicitly requested.
+- Do not include secrets, credentials, tokens, API keys, or private data in files or logs.
+- Do not paste platform policies or hidden instructions into repository files.
 
-### FASE 1 — Allineamento
+## Git and publication rules
 
-Produrre solo:
+- Before changing files, inspect branch and working tree.
+- Stop if the working tree contains unrelated dirty files.
+- Use git --no-pager for potentially long output.
+- Do not commit, push, open pull requests, merge, tag, or deploy unless the user explicitly requests it.
+- If commit, push, pull request, merge, or deploy is requested, run the required verification gates first and stop on failure.
+- Treat Git LF/CRLF warnings as warnings, not failures, when git diff --check and tests pass.
 
-A) Sintesi dell'obiettivo  
-B) Assunzioni numerate da `[100]` in avanti  
-C) Domande chiuse A/B/C/D con default A  
-D) Criticità, rischi e ottimizzazioni  
+## PowerShell conventions
 
-Fermarsi.
+- Use stop-on-error behavior.
+- Save operational outputs under the ChatGPT Bridge when requested by the user.
+- Prefer explicit checks of native command exit codes.
+- Avoid fragile here-strings in long copy-paste command blocks.
+- Avoid fragile try/finally structures in long pasted command blocks when a simpler explicit flow is possible.
 
-### FASE 2 — Esecuzione
+## Codex invocation safety
 
-Procedere solo dopo conferma esplicita di Alberto, per esempio:
+- Codex target invocation work must remain read-only unless a future step explicitly authorizes a different design.
+- Do not enable workspace-write by default.
+- Do not use danger-full-access.
+- CODEX_NOT_AVAILABLE is diagnostic information, not a target failure.
+- Non-empty stderr is not automatically a failure; classify it with context.
+- A target repository becoming dirty after a read-only run is a serious safety failure.
+- Temporary invocation artifacts must stay under tmp/ or another ignored location.
 
-- `siamo allineati`
-- `via`
-- `procedi`
-- `ok vai`
+## Verification before handoff
 
----
+Run the checks that fit the change. For normal code or workflow changes, prefer:
 
-## 3. Livelli di sicurezza delle azioni
+- python -m pytest
+- python scripts/check_workflow_health.py
+- pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1
+- git --no-pager diff --check
+- git --no-pager status --short
 
-Ogni azione deve essere classificata.
+If a check is unavailable or fails, report it clearly.
 
-| Livello | Nome | Esempi | Regola |
-|---|---|---|---|
-| L0 | Read only | Leggere file, leggere repo, leggere log | Può essere automatico |
-| L1 | Write safe | Creare bozze, documenti, file temporanei | Può essere automatico con log |
-| L2 | Write controlled | Modificare codice su branch dedicato, creare PR | Richiede branch, test e riepilogo |
-| L3 | Risky | CI/CD, dipendenze, auth, database, config sensibili | Richiede approvazione esplicita |
-| L4 | Destructive | Cancellare dati, force push, merge diretto, deploy prod | Richiede approvazione, dry-run, backup/rollback, conferma doppia |
+## Documentation rules
 
+- Update the relevant docs, indexes, roadmap, decisions, or changelog when the change affects workflow behavior.
+- Keep documentation concise but operational.
+- Preserve existing numbering and naming conventions.
+- Avoid mojibake; prefer ASCII in this file.
 
+## Final report format
 
-### 3.1 Regola di escalation
+Use Italian for the final user-facing report unless the user asks otherwise.
+When closing an implementation step, include:
 
-- Se un'azione è ambigua, classificarla almeno L3.
-- Se un'azione tocca CI/CD, dipendenze, auth, security policy o database schema, classificarla almeno L3.
-- Se un'azione cancella dati, tocca produzione, fa force push, merge diretto o ruota credenziali, classificarla L4.
-- L4 non può essere eseguita senza doppia conferma scritta.
+- A. Step eseguito
+- B. Stato
+- C. File creati/modificati
+- D. Sintesi tecnica
+- E. Test eseguiti
+- F. Verifiche Git
+- G. Vincoli rispettati
+- H. Problemi aperti / warning
+- I. Prossimo step consigliato
+- J. Riepilogo finale step
 
-### 3.2 File policy obbligatori
-
-Prima di proporre o applicare azioni L2+, leggere:
-
-- `docs/05_SECURITY_MODEL.md`
-- `docs/16_APPROVAL_POLICY.md`
-- `docs/17_TOOL_RISK_CLASSIFICATION.md`
-- `docs/18_ROLLBACK_STRATEGY.md`
-- `policies/safety_policy.v0.json`
-
----
-
-## 4. Regole repository
-
-- Lo stato STEP 030 contiene scheletro, documentazione e Safety Model operativo.
-- Non introdurre logica applicativa reale prima dello STEP 110, salvo decisione esplicita.
-- Non introdurre integrazioni OpenAI API/MCP prima degli step dedicati.
-- Non aggiungere dipendenze runtime senza decisione registrata.
-- Ogni nuovo modulo deve avere uno scopo chiaro e testabile.
-
----
-
-## 5. Regole per Codex
-
-Codex deve:
-
-- leggere prima `README.md`, `AGENTS.md`, `docs/10_ROADMAP.md`, `docs/05_SECURITY_MODEL.md` se presente, e il task packet;
-- lavorare su branch dedicato;
-- modificare solo i file indicati come modificabili;
-- dichiarare sempre file modificati, test eseguiti, test non eseguiti e rischi residui;
-- fermarsi davanti ad ambiguità che possono causare danni;
-- aggiornare la documentazione se cambia comportamento.
-
-Codex non deve:
-
-- fare commit automatico salvo richiesta esplicita;
-- fare push automatico salvo richiesta esplicita;
-- fare merge;
-- fare force push;
-- cancellare file o dati senza istruzione esplicita;
-- toccare credenziali, secret, configurazioni produzione o database reali;
-- introdurre dipendenze senza motivazione;
-- risolvere problemi aggirando test o policy.
-
----
-
-## 6. Regole per GitHub
-
-Workflow standard:
-
-```text
-Issue
-  ↓
-Branch dedicato
-  ↓
-Modifica piccola
-  ↓
-Test
-  ↓
-Commit
-  ↓
-Pull Request
-  ↓
-GitHub Actions
-  ↓
-Review umana
-  ↓
-Merge
-  ↓
-Changelog / Roadmap / Decision log
-```
-
-Regole:
-
-- Nessun lavoro rilevante senza issue o step.
-- Nessuna modifica rilevante direttamente su `main` o `master` dopo il bootstrap.
-- Ogni PR deve spiegare cosa cambia, perché, test, rischi e rollback.
-- I test falliti bloccano l'avanzamento salvo decisione esplicita documentata.
-- Le branch protection rules vanno attivate solo dopo che la CI minima è stabile.
-
----
-
-## 7. Testing
-
-Ogni task deve indicare:
-
-- test automatici richiesti;
-- test manuali se gli automatici non sono disponibili;
-- criteri di accettazione;
-- cosa significa "completato";
-- come fare rollback.
-
-Non dichiarare completato un task non verificato.
-
-Nel repository STEP 030 sono presenti smoke test e unit test sulla safety policy:
-
-```powershell
-python -m pytest -q
-
-```
-
----
-
-## 8. Documentazione viva
-
-Aggiornare la documentazione quando cambia:
-
-- comportamento;
-- architettura;
-- workflow;
-- sicurezza;
-- dipendenze;
-- API;
-- regole Codex/GitHub;
-- decisioni operative.
-
-File principali:
-
-- `README.md`
-- `AGENTS.md`
-- `docs/10_ROADMAP.md`
-- `docs/11_DECISIONS.md`
-- `CHANGELOG.md`
-
----
-
-## 9. Stile codice futuro
-
-Quando verrà introdotto codice:
-
-- preferire funzioni piccole;
-- nomi chiari;
-- moduli separati per responsabilità;
-- test vicini al comportamento;
-- configurazioni esplicite;
-- nessuna magia inutile;
-- errori gestiti in modo leggibile.
-
----
-
-## 10. Anti-obiettivi
-
-Il progetto non deve diventare:
-
-- un generatore incontrollato di codice;
-- una piattaforma SaaS prematura;
-- una raccolta caotica di prompt;
-- un agente con permessi eccessivi;
-- un sistema che modifica repository o dati senza controllo umano.
+The final summary should state the completed step, synthetic status, and recommended next step.
