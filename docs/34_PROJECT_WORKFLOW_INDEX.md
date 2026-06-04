@@ -40,6 +40,9 @@ L'indice orienta il lavoro. Non sostituisce i documenti specifici, il Verificati
 | Generare ASF Human Approval Gate | `docs/49_ASF_HUMAN_APPROVAL_GATE.md` | `scripts/asf_human_approval_gate.py`, `templates/codex_tasks/asf_human_approval_gate_template.md` | Dopo intake, verification pack o closure pack, prima di preview/chiusura | Produce GO/WARNING/HOLD/NO-GO, non approval automatica |
 | Leggere ASF Codex Invocation Design | `docs/50_ASF_CODEX_INVOCATION_DESIGN.md` | Nessuno | Prima di progettare invocazioni Codex controllate | Definisce livelli, sandbox, input/output e stop condition |
 | Generare ASF Codex Invocation Dry Run Pack | `docs/51_ASF_CODEX_INVOCATION_DRY_RUN_PACK.md` | `scripts/asf_codex_invocation_dry_run.py`, `templates/codex_tasks/asf_codex_invocation_dry_run_template.md` | Dopo Human Approval Gate e prima di qualunque prototipo Codex | Genera preview `codex exec`, non la esegue |
+| Preparare ASF Codex Read-Only Invocation Prototype | `docs/52_ASF_CODEX_READONLY_INVOCATION_PROTOTYPE.md` | `scripts/asf_codex_readonly_invoke.py`, `templates/codex_tasks/asf_codex_readonly_invocation_template.md` | Dopo dry-run pack e Human Approval Gate `GO` | Default preview; execute-readonly solo con conferma esplicita e sandbox read-only |
+| Fare ASF Codex Invocation Result Capture | `docs/53_ASF_CODEX_INVOCATION_RESULT_CAPTURE.md` | `scripts/asf_codex_result_capture.py`, `templates/codex_tasks/asf_codex_invocation_result_capture_template.md` | Dopo una invocation read-only o output simulati | Normalizza stdout, stderr, exit code e working tree in PASS/WARNING/FAIL |
+| Valutare ASF Codex Read-Only Safety Gate | `docs/54_ASF_CODEX_READONLY_SAFETY_GATE.md` | `scripts/asf_codex_readonly_safety_gate.py`, `templates/codex_tasks/asf_codex_readonly_safety_gate_template.md` | Dopo result capture | Decide GO_TO_WORKSPACE_WRITE_DESIGN/WARNING/HOLD/NO_GO senza autorizzare execution diretta |
 | Eseguire Verification Gate | `docs/20_VERIFICATION_GATE.md` | `scripts/verify.ps1` | Prima di commit/push/PR e dopo merge quando richiesto | Include test, `git diff --check`, `git status --short` |
 | Controllare Documentation Sync | `docs/21_DOCUMENTATION_SYNC.md` | Nessuno | Ogni step documentale o operativo | Valuta changelog, roadmap, decisions e documenti specifici |
 | Controllare Soft Protection Guardrails | `docs/24_SOFT_PROTECTION_GUARDRAILS.md` | `scripts/git/check_soft_guardrails.ps1` | Prima del commit o come controllo locale | Read-only; non installa hook |
@@ -101,6 +104,9 @@ Regole operative:
 - `docs/49_ASF_HUMAN_APPROVAL_GATE.md`: approval gate read-only con decisione GO/WARNING/HOLD/NO-GO.
 - `docs/50_ASF_CODEX_INVOCATION_DESIGN.md`: design dei livelli di futura invocazione Codex controllata.
 - `docs/51_ASF_CODEX_INVOCATION_DRY_RUN_PACK.md`: dry-run pack con preview `codex exec` non eseguita.
+- `docs/52_ASF_CODEX_READONLY_INVOCATION_PROTOTYPE.md`: prototipo preview/execute-readonly con approval gate e sandbox read-only.
+- `docs/53_ASF_CODEX_INVOCATION_RESULT_CAPTURE.md`: normalizzazione stdout, stderr, exit code e classificazione PASS/WARNING/FAIL.
+- `docs/54_ASF_CODEX_READONLY_SAFETY_GATE.md`: safety gate read-only per decidere se progettare uno step futuro piu' ampio.
 
 ---
 
@@ -119,6 +125,9 @@ Regole operative:
 - `scripts/asf_generate_closure_pack.py`: generatore di closure pack Markdown human-gated.
 - `scripts/asf_human_approval_gate.py`: gate read-only per classificare GO/WARNING/HOLD/NO-GO.
 - `scripts/asf_codex_invocation_dry_run.py`: generatore di preview dry-run per futura invocazione Codex controllata.
+- `scripts/asf_codex_readonly_invoke.py`: preview e execute-readonly human-approved con output sotto `tmp/`.
+- `scripts/asf_codex_result_capture.py`: capture read-only di stdout, stderr, exit code e working tree.
+- `scripts/asf_codex_readonly_safety_gate.py`: safety gate read-only su result capture.
 
 Questi script non devono essere usati per automatizzare commit, push, PR o merge.
 
@@ -142,6 +151,9 @@ Config centrale:
 - `templates/codex_tasks/asf_human_gated_closure_pack_template.md`: struttura del closure pack human-gated.
 - `templates/codex_tasks/asf_human_approval_gate_template.md`: struttura del report Human Approval Gate.
 - `templates/codex_tasks/asf_codex_invocation_dry_run_template.md`: struttura del dry-run pack per preview Codex.
+- `templates/codex_tasks/asf_codex_readonly_invocation_template.md`: struttura del prototipo read-only invocation.
+- `templates/codex_tasks/asf_codex_invocation_result_capture_template.md`: struttura del result capture.
+- `templates/codex_tasks/asf_codex_readonly_safety_gate_template.md`: struttura del safety gate read-only.
 
 ---
 
@@ -213,6 +225,10 @@ Per preparare automaticamente task packet, handoff e report temporanei del pross
 Per valutare l'approvazione umana prima della preview di invocazione, usare `docs/49_ASF_HUMAN_APPROVAL_GATE.md`.
 
 Per generare una preview dry-run non eseguita di futura invocazione Codex, usare `docs/51_ASF_CODEX_INVOCATION_DRY_RUN_PACK.md`.
+
+Per preparare il primo prototipo Codex read-only con default preview, usare `docs/52_ASF_CODEX_READONLY_INVOCATION_PROTOTYPE.md`.
+
+Per normalizzare stdout/stderr/exit code e valutare il safety gate read-only, usare `docs/53_ASF_CODEX_INVOCATION_RESULT_CAPTURE.md` e `docs/54_ASF_CODEX_READONLY_SAFETY_GATE.md`.
 
 I comandi di commit, push, PR e merge restano azioni manuali di Alberto e non sono raccolti qui in una sequenza automatica.
 

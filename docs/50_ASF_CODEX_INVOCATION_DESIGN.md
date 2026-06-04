@@ -4,7 +4,7 @@
 
 Questo documento definisce il design della futura invocazione Codex controllata da ASF Runner.
 
-Lo step corrente prepara solo il ponte: Human Approval Gate e dry-run pack. Non invoca Codex, non abilita loop automatici e non modifica repository target.
+Gli step 370-390 hanno preparato il ponte: Human Approval Gate e dry-run pack. Il pack 400-420 aggiunge il primo prototipo read-only human-approved, result capture e safety gate. Non abilita loop automatici e non autorizza modifiche workspace-write.
 
 ---
 
@@ -14,12 +14,12 @@ Lo step corrente prepara solo il ponte: Human Approval Gate e dry-run pack. Non 
 |---:|---|---|
 | Level 0 | Manual handoff | Stato storico: Alberto/ChatGPT copiano manualmente `codex_handoff.md` in Codex. |
 | Level 1 | Dry-run command preview | Stato introdotto da questo step: genera preview testuale del comando. |
-| Level 2 | Read-only Codex analysis | Prototipo futuro: Codex analizza in sandbox read-only e produce report. |
+| Level 2 | Read-only Codex analysis | Stato introdotto dal pack 400-420: default preview, execute-readonly solo con gate GO e conferma esplicita. |
 | Level 3 | Workspace-write Codex execution | Futuro: esecuzione `workspace-write` solo human-approved e su branch dedicato. |
 | Level 4 | Supervised loop multi-step | Futuro avanzato: cicli multi-step con stop condition e review umana tra i passaggi. |
 | Level 5 | Full automation | Non autorizzata ora. Richiederebbe policy, audit, sandbox dedicata e gate separati. |
 
-Il livello attivo dopo questo step e' Level 1.
+Il livello attivo dopo il pack 400-420 e' Level 2, limitato alla sandbox read-only e senza autorizzazione a workspace-write.
 
 ---
 
@@ -27,12 +27,20 @@ Il livello attivo dopo questo step e' Level 1.
 
 La futura invocazione potra' basarsi su `codex exec`.
 
-In questo step:
+Nel dry-run pack:
 
 - `codex exec` puo' comparire solo come testo di preview;
 - il comando non viene eseguito;
 - lo script Python non chiama Codex tramite subprocess;
-- la sintassi della preview resta da verificare manualmente nel prossimo prototipo read-only.
+- la sintassi della preview resta verificabile prima del prototipo read-only.
+
+Nel prototipo read-only:
+
+- `codex exec` puo' essere eseguito solo in `execute-readonly`;
+- serve conferma `YES_I_APPROVE_READONLY_CODEX_EXECUTION`;
+- serve Human Approval Gate `GO`;
+- serve working tree target `CLEAN`;
+- stdout, stderr, exit code e report vengono salvati sotto `tmp/`.
 
 ---
 
@@ -70,13 +78,13 @@ Questi input devono essere revisionati da Alberto/ChatGPT prima dell'esecuzione.
 
 ## 6. Output futuri
 
-Una futura invocazione dovra' produrre:
+Una invocazione read-only deve produrre:
 
-- Codex report;
-- eventuali file modificati nel repo target, solo se autorizzati dal livello scelto;
 - log stdout/stderr;
 - exit code;
-- structured result futuro, se disponibile.
+- report di invocazione;
+- result capture;
+- safety gate.
 
 Gli output devono restare verificabili e collegati allo Step Closure Report.
 
@@ -121,7 +129,7 @@ Questo step non:
 Prossimo step consigliato:
 
 ```text
-400) ASF Codex Invocation Read-Only Prototype
+430) ASF Codex Read-Only Invocation First Manual Trial
 ```
 
-Motivo: prima di qualunque `workspace-write`, il primo prototipo deve dimostrare che ASF Runner puo' preparare ed eventualmente lanciare solo analisi read-only, registrando comando, log, exit code e report senza modificare il repository target.
+Motivo: prima di qualunque `workspace-write`, serve una prova manuale controllata del prototipo read-only con result capture e safety gate.

@@ -621,6 +621,42 @@ Non eseguire il preview senza approval esplicita di Alberto. Non usare `workspac
 
 ---
 
+## 14.9 Ricetta - Codex read-only invocation prototype
+
+### Quando usarla
+
+Dopo dry-run pack e Human Approval Gate, quando serve generare una preview read-only o normalizzare output di una prova read-only controllata.
+
+### Comandi
+
+Preview default:
+
+```powershell
+python scripts/asf_codex_readonly_invoke.py --mode preview --project-name AI_Software_Factory --repo-path . --step 400 --branch step-400-420-asf-codex-readonly-invocation-prototype-pack --handoff-path tmp/asf_next_step/AI_Software_Factory/step_400/codex_handoff.md --approval-gate tmp/asf_approval_gate/AI_Software_Factory/step_400/human_approval_gate.md
+```
+
+Result capture:
+
+```powershell
+python scripts/asf_codex_result_capture.py --project-name AI_Software_Factory --repo-path . --step 400 --invocation-dir tmp/asf_codex_readonly_invocation/AI_Software_Factory/step_400
+```
+
+Safety gate:
+
+```powershell
+python scripts/asf_codex_readonly_safety_gate.py --project-name AI_Software_Factory --repo-path . --step 400 --result-capture tmp/asf_codex_result_capture/AI_Software_Factory/step_400/codex_result_capture.md
+```
+
+### Esito atteso
+
+Preview genera `readonly_invocation_preview.md` e `codex_readonly_command_preview.ps1`. Capture genera `codex_result_capture.md`. Safety gate genera `readonly_safety_gate.md`.
+
+### Cosa non fare
+
+Non eseguire Codex durante test o sviluppo dello step. Non trattare `GO_TO_WORKSPACE_WRITE_DESIGN` come autorizzazione diretta a execution piu' ampia.
+
+---
+
 ## 15. Ricetta - Verification Gate fallito
 
 ### Quando usarla
@@ -774,4 +810,7 @@ Codex non deve fare commit, Codex non deve fare push, Codex non deve aprire PR e
 - `docs/49_ASF_HUMAN_APPROVAL_GATE.md`
 - `docs/50_ASF_CODEX_INVOCATION_DESIGN.md`
 - `docs/51_ASF_CODEX_INVOCATION_DRY_RUN_PACK.md`
+- `docs/52_ASF_CODEX_READONLY_INVOCATION_PROTOTYPE.md`
+- `docs/53_ASF_CODEX_INVOCATION_RESULT_CAPTURE.md`
+- `docs/54_ASF_CODEX_READONLY_SAFETY_GATE.md`
 - `templates/codex_tasks/step_closure_report_template.md`

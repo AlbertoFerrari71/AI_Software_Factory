@@ -1516,3 +1516,49 @@ Il prossimo step consigliato e':
 ```
 
 Solo dopo un prototipo read-only verificato si potra' valutare una futura esecuzione `workspace-write`, sempre su branch dedicato e con approval esplicita.
+
+---
+
+## DEC-054 - ASF Codex Read-Only Invocation Prototype Pack
+
+**Data:** 2026-06-03
+**Stato:** Accettata
+
+### Contesto
+
+Dopo l'Automation Bridge Pack esiste una preview dry-run di futura invocazione Codex, ma manca ancora un passaggio controllato per provare la sola analisi read-only e salvare output verificabili.
+
+Il rischio principale e' trasformare troppo presto il runner in un esecutore che modifica repository target o automatizza Git/GitHub.
+
+### Decisione
+
+Introdurre il pack 400-420:
+
+- `scripts/asf_codex_readonly_invoke.py` con default `preview` e `execute-readonly` solo dietro conferma esplicita, Human Approval Gate `GO`, working tree target `CLEAN` e sandbox read-only;
+- `scripts/asf_codex_result_capture.py` per normalizzare stdout, stderr, exit code e report in `PASS`, `WARNING` o `FAIL`;
+- `scripts/asf_codex_readonly_safety_gate.py` per decidere `GO_TO_WORKSPACE_WRITE_DESIGN`, `WARNING_REVIEW_REQUIRED`, `HOLD` o `NO_GO`;
+- documenti e template dedicati per invocation, capture e safety gate.
+
+Il pack non autorizza workspace-write. `GO_TO_WORKSPACE_WRITE_DESIGN` autorizza solo la progettazione di uno step futuro separato.
+
+### Motivazione
+
+Il passaggio da preview a execution deve restare incrementale. Una invocation read-only controllata permette di verificare:
+
+- disponibilita' del comando Codex;
+- comportamento della sandbox read-only;
+- raccolta di stdout/stderr/exit code;
+- working tree target prima e dopo;
+- qualita' delle evidenze prima di qualunque livello successivo.
+
+### Conseguenze
+
+Il livello attivo diventa Level 2 read-only analysis, con default preview.
+
+Il prossimo step consigliato e':
+
+```text
+430) ASF Codex Read-Only Invocation First Manual Trial
+```
+
+Qualunque futura esecuzione workspace-write richiedera' un nuovo step, un nuovo gate umano, scope esplicito, branch dedicato e verifiche dedicate.

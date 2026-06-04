@@ -307,6 +307,7 @@ Il prossimo step naturale e':
 310-330) ASF Runner Upgrade Pack
 340-360) ASF Runner Automation Readiness Pack
 370-390) ASF Automation Bridge Pack
+400-420) ASF Codex Read-Only Invocation Prototype Pack
 ```
 
-In questi step si introduce e si potenzia un runner locale prudente per preparare task packet, handoff Codex, report, Verification Pack, intake report, closure pack, Human Approval Gate e dry-run preview del prossimo step senza refactor ampi, senza invocare Codex, senza eseguire commit/push/PR/merge e senza modifiche premature a repository esterne.
+In questi step si introduce e si potenzia un runner locale prudente per preparare task packet, handoff Codex, report, Verification Pack, intake report, closure pack, Human Approval Gate, dry-run preview, prototipo read-only, result capture e safety gate senza refactor ampi, senza eseguire commit/push/PR/merge e senza modifiche premature a repository esterne.
