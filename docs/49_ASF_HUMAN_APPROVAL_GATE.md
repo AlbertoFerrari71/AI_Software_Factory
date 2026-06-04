@@ -2,7 +2,7 @@
 
 ## 1. Scopo
 
-`scripts/asf_human_approval_gate.py` produce un report locale read-only prima di passare dalla fase di intake/verification alla fase di preview o chiusura human-gated.
+`scripts/asf_human_approval_gate.py` produce un report locale read-only prima di passare dalla fase di intake/verification alla fase di preview, chiusura human-gated o prototipo Codex read-only.
 
 Il gate non approva automaticamente lo step. Raccoglie evidenze e propone una decisione operativa:
 
@@ -121,6 +121,14 @@ Usare quando compare un blocco forte:
 Il Codex Report Intake controlla la struttura del report finale Codex e classifica `PASS`, `WARNING` o `FAIL`.
 
 Il Human Approval Gate usa l'intake come evidenza, ma non lo sostituisce. Un intake `PASS` non equivale ad approval finale.
+
+---
+
+## 5.1 Relazione con Codex Read-Only Invocation Prototype
+
+`execute-readonly` in `scripts/asf_codex_readonly_invoke.py` richiede un Human Approval Gate esistente con decisione `GO`.
+
+`WARNING`, `HOLD`, `NO-GO`, gate mancante o gate ambiguo bloccano l'esecuzione. Il gate resta comunque una evidenza da leggere: non autorizza commit, push, PR, merge, GitHub changes o future execution piu' ampie.
 
 ---
 

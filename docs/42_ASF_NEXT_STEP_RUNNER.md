@@ -122,6 +122,12 @@ Dopo il runner, gli step 370-390 aggiungono:
 - `human_approval_gate.md` sotto `tmp/asf_approval_gate/`;
 - `codex_invocation_dry_run.md` e `codex_exec_preview.ps1` sotto `tmp/asf_codex_invocation/`.
 
+Dopo il pack 400-420 si aggiungono anche:
+
+- `readonly_invocation_preview.md` e `codex_readonly_command_preview.ps1` sotto `tmp/asf_codex_readonly_invocation/`;
+- `codex_result_capture.md` sotto `tmp/asf_codex_result_capture/`;
+- `readonly_safety_gate.md` sotto `tmp/asf_codex_readonly_safety_gate/`.
+
 Questi output restano separati: il runner continua a non invocare Codex.
 
 ---
@@ -176,6 +182,9 @@ Get-Content -Raw .\tmp\asf_next_step\AI_Software_Factory\step_340\runner_report.
 - `docs/49_ASF_HUMAN_APPROVAL_GATE.md`
 - `docs/50_ASF_CODEX_INVOCATION_DESIGN.md`
 - `docs/51_ASF_CODEX_INVOCATION_DRY_RUN_PACK.md`
+- `docs/52_ASF_CODEX_READONLY_INVOCATION_PROTOTYPE.md`
+- `docs/53_ASF_CODEX_INVOCATION_RESULT_CAPTURE.md`
+- `docs/54_ASF_CODEX_READONLY_SAFETY_GATE.md`
 
 ---
 
@@ -183,5 +192,5 @@ Get-Content -Raw .\tmp\asf_next_step\AI_Software_Factory\step_340\runner_report.
 
 Possibili step futuri:
 
-- 400. ASF Codex Invocation Read-Only Prototype;
+- 430. ASF Codex Read-Only Invocation First Manual Trial;
 - OpenAI API Adapter in uno step successivo separato.

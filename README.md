@@ -241,6 +241,14 @@ docs/50_ASF_CODEX_INVOCATION_DESIGN.md
 docs/51_ASF_CODEX_INVOCATION_DRY_RUN_PACK.md
 ```
 
+Prototipo read-only human-approved per invocazione Codex, result capture e safety gate:
+
+```text
+docs/52_ASF_CODEX_READONLY_INVOCATION_PROTOTYPE.md
+docs/53_ASF_CODEX_INVOCATION_RESULT_CAPTURE.md
+docs/54_ASF_CODEX_READONLY_SAFETY_GATE.md
+```
+
 ---
 
 ## 8. Setup locale minimo

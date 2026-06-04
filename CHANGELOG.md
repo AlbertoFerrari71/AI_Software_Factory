@@ -4,6 +4,40 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.42.0] - 2026-06-03
+
+### Added
+
+- MEGA-STEP 400-420 - ASF Codex Read-Only Invocation Prototype Pack.
+- Script `scripts/asf_codex_readonly_invoke.py` con default `preview` e modalita' `execute-readonly` human-approved.
+- Script `scripts/asf_codex_result_capture.py` per normalizzare stdout, stderr, exit code e report in PASS/WARNING/FAIL.
+- Script `scripts/asf_codex_readonly_safety_gate.py` per valutare result capture read-only prima di qualunque design futuro piu' ampio.
+- Documenti `docs/52_ASF_CODEX_READONLY_INVOCATION_PROTOTYPE.md`, `docs/53_ASF_CODEX_INVOCATION_RESULT_CAPTURE.md` e `docs/54_ASF_CODEX_READONLY_SAFETY_GATE.md`.
+- Template `templates/codex_tasks/asf_codex_readonly_invocation_template.md`, `templates/codex_tasks/asf_codex_invocation_result_capture_template.md` e `templates/codex_tasks/asf_codex_readonly_safety_gate_template.md`.
+- Test automatici per invocation preview/validation, result capture, safety gate e copertura del pack 400-420.
+
+### Changed
+
+- Aggiornati Workflow Health Check e Workflow Status Dashboard per includere i nuovi documenti, script e template.
+- Aggiornati Project Workflow Index, Quick Reference, Command Cookbook, Release Readiness, Existing Project Pilot Onboarding e documenti runner con il nuovo passaggio read-only.
+- Aggiornata roadmap: STEP 400, 410 e 420 completati; STEP 430 consigliato come ASF Codex Read-Only Invocation First Manual Trial.
+- Aggiornato decision log con la scelta di mantenere il livello attivo a read-only analysis con default preview.
+
+### Not included
+
+- Nessuna esecuzione di `codex exec` durante lo sviluppo o i test dello step.
+- Nessuna invocazione automatica di Codex in default mode.
+- Nessuna esecuzione workspace-write.
+- Nessuna esecuzione danger-full-access.
+- Nessuna esecuzione automatica di commit, push, PR o merge.
+- Nessuna modifica a repository target esterni.
+- Nessuna modifica a GitHub o GitHub API.
+- Nessuna modifica a CI, hook Git, `core.hooksPath`, dipendenze, secret, `.env`, PATH o profili PowerShell.
+- Nessuna modifica a `src/**` o `policies/**`.
+- Nessuna pubblicazione PyPI o registry.
+
+---
+
 ## [0.39.0] - 2026-06-03
 
 ### Added

@@ -28,6 +28,9 @@ CENTRAL_DOCUMENTS = [
     "docs/49_ASF_HUMAN_APPROVAL_GATE.md",
     "docs/50_ASF_CODEX_INVOCATION_DESIGN.md",
     "docs/51_ASF_CODEX_INVOCATION_DRY_RUN_PACK.md",
+    "docs/52_ASF_CODEX_READONLY_INVOCATION_PROTOTYPE.md",
+    "docs/53_ASF_CODEX_INVOCATION_RESULT_CAPTURE.md",
+    "docs/54_ASF_CODEX_READONLY_SAFETY_GATE.md",
 ]
 
 MAIN_SCRIPTS = [
@@ -36,6 +39,9 @@ MAIN_SCRIPTS = [
     "scripts/asf_generate_closure_pack.py",
     "scripts/asf_human_approval_gate.py",
     "scripts/asf_codex_invocation_dry_run.py",
+    "scripts/asf_codex_readonly_invoke.py",
+    "scripts/asf_codex_result_capture.py",
+    "scripts/asf_codex_readonly_safety_gate.py",
     "scripts/check_workflow_health.py",
     "scripts/show_workflow_status.py",
     "scripts/generate_task_packet.py",

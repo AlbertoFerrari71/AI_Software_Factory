@@ -162,6 +162,28 @@ python scripts/asf_codex_invocation_dry_run.py --project-name AI_Software_Factor
 
 Il dry-run pack genera `codex_invocation_dry_run.md` e `codex_exec_preview.ps1` sotto `tmp/asf_codex_invocation/`. Il comando `codex exec` e' solo testo di preview e non viene eseguito.
 
+## 7.9 Preparare Codex read-only invocation prototype
+
+Default preview:
+
+```powershell
+python scripts/asf_codex_readonly_invoke.py --mode preview --project-name AI_Software_Factory --repo-path . --step 400 --branch step-400-420-asf-codex-readonly-invocation-prototype-pack --handoff-path tmp/asf_next_step/AI_Software_Factory/step_400/codex_handoff.md --approval-gate tmp/asf_approval_gate/AI_Software_Factory/step_400/human_approval_gate.md
+```
+
+Capture output simulati o reali:
+
+```powershell
+python scripts/asf_codex_result_capture.py --project-name AI_Software_Factory --repo-path . --step 400 --invocation-dir tmp/asf_codex_readonly_invocation/AI_Software_Factory/step_400
+```
+
+Safety gate:
+
+```powershell
+python scripts/asf_codex_readonly_safety_gate.py --project-name AI_Software_Factory --repo-path . --step 400 --result-capture tmp/asf_codex_result_capture/AI_Software_Factory/step_400/codex_result_capture.md
+```
+
+`execute-readonly` richiede conferma esplicita, approval gate `GO`, working tree `CLEAN` e sandbox read-only. Non usarlo come autorizzazione a workspace-write.
+
 ---
 
 ## 8. Eseguire Verification Gate
@@ -282,5 +304,8 @@ Solo dopo questa verifica lo step puo' essere considerato presente su `main`.
 - `docs/49_ASF_HUMAN_APPROVAL_GATE.md`: gate GO/WARNING/HOLD/NO-GO prima di preview o closure.
 - `docs/50_ASF_CODEX_INVOCATION_DESIGN.md`: design della futura invocazione Codex controllata.
 - `docs/51_ASF_CODEX_INVOCATION_DRY_RUN_PACK.md`: dry-run pack con preview `codex exec` non eseguita.
+- `docs/52_ASF_CODEX_READONLY_INVOCATION_PROTOTYPE.md`: prototipo read-only con default preview.
+- `docs/53_ASF_CODEX_INVOCATION_RESULT_CAPTURE.md`: capture di stdout, stderr, exit code e working tree.
+- `docs/54_ASF_CODEX_READONLY_SAFETY_GATE.md`: safety gate read-only prima di qualunque step futuro piu' ampio.
 - `docs/20_VERIFICATION_GATE.md`: criteri di verifica locale e CI.
 - `docs/28_PROMPT_PACKET_VALIDATION_STRICT_MODE.md`: dettagli della validazione Strict.

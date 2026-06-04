@@ -64,11 +64,14 @@ Esempio:
 | 370 | ASF Runner Human Approval Gate | Rafforzare gate umano prima di preview, closure e pubblicazione manuale | Approval gate GO/WARNING/HOLD/NO-GO, evidenze Git, report Markdown | MVP personale | Completato |
 | 380 | ASF Runner Codex Invocation Design | Documentare livelli e limiti della futura invocazione Codex controllata | Design livelli 0-5, sandbox, input/output e stop condition | MVP personale | Completato |
 | 390 | ASF Runner Codex Invocation Dry Run Pack | Generare preview dry-run di futura invocazione Codex senza eseguirla | Dry-run Markdown, preview PowerShell inertizzata, test | MVP personale | Completato |
-| 400 | ASF Codex Invocation Read-Only Prototype | Primo prototipo di invocazione Codex solo read-only e human-approved | Esecuzione read-only controllata, log, exit code, report | MVP personale | Da fare |
-| 410 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
-| 420 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
-| 430 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
-| 440 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
+| 400 | ASF Codex Invocation Read-Only Prototype | Primo prototipo di invocazione Codex solo read-only e human-approved | Preview default, execute-readonly controllato, stdout/stderr, exit code, report | MVP personale | Completato |
+| 410 | ASF Codex Invocation Result Capture | Normalizzare output di una invocazione Codex read-only | Capture PASS/WARNING/FAIL, stdout/stderr summary, stato Git target | MVP personale | Completato |
+| 420 | ASF Codex Read-Only Safety Gate | Valutare se le evidenze read-only permettono solo design futuro | Safety gate GO_TO_WORKSPACE_WRITE_DESIGN/WARNING/HOLD/NO_GO | MVP personale | Completato |
+| 430 | ASF Codex Read-Only Invocation First Manual Trial | Eseguire una prima prova manuale read-only controllata | Trial locale con capture e safety gate, senza modifiche automatiche | MVP personale | Da fare |
+| 440 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
+| 450 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
+| 460 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
+| 470 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
 
 ---
 
@@ -861,18 +864,70 @@ Generare un pacchetto dry-run per futura invocazione Codex controllata.
 
 Verificare una prima invocazione Codex controllata in sola analisi read-only.
 
-### Output previsti
+### Output realizzati
 
-- prototipo read-only human-approved;
-- lettura handoff da file;
-- log stdout/stderr;
-- exit code;
-- report Codex salvato;
-- nessuna modifica al repository target.
+- script `scripts/asf_codex_readonly_invoke.py`;
+- documento `docs/52_ASF_CODEX_READONLY_INVOCATION_PROTOTYPE.md`;
+- template `templates/codex_tasks/asf_codex_readonly_invocation_template.md`;
+- modalita' `preview` default senza invocazione Codex;
+- modalita' `execute-readonly` solo con conferma esplicita, approval gate `GO`, working tree `CLEAN` e sandbox read-only;
+- output sotto `tmp/asf_codex_readonly_invocation/`;
+- nessuna esecuzione Codex nei test dello step.
 
 ---
 
-## 43. STEP 410 - OpenAI API Adapter
+## 43. STEP 410 - ASF Codex Invocation Result Capture
+
+### Obiettivo
+
+Normalizzare stdout, stderr, exit code e report di una invocazione Codex read-only.
+
+### Output realizzati
+
+- script `scripts/asf_codex_result_capture.py`;
+- documento `docs/53_ASF_CODEX_INVOCATION_RESULT_CAPTURE.md`;
+- template `templates/codex_tasks/asf_codex_invocation_result_capture_template.md`;
+- output `codex_result_capture.md` sotto `tmp/asf_codex_result_capture/`;
+- classificazione `PASS`, `WARNING` o `FAIL`;
+- lettura Git target read-only.
+
+---
+
+## 44. STEP 420 - ASF Codex Read-Only Safety Gate
+
+### Obiettivo
+
+Valutare se un result capture read-only e' sufficiente per progettare uno step futuro piu' ampio.
+
+### Output realizzati
+
+- script `scripts/asf_codex_readonly_safety_gate.py`;
+- documento `docs/54_ASF_CODEX_READONLY_SAFETY_GATE.md`;
+- template `templates/codex_tasks/asf_codex_readonly_safety_gate_template.md`;
+- output `readonly_safety_gate.md` sotto `tmp/asf_codex_readonly_safety_gate/`;
+- decisioni `GO_TO_WORKSPACE_WRITE_DESIGN`, `WARNING_REVIEW_REQUIRED`, `HOLD` e `NO_GO`;
+- chiarimento che il gate non autorizza direttamente workspace-write.
+
+---
+
+## 45. STEP 430 - ASF Codex Read-Only Invocation First Manual Trial
+
+### Obiettivo
+
+Eseguire una prima prova manuale read-only controllata usando il prototipo 400-420.
+
+### Output previsti
+
+- approval gate reale `GO`;
+- invocation read-only manuale;
+- result capture;
+- safety gate;
+- report finale con evidenze;
+- nessuna modifica automatica a repository target.
+
+---
+
+## 46. STEP 440 - OpenAI API Adapter
 
 ### Obiettivo
 
@@ -888,7 +943,7 @@ Collegare Responses API e Structured Outputs.
 
 ---
 
-## 44. STEP 420 - MCP Tool Registry
+## 47. STEP 450 - MCP Tool Registry
 
 ### Obiettivo
 
@@ -903,7 +958,7 @@ Gestire tool esterni in modo sicuro.
 
 ---
 
-## 45. STEP 430 - Guided Mode
+## 48. STEP 460 - Guided Mode
 
 ### Obiettivo
 
@@ -918,7 +973,7 @@ Rendere il framework utilizzabile da utenti non tecnici.
 
 ---
 
-## 46. STEP 440 - SaaS Evolution Plan
+## 49. STEP 470 - SaaS Evolution Plan
 
 ### Obiettivo
 

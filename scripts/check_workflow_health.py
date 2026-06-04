@@ -64,8 +64,14 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/49_ASF_HUMAN_APPROVAL_GATE.md",
         "docs/50_ASF_CODEX_INVOCATION_DESIGN.md",
         "docs/51_ASF_CODEX_INVOCATION_DRY_RUN_PACK.md",
+        "docs/52_ASF_CODEX_READONLY_INVOCATION_PROTOTYPE.md",
+        "docs/53_ASF_CODEX_INVOCATION_RESULT_CAPTURE.md",
+        "docs/54_ASF_CODEX_READONLY_SAFETY_GATE.md",
         "config/asf_project_profiles.json",
         "scripts/asf_codex_invocation_dry_run.py",
+        "scripts/asf_codex_readonly_invoke.py",
+        "scripts/asf_codex_result_capture.py",
+        "scripts/asf_codex_readonly_safety_gate.py",
         "scripts/asf_codex_report_intake.py",
         "scripts/asf_generate_closure_pack.py",
         "scripts/asf_human_approval_gate.py",
@@ -89,6 +95,9 @@ def check_files(root: Path) -> list[HealthIssue]:
         "templates/codex_tasks/asf_human_gated_closure_pack_template.md",
         "templates/codex_tasks/asf_human_approval_gate_template.md",
         "templates/codex_tasks/asf_codex_invocation_dry_run_template.md",
+        "templates/codex_tasks/asf_codex_readonly_invocation_template.md",
+        "templates/codex_tasks/asf_codex_invocation_result_capture_template.md",
+        "templates/codex_tasks/asf_codex_readonly_safety_gate_template.md",
     ]
 
     issues: list[HealthIssue] = []
@@ -169,6 +178,9 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             ("ASF Human Approval Gate", ["ASF Human Approval Gate"]),
             ("ASF Codex Invocation Design", ["ASF Codex Invocation Design"]),
             ("ASF Codex Invocation Dry Run Pack", ["ASF Codex Invocation Dry Run Pack"]),
+            ("ASF Codex Read-Only Invocation Prototype", ["ASF Codex Read-Only Invocation Prototype"]),
+            ("ASF Codex Invocation Result Capture", ["ASF Codex Invocation Result Capture"]),
+            ("ASF Codex Read-Only Safety Gate", ["ASF Codex Read-Only Safety Gate"]),
             ("generate task packet script", ["scripts/generate_task_packet.py"]),
             ("task packet validator script", ["scripts/validate_task_packet.py"]),
             ("ASF Next Step Runner script", ["scripts/asf_next_step.py"]),
@@ -176,6 +188,9 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             ("ASF Human-Gated Closure Pack script", ["scripts/asf_generate_closure_pack.py"]),
             ("ASF Human Approval Gate script", ["scripts/asf_human_approval_gate.py"]),
             ("ASF Codex Invocation Dry Run script", ["scripts/asf_codex_invocation_dry_run.py"]),
+            ("ASF Codex Read-Only Invocation script", ["scripts/asf_codex_readonly_invoke.py"]),
+            ("ASF Codex Result Capture script", ["scripts/asf_codex_result_capture.py"]),
+            ("ASF Codex Read-Only Safety Gate script", ["scripts/asf_codex_readonly_safety_gate.py"]),
             ("verification gate script", ["scripts/verify.ps1"]),
             ("soft guardrails check script", ["scripts/git/check_soft_guardrails.ps1"]),
             ("Workflow Health Check document", ["docs/35_WORKFLOW_HEALTH_CHECK.md"]),
@@ -207,6 +222,12 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             ("ASF Human Approval Gate document", ["docs/49_ASF_HUMAN_APPROVAL_GATE.md"]),
             ("ASF Codex Invocation Design document", ["docs/50_ASF_CODEX_INVOCATION_DESIGN.md"]),
             ("ASF Codex Invocation Dry Run Pack document", ["docs/51_ASF_CODEX_INVOCATION_DRY_RUN_PACK.md"]),
+            (
+                "ASF Codex Read-Only Invocation Prototype document",
+                ["docs/52_ASF_CODEX_READONLY_INVOCATION_PROTOTYPE.md"],
+            ),
+            ("ASF Codex Invocation Result Capture document", ["docs/53_ASF_CODEX_INVOCATION_RESULT_CAPTURE.md"]),
+            ("ASF Codex Read-Only Safety Gate document", ["docs/54_ASF_CODEX_READONLY_SAFETY_GATE.md"]),
             ("ASF project profiles config", ["config/asf_project_profiles.json"]),
             (
                 "ASF Next Step Runner handoff template",
@@ -231,6 +252,18 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             (
                 "ASF Codex Invocation Dry Run template",
                 ["templates/codex_tasks/asf_codex_invocation_dry_run_template.md"],
+            ),
+            (
+                "ASF Codex Read-Only Invocation template",
+                ["templates/codex_tasks/asf_codex_readonly_invocation_template.md"],
+            ),
+            (
+                "ASF Codex Invocation Result Capture template",
+                ["templates/codex_tasks/asf_codex_invocation_result_capture_template.md"],
+            ),
+            (
+                "ASF Codex Read-Only Safety Gate template",
+                ["templates/codex_tasks/asf_codex_readonly_safety_gate_template.md"],
             ),
         ],
     )
@@ -313,6 +346,9 @@ def check_script_safety(root: Path) -> list[HealthIssue]:
         "scripts/asf_generate_closure_pack.py",
         "scripts/asf_human_approval_gate.py",
         "scripts/asf_codex_invocation_dry_run.py",
+        "scripts/asf_codex_readonly_invoke.py",
+        "scripts/asf_codex_result_capture.py",
+        "scripts/asf_codex_readonly_safety_gate.py",
     ]
     patterns = forbidden_script_patterns()
     issues: list[HealthIssue] = []

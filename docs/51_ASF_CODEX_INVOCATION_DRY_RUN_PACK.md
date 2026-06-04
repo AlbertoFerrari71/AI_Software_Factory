@@ -114,7 +114,7 @@ Se il Human Approval Gate e' `HOLD` o `NO-GO`:
 Prossimo step prudente:
 
 ```text
-400) ASF Codex Invocation Read-Only Prototype
+400-420) ASF Codex Read-Only Invocation Prototype Pack
 ```
 
-Il prototipo dovra' restare read-only, registrare stdout/stderr, exit code e report, e bloccare esecuzione se il gate umano non e' favorevole.
+Il prototipo resta read-only, registra stdout/stderr, exit code e report, normalizza il risultato con result capture e blocca progressione futura tramite safety gate se il gate umano o le evidenze non sono favorevoli.
