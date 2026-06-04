@@ -717,6 +717,50 @@ Non trattare exit code `0` come GO automatico se stderr e' non vuoto o l'output 
 
 ---
 
+## 16.1 Ricetta - Repeatable trial pack read-only
+
+### Quando usarla
+
+Quando serve ripetere un trial Codex read-only su repo sintetica temporanea e confrontare l'esito tra run.
+
+### Comandi
+
+Prepare-only:
+
+```powershell
+python scripts/asf_codex_readonly_repeatable_trial.py --mode prepare-only --trial-name step_450_prepare_only --step 450
+```
+
+Run diagnostico con comando Codex non disponibile:
+
+```powershell
+python scripts/asf_codex_readonly_repeatable_trial.py --mode run-readonly-if-safe --trial-name step_450_missing_codex --step 450 --codex-command codex-command-that-does-not-exist --confirm-readonly-execution YES_I_APPROVE_READONLY_CODEX_EXECUTION
+```
+
+Compare:
+
+```powershell
+python scripts/asf_codex_readonly_trial_compare.py --reports tmp/asf_codex_readonly_repeatable_trials/step_450_prepare_only/reports/repeatable_trial_report.md tmp/asf_codex_readonly_repeatable_trials/step_450_missing_codex/reports/repeatable_trial_report.md --output-dir tmp/asf_codex_readonly_repeatable_trials/comparison
+```
+
+### Esito atteso
+
+- `PREPARED_ONLY` per prepare-only;
+- `CODEX_NOT_AVAILABLE` quando il comando Codex finto non esiste;
+- target sintetico finale `CLEAN`;
+- report confrontabile in `trial_comparison_report.md`.
+
+### Cosa non fare
+
+Non usare il repeatable trial come autorizzazione a workspace-write. Non modificare repository target esterni. Non trasformare i comandi di confronto in Git/GitHub automation.
+
+Documenti:
+
+- `docs/59_ASF_CODEX_READONLY_REPEATABLE_TRIAL_PACK.md`;
+- `docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md`.
+
+---
+
 ## 17. Ricetta - Verification Gate fallito
 
 ### Quando usarla
@@ -877,4 +921,6 @@ Codex non deve fare commit, Codex non deve fare push, Codex non deve aprire PR e
 - `docs/56_ASF_CODEX_READONLY_FIRST_TRIAL_RESULTS.md`
 - `docs/57_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL.md`
 - `docs/58_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL_RESULTS.md`
+- `docs/59_ASF_CODEX_READONLY_REPEATABLE_TRIAL_PACK.md`
+- `docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md`
 - `templates/codex_tasks/step_closure_report_template.md`

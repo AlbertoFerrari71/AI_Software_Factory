@@ -71,11 +71,15 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/56_ASF_CODEX_READONLY_FIRST_TRIAL_RESULTS.md",
         "docs/57_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL.md",
         "docs/58_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL_RESULTS.md",
+        "docs/59_ASF_CODEX_READONLY_REPEATABLE_TRIAL_PACK.md",
+        "docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md",
         "config/asf_project_profiles.json",
         "scripts/asf_codex_invocation_dry_run.py",
         "scripts/asf_codex_readonly_invoke.py",
+        "scripts/asf_codex_readonly_repeatable_trial.py",
         "scripts/asf_codex_result_capture.py",
         "scripts/asf_codex_readonly_safety_gate.py",
+        "scripts/asf_codex_readonly_trial_compare.py",
         "scripts/asf_codex_report_intake.py",
         "scripts/asf_generate_closure_pack.py",
         "scripts/asf_human_approval_gate.py",
@@ -102,6 +106,8 @@ def check_files(root: Path) -> list[HealthIssue]:
         "templates/codex_tasks/asf_codex_readonly_invocation_template.md",
         "templates/codex_tasks/asf_codex_invocation_result_capture_template.md",
         "templates/codex_tasks/asf_codex_readonly_safety_gate_template.md",
+        "templates/codex_tasks/asf_codex_readonly_repeatable_trial_template.md",
+        "templates/codex_tasks/asf_codex_readonly_trial_compare_template.md",
     ]
 
     issues: list[HealthIssue] = []
@@ -187,6 +193,8 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             ("ASF Codex Read-Only Safety Gate", ["ASF Codex Read-Only Safety Gate"]),
             ("ASF Codex Read-Only First Manual Trial", ["ASF Codex Read-Only First Manual Trial"]),
             ("ASF Codex Read-Only Clean Target Trial", ["ASF Codex Read-Only Clean Target Trial"]),
+            ("ASF Codex Read-Only Repeatable Trial Pack", ["ASF Codex Read-Only Repeatable Trial Pack"]),
+            ("ASF Codex Read-Only Trial Compare", ["ASF Codex Read-Only Trial Compare"]),
             ("generate task packet script", ["scripts/generate_task_packet.py"]),
             ("task packet validator script", ["scripts/validate_task_packet.py"]),
             ("ASF Next Step Runner script", ["scripts/asf_next_step.py"]),
@@ -195,8 +203,10 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             ("ASF Human Approval Gate script", ["scripts/asf_human_approval_gate.py"]),
             ("ASF Codex Invocation Dry Run script", ["scripts/asf_codex_invocation_dry_run.py"]),
             ("ASF Codex Read-Only Invocation script", ["scripts/asf_codex_readonly_invoke.py"]),
+            ("ASF Codex Read-Only Repeatable Trial script", ["scripts/asf_codex_readonly_repeatable_trial.py"]),
             ("ASF Codex Result Capture script", ["scripts/asf_codex_result_capture.py"]),
             ("ASF Codex Read-Only Safety Gate script", ["scripts/asf_codex_readonly_safety_gate.py"]),
+            ("ASF Codex Read-Only Trial Compare script", ["scripts/asf_codex_readonly_trial_compare.py"]),
             ("verification gate script", ["scripts/verify.ps1"]),
             ("soft guardrails check script", ["scripts/git/check_soft_guardrails.ps1"]),
             ("Workflow Health Check document", ["docs/35_WORKFLOW_HEALTH_CHECK.md"]),
@@ -250,6 +260,14 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                 "ASF Codex Read-Only Clean Target Trial Results document",
                 ["docs/58_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL_RESULTS.md"],
             ),
+            (
+                "ASF Codex Read-Only Repeatable Trial Pack document",
+                ["docs/59_ASF_CODEX_READONLY_REPEATABLE_TRIAL_PACK.md"],
+            ),
+            (
+                "ASF Codex Read-Only Repeatable Trial Results document",
+                ["docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md"],
+            ),
             ("ASF project profiles config", ["config/asf_project_profiles.json"]),
             (
                 "ASF Next Step Runner handoff template",
@@ -286,6 +304,14 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             (
                 "ASF Codex Read-Only Safety Gate template",
                 ["templates/codex_tasks/asf_codex_readonly_safety_gate_template.md"],
+            ),
+            (
+                "ASF Codex Read-Only Repeatable Trial template",
+                ["templates/codex_tasks/asf_codex_readonly_repeatable_trial_template.md"],
+            ),
+            (
+                "ASF Codex Read-Only Trial Compare template",
+                ["templates/codex_tasks/asf_codex_readonly_trial_compare_template.md"],
             ),
         ],
     )
@@ -369,8 +395,10 @@ def check_script_safety(root: Path) -> list[HealthIssue]:
         "scripts/asf_human_approval_gate.py",
         "scripts/asf_codex_invocation_dry_run.py",
         "scripts/asf_codex_readonly_invoke.py",
+        "scripts/asf_codex_readonly_repeatable_trial.py",
         "scripts/asf_codex_result_capture.py",
         "scripts/asf_codex_readonly_safety_gate.py",
+        "scripts/asf_codex_readonly_trial_compare.py",
     ]
     patterns = forbidden_script_patterns()
     issues: list[HealthIssue] = []

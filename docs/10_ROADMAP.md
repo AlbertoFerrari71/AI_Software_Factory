@@ -69,11 +69,12 @@ Esempio:
 | 420 | ASF Codex Read-Only Safety Gate | Valutare se le evidenze read-only permettono solo design futuro | Safety gate GO_TO_WORKSPACE_WRITE_DESIGN/WARNING/HOLD/NO_GO | MVP personale | Completato |
 | 430 | ASF Codex Read-Only Invocation First Manual Trial | Eseguire una prima prova manuale read-only controllata | Trial locale preview-only, capture simulato e safety gate su controllo pulito | MVP personale | Completato |
 | 440 | ASF Codex Read-Only Invocation Clean Target Trial | Ripetere il trial su target pulito con branch/gate coerenti | Trial read-only reale su repo tmp, exit 0, target CLEAN, safety gate WARNING | MVP personale | Completato |
-| 450 | ASF Codex Read-Only Invocation Repeatable Trial Pack | Rendere ripetibile il trial e gestire meglio errori ambientali | Pack ripetibile, report ambiente, retry policy, criteri WARNING/HOLD | MVP personale | Da fare |
-| 460 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
-| 470 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
-| 480 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
-| 490 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
+| 450 | ASF Codex Read-Only Invocation Repeatable Trial Pack | Rendere ripetibile il trial e gestire meglio errori ambientali | Pack ripetibile, compare trial, CODEX_NOT_AVAILABLE, report e test | MVP personale | Completato |
+| 460 | ASF Codex Read-Only Invocation Diagnostics Hardening | Consolidare diagnostica stderr/output incompleto prima di step piu' ampi | Hardening diagnostico, criteri run comparabili, retry/stop piu' chiari | MVP personale | Da fare |
+| 470 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
+| 480 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
+| 490 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
+| 500 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
 
 ---
 
@@ -957,17 +958,38 @@ Ripetere il trial read-only su target pulito, con branch atteso coerente e Human
 
 Rendere ripetibile il clean target trial e distinguere in modo piu' chiaro limiti ambientali, stderr non vuoto e output incompleti.
 
-### Output previsti
+### Output realizzati
 
-- runbook ripetibile;
-- criteri di retry e stop;
-- report ambiente Codex read-only;
-- gestione WARNING/HOLD per errori sandbox;
+- script `scripts/asf_codex_readonly_repeatable_trial.py`;
+- script `scripts/asf_codex_readonly_trial_compare.py`;
+- documenti `docs/59_ASF_CODEX_READONLY_REPEATABLE_TRIAL_PACK.md` e `docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md`;
+- template repeatable trial e trial compare;
+- repo sintetica temporanea sotto `tmp/asf_codex_readonly_repeatable_trials/<trial-name>/target_repo`;
+- modalita' `prepare-only` default;
+- modalita' `run-readonly-if-safe` con conferma esplicita, approval gate GO e target CLEAN;
+- gestione `CODEX_NOT_AVAILABLE` senza modificare il target;
+- compare tra report trial;
+- test automatici per script, documenti e riferimenti health check;
 - nessuna autorizzazione workspace-write.
 
 ---
 
-## 48. STEP 460 - OpenAI API Adapter
+## 48. STEP 460 - ASF Codex Read-Only Invocation Diagnostics Hardening
+
+### Obiettivo
+
+Consolidare diagnostica, confronto run e criteri di retry/stop per stderr non vuoto, output incompleto e disponibilita' Codex prima di qualunque step piu' ampio.
+
+### Output previsti
+
+- diagnostica piu' granulare su stderr/output incompleto;
+- criteri di ripetizione trial;
+- separazione piu' chiara tra ambiente non disponibile, warning Codex e failure target;
+- nessuna autorizzazione workspace-write.
+
+---
+
+## 49. STEP 470 - OpenAI API Adapter
 
 ### Obiettivo
 
@@ -983,7 +1005,7 @@ Collegare Responses API e Structured Outputs.
 
 ---
 
-## 49. STEP 470 - MCP Tool Registry
+## 50. STEP 480 - MCP Tool Registry
 
 ### Obiettivo
 
@@ -998,7 +1020,7 @@ Gestire tool esterni in modo sicuro.
 
 ---
 
-## 50. STEP 480 - Guided Mode
+## 51. STEP 490 - Guided Mode
 
 ### Obiettivo
 
@@ -1013,7 +1035,7 @@ Rendere il framework utilizzabile da utenti non tecnici.
 
 ---
 
-## 51. STEP 490 - SaaS Evolution Plan
+## 52. STEP 500 - SaaS Evolution Plan
 
 ### Obiettivo
 

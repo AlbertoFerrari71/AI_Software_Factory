@@ -37,6 +37,7 @@ The script `scripts/check_workflow_health.py` checks:
 - `docs/52_ASF_CODEX_READONLY_INVOCATION_PROTOTYPE.md`, `docs/53_ASF_CODEX_INVOCATION_RESULT_CAPTURE.md`, `docs/54_ASF_CODEX_READONLY_SAFETY_GATE.md`, `scripts/asf_codex_readonly_invoke.py`, `scripts/asf_codex_result_capture.py`, `scripts/asf_codex_readonly_safety_gate.py`, `templates/codex_tasks/asf_codex_readonly_invocation_template.md`, `templates/codex_tasks/asf_codex_invocation_result_capture_template.md` and `templates/codex_tasks/asf_codex_readonly_safety_gate_template.md` are present and linked from the Project Workflow Index;
 - `docs/55_ASF_CODEX_READONLY_FIRST_MANUAL_TRIAL.md` and `docs/56_ASF_CODEX_READONLY_FIRST_TRIAL_RESULTS.md` are present and linked from the Project Workflow Index;
 - `docs/57_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL.md` and `docs/58_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL_RESULTS.md` are present and linked from the Project Workflow Index;
+- `docs/59_ASF_CODEX_READONLY_REPEATABLE_TRIAL_PACK.md`, `docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md`, `scripts/asf_codex_readonly_repeatable_trial.py`, `scripts/asf_codex_readonly_trial_compare.py`, `templates/codex_tasks/asf_codex_readonly_repeatable_trial_template.md` and `templates/codex_tasks/asf_codex_readonly_trial_compare_template.md` are present and linked from the Project Workflow Index;
 - operational scripts do not contain dangerous Git/GitHub command patterns.
 
 The covered areas include:
@@ -71,6 +72,8 @@ The covered areas include:
 - ASF Codex Read-Only Safety Gate;
 - ASF Codex Read-Only First Manual Trial;
 - ASF Codex Read-Only Clean Target Trial;
+- ASF Codex Read-Only Repeatable Trial Pack;
+- ASF Codex Read-Only Trial Compare;
 - Project Workflow Index.
 
 ---
@@ -216,3 +219,5 @@ After STEP 340-360, it also treats the Automation Readiness Pack documents, scri
 After STEP 370-390, it also treats the Automation Bridge Pack documents, scripts and templates as core runner references because they add a Human Approval Gate, Codex invocation design and dry-run preview pack without executing Codex or modifying repository targets.
 
 After STEP 400-420, it also treats the Codex Read-Only Invocation Prototype Pack documents, scripts and templates as core runner references because they add preview-by-default read-only execution support, result capture and a safety gate without enabling broader execution or automatic Git/GitHub actions.
+
+After STEP 450, it also treats the Codex Read-Only Repeatable Trial Pack documents, scripts and templates as core workflow references because they make read-only trials repeatable, comparable and robust when Codex is not available, without enabling workspace-write or target repository modifications.

@@ -218,6 +218,28 @@ tmp/asf_clean_target_trial/step_440/
 
 Il clean target trial usa una repo temporanea sotto `tmp/`, Human Approval Gate `GO`, preview, eventuale `execute-readonly`, result capture e safety gate. Anche con exit code `0`, stderr non vuoto o output incompleto devono restare `WARNING_REVIEW_REQUIRED`.
 
+## 7.12 Preparare repeatable trial pack
+
+Prepare-only:
+
+```powershell
+python scripts/asf_codex_readonly_repeatable_trial.py --mode prepare-only --trial-name step_450_prepare_only --step 450
+```
+
+Run diagnostico con Codex non disponibile:
+
+```powershell
+python scripts/asf_codex_readonly_repeatable_trial.py --mode run-readonly-if-safe --trial-name step_450_missing_codex --step 450 --codex-command codex-command-that-does-not-exist --confirm-readonly-execution YES_I_APPROVE_READONLY_CODEX_EXECUTION
+```
+
+Compare:
+
+```powershell
+python scripts/asf_codex_readonly_trial_compare.py --reports tmp/asf_codex_readonly_repeatable_trials/step_450_prepare_only/reports/repeatable_trial_report.md tmp/asf_codex_readonly_repeatable_trials/step_450_missing_codex/reports/repeatable_trial_report.md --output-dir tmp/asf_codex_readonly_repeatable_trials/comparison
+```
+
+Il Repeatable Trial Pack usa repo sintetiche sotto `tmp/`, richiede approval gate GO e target CLEAN per l'esecuzione, gestisce `CODEX_NOT_AVAILABLE` e non autorizza workspace-write.
+
 ---
 
 ## 8. Eseguire Verification Gate
@@ -341,5 +363,7 @@ Solo dopo questa verifica lo step puo' essere considerato presente su `main`.
 - `docs/52_ASF_CODEX_READONLY_INVOCATION_PROTOTYPE.md`: prototipo read-only con default preview.
 - `docs/53_ASF_CODEX_INVOCATION_RESULT_CAPTURE.md`: capture di stdout, stderr, exit code e working tree.
 - `docs/54_ASF_CODEX_READONLY_SAFETY_GATE.md`: safety gate read-only prima di qualunque step futuro piu' ampio.
+- `docs/59_ASF_CODEX_READONLY_REPEATABLE_TRIAL_PACK.md`: repeatable trial pack per run read-only comparabili.
+- `docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md`: risultati STEP 450.
 - `docs/20_VERIFICATION_GATE.md`: criteri di verifica locale e CI.
 - `docs/28_PROMPT_PACKET_VALIDATION_STRICT_MODE.md`: dettagli della validazione Strict.

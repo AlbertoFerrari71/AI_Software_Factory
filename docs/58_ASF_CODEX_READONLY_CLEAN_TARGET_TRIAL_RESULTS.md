@@ -255,7 +255,20 @@ Verifiche eseguite:
 Prossimo step consigliato:
 
 ```text
-450) ASF Codex Read-Only Invocation Repeatable Trial Pack
+460) ASF Codex Read-Only Invocation Diagnostics Hardening
 ```
 
-Motivo: prima di qualunque design workspace-write serve rendere il trial ripetibile, registrare meglio errori stderr/output incompleti e confermare se il problema sandbox e' ambientale o sistematico.
+Motivo: lo STEP 450 ha introdotto il Repeatable Trial Pack. Prima di qualunque design workspace-write serve ora hardenizzare la diagnostica su stderr, output incompleto e disponibilita' Codex.
+
+---
+
+## 14. Esito STEP 450
+
+Lo STEP 450 e' documentato in:
+
+```text
+docs/59_ASF_CODEX_READONLY_REPEATABLE_TRIAL_PACK.md
+docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md
+```
+
+Il pack rende il clean target trial ripetibile e confrontabile, gestisce `CODEX_NOT_AVAILABLE` come risultato diagnostico e mantiene workspace-write non autorizzato.

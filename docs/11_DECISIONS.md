@@ -1634,3 +1634,50 @@ Il prossimo step consigliato e':
 ```
 
 Workspace-write resta non autorizzato. Anche in presenza di target pulito e gate iniziale `GO`, la progressione deve fermarsi se il safety gate finale e' `WARNING_REVIEW_REQUIRED`.
+
+---
+
+## DEC-057 - ASF Codex Read-Only Repeatable Trial Pack
+
+**Data:** 2026-06-04
+**Stato:** Accettata
+
+### Contesto
+
+Lo STEP 440 ha tentato `execute-readonly` reale su repo sintetica pulita. Il target e' rimasto `CLEAN` e l'exit code e' stato `0`, ma il Safety Gate e' rimasto `WARNING_REVIEW_REQUIRED` per stderr non vuoto e output incompleto.
+
+### Decisione
+
+Introdurre uno STEP 450 dedicato al Repeatable Trial Pack:
+
+- `scripts/asf_codex_readonly_repeatable_trial.py`;
+- `scripts/asf_codex_readonly_trial_compare.py`;
+- documenti `docs/59_ASF_CODEX_READONLY_REPEATABLE_TRIAL_PACK.md` e `docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md`;
+- template per trial e compare;
+- repo sintetica temporanea sotto `tmp/`;
+- classificazioni esplicite, inclusa `CODEX_NOT_AVAILABLE`.
+
+Il pack resta read-only e non autorizza workspace-write.
+
+### Motivazione
+
+Prima di progettare qualunque esecuzione piu' ampia serve distinguere meglio:
+
+- limite ambientale;
+- Codex non disponibile;
+- stderr non vuoto;
+- output incompleto;
+- target dirty;
+- approval gate non GO.
+
+Un trial ripetibile e confrontabile riduce ambiguita' e impedisce di scambiare un exit code `0` per autorizzazione operativa.
+
+### Conseguenze
+
+Il prossimo step consigliato diventa:
+
+```text
+460) ASF Codex Read-Only Invocation Diagnostics Hardening
+```
+
+OpenAI API Adapter, MCP e qualunque futuro workspace-write restano posticipati finche' la diagnostica read-only non e' piu' robusta.

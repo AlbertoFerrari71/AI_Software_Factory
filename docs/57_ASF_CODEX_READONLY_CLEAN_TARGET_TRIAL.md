@@ -151,3 +151,19 @@ Questo trial non autorizza workspace-write.
 STEP 430 ha validato il flusso preview-only quando il gate non era `GO`.
 
 STEP 440 valida il caso clean target: repo temporanea pulita, gate `GO`, preview e tentativo `execute-readonly`. Se l'esecuzione reale non completa l'analisi, lo step resta utile per evidenziare il limite ambientale e bloccare avanzamenti non giustificati.
+
+---
+
+## 11. Relazione con STEP 450
+
+Lo STEP 450 e' documentato in `docs/59_ASF_CODEX_READONLY_REPEATABLE_TRIAL_PACK.md` e `docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md`.
+
+Il Repeatable Trial Pack generalizza il clean target trial in una procedura ripetibile con:
+
+- `prepare-only`;
+- `run-readonly-if-safe`;
+- classificazione `CODEX_NOT_AVAILABLE`;
+- result capture e safety gate diagnostici;
+- confronto tra report trial.
+
+Lo STEP 450 non autorizza workspace-write.
