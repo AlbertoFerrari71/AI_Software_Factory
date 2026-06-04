@@ -139,6 +139,17 @@ def read_git_snapshot(repo: Path) -> GitSnapshot:
 
 
 def parse_approval_status(content: str) -> str:
+    explicit_patterns = [
+        r"(?im)^\s*-\s*decisione\s*:\s*`?(GO|WARNING|HOLD|NO-GO)`?\s*$",
+        r"(?im)^\s*-\s*decision\s*:\s*`?(GO|WARNING|HOLD|NO-GO)`?\s*$",
+        r"(?im)^\s*decisione\s*:\s*`?(GO|WARNING|HOLD|NO-GO)`?\s*$",
+        r"(?im)^\s*decision\s*:\s*`?(GO|WARNING|HOLD|NO-GO)`?\s*$",
+    ]
+    for pattern in explicit_patterns:
+        match = re.search(pattern, content)
+        if match:
+            return match.group(1).upper()
+
     lowered = content.casefold()
     if re.search(r"\bno-go\b|\bno go\b", lowered, flags=re.IGNORECASE):
         return "NO-GO"
@@ -411,6 +422,8 @@ def run_execute_readonly(args: argparse.Namespace, root: Path, target_repo: Path
         cwd=target_repo,
         input=handoff_text,
         text=True,
+        encoding="utf-8",
+        errors="replace",
         capture_output=True,
         check=False,
     )

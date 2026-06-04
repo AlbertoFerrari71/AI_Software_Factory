@@ -687,7 +687,37 @@ Non tentare `execute-readonly` se il gate non e' `GO`, se la working tree target
 
 ---
 
-## 16. Ricetta - Verification Gate fallito
+## 16. Ricetta - Clean target trial read-only
+
+### Quando usarla
+
+Quando si vuole ripetere il trial Codex read-only su una repo temporanea pulita sotto `tmp/`.
+
+### Comandi
+
+Seguire:
+
+```text
+docs/57_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL.md
+```
+
+Registrare l'esito in:
+
+```text
+docs/58_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL_RESULTS.md
+```
+
+### Esito atteso
+
+Human Approval Gate `GO`, preview, `execute-readonly` solo se sicuro, result capture e safety gate. Il target deve restare `CLEAN`.
+
+### Cosa non fare
+
+Non trattare exit code `0` come GO automatico se stderr e' non vuoto o l'output Codex e' incompleto. Non usare workspace-write o danger-full-access.
+
+---
+
+## 17. Ricetta - Verification Gate fallito
 
 ### Quando usarla
 
@@ -713,7 +743,7 @@ Non dichiarare lo step verificato se il Verification Gate fallisce.
 
 ---
 
-## 17. Ricetta - Pulizia riferimenti remoti vecchi
+## 18. Ricetta - Pulizia riferimenti remoti vecchi
 
 ### Quando usarla
 
@@ -739,7 +769,7 @@ Questo comando non modifica i branch remoti gia' eliminati. Non usarlo come sost
 
 ---
 
-## 18. Ricetta - CRLF/LF warning
+## 19. Ricetta - CRLF/LF warning
 
 ### Quando usarla
 
@@ -771,7 +801,7 @@ Non confondere warning non bloccanti con fallimenti dei test.
 
 ---
 
-## 19. Ricetta - Preparare il report finale di chiusura step
+## 20. Ricetta - Preparare il report finale di chiusura step
 
 ### Quando usarla
 
@@ -811,7 +841,7 @@ Non scrivere "chiuso" se mancano merge, pull `main` o verifiche finali.
 
 ---
 
-## 20. Anti-pattern finali
+## 21. Anti-pattern finali
 
 - Usare `reset --hard` per "pulire" senza diagnosi.
 - Iniziare lo step successivo senza merge su `main`.
@@ -826,7 +856,7 @@ Codex non deve fare commit, Codex non deve fare push, Codex non deve aprire PR e
 
 ---
 
-## 21. Collegamenti utili
+## 22. Collegamenti utili
 
 - `docs/32_PROMPT_PACKET_LIFECYCLE_CHECKLIST.md`
 - `docs/34_PROJECT_WORKFLOW_INDEX.md`
@@ -845,4 +875,6 @@ Codex non deve fare commit, Codex non deve fare push, Codex non deve aprire PR e
 - `docs/54_ASF_CODEX_READONLY_SAFETY_GATE.md`
 - `docs/55_ASF_CODEX_READONLY_FIRST_MANUAL_TRIAL.md`
 - `docs/56_ASF_CODEX_READONLY_FIRST_TRIAL_RESULTS.md`
+- `docs/57_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL.md`
+- `docs/58_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL_RESULTS.md`
 - `templates/codex_tasks/step_closure_report_template.md`

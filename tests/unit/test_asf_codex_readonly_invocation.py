@@ -93,6 +93,34 @@ def write_approval(tmp_path: Path, decision: str) -> Path:
     return approval
 
 
+def write_full_approval_report(tmp_path: Path) -> Path:
+    approval = tmp_path / "human_approval_gate.md"
+    approval.write_text(
+        """# ASF Human Approval Gate
+
+## Summary
+
+- decisione: `GO`
+
+## Dettaglio decisione
+
+### NO-GO
+
+- none
+
+### HOLD
+
+- none
+
+### WARNING
+
+- none
+""",
+        encoding="utf-8",
+    )
+    return approval
+
+
 def base_args(repo: Path, handoff: Path, output_dir: Path) -> list[str | Path]:
     return [
         "--project-name",
@@ -178,6 +206,53 @@ def test_execute_readonly_with_non_go_approval_fails_before_codex_lookup(tmp_pat
 
     assert result.returncode != 0
     assert "must be GO" in result.stderr
+
+
+def test_execute_readonly_accepts_full_go_approval_report_before_codex_lookup(tmp_path: Path) -> None:
+    repo = make_git_repo(tmp_path)
+    handoff = write_handoff(tmp_path)
+    approval = write_full_approval_report(tmp_path)
+
+    result = run_script(
+        "--mode",
+        "execute-readonly",
+        *base_args(repo, handoff, tmp_path / "readonly"),
+        "--approval-gate",
+        approval,
+        "--confirm-readonly-execution",
+        "YES_I_APPROVE_READONLY_CODEX_EXECUTION",
+        "--codex-command",
+        "definitely-not-a-codex-command",
+    )
+
+    assert result.returncode != 0
+    assert "Codex command not found" in result.stderr
+    assert "must be GO" not in result.stderr
+
+
+def test_execute_readonly_handles_utf8_handoff_without_traceback(tmp_path: Path) -> None:
+    repo = make_git_repo(tmp_path)
+    handoff = tmp_path / "codex_handoff.md"
+    handoff.write_text("\ufeff# Handoff\n\nAnalisi read-only.\n", encoding="utf-8")
+    approval = write_approval(tmp_path, "GO")
+    output_dir = tmp_path / "readonly"
+
+    result = run_script(
+        "--mode",
+        "execute-readonly",
+        *base_args(repo, handoff, output_dir),
+        "--approval-gate",
+        approval,
+        "--confirm-readonly-execution",
+        "YES_I_APPROVE_READONLY_CODEX_EXECUTION",
+        "--codex-command",
+        sys.executable,
+    )
+
+    assert result.returncode != 0
+    assert "Traceback" not in result.stderr
+    assert (output_dir / "Temp_Project" / "step_590" / "stderr.txt").exists()
+    assert run_git(repo, "status", "--short").stdout.strip() == ""
 
 
 def test_execute_readonly_with_dirty_working_tree_fails_before_codex_lookup(tmp_path: Path) -> None:

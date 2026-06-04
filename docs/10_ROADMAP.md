@@ -68,11 +68,12 @@ Esempio:
 | 410 | ASF Codex Invocation Result Capture | Normalizzare output di una invocazione Codex read-only | Capture PASS/WARNING/FAIL, stdout/stderr summary, stato Git target | MVP personale | Completato |
 | 420 | ASF Codex Read-Only Safety Gate | Valutare se le evidenze read-only permettono solo design futuro | Safety gate GO_TO_WORKSPACE_WRITE_DESIGN/WARNING/HOLD/NO_GO | MVP personale | Completato |
 | 430 | ASF Codex Read-Only Invocation First Manual Trial | Eseguire una prima prova manuale read-only controllata | Trial locale preview-only, capture simulato e safety gate su controllo pulito | MVP personale | Completato |
-| 440 | ASF Codex Read-Only Invocation Clean Target Trial | Ripetere il trial su target pulito con branch/gate coerenti | Trial read-only pulito, execute-readonly solo se tutti i gate sono soddisfatti | MVP personale | Da fare |
-| 450 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
-| 460 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
-| 470 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
-| 480 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
+| 440 | ASF Codex Read-Only Invocation Clean Target Trial | Ripetere il trial su target pulito con branch/gate coerenti | Trial read-only reale su repo tmp, exit 0, target CLEAN, safety gate WARNING | MVP personale | Completato |
+| 450 | ASF Codex Read-Only Invocation Repeatable Trial Pack | Rendere ripetibile il trial e gestire meglio errori ambientali | Pack ripetibile, report ambiente, retry policy, criteri WARNING/HOLD | MVP personale | Da fare |
+| 460 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
+| 470 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
+| 480 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
+| 490 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
 
 ---
 
@@ -936,19 +937,37 @@ Eseguire una prima prova manuale read-only controllata usando il prototipo 400-4
 
 Ripetere il trial read-only su target pulito, con branch atteso coerente e Human Approval Gate `GO` prima di valutare qualunque `execute-readonly`.
 
-### Output previsti
+### Output realizzati
 
-- target pulito o repository temporanea controllata;
-- approval gate `GO`;
-- preview read-only;
-- eventuale `execute-readonly` solo se `codex` e' disponibile, sandbox read-only e conferma esplicita sono presenti;
-- result capture reale o simulato motivato;
-- safety gate;
+- documento procedura `docs/57_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL.md`;
+- documento risultati `docs/58_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL_RESULTS.md`;
+- repo Git temporanea sintetica sotto `tmp/asf_clean_target_trial/step_440/clean_repo`;
+- Human Approval Gate `GO`;
+- preview read-only generata;
+- `execute-readonly` reale con sandbox read-only, exit code `0` e target rimasto `CLEAN`;
+- result capture `PASS`;
+- safety gate `WARNING_REVIEW_REQUIRED` per stderr non vuoto e output Codex incompleto;
 - nessuna autorizzazione workspace-write.
 
 ---
 
-## 47. STEP 450 - OpenAI API Adapter
+## 47. STEP 450 - ASF Codex Read-Only Invocation Repeatable Trial Pack
+
+### Obiettivo
+
+Rendere ripetibile il clean target trial e distinguere in modo piu' chiaro limiti ambientali, stderr non vuoto e output incompleti.
+
+### Output previsti
+
+- runbook ripetibile;
+- criteri di retry e stop;
+- report ambiente Codex read-only;
+- gestione WARNING/HOLD per errori sandbox;
+- nessuna autorizzazione workspace-write.
+
+---
+
+## 48. STEP 460 - OpenAI API Adapter
 
 ### Obiettivo
 
@@ -964,7 +983,7 @@ Collegare Responses API e Structured Outputs.
 
 ---
 
-## 48. STEP 460 - MCP Tool Registry
+## 49. STEP 470 - MCP Tool Registry
 
 ### Obiettivo
 
@@ -979,7 +998,7 @@ Gestire tool esterni in modo sicuro.
 
 ---
 
-## 49. STEP 470 - Guided Mode
+## 50. STEP 480 - Guided Mode
 
 ### Obiettivo
 
@@ -994,7 +1013,7 @@ Rendere il framework utilizzabile da utenti non tecnici.
 
 ---
 
-## 50. STEP 480 - SaaS Evolution Plan
+## 51. STEP 490 - SaaS Evolution Plan
 
 ### Obiettivo
 

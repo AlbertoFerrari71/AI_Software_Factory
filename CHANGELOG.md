@@ -4,6 +4,35 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.44.0] - 2026-06-04
+
+### Added
+
+- STEP 440 - ASF Codex Read-Only Invocation Clean Target Trial.
+- Documenti `docs/57_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL.md` e `docs/58_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL_RESULTS.md`.
+- Test documentale `tests/unit/test_asf_codex_readonly_clean_target_trial_docs.py`.
+- Trial locale sotto `tmp/asf_clean_target_trial/step_440/` con repo Git sintetica pulita, Human Approval Gate `GO`, preview, `execute-readonly`, result capture e safety gate.
+
+### Changed
+
+- Aggiornati Project Workflow Index, Workflow Health Check, Workflow Status Dashboard, Quick Reference, Command Cookbook, roadmap, decision log e README con i riferimenti al clean target trial.
+- Aggiornati `scripts/check_workflow_health.py` e `scripts/show_workflow_status.py` per includere i documenti 57-58.
+- Rafforzato `scripts/asf_codex_readonly_invoke.py` per leggere correttamente report completi del Human Approval Gate con decisione `GO` e per usare UTF-8 esplicito nella subprocess.
+- Rafforzato `scripts/asf_codex_readonly_safety_gate.py` per classificare come `WARNING_REVIEW_REQUIRED` capture PASS con stderr non vuoto o output incompleto.
+- Aggiornato il prossimo step consigliato a `450) ASF Codex Read-Only Invocation Repeatable Trial Pack`.
+
+### Not included
+
+- Nessuna esecuzione workspace-write.
+- Nessun uso danger-full-access.
+- Nessun commit, push, PR o merge automatico.
+- Nessuna modifica a repository target esterni.
+- Nessuna modifica a GitHub o GitHub API.
+- Nessuna modifica a CI, hook Git, `core.hooksPath`, dipendenze, secret, `.env`, PATH o profili PowerShell.
+- Nessuna modifica a `src/**` o `policies/**`.
+
+---
+
 ## [0.43.0] - 2026-06-04
 
 ### Added

@@ -254,6 +254,8 @@ Primo trial manuale controllato della pipeline Codex read-only:
 ```text
 docs/55_ASF_CODEX_READONLY_FIRST_MANUAL_TRIAL.md
 docs/56_ASF_CODEX_READONLY_FIRST_TRIAL_RESULTS.md
+docs/57_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL.md
+docs/58_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL_RESULTS.md
 ```
 
 ---

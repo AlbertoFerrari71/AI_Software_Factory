@@ -112,3 +112,11 @@ Prima di qualunque futura esecuzione piu' ampia serve uno step separato, con nuo
 Il primo trial manuale e' documentato in `docs/55_ASF_CODEX_READONLY_FIRST_MANUAL_TRIAL.md` e `docs/56_ASF_CODEX_READONLY_FIRST_TRIAL_RESULTS.md`.
 
 Nel trial 430 `execute-readonly` resta non tentato se il Human Approval Gate non e' `GO` o se la working tree target non e' `CLEAN`. Questo e' comportamento previsto del prototipo, non fallimento del trial.
+
+---
+
+## 9. Relazione con il clean target trial
+
+Il clean target trial e' documentato in `docs/57_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL.md` e `docs/58_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL_RESULTS.md`.
+
+Nel trial 440 `execute-readonly` e' stato tentato su repo temporanea pulita con gate `GO`. Lo script ha richiesto una correzione per leggere correttamente report completi del Human Approval Gate e per usare UTF-8 esplicito nella subprocess.

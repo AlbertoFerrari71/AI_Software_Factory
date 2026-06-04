@@ -201,6 +201,23 @@ tmp/asf_step_430_first_manual_trial/
 
 Il first manual trial collega runner prepare, Human Approval Gate, preview read-only, result capture e safety gate. Se il gate non e' `GO` o la working tree target non e' `CLEAN`, restare in preview/capture simulato: non e' fallimento del trial e non autorizza workspace-write.
 
+## 7.11 Review clean target trial
+
+Documenti:
+
+```text
+docs/57_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL.md
+docs/58_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL_RESULTS.md
+```
+
+Output locale previsto:
+
+```text
+tmp/asf_clean_target_trial/step_440/
+```
+
+Il clean target trial usa una repo temporanea sotto `tmp/`, Human Approval Gate `GO`, preview, eventuale `execute-readonly`, result capture e safety gate. Anche con exit code `0`, stderr non vuoto o output incompleto devono restare `WARNING_REVIEW_REQUIRED`.
+
 ---
 
 ## 8. Eseguire Verification Gate

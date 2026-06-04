@@ -69,6 +69,8 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/54_ASF_CODEX_READONLY_SAFETY_GATE.md",
         "docs/55_ASF_CODEX_READONLY_FIRST_MANUAL_TRIAL.md",
         "docs/56_ASF_CODEX_READONLY_FIRST_TRIAL_RESULTS.md",
+        "docs/57_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL.md",
+        "docs/58_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL_RESULTS.md",
         "config/asf_project_profiles.json",
         "scripts/asf_codex_invocation_dry_run.py",
         "scripts/asf_codex_readonly_invoke.py",
@@ -184,6 +186,7 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             ("ASF Codex Invocation Result Capture", ["ASF Codex Invocation Result Capture"]),
             ("ASF Codex Read-Only Safety Gate", ["ASF Codex Read-Only Safety Gate"]),
             ("ASF Codex Read-Only First Manual Trial", ["ASF Codex Read-Only First Manual Trial"]),
+            ("ASF Codex Read-Only Clean Target Trial", ["ASF Codex Read-Only Clean Target Trial"]),
             ("generate task packet script", ["scripts/generate_task_packet.py"]),
             ("task packet validator script", ["scripts/validate_task_packet.py"]),
             ("ASF Next Step Runner script", ["scripts/asf_next_step.py"]),
@@ -238,6 +241,14 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             (
                 "ASF Codex Read-Only First Trial Results document",
                 ["docs/56_ASF_CODEX_READONLY_FIRST_TRIAL_RESULTS.md"],
+            ),
+            (
+                "ASF Codex Read-Only Clean Target Trial document",
+                ["docs/57_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL.md"],
+            ),
+            (
+                "ASF Codex Read-Only Clean Target Trial Results document",
+                ["docs/58_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL_RESULTS.md"],
             ),
             ("ASF project profiles config", ["config/asf_project_profiles.json"]),
             (

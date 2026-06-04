@@ -201,10 +201,16 @@ def has_warning_capture(text: str) -> bool:
         return True
     if section_has_nonempty_bullets(text, "Outputs missing"):
         return True
+    stderr_summary = section_body(text, "stderr summary")
+    if stderr_summary and stderr_summary.casefold() not in {"```text\n(none)\n```", "(none)"}:
+        return True
     return contains_any(
         text,
         [
             "output incompleto",
+            "could not complete",
+            "not determined",
+            "not accessible",
             "stderr non vuoto",
             "stderr not empty",
             "review required",
