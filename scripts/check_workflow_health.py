@@ -67,6 +67,8 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/52_ASF_CODEX_READONLY_INVOCATION_PROTOTYPE.md",
         "docs/53_ASF_CODEX_INVOCATION_RESULT_CAPTURE.md",
         "docs/54_ASF_CODEX_READONLY_SAFETY_GATE.md",
+        "docs/55_ASF_CODEX_READONLY_FIRST_MANUAL_TRIAL.md",
+        "docs/56_ASF_CODEX_READONLY_FIRST_TRIAL_RESULTS.md",
         "config/asf_project_profiles.json",
         "scripts/asf_codex_invocation_dry_run.py",
         "scripts/asf_codex_readonly_invoke.py",
@@ -181,6 +183,7 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             ("ASF Codex Read-Only Invocation Prototype", ["ASF Codex Read-Only Invocation Prototype"]),
             ("ASF Codex Invocation Result Capture", ["ASF Codex Invocation Result Capture"]),
             ("ASF Codex Read-Only Safety Gate", ["ASF Codex Read-Only Safety Gate"]),
+            ("ASF Codex Read-Only First Manual Trial", ["ASF Codex Read-Only First Manual Trial"]),
             ("generate task packet script", ["scripts/generate_task_packet.py"]),
             ("task packet validator script", ["scripts/validate_task_packet.py"]),
             ("ASF Next Step Runner script", ["scripts/asf_next_step.py"]),
@@ -228,6 +231,14 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             ),
             ("ASF Codex Invocation Result Capture document", ["docs/53_ASF_CODEX_INVOCATION_RESULT_CAPTURE.md"]),
             ("ASF Codex Read-Only Safety Gate document", ["docs/54_ASF_CODEX_READONLY_SAFETY_GATE.md"]),
+            (
+                "ASF Codex Read-Only First Manual Trial document",
+                ["docs/55_ASF_CODEX_READONLY_FIRST_MANUAL_TRIAL.md"],
+            ),
+            (
+                "ASF Codex Read-Only First Trial Results document",
+                ["docs/56_ASF_CODEX_READONLY_FIRST_TRIAL_RESULTS.md"],
+            ),
             ("ASF project profiles config", ["config/asf_project_profiles.json"]),
             (
                 "ASF Next Step Runner handoff template",

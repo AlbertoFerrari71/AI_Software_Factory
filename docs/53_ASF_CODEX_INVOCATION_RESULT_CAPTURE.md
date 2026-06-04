@@ -94,3 +94,11 @@ Lo script non:
 - chiama GitHub API.
 
 Il capture non e' approval. Serve come input per il Safety Gate read-only.
+
+---
+
+## 7. Relazione con il first manual trial
+
+Il trial manuale in `docs/55_ASF_CODEX_READONLY_FIRST_MANUAL_TRIAL.md` usa questo capture anche con output simulati sotto `tmp/` quando `execute-readonly` non e' sicuro o non e' consentito.
+
+Il risultato del trial e' registrato in `docs/56_ASF_CODEX_READONLY_FIRST_TRIAL_RESULTS.md`. Un capture simulato puo' validare il flusso, ma non sostituisce una futura invocation read-only reale su target pulito e gate `GO`.

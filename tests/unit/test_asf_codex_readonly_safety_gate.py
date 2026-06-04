@@ -117,6 +117,7 @@ def write_generated_pass_capture(tmp_path: Path) -> Path:
 
 ```text
 Read-only analysis completed without file modifications.
+No target file modifications detected.
 ```
 
 ## Classification criteria

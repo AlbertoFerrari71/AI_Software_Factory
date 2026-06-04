@@ -111,3 +111,11 @@ Fermarsi se:
 - servono azioni L3/L4 non approvate.
 
 Il prossimo step prudente e' una prova manuale read-only controllata oppure una correzione delle evidenze.
+
+---
+
+## 10. Relazione con il first manual trial
+
+Il first manual trial in `docs/55_ASF_CODEX_READONLY_FIRST_MANUAL_TRIAL.md` usa il Safety Gate per confermare che un target dirty blocchi la progressione e che un controllo pulito con evidenze simulate possa arrivare solo a `GO_TO_WORKSPACE_WRITE_DESIGN`.
+
+Il risultato e' registrato in `docs/56_ASF_CODEX_READONLY_FIRST_TRIAL_RESULTS.md`. Anche in quel caso il gate non autorizza workspace-write; autorizza al massimo la progettazione prudente di uno step successivo.
