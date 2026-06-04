@@ -4,6 +4,36 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.45.0] - 2026-06-04
+
+### Added
+
+- STEP 450 - ASF Codex Read-Only Invocation Repeatable Trial Pack.
+- Script `scripts/asf_codex_readonly_repeatable_trial.py`.
+- Script `scripts/asf_codex_readonly_trial_compare.py`.
+- Documenti `docs/59_ASF_CODEX_READONLY_REPEATABLE_TRIAL_PACK.md` e `docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md`.
+- Template `templates/codex_tasks/asf_codex_readonly_repeatable_trial_template.md` e `templates/codex_tasks/asf_codex_readonly_trial_compare_template.md`.
+- Test automatici per prepare-only, conferma mancante, Codex non disponibile, compare e documentazione.
+
+### Changed
+
+- Aggiornati Project Workflow Index, Workflow Health Check, Quick Reference, Command Cookbook, Workflow Status Dashboard, roadmap, decision log e README con i riferimenti al Repeatable Trial Pack.
+- Aggiornati `scripts/check_workflow_health.py` e `scripts/show_workflow_status.py` per includere documenti, script e template dello STEP 450.
+- Aggiornato il prossimo step consigliato a `460) ASF Codex Read-Only Invocation Diagnostics Hardening`.
+
+### Not included
+
+- Nessuna esecuzione workspace-write.
+- Nessun uso danger-full-access.
+- Nessun commit, push, PR o merge automatico.
+- Nessuna modifica a repository target esterni.
+- Nessuna modifica a GitHub o GitHub API.
+- Nessuna modifica a CI, hook Git, `core.hooksPath`, dipendenze, secret, `.env`, PATH o profili PowerShell.
+- Nessuna modifica a `src/**` o `policies/**`.
+- Nessuna modifica a `scripts/verify.ps1`.
+
+---
+
 ## [0.44.0] - 2026-06-04
 
 ### Added

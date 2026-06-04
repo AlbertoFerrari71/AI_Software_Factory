@@ -128,3 +128,11 @@ Il risultato e' registrato in `docs/56_ASF_CODEX_READONLY_FIRST_TRIAL_RESULTS.md
 Il clean target trial in `docs/57_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL.md` ha prodotto exit code `0` e target `CLEAN`, ma il Safety Gate finale e' `WARNING_REVIEW_REQUIRED` per stderr non vuoto e output Codex incompleto.
 
 Il risultato e' registrato in `docs/58_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL_RESULTS.md`. Questo conferma che il gate deve valutare anche qualita' e completezza dell'output, non solo exit code e working tree.
+
+---
+
+## 12. Relazione con il repeatable trial pack
+
+Il repeatable trial pack e' documentato in `docs/59_ASF_CODEX_READONLY_REPEATABLE_TRIAL_PACK.md` e `docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md`.
+
+Lo STEP 450 usa il Safety Gate come evidenza diagnostica. `WARNING_REVIEW_REQUIRED` e `CODEX_NOT_AVAILABLE` non autorizzano workspace-write e servono a decidere se ripetere o hardenizzare la diagnostica read-only.

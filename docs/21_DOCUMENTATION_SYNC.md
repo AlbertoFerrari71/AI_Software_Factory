@@ -89,6 +89,8 @@ Examples:
 - update `docs/56_ASF_CODEX_READONLY_FIRST_TRIAL_RESULTS.md` when first-trial evidence, classification, verification status or next recommended trial changes;
 - update `docs/57_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL.md` when clean target setup, execute-readonly conditions or tmp target rules change;
 - update `docs/58_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL_RESULTS.md` when clean target trial evidence, stdout/stderr/exit code, safety gate decision or next step changes;
+- update `docs/59_ASF_CODEX_READONLY_REPEATABLE_TRIAL_PACK.md` when repeatable trial modes, classifications, tmp layout, approval rules or compare flow change;
+- update `docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md` when STEP 450 trial evidence, Codex availability, target cleanliness or next step changes;
 - update `config/asf_project_profiles.json` only when profile defaults need to change and no secrets are introduced;
 - update `templates/codex_tasks/asf_runner_verification_pack_template.md` when the Verification Pack structure changes;
 - update `templates/codex_tasks/asf_codex_report_intake_template.md` when intake report structure changes;
@@ -98,6 +100,8 @@ Examples:
 - update `templates/codex_tasks/asf_codex_readonly_invocation_template.md` when read-only invocation template structure changes;
 - update `templates/codex_tasks/asf_codex_invocation_result_capture_template.md` when result capture template structure changes;
 - update `templates/codex_tasks/asf_codex_readonly_safety_gate_template.md` when read-only safety gate template structure changes;
+- update `templates/codex_tasks/asf_codex_readonly_repeatable_trial_template.md` when repeatable trial report structure changes;
+- update `templates/codex_tasks/asf_codex_readonly_trial_compare_template.md` when trial comparison structure changes;
 - update `docs/05_SECURITY_MODEL.md` or `policies/**` only when the Safety Model changes and the risk level is approved.
 
 ### Do not touch unless needed

@@ -120,3 +120,11 @@ Nel trial 430 `execute-readonly` resta non tentato se il Human Approval Gate non
 Il clean target trial e' documentato in `docs/57_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL.md` e `docs/58_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL_RESULTS.md`.
 
 Nel trial 440 `execute-readonly` e' stato tentato su repo temporanea pulita con gate `GO`. Lo script ha richiesto una correzione per leggere correttamente report completi del Human Approval Gate e per usare UTF-8 esplicito nella subprocess.
+
+---
+
+## 10. Relazione con il repeatable trial pack
+
+Il repeatable trial pack e' documentato in `docs/59_ASF_CODEX_READONLY_REPEATABLE_TRIAL_PACK.md` e `docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md`.
+
+Lo STEP 450 usa questo prototipo in preview e, solo se sicuro, in `execute-readonly`. Il nuovo orchestratore non cambia le regole del prototipo: conferma esplicita, approval gate `GO`, target `CLEAN`, sandbox read-only e nessuna autorizzazione workspace-write restano obbligatori.

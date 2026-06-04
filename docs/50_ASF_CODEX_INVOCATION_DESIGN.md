@@ -6,6 +6,8 @@ Questo documento definisce il design della futura invocazione Codex controllata 
 
 Gli step 370-390 hanno preparato il ponte: Human Approval Gate e dry-run pack. Il pack 400-420 aggiunge il primo prototipo read-only human-approved, result capture e safety gate. Non abilita loop automatici e non autorizza modifiche workspace-write.
 
+Gli step 430-450 aggiungono trial controllati e ripetibili per distinguere target dirty, approval non GO, Codex non disponibile, stderr non vuoto e output incompleto prima di qualunque design piu' ampio.
+
 ---
 
 ## 2. Livelli di invocazione
@@ -129,7 +131,7 @@ Questo step non:
 Prossimo step consigliato:
 
 ```text
-450) ASF Codex Read-Only Invocation Repeatable Trial Pack
+460) ASF Codex Read-Only Invocation Diagnostics Hardening
 ```
 
-Motivo: il clean target trial ha eseguito Codex read-only con exit code `0` e target `CLEAN`, ma il safety gate finale e' `WARNING_REVIEW_REQUIRED` per stderr non vuoto e output incompleto. Prima di qualunque `workspace-write`, serve rendere il trial ripetibile e chiarire il comportamento ambientale.
+Motivo: il clean target trial e il repeatable trial pack hanno confermato che stderr, output incompleto e disponibilita' Codex devono essere diagnosticati meglio prima di qualunque `workspace-write`.

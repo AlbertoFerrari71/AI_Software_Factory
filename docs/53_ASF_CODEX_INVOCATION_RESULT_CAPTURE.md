@@ -110,3 +110,11 @@ Il risultato del trial e' registrato in `docs/56_ASF_CODEX_READONLY_FIRST_TRIAL_
 Il clean target trial in `docs/57_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL.md` usa output reali di `execute-readonly`.
 
 Il risultato in `docs/58_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL_RESULTS.md` mostra che un capture meccanico puo' essere `PASS` con exit code `0` e target `CLEAN`, mentre il safety gate puo' restare `WARNING_REVIEW_REQUIRED` se stderr e' non vuoto o l'output Codex e' incompleto.
+
+---
+
+## 9. Relazione con il repeatable trial pack
+
+Il repeatable trial pack in `docs/59_ASF_CODEX_READONLY_REPEATABLE_TRIAL_PACK.md` usa il result capture sia dopo un run read-only reale sia per diagnosticare il caso `CODEX_NOT_AVAILABLE`.
+
+In STEP 450 il capture resta meccanico: puo' produrre `WARNING` quando gli output sono diagnostici o incompleti. La classificazione finale del repeatable trial viene registrata nel report dedicato.
