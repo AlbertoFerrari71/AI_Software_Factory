@@ -1599,3 +1599,38 @@ Il prossimo step consigliato e':
 ```
 
 Prima di OpenAI API Adapter, MCP o workspace-write serve un trial su target pulito con branch atteso coerente, approval gate `GO`, eventuale disponibilita' del comando `codex`, conferma esplicita e sandbox read-only.
+
+---
+
+## DEC-056 - ASF Codex Read-Only Clean Target Trial
+
+**Data:** 2026-06-04
+**Stato:** Accettata
+
+### Contesto
+
+Dopo lo STEP 430 il prototipo read-only era stato validato solo in modalita' preview-only. Serviva una prova con target pulito, gate `GO` ed eventuale `execute-readonly` reale.
+
+### Decisione
+
+Usare una repo Git temporanea sotto `tmp/asf_clean_target_trial/step_440/clean_repo`, con soli file sintetici, branch locale temporaneo e Human Approval Gate `GO`.
+
+Il trial ha tentato ed eseguito `execute-readonly` con sandbox read-only. L'exit code e' stato `0` e la working tree target e' rimasta `CLEAN`.
+
+Il Safety Gate finale e' `WARNING_REVIEW_REQUIRED`, non `GO_TO_WORKSPACE_WRITE_DESIGN`, perche' Codex ha prodotto stderr non vuoto e non ha completato l'ispezione della repo a causa di un errore sandbox interno.
+
+### Motivazione
+
+Un exit code `0` e una working tree pulita non bastano per promuovere il risultato a GO se l'output Codex e' incompleto.
+
+Il gate deve restare conservativo: stderr non vuoto o output incompleto richiedono review manuale e un trial ripetibile prima di qualsiasi design piu' ampio.
+
+### Conseguenze
+
+Il prossimo step consigliato e':
+
+```text
+450) ASF Codex Read-Only Invocation Repeatable Trial Pack
+```
+
+Workspace-write resta non autorizzato. Anche in presenza di target pulito e gate iniziale `GO`, la progressione deve fermarsi se il safety gate finale e' `WARNING_REVIEW_REQUIRED`.

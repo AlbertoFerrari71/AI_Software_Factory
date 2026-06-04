@@ -142,3 +142,11 @@ Fermarsi se:
 Questo trial non autorizza workspace-write.
 
 Un futuro step workspace-write richiedera' un design separato, branch dedicato, gate umano esplicito, working tree compresa, scope chiaro, test e rollback. Il safety gate read-only serve solo come evidenza per decidere se progettare quel futuro step.
+
+---
+
+## 9. Step successivo
+
+Lo STEP 440 e' il clean target trial documentato in `docs/57_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL.md`.
+
+Usa una repo temporanea sotto `tmp/` per ottenere target pulito, Human Approval Gate `GO`, preview, eventuale `execute-readonly`, result capture e safety gate.

@@ -102,3 +102,11 @@ Il capture non e' approval. Serve come input per il Safety Gate read-only.
 Il trial manuale in `docs/55_ASF_CODEX_READONLY_FIRST_MANUAL_TRIAL.md` usa questo capture anche con output simulati sotto `tmp/` quando `execute-readonly` non e' sicuro o non e' consentito.
 
 Il risultato del trial e' registrato in `docs/56_ASF_CODEX_READONLY_FIRST_TRIAL_RESULTS.md`. Un capture simulato puo' validare il flusso, ma non sostituisce una futura invocation read-only reale su target pulito e gate `GO`.
+
+---
+
+## 8. Relazione con il clean target trial
+
+Il clean target trial in `docs/57_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL.md` usa output reali di `execute-readonly`.
+
+Il risultato in `docs/58_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL_RESULTS.md` mostra che un capture meccanico puo' essere `PASS` con exit code `0` e target `CLEAN`, mentre il safety gate puo' restare `WARNING_REVIEW_REQUIRED` se stderr e' non vuoto o l'output Codex e' incompleto.

@@ -36,6 +36,7 @@ The script `scripts/check_workflow_health.py` checks:
 - `docs/49_ASF_HUMAN_APPROVAL_GATE.md`, `docs/50_ASF_CODEX_INVOCATION_DESIGN.md`, `docs/51_ASF_CODEX_INVOCATION_DRY_RUN_PACK.md`, `scripts/asf_human_approval_gate.py`, `scripts/asf_codex_invocation_dry_run.py`, `templates/codex_tasks/asf_human_approval_gate_template.md` and `templates/codex_tasks/asf_codex_invocation_dry_run_template.md` are present and linked from the Project Workflow Index;
 - `docs/52_ASF_CODEX_READONLY_INVOCATION_PROTOTYPE.md`, `docs/53_ASF_CODEX_INVOCATION_RESULT_CAPTURE.md`, `docs/54_ASF_CODEX_READONLY_SAFETY_GATE.md`, `scripts/asf_codex_readonly_invoke.py`, `scripts/asf_codex_result_capture.py`, `scripts/asf_codex_readonly_safety_gate.py`, `templates/codex_tasks/asf_codex_readonly_invocation_template.md`, `templates/codex_tasks/asf_codex_invocation_result_capture_template.md` and `templates/codex_tasks/asf_codex_readonly_safety_gate_template.md` are present and linked from the Project Workflow Index;
 - `docs/55_ASF_CODEX_READONLY_FIRST_MANUAL_TRIAL.md` and `docs/56_ASF_CODEX_READONLY_FIRST_TRIAL_RESULTS.md` are present and linked from the Project Workflow Index;
+- `docs/57_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL.md` and `docs/58_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL_RESULTS.md` are present and linked from the Project Workflow Index;
 - operational scripts do not contain dangerous Git/GitHub command patterns.
 
 The covered areas include:
@@ -69,6 +70,7 @@ The covered areas include:
 - ASF Codex Invocation Result Capture;
 - ASF Codex Read-Only Safety Gate;
 - ASF Codex Read-Only First Manual Trial;
+- ASF Codex Read-Only Clean Target Trial;
 - Project Workflow Index.
 
 ---

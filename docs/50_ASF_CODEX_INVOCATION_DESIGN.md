@@ -19,7 +19,7 @@ Gli step 370-390 hanno preparato il ponte: Human Approval Gate e dry-run pack. I
 | Level 4 | Supervised loop multi-step | Futuro avanzato: cicli multi-step con stop condition e review umana tra i passaggi. |
 | Level 5 | Full automation | Non autorizzata ora. Richiederebbe policy, audit, sandbox dedicata e gate separati. |
 
-Il livello attivo dopo il pack 400-420 e' Level 2, limitato alla sandbox read-only e senza autorizzazione a workspace-write.
+Il livello attivo dopo il pack 400-420 e gli step 430-440 e' Level 2, limitato alla sandbox read-only e senza autorizzazione a workspace-write.
 
 ---
 
@@ -129,7 +129,7 @@ Questo step non:
 Prossimo step consigliato:
 
 ```text
-430) ASF Codex Read-Only Invocation First Manual Trial
+450) ASF Codex Read-Only Invocation Repeatable Trial Pack
 ```
 
-Motivo: prima di qualunque `workspace-write`, serve una prova manuale controllata del prototipo read-only con result capture e safety gate.
+Motivo: il clean target trial ha eseguito Codex read-only con exit code `0` e target `CLEAN`, ma il safety gate finale e' `WARNING_REVIEW_REQUIRED` per stderr non vuoto e output incompleto. Prima di qualunque `workspace-write`, serve rendere il trial ripetibile e chiarire il comportamento ambientale.

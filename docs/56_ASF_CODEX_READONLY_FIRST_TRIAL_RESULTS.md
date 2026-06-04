@@ -200,3 +200,11 @@ Verifiche eseguite prima della chiusura locale:
 ```
 
 Motivo: prima di workspace-write o OpenAI API Adapter, serve un trial read-only con target pulito, branch coerente, approval gate `GO` e, solo se il comando `codex` e' disponibile, tentativo `execute-readonly` controllato.
+
+---
+
+## 13. Esito dello step successivo
+
+Lo STEP 440 e' documentato in `docs/57_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL.md` e `docs/58_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL_RESULTS.md`.
+
+Il clean target trial ha tentato ed eseguito `execute-readonly` su repo temporanea pulita. Il target e' rimasto `CLEAN`, ma il safety gate finale ha richiesto `WARNING_REVIEW_REQUIRED` per stderr non vuoto e output incompleto.

@@ -136,6 +136,45 @@ No target file modifications detected.
     return capture
 
 
+def write_pass_capture_with_stderr(tmp_path: Path) -> Path:
+    capture = tmp_path / "pass_capture_with_stderr.md"
+    capture.write_text(
+        """# ASF Codex Invocation Result Capture
+
+## Summary
+
+- classification: `PASS`
+- exit code: `0`
+- target working tree: `CLEAN`
+
+## Outputs present
+
+- stdout.txt
+- stderr.txt
+- exit_code.txt
+- codex_readonly_invocation_result.md
+
+## Outputs missing
+
+- none
+
+## stdout summary
+
+```text
+I could not complete the repository inspection.
+```
+
+## stderr summary
+
+```text
+OpenAI Codex v0.135.0
+```
+""",
+        encoding="utf-8",
+    )
+    return capture
+
+
 def base_args(repo: Path, capture: Path, output_dir: Path) -> list[str | Path]:
     return [
         "--project-name",
@@ -219,6 +258,19 @@ def test_readonly_safety_gate_warning_for_incomplete_capture(tmp_path: Path) -> 
     assert result.returncode == 0, result.stdout + result.stderr
     content = read(output_dir / "Temp_Project" / "step_590" / "readonly_safety_gate.md")
     assert "decisione: `WARNING_REVIEW_REQUIRED`" in content
+
+
+def test_readonly_safety_gate_warning_for_pass_capture_with_stderr(tmp_path: Path) -> None:
+    repo = make_git_repo(tmp_path)
+    capture = write_pass_capture_with_stderr(tmp_path)
+    output_dir = tmp_path / "gate"
+
+    result = run_script(*base_args(repo, capture, output_dir))
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    content = read(output_dir / "Temp_Project" / "step_590" / "readonly_safety_gate.md")
+    assert "decisione: `WARNING_REVIEW_REQUIRED`" in content
+    assert "result capture WARNING evidence detected" in content
 
 
 def test_readonly_safety_gate_files_exist_and_docs_are_present() -> None:

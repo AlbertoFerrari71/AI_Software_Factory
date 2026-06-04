@@ -54,6 +54,7 @@ Usare `WARNING_REVIEW_REQUIRED` quando:
 
 - output incompleto ma non bloccante;
 - stderr non vuoto con exit code `0`;
+- result capture `PASS` ma stdout/stderr indicano che Codex non ha completato l'analisi;
 - report non strutturato;
 - piano ambiguo;
 - servono chiarimenti manuali.
@@ -119,3 +120,11 @@ Il prossimo step prudente e' una prova manuale read-only controllata oppure una 
 Il first manual trial in `docs/55_ASF_CODEX_READONLY_FIRST_MANUAL_TRIAL.md` usa il Safety Gate per confermare che un target dirty blocchi la progressione e che un controllo pulito con evidenze simulate possa arrivare solo a `GO_TO_WORKSPACE_WRITE_DESIGN`.
 
 Il risultato e' registrato in `docs/56_ASF_CODEX_READONLY_FIRST_TRIAL_RESULTS.md`. Anche in quel caso il gate non autorizza workspace-write; autorizza al massimo la progettazione prudente di uno step successivo.
+
+---
+
+## 11. Relazione con il clean target trial
+
+Il clean target trial in `docs/57_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL.md` ha prodotto exit code `0` e target `CLEAN`, ma il Safety Gate finale e' `WARNING_REVIEW_REQUIRED` per stderr non vuoto e output Codex incompleto.
+
+Il risultato e' registrato in `docs/58_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL_RESULTS.md`. Questo conferma che il gate deve valutare anche qualita' e completezza dell'output, non solo exit code e working tree.
