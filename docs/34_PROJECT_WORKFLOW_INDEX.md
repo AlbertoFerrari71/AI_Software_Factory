@@ -43,6 +43,7 @@ L'indice orienta il lavoro. Non sostituisce i documenti specifici, il Verificati
 | Preparare ASF Codex Read-Only Invocation Prototype | `docs/52_ASF_CODEX_READONLY_INVOCATION_PROTOTYPE.md` | `scripts/asf_codex_readonly_invoke.py`, `templates/codex_tasks/asf_codex_readonly_invocation_template.md` | Dopo dry-run pack e Human Approval Gate `GO` | Default preview; execute-readonly solo con conferma esplicita e sandbox read-only |
 | Fare ASF Codex Invocation Result Capture | `docs/53_ASF_CODEX_INVOCATION_RESULT_CAPTURE.md` | `scripts/asf_codex_result_capture.py`, `templates/codex_tasks/asf_codex_invocation_result_capture_template.md` | Dopo una invocation read-only o output simulati | Normalizza stdout, stderr, exit code e working tree in PASS/WARNING/FAIL |
 | Valutare ASF Codex Read-Only Safety Gate | `docs/54_ASF_CODEX_READONLY_SAFETY_GATE.md` | `scripts/asf_codex_readonly_safety_gate.py`, `templates/codex_tasks/asf_codex_readonly_safety_gate_template.md` | Dopo result capture | Decide GO_TO_WORKSPACE_WRITE_DESIGN/WARNING/HOLD/NO_GO senza autorizzare execution diretta |
+| Eseguire ASF Codex Read-Only First Manual Trial | `docs/55_ASF_CODEX_READONLY_FIRST_MANUAL_TRIAL.md`, `docs/56_ASF_CODEX_READONLY_FIRST_TRIAL_RESULTS.md` | `scripts/asf_next_step.py`, `scripts/asf_human_approval_gate.py`, `scripts/asf_codex_readonly_invoke.py`, `scripts/asf_codex_result_capture.py`, `scripts/asf_codex_readonly_safety_gate.py` | Dopo il pack 400-420 su `main` | Primo trial locale; resta preview-only se gate non e' `GO`; non autorizza workspace-write |
 | Eseguire Verification Gate | `docs/20_VERIFICATION_GATE.md` | `scripts/verify.ps1` | Prima di commit/push/PR e dopo merge quando richiesto | Include test, `git diff --check`, `git status --short` |
 | Controllare Documentation Sync | `docs/21_DOCUMENTATION_SYNC.md` | Nessuno | Ogni step documentale o operativo | Valuta changelog, roadmap, decisions e documenti specifici |
 | Controllare Soft Protection Guardrails | `docs/24_SOFT_PROTECTION_GUARDRAILS.md` | `scripts/git/check_soft_guardrails.ps1` | Prima del commit o come controllo locale | Read-only; non installa hook |
@@ -107,6 +108,8 @@ Regole operative:
 - `docs/52_ASF_CODEX_READONLY_INVOCATION_PROTOTYPE.md`: prototipo preview/execute-readonly con approval gate e sandbox read-only.
 - `docs/53_ASF_CODEX_INVOCATION_RESULT_CAPTURE.md`: normalizzazione stdout, stderr, exit code e classificazione PASS/WARNING/FAIL.
 - `docs/54_ASF_CODEX_READONLY_SAFETY_GATE.md`: safety gate read-only per decidere se progettare uno step futuro piu' ampio.
+- `docs/55_ASF_CODEX_READONLY_FIRST_MANUAL_TRIAL.md`: procedura del primo trial manuale controllato Codex read-only.
+- `docs/56_ASF_CODEX_READONLY_FIRST_TRIAL_RESULTS.md`: risultati del primo trial, inclusi preview-only, capture simulato e safety gate.
 
 ---
 
@@ -229,6 +232,8 @@ Per generare una preview dry-run non eseguita di futura invocazione Codex, usare
 Per preparare il primo prototipo Codex read-only con default preview, usare `docs/52_ASF_CODEX_READONLY_INVOCATION_PROTOTYPE.md`.
 
 Per normalizzare stdout/stderr/exit code e valutare il safety gate read-only, usare `docs/53_ASF_CODEX_INVOCATION_RESULT_CAPTURE.md` e `docs/54_ASF_CODEX_READONLY_SAFETY_GATE.md`.
+
+Per il primo trial manuale controllato della pipeline Codex read-only, usare `docs/55_ASF_CODEX_READONLY_FIRST_MANUAL_TRIAL.md` e registrare l'esito in `docs/56_ASF_CODEX_READONLY_FIRST_TRIAL_RESULTS.md`.
 
 I comandi di commit, push, PR e merge restano azioni manuali di Alberto e non sono raccolti qui in una sequenza automatica.
 

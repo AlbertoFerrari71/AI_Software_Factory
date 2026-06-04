@@ -1562,3 +1562,40 @@ Il prossimo step consigliato e':
 ```
 
 Qualunque futura esecuzione workspace-write richiedera' un nuovo step, un nuovo gate umano, scope esplicito, branch dedicato e verifiche dedicate.
+
+---
+
+## DEC-055 - ASF Codex Read-Only First Manual Trial
+
+**Data:** 2026-06-04
+**Stato:** Accettata
+
+### Contesto
+
+Dopo il pack 400-420 serve provare il flusso reale del runner fino al safety gate, ma senza trasformare il prototipo in una automazione che modifica repository target.
+
+Il target scelto per il primo trial e' `AI_Software_Factory`, perche' e' locale, controllato e contiene gli script del runner.
+
+### Decisione
+
+Il primo trial manuale resta valido anche in modalita' preview-only quando una condizione di esecuzione non e' soddisfatta.
+
+Nel trial 430 il Human Approval Gate ha prodotto `HOLD` per branch atteso non coerente con il branch corrente. Di conseguenza `execute-readonly` non e' stato tentato.
+
+Il result capture e' stato validato con output simulati sotto `tmp/`. Il Safety Gate ha bloccato il target ASF quando la working tree e' diventata `DIRTY` durante lo sviluppo dello step, e ha prodotto `GO_TO_WORKSPACE_WRITE_DESIGN` solo su un controllo pulito temporaneo.
+
+### Motivazione
+
+Questo mantiene la pipeline local-first, read-only e human-gated. Un gate `HOLD` deve bloccare Codex, non essere aggirato.
+
+Validare il flusso con output simulati e target temporaneo pulito e' sufficiente per chiudere il first manual trial, ma non sostituisce una futura invocazione reale read-only.
+
+### Conseguenze
+
+Il prossimo step consigliato e':
+
+```text
+440) ASF Codex Read-Only Invocation Clean Target Trial
+```
+
+Prima di OpenAI API Adapter, MCP o workspace-write serve un trial su target pulito con branch atteso coerente, approval gate `GO`, eventuale disponibilita' del comando `codex`, conferma esplicita e sandbox read-only.

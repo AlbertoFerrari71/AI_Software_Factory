@@ -85,6 +85,8 @@ Examples:
 - update `docs/52_ASF_CODEX_READONLY_INVOCATION_PROTOTYPE.md` when read-only invocation preview or execute-readonly behavior changes;
 - update `docs/53_ASF_CODEX_INVOCATION_RESULT_CAPTURE.md` when stdout/stderr/exit code capture or PASS/WARNING/FAIL behavior changes;
 - update `docs/54_ASF_CODEX_READONLY_SAFETY_GATE.md` when read-only safety gate criteria or decisions change;
+- update `docs/55_ASF_CODEX_READONLY_FIRST_MANUAL_TRIAL.md` when the manual trial procedure, target choice, stop conditions or execute-readonly prerequisites change;
+- update `docs/56_ASF_CODEX_READONLY_FIRST_TRIAL_RESULTS.md` when first-trial evidence, classification, verification status or next recommended trial changes;
 - update `config/asf_project_profiles.json` only when profile defaults need to change and no secrets are introduced;
 - update `templates/codex_tasks/asf_runner_verification_pack_template.md` when the Verification Pack structure changes;
 - update `templates/codex_tasks/asf_codex_report_intake_template.md` when intake report structure changes;

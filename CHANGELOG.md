@@ -4,6 +4,32 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.43.0] - 2026-06-04
+
+### Added
+
+- STEP 430 - ASF Codex Read-Only Invocation First Manual Trial.
+- Documenti `docs/55_ASF_CODEX_READONLY_FIRST_MANUAL_TRIAL.md` e `docs/56_ASF_CODEX_READONLY_FIRST_TRIAL_RESULTS.md`.
+- Test documentale `tests/unit/test_asf_codex_readonly_first_manual_trial_docs.py`.
+- Trial locale sotto `tmp/` con runner prepare, Human Approval Gate, preview read-only, result capture simulato e safety gate.
+
+### Changed
+
+- Aggiornati Project Workflow Index, Workflow Health Check, Quick Reference, Command Cookbook, Workflow Status Dashboard, roadmap, decision log e README con i riferimenti al first manual trial.
+- Aggiornati `scripts/check_workflow_health.py` e `scripts/show_workflow_status.py` per includere i documenti 55-56 tra i file centrali.
+- Rafforzato il safety gate read-only per non classificare come modifica file una frase negativa come `No target file modifications detected`.
+- Aggiornato il prossimo step consigliato a `440) ASF Codex Read-Only Invocation Clean Target Trial`.
+
+### Not included
+
+- Nessuna esecuzione di `codex exec` durante lo step.
+- Nessuna esecuzione workspace-write.
+- Nessuna invocazione reale Codex perche' il Human Approval Gate del trial ASF era `HOLD`.
+- Nessuna esecuzione automatica di commit, push, PR o merge.
+- Nessuna modifica a repository target esterni, GitHub, CI, dipendenze, secret, `.env`, `src/**` o `policies/**`.
+
+---
+
 ## [0.42.0] - 2026-06-03
 
 ### Added

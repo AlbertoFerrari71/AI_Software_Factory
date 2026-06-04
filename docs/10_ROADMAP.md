@@ -67,11 +67,12 @@ Esempio:
 | 400 | ASF Codex Invocation Read-Only Prototype | Primo prototipo di invocazione Codex solo read-only e human-approved | Preview default, execute-readonly controllato, stdout/stderr, exit code, report | MVP personale | Completato |
 | 410 | ASF Codex Invocation Result Capture | Normalizzare output di una invocazione Codex read-only | Capture PASS/WARNING/FAIL, stdout/stderr summary, stato Git target | MVP personale | Completato |
 | 420 | ASF Codex Read-Only Safety Gate | Valutare se le evidenze read-only permettono solo design futuro | Safety gate GO_TO_WORKSPACE_WRITE_DESIGN/WARNING/HOLD/NO_GO | MVP personale | Completato |
-| 430 | ASF Codex Read-Only Invocation First Manual Trial | Eseguire una prima prova manuale read-only controllata | Trial locale con capture e safety gate, senza modifiche automatiche | MVP personale | Da fare |
-| 440 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
-| 450 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
-| 460 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
-| 470 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
+| 430 | ASF Codex Read-Only Invocation First Manual Trial | Eseguire una prima prova manuale read-only controllata | Trial locale preview-only, capture simulato e safety gate su controllo pulito | MVP personale | Completato |
+| 440 | ASF Codex Read-Only Invocation Clean Target Trial | Ripetere il trial su target pulito con branch/gate coerenti | Trial read-only pulito, execute-readonly solo se tutti i gate sono soddisfatti | MVP personale | Da fare |
+| 450 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
+| 460 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
+| 470 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
+| 480 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
 
 ---
 
@@ -916,18 +917,38 @@ Valutare se un result capture read-only e' sufficiente per progettare uno step f
 
 Eseguire una prima prova manuale read-only controllata usando il prototipo 400-420.
 
-### Output previsti
+### Output realizzati
 
-- approval gate reale `GO`;
-- invocation read-only manuale;
-- result capture;
-- safety gate;
-- report finale con evidenze;
+- documento procedura `docs/55_ASF_CODEX_READONLY_FIRST_MANUAL_TRIAL.md`;
+- documento risultati `docs/56_ASF_CODEX_READONLY_FIRST_TRIAL_RESULTS.md`;
+- runner prepare per step fittizio 440 sotto `tmp/`;
+- Human Approval Gate con decisione `HOLD`, che blocca correttamente `execute-readonly`;
+- preview read-only generata senza eseguire Codex;
+- result capture su output simulati;
+- safety gate validato anche su controllo pulito temporaneo;
 - nessuna modifica automatica a repository target.
 
 ---
 
-## 46. STEP 440 - OpenAI API Adapter
+## 46. STEP 440 - ASF Codex Read-Only Invocation Clean Target Trial
+
+### Obiettivo
+
+Ripetere il trial read-only su target pulito, con branch atteso coerente e Human Approval Gate `GO` prima di valutare qualunque `execute-readonly`.
+
+### Output previsti
+
+- target pulito o repository temporanea controllata;
+- approval gate `GO`;
+- preview read-only;
+- eventuale `execute-readonly` solo se `codex` e' disponibile, sandbox read-only e conferma esplicita sono presenti;
+- result capture reale o simulato motivato;
+- safety gate;
+- nessuna autorizzazione workspace-write.
+
+---
+
+## 47. STEP 450 - OpenAI API Adapter
 
 ### Obiettivo
 
@@ -943,7 +964,7 @@ Collegare Responses API e Structured Outputs.
 
 ---
 
-## 47. STEP 450 - MCP Tool Registry
+## 48. STEP 460 - MCP Tool Registry
 
 ### Obiettivo
 
@@ -958,7 +979,7 @@ Gestire tool esterni in modo sicuro.
 
 ---
 
-## 48. STEP 460 - Guided Mode
+## 49. STEP 470 - Guided Mode
 
 ### Obiettivo
 
@@ -973,7 +994,7 @@ Rendere il framework utilizzabile da utenti non tecnici.
 
 ---
 
-## 49. STEP 470 - SaaS Evolution Plan
+## 50. STEP 480 - SaaS Evolution Plan
 
 ### Obiettivo
 

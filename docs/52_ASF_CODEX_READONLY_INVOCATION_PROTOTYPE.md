@@ -104,3 +104,11 @@ La sintassi `codex exec --sandbox read-only -` e' implementata in modo prudente 
 Se la CLI Codex locale non supporta questa forma, l'esecuzione reale fallira' con stdout/stderr/exit code salvati. I test dello step non eseguono Codex.
 
 Prima di qualunque futura esecuzione piu' ampia serve uno step separato, con nuovo gate umano.
+
+---
+
+## 8. Relazione con il first manual trial
+
+Il primo trial manuale e' documentato in `docs/55_ASF_CODEX_READONLY_FIRST_MANUAL_TRIAL.md` e `docs/56_ASF_CODEX_READONLY_FIRST_TRIAL_RESULTS.md`.
+
+Nel trial 430 `execute-readonly` resta non tentato se il Human Approval Gate non e' `GO` o se la working tree target non e' `CLEAN`. Questo e' comportamento previsto del prototipo, non fallimento del trial.

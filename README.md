@@ -249,6 +249,13 @@ docs/53_ASF_CODEX_INVOCATION_RESULT_CAPTURE.md
 docs/54_ASF_CODEX_READONLY_SAFETY_GATE.md
 ```
 
+Primo trial manuale controllato della pipeline Codex read-only:
+
+```text
+docs/55_ASF_CODEX_READONLY_FIRST_MANUAL_TRIAL.md
+docs/56_ASF_CODEX_READONLY_FIRST_TRIAL_RESULTS.md
+```
+
 ---
 
 ## 8. Setup locale minimo

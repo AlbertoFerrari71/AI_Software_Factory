@@ -184,6 +184,23 @@ python scripts/asf_codex_readonly_safety_gate.py --project-name AI_Software_Fact
 
 `execute-readonly` richiede conferma esplicita, approval gate `GO`, working tree `CLEAN` e sandbox read-only. Non usarlo come autorizzazione a workspace-write.
 
+## 7.10 Review first manual trial
+
+Documenti:
+
+```text
+docs/55_ASF_CODEX_READONLY_FIRST_MANUAL_TRIAL.md
+docs/56_ASF_CODEX_READONLY_FIRST_TRIAL_RESULTS.md
+```
+
+Output locale previsto:
+
+```text
+tmp/asf_step_430_first_manual_trial/
+```
+
+Il first manual trial collega runner prepare, Human Approval Gate, preview read-only, result capture e safety gate. Se il gate non e' `GO` o la working tree target non e' `CLEAN`, restare in preview/capture simulato: non e' fallimento del trial e non autorizza workspace-write.
+
 ---
 
 ## 8. Eseguire Verification Gate

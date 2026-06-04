@@ -657,7 +657,37 @@ Non eseguire Codex durante test o sviluppo dello step. Non trattare `GO_TO_WORKS
 
 ---
 
-## 15. Ricetta - Verification Gate fallito
+## 15. Ricetta - First manual trial read-only
+
+### Quando usarla
+
+Quando si vuole ripetere il primo trial locale controllato della pipeline Codex read-only.
+
+### Comandi
+
+Seguire:
+
+```text
+docs/55_ASF_CODEX_READONLY_FIRST_MANUAL_TRIAL.md
+```
+
+Registrare l'esito in:
+
+```text
+docs/56_ASF_CODEX_READONLY_FIRST_TRIAL_RESULTS.md
+```
+
+### Esito atteso
+
+Runner prepare, Human Approval Gate, preview read-only, result capture e safety gate producono evidenze sotto `tmp/`.
+
+### Cosa non fare
+
+Non tentare `execute-readonly` se il gate non e' `GO`, se la working tree target e' sporca o se il comando richiederebbe workspace-write.
+
+---
+
+## 16. Ricetta - Verification Gate fallito
 
 ### Quando usarla
 
@@ -683,7 +713,7 @@ Non dichiarare lo step verificato se il Verification Gate fallisce.
 
 ---
 
-## 16. Ricetta - Pulizia riferimenti remoti vecchi
+## 17. Ricetta - Pulizia riferimenti remoti vecchi
 
 ### Quando usarla
 
@@ -709,7 +739,7 @@ Questo comando non modifica i branch remoti gia' eliminati. Non usarlo come sost
 
 ---
 
-## 17. Ricetta - CRLF/LF warning
+## 18. Ricetta - CRLF/LF warning
 
 ### Quando usarla
 
@@ -741,7 +771,7 @@ Non confondere warning non bloccanti con fallimenti dei test.
 
 ---
 
-## 18. Ricetta - Preparare il report finale di chiusura step
+## 19. Ricetta - Preparare il report finale di chiusura step
 
 ### Quando usarla
 
@@ -781,7 +811,7 @@ Non scrivere "chiuso" se mancano merge, pull `main` o verifiche finali.
 
 ---
 
-## 19. Anti-pattern finali
+## 20. Anti-pattern finali
 
 - Usare `reset --hard` per "pulire" senza diagnosi.
 - Iniziare lo step successivo senza merge su `main`.
@@ -796,7 +826,7 @@ Codex non deve fare commit, Codex non deve fare push, Codex non deve aprire PR e
 
 ---
 
-## 20. Collegamenti utili
+## 21. Collegamenti utili
 
 - `docs/32_PROMPT_PACKET_LIFECYCLE_CHECKLIST.md`
 - `docs/34_PROJECT_WORKFLOW_INDEX.md`
@@ -813,4 +843,6 @@ Codex non deve fare commit, Codex non deve fare push, Codex non deve aprire PR e
 - `docs/52_ASF_CODEX_READONLY_INVOCATION_PROTOTYPE.md`
 - `docs/53_ASF_CODEX_INVOCATION_RESULT_CAPTURE.md`
 - `docs/54_ASF_CODEX_READONLY_SAFETY_GATE.md`
+- `docs/55_ASF_CODEX_READONLY_FIRST_MANUAL_TRIAL.md`
+- `docs/56_ASF_CODEX_READONLY_FIRST_TRIAL_RESULTS.md`
 - `templates/codex_tasks/step_closure_report_template.md`
