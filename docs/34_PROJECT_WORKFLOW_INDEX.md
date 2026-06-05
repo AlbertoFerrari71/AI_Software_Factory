@@ -27,6 +27,7 @@ L'indice orienta il lavoro. Non sostituisce i documenti specifici, il Verificati
 | Fare Developer Onboarding | `docs/33_PROMPT_PACKET_GENERATOR_DEVELOPER_ONBOARDING.md` | Comandi PowerShell documentati | Quando una persona interna deve iniziare a usare il workflow | Entry point pratico per generator e checklist |
 | Consultare Workflow Quick Reference | `docs/36_WORKFLOW_QUICK_REFERENCE.md` | Comandi PowerShell documentati | Quando serve una scheda breve per uso quotidiano | Non sostituisce la lifecycle checklist |
 | Consultare Workflow Command Cookbook | `docs/38_WORKFLOW_COMMAND_COOKBOOK.md` | Ricette PowerShell/Git/Python documentate | Quando serve gestire scenari specifici o troubleshooting | Non automatizza commit, push, PR o merge |
+| Usare ASF PowerShell Command Pack Skill Hardening | `docs/64_ASF_PWSH_COMMAND_PACK_SKILL_HARDENING.md` | `%USERPROFILE%\.agents\skills\as-common-pwsh-command-pack` | Quando serve un command pack `.ps1` loggato, verificabile e copiabile | Skill esterna; pubblicazione sempre human-gated |
 | Usare Workflow Status Dashboard | `docs/39_WORKFLOW_STATUS_DASHBOARD.md` | `scripts/show_workflow_status.py` | Quando serve vedere branch, working tree, commit recenti e file workflow presenti | Read-only; non usa GitHub API |
 | Valutare Release Readiness | `docs/40_RELEASE_READINESS.md` | `templates/codex_tasks/release_readiness_checklist.md` | Prima di applicare il metodo a un progetto pilota reale | Readiness per pilot interno, non release pubblica o SaaS |
 | Preparare Existing Project Pilot Onboarding | `docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md` | `templates/codex_tasks/existing_project_intake_template.md`, `templates/codex_tasks/first_pilot_step_packet_template.md` | Dopo readiness e prima del primo pilot reale | Intake, fotografia repo, rischi e primo task packet pilot |
@@ -116,6 +117,7 @@ Regole operative:
 - `docs/58_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL_RESULTS.md`: risultati del clean target trial, inclusi execute-readonly, capture e safety gate.
 - `docs/59_ASF_CODEX_READONLY_REPEATABLE_TRIAL_PACK.md`: runbook del Repeatable Trial Pack read-only.
 - `docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md`: risultati STEP 450, inclusa gestione `CODEX_NOT_AVAILABLE`.
+- `docs/64_ASF_PWSH_COMMAND_PACK_SKILL_HARDENING.md`: riferimento ASF per la skill esterna `as-common-pwsh-command-pack`.
 
 ---
 
@@ -250,6 +252,8 @@ Per il clean target trial con repo temporanea sotto `tmp/`, usare `docs/57_ASF_C
 Per preparare o ripetere un trial read-only confrontabile, usare `docs/59_ASF_CODEX_READONLY_REPEATABLE_TRIAL_PACK.md` e registrare l'esito in `docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md`.
 
 Per confrontare due o piu' run, usare `scripts/asf_codex_readonly_trial_compare.py`.
+
+Per generare command pack PowerShell robusti, usare la skill esterna `as-common-pwsh-command-pack` e il riferimento `docs/64_ASF_PWSH_COMMAND_PACK_SKILL_HARDENING.md`.
 
 I comandi di commit, push, PR e merge restano azioni manuali di Alberto e non sono raccolti qui in una sequenza automatica.
 

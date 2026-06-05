@@ -1681,3 +1681,38 @@ Il prossimo step consigliato diventa:
 ```
 
 OpenAI API Adapter, MCP e qualunque futuro workspace-write restano posticipati finche' la diagnostica read-only non e' piu' robusta.
+
+---
+
+## DEC-058 - ASF PowerShell Command Pack Skill Hardening
+
+**Data:** 2026-06-05
+**Stato:** Accettata
+
+### Contesto
+
+Alberto usa una skill comune personale per preparare command pack PowerShell robusti e copiabili. Prima dello STEP 490 la skill conteneva molte regole direttamente in `SKILL.md` e non aveva ancora una struttura esplicita con riferimenti lunghi, template `.ps1` e demo progressive.
+
+### Decisione
+
+Rafforzare la skill esistente `as-common-pwsh-command-pack`, senza rinominarla e senza creare una seconda skill.
+
+La skill deve:
+
+- mantenere `SKILL.md` compatto con frontmatter YAML `name` e `description`;
+- spostare standard e fonti tecniche in `references/pwsh-command-pack-standard.md`;
+- fornire un template robusto in `references/pwsh-command-pack-template.ps1`;
+- includere esempi progressivi in `examples/demo-prompts.md`;
+- generare command pack `.ps1` con output numerati e `LAST-*`, Markdown/DOCX compatto, clipboard e guardrail Git/Codex/ASF.
+
+### Motivazione
+
+I command pack lunghi sono fragili se incollati inline in PowerShell. Uno script `.ps1` completo riduce limiti di lunghezza, errori di incolla, perdita di log, ambiguita' tra verifica e pubblicazione e rischio di procedere dopo gate falliti.
+
+Separare `SKILL.md`, riferimenti, template ed esempi segue il modello di progressive disclosure delle skill e rende piu' semplice mantenere la skill senza appesantire ogni attivazione.
+
+### Conseguenze
+
+La skill esterna diventa il riferimento operativo per generare command pack PowerShell robusti per ASF e per altri progetti locali di Alberto.
+
+Lo step non autorizza commit, push, PR, merge, release, deploy, modifiche a PATH, installazione moduli o modifiche a repository target esterni.

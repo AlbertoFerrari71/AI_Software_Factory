@@ -4,6 +4,29 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.49.0] - 2026-06-05
+
+### Added
+
+- STEP 490 - ASF PowerShell Command Pack Skill Hardening.
+- Documento `docs/64_ASF_PWSH_COMMAND_PACK_SKILL_HARDENING.md`.
+- Skill esterna aggiornata in `%USERPROFILE%\.agents\skills\as-common-pwsh-command-pack` con `references/` ed `examples/`.
+- Template robusto `references/pwsh-command-pack-template.ps1` nella skill esterna.
+
+### Changed
+
+- Rafforzata la skill comune `as-common-pwsh-command-pack` per generare script `.ps1` completi, loggati, verificabili, con output numerati e `LAST-*`, Markdown/DOCX compatto, clipboard e guardrail Git/Codex/ASF.
+- Aggiornati roadmap, decision log, README, Project Workflow Index, Workflow Health Check e script `scripts/check_workflow_health.py` con il riferimento allo STEP 490.
+
+### Not included
+
+- Nessun commit, push, PR, merge, release o deploy.
+- Nessuna creazione di una seconda skill o rinomina della skill esistente.
+- Nessuna modifica a PATH, profili PowerShell, CI, hook Git, secret, `.env`, `src/**` o `policies/**`.
+- Nessuna modifica a repository target esterni.
+
+---
+
 ## [0.45.0] - 2026-06-04
 
 ### Added
