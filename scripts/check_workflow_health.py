@@ -73,6 +73,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/58_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL_RESULTS.md",
         "docs/59_ASF_CODEX_READONLY_REPEATABLE_TRIAL_PACK.md",
         "docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md",
+        "docs/64_ASF_PWSH_COMMAND_PACK_SKILL_HARDENING.md",
         "config/asf_project_profiles.json",
         "scripts/asf_codex_invocation_dry_run.py",
         "scripts/asf_codex_readonly_invoke.py",
@@ -195,6 +196,7 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             ("ASF Codex Read-Only Clean Target Trial", ["ASF Codex Read-Only Clean Target Trial"]),
             ("ASF Codex Read-Only Repeatable Trial Pack", ["ASF Codex Read-Only Repeatable Trial Pack"]),
             ("ASF Codex Read-Only Trial Compare", ["ASF Codex Read-Only Trial Compare"]),
+            ("ASF PowerShell Command Pack Skill Hardening", ["ASF PowerShell Command Pack Skill Hardening"]),
             ("generate task packet script", ["scripts/generate_task_packet.py"]),
             ("task packet validator script", ["scripts/validate_task_packet.py"]),
             ("ASF Next Step Runner script", ["scripts/asf_next_step.py"]),
@@ -267,6 +269,10 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             (
                 "ASF Codex Read-Only Repeatable Trial Results document",
                 ["docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md"],
+            ),
+            (
+                "ASF PowerShell Command Pack Skill Hardening document",
+                ["docs/64_ASF_PWSH_COMMAND_PACK_SKILL_HARDENING.md"],
             ),
             ("ASF project profiles config", ["config/asf_project_profiles.json"]),
             (

@@ -260,6 +260,12 @@ docs/59_ASF_CODEX_READONLY_REPEATABLE_TRIAL_PACK.md
 docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md
 ```
 
+Hardening della skill comune per PowerShell Command Pack robusti:
+
+```text
+docs/64_ASF_PWSH_COMMAND_PACK_SKILL_HARDENING.md
+```
+
 ---
 
 ## 8. Setup locale minimo

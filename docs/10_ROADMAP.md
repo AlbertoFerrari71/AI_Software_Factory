@@ -73,8 +73,9 @@ Esempio:
 | 460 | ASF Codex Read-Only Invocation Diagnostics Hardening | Consolidare diagnostica stderr/output incompleto prima di step piu' ampi | Hardening diagnostico, criteri run comparabili, retry/stop piu' chiari | MVP personale | Da fare |
 | 470 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
 | 480 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
-| 490 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
-| 500 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
+| 490 | ASF PowerShell Command Pack Skill Hardening | Rafforzare la skill comune per command pack PowerShell robusti | Skill esterna aggiornata, template `.ps1`, esempi, documento STEP 490 | MVP personale | Completato |
+| 500 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
+| 510 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
 
 ---
 
@@ -1020,7 +1021,25 @@ Gestire tool esterni in modo sicuro.
 
 ---
 
-## 51. STEP 490 - Guided Mode
+## 51. STEP 490 - ASF PowerShell Command Pack Skill Hardening
+
+### Obiettivo
+
+Rafforzare la skill comune `as-common-pwsh-command-pack` per generare command pack PowerShell robusti, loggati e verificabili.
+
+### Output realizzati
+
+- skill esterna aggiornata in `%USERPROFILE%\.agents\skills\as-common-pwsh-command-pack`;
+- `SKILL.md` compatto con frontmatter YAML valido;
+- riferimento operativo `references/pwsh-command-pack-standard.md`;
+- template robusto `references/pwsh-command-pack-template.ps1`;
+- esempi progressivi `examples/demo-prompts.md`;
+- documento `docs/64_ASF_PWSH_COMMAND_PACK_SKILL_HARDENING.md`;
+- nessuna pubblicazione automatica e nessuna modifica a repository target esterni.
+
+---
+
+## 52. STEP 500 - Guided Mode
 
 ### Obiettivo
 
@@ -1035,7 +1054,7 @@ Rendere il framework utilizzabile da utenti non tecnici.
 
 ---
 
-## 52. STEP 500 - SaaS Evolution Plan
+## 53. STEP 510 - SaaS Evolution Plan
 
 ### Obiettivo
 
