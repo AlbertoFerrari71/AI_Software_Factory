@@ -761,6 +761,48 @@ Documenti:
 
 ---
 
+## 16.2 Ricetta - Diagnostics, CLI probe e decision gate read-only
+
+### Quando usarla
+
+Quando esistono evidenze JSON di trial read-only e serve decidere se proseguire con altri trial, hold, warning, no-go o solo design futuro separato.
+
+### Comandi
+
+Diagnostica:
+
+```powershell
+python scripts/asf_codex_readonly_diagnostics.py --reports tmp/asf_codex_readonly_reports/report.json --output-json tmp/asf_codex_readonly_diagnostics/readonly_diagnostics.json --output-markdown tmp/asf_codex_readonly_diagnostics/readonly_diagnostics.md
+```
+
+Probe CLI:
+
+```powershell
+python scripts/asf_codex_cli_compatibility_probe.py --output-json tmp/asf_codex_cli_compatibility_probe/cli_compatibility_probe.json --output-markdown tmp/asf_codex_cli_compatibility_probe/cli_compatibility_probe.md
+```
+
+Decision gate:
+
+```powershell
+python scripts/asf_codex_readonly_decision_gate.py --diagnostics tmp/asf_codex_readonly_diagnostics/readonly_diagnostics.json --cli-probe tmp/asf_codex_cli_compatibility_probe/cli_compatibility_probe.json --output-json tmp/asf_codex_readonly_decision_gate/readonly_decision_gate.json --output-markdown tmp/asf_codex_readonly_decision_gate/readonly_decision_gate.md
+```
+
+### Esito atteso
+
+Il gate restituisce solo una tra `GO_TO_WORKSPACE_WRITE_DESIGN`, `GO_TO_MORE_READONLY_TRIALS`, `WARNING_REVIEW_REQUIRED`, `HOLD` e `NO_GO`.
+
+### Cosa non fare
+
+Non trattare `GO_TO_WORKSPACE_WRITE_DESIGN` come autorizzazione a workspace-write. Non modificare repository target esterni.
+
+Documenti:
+
+- `docs/61_ASF_CODEX_READONLY_DIAGNOSTICS_HARDENING.md`;
+- `docs/62_ASF_CODEX_CLI_COMPATIBILITY_PROBE.md`;
+- `docs/63_ASF_CODEX_READONLY_DECISION_GATE.md`.
+
+---
+
 ## 17. Ricetta - Verification Gate fallito
 
 ### Quando usarla
@@ -923,4 +965,7 @@ Codex non deve fare commit, Codex non deve fare push, Codex non deve aprire PR e
 - `docs/58_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL_RESULTS.md`
 - `docs/59_ASF_CODEX_READONLY_REPEATABLE_TRIAL_PACK.md`
 - `docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md`
+- `docs/61_ASF_CODEX_READONLY_DIAGNOSTICS_HARDENING.md`
+- `docs/62_ASF_CODEX_CLI_COMPATIBILITY_PROBE.md`
+- `docs/63_ASF_CODEX_READONLY_DECISION_GATE.md`
 - `templates/codex_tasks/step_closure_report_template.md`

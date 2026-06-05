@@ -1681,3 +1681,38 @@ Il prossimo step consigliato diventa:
 ```
 
 OpenAI API Adapter, MCP e qualunque futuro workspace-write restano posticipati finche' la diagnostica read-only non e' piu' robusta.
+
+---
+
+## DEC-058 - ASF Codex Read-Only Diagnostics and Decision Gate Pack
+
+**Data:** 2026-06-04
+**Stato:** Accettata
+
+### Contesto
+
+Dopo lo STEP 450 il trial read-only e' ripetibile, ma servono diagnostica deterministica, probe CLI locale e un gate finale piu' conservativo prima di riprendere OpenAI API Adapter, MCP o qualunque design piu' ampio.
+
+### Decisione
+
+Introdurre il pack 460-480:
+
+- `scripts/asf_codex_readonly_diagnostics.py`;
+- `scripts/asf_codex_cli_compatibility_probe.py`;
+- `scripts/asf_codex_readonly_decision_gate.py`;
+- documenti `docs/61_ASF_CODEX_READONLY_DIAGNOSTICS_HARDENING.md`, `docs/62_ASF_CODEX_CLI_COMPATIBILITY_PROBE.md` e `docs/63_ASF_CODEX_READONLY_DECISION_GATE.md`;
+- template dedicati per diagnostica, probe CLI e decision gate.
+
+Il probe CLI e' metadata-only e non chiama il modello. Il decision gate puo' produrre `GO_TO_WORKSPACE_WRITE_DESIGN`, ma questa decisione autorizza solo a preparare un futuro step di design separato.
+
+### Motivazione
+
+Serve distinguere in modo verificabile ambiente non disponibile, stderr non vuoto, output incompleto, exit code nonzero, report mancanti o malformati e target dirty dopo una run read-only.
+
+### Conseguenze
+
+Workspace-write resta non autorizzato. Il prossimo step consigliato diventa:
+
+```text
+490) OpenAI API Adapter
+```

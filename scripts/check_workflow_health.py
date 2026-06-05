@@ -73,7 +73,13 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/58_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL_RESULTS.md",
         "docs/59_ASF_CODEX_READONLY_REPEATABLE_TRIAL_PACK.md",
         "docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md",
+        "docs/61_ASF_CODEX_READONLY_DIAGNOSTICS_HARDENING.md",
+        "docs/62_ASF_CODEX_CLI_COMPATIBILITY_PROBE.md",
+        "docs/63_ASF_CODEX_READONLY_DECISION_GATE.md",
         "config/asf_project_profiles.json",
+        "scripts/asf_codex_readonly_diagnostics.py",
+        "scripts/asf_codex_cli_compatibility_probe.py",
+        "scripts/asf_codex_readonly_decision_gate.py",
         "scripts/asf_codex_invocation_dry_run.py",
         "scripts/asf_codex_readonly_invoke.py",
         "scripts/asf_codex_readonly_repeatable_trial.py",
@@ -108,6 +114,9 @@ def check_files(root: Path) -> list[HealthIssue]:
         "templates/codex_tasks/asf_codex_readonly_safety_gate_template.md",
         "templates/codex_tasks/asf_codex_readonly_repeatable_trial_template.md",
         "templates/codex_tasks/asf_codex_readonly_trial_compare_template.md",
+        "templates/codex_tasks/asf_codex_readonly_diagnostics_template.md",
+        "templates/codex_tasks/asf_codex_cli_compatibility_probe_template.md",
+        "templates/codex_tasks/asf_codex_readonly_decision_gate_template.md",
     ]
 
     issues: list[HealthIssue] = []
@@ -195,6 +204,9 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             ("ASF Codex Read-Only Clean Target Trial", ["ASF Codex Read-Only Clean Target Trial"]),
             ("ASF Codex Read-Only Repeatable Trial Pack", ["ASF Codex Read-Only Repeatable Trial Pack"]),
             ("ASF Codex Read-Only Trial Compare", ["ASF Codex Read-Only Trial Compare"]),
+            ("ASF Codex Read-Only Diagnostics Hardening", ["ASF Codex Read-Only Diagnostics Hardening"]),
+            ("ASF Codex CLI Compatibility Probe", ["ASF Codex CLI Compatibility Probe"]),
+            ("ASF Codex Read-Only Decision Gate", ["ASF Codex Read-Only Decision Gate"]),
             ("generate task packet script", ["scripts/generate_task_packet.py"]),
             ("task packet validator script", ["scripts/validate_task_packet.py"]),
             ("ASF Next Step Runner script", ["scripts/asf_next_step.py"]),
@@ -207,6 +219,9 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             ("ASF Codex Result Capture script", ["scripts/asf_codex_result_capture.py"]),
             ("ASF Codex Read-Only Safety Gate script", ["scripts/asf_codex_readonly_safety_gate.py"]),
             ("ASF Codex Read-Only Trial Compare script", ["scripts/asf_codex_readonly_trial_compare.py"]),
+            ("ASF Codex Read-Only Diagnostics script", ["scripts/asf_codex_readonly_diagnostics.py"]),
+            ("ASF Codex CLI Compatibility Probe script", ["scripts/asf_codex_cli_compatibility_probe.py"]),
+            ("ASF Codex Read-Only Decision Gate script", ["scripts/asf_codex_readonly_decision_gate.py"]),
             ("verification gate script", ["scripts/verify.ps1"]),
             ("soft guardrails check script", ["scripts/git/check_soft_guardrails.ps1"]),
             ("Workflow Health Check document", ["docs/35_WORKFLOW_HEALTH_CHECK.md"]),
@@ -268,6 +283,18 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                 "ASF Codex Read-Only Repeatable Trial Results document",
                 ["docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md"],
             ),
+            (
+                "ASF Codex Read-Only Diagnostics Hardening document",
+                ["docs/61_ASF_CODEX_READONLY_DIAGNOSTICS_HARDENING.md"],
+            ),
+            (
+                "ASF Codex CLI Compatibility Probe document",
+                ["docs/62_ASF_CODEX_CLI_COMPATIBILITY_PROBE.md"],
+            ),
+            (
+                "ASF Codex Read-Only Decision Gate document",
+                ["docs/63_ASF_CODEX_READONLY_DECISION_GATE.md"],
+            ),
             ("ASF project profiles config", ["config/asf_project_profiles.json"]),
             (
                 "ASF Next Step Runner handoff template",
@@ -312,6 +339,18 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             (
                 "ASF Codex Read-Only Trial Compare template",
                 ["templates/codex_tasks/asf_codex_readonly_trial_compare_template.md"],
+            ),
+            (
+                "ASF Codex Read-Only Diagnostics template",
+                ["templates/codex_tasks/asf_codex_readonly_diagnostics_template.md"],
+            ),
+            (
+                "ASF Codex CLI Compatibility Probe template",
+                ["templates/codex_tasks/asf_codex_cli_compatibility_probe_template.md"],
+            ),
+            (
+                "ASF Codex Read-Only Decision Gate template",
+                ["templates/codex_tasks/asf_codex_readonly_decision_gate_template.md"],
             ),
         ],
     )
@@ -399,6 +438,9 @@ def check_script_safety(root: Path) -> list[HealthIssue]:
         "scripts/asf_codex_result_capture.py",
         "scripts/asf_codex_readonly_safety_gate.py",
         "scripts/asf_codex_readonly_trial_compare.py",
+        "scripts/asf_codex_readonly_diagnostics.py",
+        "scripts/asf_codex_cli_compatibility_probe.py",
+        "scripts/asf_codex_readonly_decision_gate.py",
     ]
     patterns = forbidden_script_patterns()
     issues: list[HealthIssue] = []

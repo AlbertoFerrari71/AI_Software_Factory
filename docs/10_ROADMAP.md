@@ -70,11 +70,13 @@ Esempio:
 | 430 | ASF Codex Read-Only Invocation First Manual Trial | Eseguire una prima prova manuale read-only controllata | Trial locale preview-only, capture simulato e safety gate su controllo pulito | MVP personale | Completato |
 | 440 | ASF Codex Read-Only Invocation Clean Target Trial | Ripetere il trial su target pulito con branch/gate coerenti | Trial read-only reale su repo tmp, exit 0, target CLEAN, safety gate WARNING | MVP personale | Completato |
 | 450 | ASF Codex Read-Only Invocation Repeatable Trial Pack | Rendere ripetibile il trial e gestire meglio errori ambientali | Pack ripetibile, compare trial, CODEX_NOT_AVAILABLE, report e test | MVP personale | Completato |
-| 460 | ASF Codex Read-Only Invocation Diagnostics Hardening | Consolidare diagnostica stderr/output incompleto prima di step piu' ampi | Hardening diagnostico, criteri run comparabili, retry/stop piu' chiari | MVP personale | Da fare |
-| 470 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
-| 480 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
-| 490 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
-| 500 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
+| 460 | ASF Codex Read-Only Invocation Diagnostics Hardening | Consolidare diagnostica stderr/output incompleto prima di step piu' ampi | Diagnostica JSON stabile, classificazioni, report Markdown opzionale | MVP personale | Completato |
+| 470 | ASF Codex CLI Compatibility Probe | Verificare compatibilita' CLI locale senza chiamare il modello | Probe metadata-only, support evidence, CODEX_NOT_AVAILABLE | MVP personale | Completato |
+| 480 | ASF Read-Only Invocation Decision Gate | Decidere se restare in trial, hold, warning, no-go o solo design futuro | Decision gate JSON conservativo, docs, template e test | MVP personale | Completato |
+| 490 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
+| 500 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
+| 510 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
+| 520 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
 
 ---
 
@@ -980,16 +982,51 @@ Rendere ripetibile il clean target trial e distinguere in modo piu' chiaro limit
 
 Consolidare diagnostica, confronto run e criteri di retry/stop per stderr non vuoto, output incompleto e disponibilita' Codex prima di qualunque step piu' ampio.
 
-### Output previsti
+### Output realizzati
 
-- diagnostica piu' granulare su stderr/output incompleto;
-- criteri di ripetizione trial;
-- separazione piu' chiara tra ambiente non disponibile, warning Codex e failure target;
+- script `scripts/asf_codex_readonly_diagnostics.py`;
+- documento `docs/61_ASF_CODEX_READONLY_DIAGNOSTICS_HARDENING.md`;
+- template `templates/codex_tasks/asf_codex_readonly_diagnostics_template.md`;
+- classificazioni stabili per `CODEX_NOT_AVAILABLE`, stderr, stdout vuoto, output incompleto, report mancanti o malformati e target clean/dirty;
+- output JSON stabile e Markdown opzionale;
 - nessuna autorizzazione workspace-write.
 
 ---
 
-## 49. STEP 470 - OpenAI API Adapter
+## 49. STEP 470 - ASF Codex CLI Compatibility Probe
+
+### Obiettivo
+
+Verificare la compatibilita' metadata-only del Codex CLI locale senza chiamare il modello.
+
+### Output realizzati
+
+- script `scripts/asf_codex_cli_compatibility_probe.py`;
+- documento `docs/62_ASF_CODEX_CLI_COMPATIBILITY_PROBE.md`;
+- template `templates/codex_tasks/asf_codex_cli_compatibility_probe_template.md`;
+- probe per executable, version, help, exec help, sandbox, read-only, JSON, output-last-message e stdin dash;
+- classificazione `CODEX_NOT_AVAILABLE` come diagnostica ambientale;
+- nessuna chiamata modello.
+
+---
+
+## 50. STEP 480 - ASF Read-Only Invocation Decision Gate
+
+### Obiettivo
+
+Combinare diagnostica, probe CLI e confronto trial in una decisione conservativa prima di qualunque design futuro piu' ampio.
+
+### Output realizzati
+
+- script `scripts/asf_codex_readonly_decision_gate.py`;
+- documento `docs/63_ASF_CODEX_READONLY_DECISION_GATE.md`;
+- template `templates/codex_tasks/asf_codex_readonly_decision_gate_template.md`;
+- decisioni `GO_TO_WORKSPACE_WRITE_DESIGN`, `GO_TO_MORE_READONLY_TRIALS`, `WARNING_REVIEW_REQUIRED`, `HOLD` e `NO_GO`;
+- regola esplicita che `GO_TO_WORKSPACE_WRITE_DESIGN` non autorizza workspace-write.
+
+---
+
+## 51. STEP 490 - OpenAI API Adapter
 
 ### Obiettivo
 
@@ -1005,7 +1042,7 @@ Collegare Responses API e Structured Outputs.
 
 ---
 
-## 50. STEP 480 - MCP Tool Registry
+## 52. STEP 500 - MCP Tool Registry
 
 ### Obiettivo
 
@@ -1020,7 +1057,7 @@ Gestire tool esterni in modo sicuro.
 
 ---
 
-## 51. STEP 490 - Guided Mode
+## 53. STEP 510 - Guided Mode
 
 ### Obiettivo
 
@@ -1035,7 +1072,7 @@ Rendere il framework utilizzabile da utenti non tecnici.
 
 ---
 
-## 52. STEP 500 - SaaS Evolution Plan
+## 54. STEP 520 - SaaS Evolution Plan
 
 ### Obiettivo
 

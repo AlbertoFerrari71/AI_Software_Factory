@@ -240,6 +240,28 @@ python scripts/asf_codex_readonly_trial_compare.py --reports tmp/asf_codex_reado
 
 Il Repeatable Trial Pack usa repo sintetiche sotto `tmp/`, richiede approval gate GO e target CLEAN per l'esecuzione, gestisce `CODEX_NOT_AVAILABLE` e non autorizza workspace-write.
 
+## 7.13 Eseguire diagnostics, CLI probe e decision gate
+
+Diagnostica JSON:
+
+```powershell
+python scripts/asf_codex_readonly_diagnostics.py --reports tmp/asf_codex_readonly_reports/report.json --output-json tmp/asf_codex_readonly_diagnostics/readonly_diagnostics.json --output-markdown tmp/asf_codex_readonly_diagnostics/readonly_diagnostics.md
+```
+
+Probe CLI metadata-only:
+
+```powershell
+python scripts/asf_codex_cli_compatibility_probe.py --output-json tmp/asf_codex_cli_compatibility_probe/cli_compatibility_probe.json --output-markdown tmp/asf_codex_cli_compatibility_probe/cli_compatibility_probe.md
+```
+
+Decision gate:
+
+```powershell
+python scripts/asf_codex_readonly_decision_gate.py --diagnostics tmp/asf_codex_readonly_diagnostics/readonly_diagnostics.json --cli-probe tmp/asf_codex_cli_compatibility_probe/cli_compatibility_probe.json --output-json tmp/asf_codex_readonly_decision_gate/readonly_decision_gate.json --output-markdown tmp/asf_codex_readonly_decision_gate/readonly_decision_gate.md
+```
+
+Il gate puo' produrre `GO_TO_WORKSPACE_WRITE_DESIGN`, ma questa decisione autorizza solo a preparare un futuro step di design separato.
+
 ---
 
 ## 8. Eseguire Verification Gate
@@ -365,5 +387,8 @@ Solo dopo questa verifica lo step puo' essere considerato presente su `main`.
 - `docs/54_ASF_CODEX_READONLY_SAFETY_GATE.md`: safety gate read-only prima di qualunque step futuro piu' ampio.
 - `docs/59_ASF_CODEX_READONLY_REPEATABLE_TRIAL_PACK.md`: repeatable trial pack per run read-only comparabili.
 - `docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md`: risultati STEP 450.
+- `docs/61_ASF_CODEX_READONLY_DIAGNOSTICS_HARDENING.md`: diagnostica read-only stabile.
+- `docs/62_ASF_CODEX_CLI_COMPATIBILITY_PROBE.md`: probe CLI metadata-only.
+- `docs/63_ASF_CODEX_READONLY_DECISION_GATE.md`: decision gate conservativo.
 - `docs/20_VERIFICATION_GATE.md`: criteri di verifica locale e CI.
 - `docs/28_PROMPT_PACKET_VALIDATION_STRICT_MODE.md`: dettagli della validazione Strict.

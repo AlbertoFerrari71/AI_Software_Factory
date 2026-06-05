@@ -37,6 +37,9 @@ CENTRAL_DOCUMENTS = [
     "docs/58_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL_RESULTS.md",
     "docs/59_ASF_CODEX_READONLY_REPEATABLE_TRIAL_PACK.md",
     "docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md",
+    "docs/61_ASF_CODEX_READONLY_DIAGNOSTICS_HARDENING.md",
+    "docs/62_ASF_CODEX_CLI_COMPATIBILITY_PROBE.md",
+    "docs/63_ASF_CODEX_READONLY_DECISION_GATE.md",
 ]
 
 MAIN_SCRIPTS = [
@@ -50,6 +53,9 @@ MAIN_SCRIPTS = [
     "scripts/asf_codex_result_capture.py",
     "scripts/asf_codex_readonly_safety_gate.py",
     "scripts/asf_codex_readonly_trial_compare.py",
+    "scripts/asf_codex_readonly_diagnostics.py",
+    "scripts/asf_codex_cli_compatibility_probe.py",
+    "scripts/asf_codex_readonly_decision_gate.py",
     "scripts/check_workflow_health.py",
     "scripts/show_workflow_status.py",
     "scripts/generate_task_packet.py",

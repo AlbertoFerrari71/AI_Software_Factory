@@ -258,6 +258,9 @@ docs/57_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL.md
 docs/58_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL_RESULTS.md
 docs/59_ASF_CODEX_READONLY_REPEATABLE_TRIAL_PACK.md
 docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md
+docs/61_ASF_CODEX_READONLY_DIAGNOSTICS_HARDENING.md
+docs/62_ASF_CODEX_CLI_COMPATIBILITY_PROBE.md
+docs/63_ASF_CODEX_READONLY_DECISION_GATE.md
 ```
 
 ---
@@ -316,7 +319,7 @@ policies/path_policy.v0.json
 ## 11. Prossimo step
 
 ```text
-460) ASF Codex Read-Only Invocation Diagnostics Hardening
+490) OpenAI API Adapter
 ```
 
-Obiettivo: consolidare diagnostica e confronto dei trial Codex read-only prima di qualunque passo futuro piu' ampio.
+Obiettivo: riprendere l'adapter OpenAI API solo dopo il gate diagnostico read-only 460-480.

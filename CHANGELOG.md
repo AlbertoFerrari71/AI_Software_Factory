@@ -4,6 +4,35 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.48.0] - 2026-06-04
+
+### Added
+
+- MEGA-STEP 460-480 - ASF Codex Read-Only Diagnostics and Decision Gate Pack.
+- Script `scripts/asf_codex_readonly_diagnostics.py`.
+- Script `scripts/asf_codex_cli_compatibility_probe.py`.
+- Script `scripts/asf_codex_readonly_decision_gate.py`.
+- Documenti `docs/61_ASF_CODEX_READONLY_DIAGNOSTICS_HARDENING.md`, `docs/62_ASF_CODEX_CLI_COMPATIBILITY_PROBE.md` e `docs/63_ASF_CODEX_READONLY_DECISION_GATE.md`.
+- Template `templates/codex_tasks/asf_codex_readonly_diagnostics_template.md`, `templates/codex_tasks/asf_codex_cli_compatibility_probe_template.md` e `templates/codex_tasks/asf_codex_readonly_decision_gate_template.md`.
+- Test deterministici con fixture JSON sintetiche per diagnostica, probe CLI e decision gate.
+
+### Changed
+
+- Aggiornati Project Workflow Index, Workflow Health Check, Quick Reference, Command Cookbook, Workflow Status Dashboard, roadmap, decision log, Documentation Sync e README con i riferimenti al pack 460-480.
+- Aggiornati `scripts/check_workflow_health.py` e `scripts/show_workflow_status.py` per includere documenti, script e template del nuovo gate.
+- Aggiornato il prossimo step consigliato a `490) OpenAI API Adapter`.
+
+### Not included
+
+- Nessuna esecuzione workspace-write.
+- Nessun uso danger-full-access.
+- Nessun commit, push, PR, merge, tag o deploy automatico.
+- Nessuna modifica a repository target esterni.
+- Nessuna invocazione modello durante il probe CLI.
+- Nessuna modifica a GitHub, GitHub API, CI, dipendenze, secret, `.env`, `src/**` o `policies/**`.
+
+---
+
 ## [0.45.0] - 2026-06-04
 
 ### Added

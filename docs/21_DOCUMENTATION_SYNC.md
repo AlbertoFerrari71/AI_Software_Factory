@@ -91,6 +91,9 @@ Examples:
 - update `docs/58_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL_RESULTS.md` when clean target trial evidence, stdout/stderr/exit code, safety gate decision or next step changes;
 - update `docs/59_ASF_CODEX_READONLY_REPEATABLE_TRIAL_PACK.md` when repeatable trial modes, classifications, tmp layout, approval rules or compare flow change;
 - update `docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md` when STEP 450 trial evidence, Codex availability, target cleanliness or next step changes;
+- update `docs/61_ASF_CODEX_READONLY_DIAGNOSTICS_HARDENING.md` when diagnostics classifications, JSON contract or Markdown summary behavior changes;
+- update `docs/62_ASF_CODEX_CLI_COMPATIBILITY_PROBE.md` when CLI metadata probe behavior or support evidence changes;
+- update `docs/63_ASF_CODEX_READONLY_DECISION_GATE.md` when allowed decisions or conservative decision rules change;
 - update `config/asf_project_profiles.json` only when profile defaults need to change and no secrets are introduced;
 - update `templates/codex_tasks/asf_runner_verification_pack_template.md` when the Verification Pack structure changes;
 - update `templates/codex_tasks/asf_codex_report_intake_template.md` when intake report structure changes;
@@ -102,6 +105,9 @@ Examples:
 - update `templates/codex_tasks/asf_codex_readonly_safety_gate_template.md` when read-only safety gate template structure changes;
 - update `templates/codex_tasks/asf_codex_readonly_repeatable_trial_template.md` when repeatable trial report structure changes;
 - update `templates/codex_tasks/asf_codex_readonly_trial_compare_template.md` when trial comparison structure changes;
+- update `templates/codex_tasks/asf_codex_readonly_diagnostics_template.md` when diagnostics command or review fields change;
+- update `templates/codex_tasks/asf_codex_cli_compatibility_probe_template.md` when CLI probe command or support evidence changes;
+- update `templates/codex_tasks/asf_codex_readonly_decision_gate_template.md` when decision gate inputs, outputs or allowed decisions change;
 - update `docs/05_SECURITY_MODEL.md` or `policies/**` only when the Safety Model changes and the risk level is approved.
 
 ### Do not touch unless needed

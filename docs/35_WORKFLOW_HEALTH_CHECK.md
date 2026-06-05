@@ -38,6 +38,7 @@ The script `scripts/check_workflow_health.py` checks:
 - `docs/55_ASF_CODEX_READONLY_FIRST_MANUAL_TRIAL.md` and `docs/56_ASF_CODEX_READONLY_FIRST_TRIAL_RESULTS.md` are present and linked from the Project Workflow Index;
 - `docs/57_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL.md` and `docs/58_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL_RESULTS.md` are present and linked from the Project Workflow Index;
 - `docs/59_ASF_CODEX_READONLY_REPEATABLE_TRIAL_PACK.md`, `docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md`, `scripts/asf_codex_readonly_repeatable_trial.py`, `scripts/asf_codex_readonly_trial_compare.py`, `templates/codex_tasks/asf_codex_readonly_repeatable_trial_template.md` and `templates/codex_tasks/asf_codex_readonly_trial_compare_template.md` are present and linked from the Project Workflow Index;
+- `docs/61_ASF_CODEX_READONLY_DIAGNOSTICS_HARDENING.md`, `docs/62_ASF_CODEX_CLI_COMPATIBILITY_PROBE.md`, `docs/63_ASF_CODEX_READONLY_DECISION_GATE.md`, `scripts/asf_codex_readonly_diagnostics.py`, `scripts/asf_codex_cli_compatibility_probe.py`, `scripts/asf_codex_readonly_decision_gate.py`, `templates/codex_tasks/asf_codex_readonly_diagnostics_template.md`, `templates/codex_tasks/asf_codex_cli_compatibility_probe_template.md` and `templates/codex_tasks/asf_codex_readonly_decision_gate_template.md` are present and linked from the Project Workflow Index;
 - operational scripts do not contain dangerous Git/GitHub command patterns.
 
 The covered areas include:
@@ -74,6 +75,9 @@ The covered areas include:
 - ASF Codex Read-Only Clean Target Trial;
 - ASF Codex Read-Only Repeatable Trial Pack;
 - ASF Codex Read-Only Trial Compare;
+- ASF Codex Read-Only Diagnostics Hardening;
+- ASF Codex CLI Compatibility Probe;
+- ASF Codex Read-Only Decision Gate;
 - Project Workflow Index.
 
 ---
@@ -221,3 +225,5 @@ After STEP 370-390, it also treats the Automation Bridge Pack documents, scripts
 After STEP 400-420, it also treats the Codex Read-Only Invocation Prototype Pack documents, scripts and templates as core runner references because they add preview-by-default read-only execution support, result capture and a safety gate without enabling broader execution or automatic Git/GitHub actions.
 
 After STEP 450, it also treats the Codex Read-Only Repeatable Trial Pack documents, scripts and templates as core workflow references because they make read-only trials repeatable, comparable and robust when Codex is not available, without enabling workspace-write or target repository modifications.
+
+After STEP 460-480, it also treats the diagnostics hardening, CLI compatibility probe and decision gate documents, scripts and templates as core workflow references because they decide whether evidence is missing, malformed, warning, no-go or ready only for a future design step.
