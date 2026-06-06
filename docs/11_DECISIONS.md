@@ -1855,3 +1855,44 @@ Il prossimo step consigliato e':
 ```text
 530) OpenAI API Adapter Live Smoke Result Hardening
 ```
+
+---
+
+## DEC-062 - OpenAI API Adapter live smoke result hardening
+
+**Data:** 2026-06-06
+**Stato:** Accettata
+
+### Contesto
+
+STEP 520 ha introdotto una prima smoke live controllata, ma prima di qualunque ulteriore prova live serve rendere piu' stabile e leggibile il risultato.
+
+Il rischio e' confondere HTTP status, rete, schema risposta, gate mancanti e autorizzazione live in un unico errore generico, oppure produrre artifact difficili da confrontare.
+
+### Decisione
+
+Estendere `scripts/asf_openai_api_adapter.py` con un contratto live result stabile:
+
+- `status` in `success`, `failed` o `skipped`;
+- `classification` in `not_configured`, `disabled`, `credential_missing`, `live_not_allowed`, `success`, `provider_error`, `network_error`, `rate_limited`, `auth_error`, `schema_error` o `unknown_error`;
+- `safe_details` redatto;
+- `credential_present` solo booleano;
+- artifact JSON machine-readable e Markdown opzionale per operatore.
+
+Lo step usa solo test mockati. Non autorizza una nuova chiamata live.
+
+### Motivazione
+
+Una classificazione centrale rende i risultati confrontabili e impedisce di promuovere errori ambientali o provider a readiness operativa.
+
+Il contratto stabile aiuta i futuri gate umani e mantiene la regola fail-closed prima di ogni prova live successiva.
+
+### Conseguenze
+
+Qualunque futura esecuzione live dovra' usare questo schema, mantenere artifact sotto `tmp/`, non emettere segreti o derivati e richiedere autorizzazione separata.
+
+Il prossimo step consigliato e':
+
+```text
+540) OpenAI API Adapter Controlled Live Execution Pack
+```

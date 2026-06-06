@@ -126,7 +126,19 @@ Do not retry automatically. A second live request requires a separate human deci
 
 ## 6. Result contract
 
-The live result or gate result includes these fields:
+After STEP 530, the live result or gate result includes a stable schema:
+
+```json
+{
+  "status": "success|failed|skipped",
+  "classification": "not_configured|disabled|credential_missing|live_not_allowed|success|provider_error|network_error|rate_limited|auth_error|schema_error|unknown_error",
+  "safe_details": {},
+  "provider": "openai",
+  "credential_present": false
+}
+```
+
+The live result also preserves STEP 520 compatibility fields:
 
 ```text
 mode
@@ -172,6 +184,22 @@ LIVE_SMOKE_INVALID_JSON
 LIVE_SMOKE_MISSING_SUCCESS_EVIDENCE
 ```
 
+STEP 530 maps these legacy categories to stable lowercase classifications:
+
+```text
+not_configured
+disabled
+credential_missing
+live_not_allowed
+success
+provider_error
+network_error
+rate_limited
+auth_error
+schema_error
+unknown_error
+```
+
 If network is blocked by the execution environment, report `LIVE_SMOKE_NOT_RUN_NETWORK_BLOCKED`; this is not an adapter crash.
 
 If the API returns valid JSON with different output text, report `LIVE_SMOKE_UNEXPECTED_MODEL_OUTPUT`.
@@ -214,5 +242,7 @@ STEP 520 does not:
 The next recommended step is:
 
 ```text
-530) OpenAI API Adapter Live Smoke Result Hardening
+540) OpenAI API Adapter Controlled Live Execution Pack
 ```
+
+STEP 530 is documented in `docs/68_ASF_OPENAI_API_ADAPTER_LIVE_SMOKE_RESULT_HARDENING.md`.

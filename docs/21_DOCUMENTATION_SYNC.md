@@ -95,6 +95,7 @@ Examples:
 - update `docs/65_ASF_OPENAI_API_ADAPTER.md` when OpenAI adapter payloads, dry-run/mock behavior, key redaction, environment checks or live boundary rules change;
 - update `docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md` when OpenAI live boundary decisions, credential gate rules, live request plan or future smoke prerequisites change;
 - update `docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md` when OpenAI live smoke commands, result fields, failure classifications, artifact rules or one-call constraints change;
+- update `docs/68_ASF_OPENAI_API_ADAPTER_LIVE_SMOKE_RESULT_HARDENING.md` when OpenAI live smoke result schema, classifications, safe artifact rules or mocked error coverage change;
 - update `config/asf_project_profiles.json` only when profile defaults need to change and no secrets are introduced;
 - update `templates/codex_tasks/asf_runner_verification_pack_template.md` when the Verification Pack structure changes;
 - update `templates/codex_tasks/asf_codex_report_intake_template.md` when intake report structure changes;
