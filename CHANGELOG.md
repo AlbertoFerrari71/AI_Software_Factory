@@ -4,6 +4,35 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.54.8] - 2026-06-06
+
+### Added
+
+- STEP 548 - Git Line Endings Warning Cleanup.
+- Documento `docs/72_ASF_GIT_LINE_ENDINGS_WARNING_CLEANUP.md`.
+- Test guardrail `tests/unit/test_git_line_endings_warning_cleanup.py`.
+
+### Changed
+
+- Aggiornata `.gitattributes` con policy EOL repository-level per sorgenti, documentazione, template e script Windows.
+- Aggiornati roadmap, decision log, Documentation Sync, Project Workflow Index, Quick Reference e Command Cookbook con la gestione LF/CRLF controllata.
+- Confermato il prossimo step consigliato: `550) OpenAI API Adapter First Authorized Live Run`.
+
+### Guardrails
+
+- Nessuna modifica a configurazione Git globale utente.
+- Nessuna rinormalizzazione massiva.
+- `templates/test_plans/test_plan_template.md` esplicitamente protetto con `eol=lf`.
+- Script Windows `.bat`, `.cmd` e `.ps1` lasciati compatibili con CRLF working-tree.
+
+### Not included
+
+- Nessun commit, push, PR, merge, release o deploy.
+- Nessuna modifica agli stash.
+- Nessuna modifica fuori repository ASF.
+
+---
+
 ## [0.54.6] - 2026-06-06
 
 ### Added

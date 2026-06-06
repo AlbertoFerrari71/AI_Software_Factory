@@ -1224,8 +1224,13 @@ Quando Git mostra warning di conversione fine riga.
 ### Comandi
 
 ```powershell
+git config --show-origin --get core.autocrlf
+git config --show-origin --get core.eol
+git --no-pager ls-files --eol -- templates/test_plans/test_plan_template.md
+git --no-pager check-attr -a -- templates/test_plans/test_plan_template.md
 git --no-pager diff --check
 python -m pytest
+python scripts/check_workflow_health.py
 pwsh -NoProfile -ExecutionPolicy Bypass -File .\scripts\verify.ps1
 ```
 
@@ -1234,16 +1239,31 @@ pwsh -NoProfile -ExecutionPolicy Bypass -File .\scripts\verify.ps1
 I warning CRLF/LF non sono automaticamente bloccanti se:
 
 - `git diff --check` ha exit code 0;
+- `.gitattributes` applica una policy repository-level coerente;
 - Verification Gate passa;
+- workflow health check passa;
 - i test passano.
 
 ### Se qualcosa va storto
 
 Se `git diff --check` segnala errori reali, correggere whitespace o fine riga.
 
+Se serve controllare il file noto dello STEP 548, usare:
+
+```powershell
+git add --dry-run -- templates/test_plans/test_plan_template.md
+git add --renormalize --dry-run -- templates/test_plans/test_plan_template.md
+```
+
+Se una diagnosi ampia mostra piu' di 10 file da rinormalizzare, fermarsi e chiedere review manuale.
+
 ### Cosa non fare
 
 Non confondere warning non bloccanti con fallimenti dei test.
+
+Non eseguire `git add --renormalize .` alla cieca.
+
+Documento: `docs/72_ASF_GIT_LINE_ENDINGS_WARNING_CLEANUP.md`.
 
 ---
 

@@ -32,6 +32,7 @@ L'indice orienta il lavoro. Non sostituisce i documenti specifici, il Verificati
 | Usare ASF PowerShell Command Pack Skill Hardening | `docs/64_ASF_PWSH_COMMAND_PACK_SKILL_HARDENING.md` | `%USERPROFILE%\.agents\skills\as-common-pwsh-command-pack`, `templates/pwsh_command_pack/` | Quando serve Bridge, file numerati/`LAST`, audit trail o pubblicazione presidiata | non e' il wrapper default dei prompt Codex; safe bootstrap, parse-check, script `.ps1` completo, PR-first |
 | Usare ASF PowerShell Command Pack Skill Finalization | `docs/70_ASF_PWSH_COMMAND_PACK_SKILL_FINALIZATION.md` | `templates/pwsh_command_pack/README.md`, `templates/pwsh_command_pack/as-common-pwsh-command-pack-SKILL.md` | Quando serve creare o verificare command pack futuri con lo standard canonico | `ArgList`, parser porcelain, output 4 cifre/`LAST`, DOCX best-effort, LF/CRLF warning non bloccanti |
 | Usare ASF PowerShell Command Pack Skill Export Install | `docs/71_ASF_PWSH_COMMAND_PACK_SKILL_EXPORT_INSTALL.md` | `templates/pwsh_command_pack/export/as-common-pwsh-command-pack/SKILL.md`, `scripts/install_pwsh_command_pack_skill.py` | Quando serve preparare dry-run/apply della skill comune dopo intake manuale | Codex non installa direttamente fuori repo; target esplicito, backup prima di overwrite |
+| Diagnosticare Git line endings warning | `docs/72_ASF_GIT_LINE_ENDINGS_WARNING_CLEANUP.md` | `.gitattributes`, `git --no-pager ls-files --eol`, `git --no-pager check-attr` | Quando Git segnala warning LF/CRLF o serve verificare `templates/test_plans/test_plan_template.md` | Policy repository-level; no rinormalizzazione massiva non misurata |
 | Usare Workflow Status Dashboard | `docs/39_WORKFLOW_STATUS_DASHBOARD.md` | `scripts/show_workflow_status.py` | Quando serve vedere branch, working tree, commit recenti e file workflow presenti | Read-only; non usa GitHub API |
 | Valutare Release Readiness | `docs/40_RELEASE_READINESS.md` | `templates/codex_tasks/release_readiness_checklist.md` | Prima di applicare il metodo a un progetto pilota reale | Readiness per pilot interno, non release pubblica o SaaS |
 | Preparare Existing Project Pilot Onboarding | `docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md` | `templates/codex_tasks/existing_project_intake_template.md`, `templates/codex_tasks/first_pilot_step_packet_template.md` | Dopo readiness e prima del primo pilot reale | Intake, fotografia repo, rischi e primo task packet pilot |
@@ -137,6 +138,7 @@ Regole operative:
 - `docs/64_ASF_PWSH_COMMAND_PACK_SKILL_HARDENING.md`: riferimento ASF per la skill esterna `as-common-pwsh-command-pack`.
 - `docs/70_ASF_PWSH_COMMAND_PACK_SKILL_FINALIZATION.md`: standard canonico finalizzato per command pack PowerShell e skill draft esportabile.
 - `docs/71_ASF_PWSH_COMMAND_PACK_SKILL_EXPORT_INSTALL.md`: export installabile e procedura dry-run/apply della skill comune.
+- `docs/72_ASF_GIT_LINE_ENDINGS_WARNING_CLEANUP.md`: diagnosi e policy `.gitattributes` per warning LF/CRLF senza rinormalizzazione massiva.
 - `templates/pwsh_command_pack/safe_bootstrap_template.ps1`: template del bootstrap corto con parse-check.
 - `templates/pwsh_command_pack/safe_command_pack_script_template.ps1`: template dello script completo per output, native command wrapper e DOCX best-effort.
 - `templates/pwsh_command_pack/README.md`: indice locale dei template command pack e checklist canonica.
@@ -401,7 +403,9 @@ Correzione: fermarsi. Completare lo step precedente con commit, push, PR, checks
 
 Sintomo: Git segnala conversioni LF/CRLF.
 
-Correzione: considerarli warning non bloccanti se `git diff --check` non segnala whitespace error reali.
+Correzione: considerarli warning non bloccanti se `git diff --check` non segnala whitespace error reali e test, health check e verify gate passano. Per diagnosi repository-level usare `docs/72_ASF_GIT_LINE_ENDINGS_WARNING_CLEANUP.md` e verificare `.gitattributes`, `git --no-pager ls-files --eol` e `git --no-pager check-attr`.
+
+Non eseguire `git add --renormalize .` senza prima misurare l'impatto e ottenere review manuale se la normalizzazione supera 10 file.
 
 ### Tmp ignorato
 
