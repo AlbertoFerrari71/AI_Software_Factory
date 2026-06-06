@@ -1,7 +1,7 @@
 # AI Software Factory
 
 **Metodo interno:** Codex Alchemy Method  
-**Stato:** STEP 540 - OpenAI API Adapter Controlled Live Execution Pack
+**Stato:** STEP 545 - PowerShell Command Pack Skill Finalization
 **Data bootstrap:** 2026-05-25  
 **Strategia:** local-first personale, progettato per evoluzione SaaS
 
@@ -28,7 +28,7 @@ Il metodo interno si chiama **Codex Alchemy Method**: l'idea grezza viene trasfo
 
 ## 2. Stato repository
 
-Questo repository è nello stato **STEP 540 - OpenAI API Adapter Controlled Live Execution Pack**.
+Questo repository è nello stato **STEP 545 - PowerShell Command Pack Skill Finalization**.
 
 Sono presenti:
 
@@ -51,6 +51,7 @@ Sono presenti:
 - schema risultato live smoke stabile, classificazioni fail-closed e artifact JSON/Markdown sicuri.
 - regola clean-first per prompt Codex, con separazione tra prompt pulito, Bridge, intake gate e publication command pack.
 - standard Safe Bootstrap PowerShell Command Pack con bootstrap corto, parse-check, script `.ps1` completo, output numerati/`LAST`, DOCX non bloccante e pubblicazione PR-first.
+- pacchetto canonico PowerShell Command Pack con README template, skill draft esportabile, parser Git robusto e `ArgList`.
 - controlled live execution pack OpenAI dry-run-default con doppio consenso futuro, artifact safe sotto `tmp/` e template operatore PowerShell.
 
 Non sono ancora presenti:
@@ -271,6 +272,9 @@ Hardening della skill comune per PowerShell Command Pack robusti:
 
 ```text
 docs/64_ASF_PWSH_COMMAND_PACK_SKILL_HARDENING.md
+docs/70_ASF_PWSH_COMMAND_PACK_SKILL_FINALIZATION.md
+templates/pwsh_command_pack/README.md
+templates/pwsh_command_pack/as-common-pwsh-command-pack-SKILL.md
 templates/pwsh_command_pack/safe_bootstrap_template.ps1
 templates/pwsh_command_pack/safe_command_pack_script_template.ps1
 ```

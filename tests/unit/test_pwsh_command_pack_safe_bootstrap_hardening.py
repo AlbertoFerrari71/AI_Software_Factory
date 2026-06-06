@@ -100,7 +100,7 @@ def test_step_536_templates_exist_and_keep_bootstrap_short() -> None:
 
     bootstrap_text = read(BOOTSTRAP_TEMPLATE)
     assert "[scriptblock]::Create($ScriptText)" in bootstrap_text
-    assert "pwsh -NoProfile -ExecutionPolicy Bypass -File $ScriptPath" in bootstrap_text
+    assert "pwsh -NoProfile -ExecutionPolicy Bypass -File $CommandFile" in bootstrap_text
     assert "Write-Host \";\"" in bootstrap_text
     assert len(bootstrap_text.splitlines()) < 100
 

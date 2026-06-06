@@ -4,6 +4,40 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.54.5] - 2026-06-06
+
+### Added
+
+- STEP 545 - PowerShell Command Pack Skill Finalization.
+- Documento `docs/70_ASF_PWSH_COMMAND_PACK_SKILL_FINALIZATION.md`.
+- README template `templates/pwsh_command_pack/README.md`.
+- Skill draft esportabile `templates/pwsh_command_pack/as-common-pwsh-command-pack-SKILL.md`.
+- Test guardrail `tests/unit/test_pwsh_command_pack_skill_finalization.py`.
+
+### Changed
+
+- Aggiornati i template canonici `safe_bootstrap_template.ps1` e `safe_command_pack_script_template.ps1` con file prefix a 4 cifre, `ArgList`, parser Git `--porcelain=v1 --untracked-files=all`, scope guard e clipboard best-effort.
+- Aggiornati AGENTS, README, Codex Workflow, roadmap, decision log, Project Workflow Index, Quick Reference, Command Cookbook e documento PowerShell Command Pack con richiami allo standard finalizzato.
+- Confermato che lo standard STEP 536 e' stato validato concretamente dallo STEP 540 con safe bootstrap e branch/PR.
+- Confermato il prossimo step consigliato: `550) OpenAI API Adapter First Authorized Live Run`.
+
+### Guardrails
+
+- Bootstrap corto con `& { ... }`, parse-check e ultima riga eseguibile.
+- Logica complessa solo nel `.ps1` generato.
+- `ArgList`, non `$Args`, per parametri wrapper.
+- Parser Git robusto con `git status --porcelain=v1 --untracked-files=all`.
+- PR-first publishing; nessun `git push origin main` come default.
+- DOCX best-effort e warning LF/CRLF non bloccanti quando i gate passano.
+
+### Not included
+
+- Nessuna modifica alla skill esterna sotto `%USERPROFILE%\.agents\skills`.
+- Nessun commit, push, PR, merge, release o deploy.
+- Nessuna modifica agli stash.
+
+---
+
 ## [0.54.0] - 2026-06-06
 
 ### Added

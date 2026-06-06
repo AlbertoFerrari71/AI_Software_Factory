@@ -92,6 +92,7 @@ Examples:
 - update `docs/58_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL_RESULTS.md` when clean target trial evidence, stdout/stderr/exit code, safety gate decision or next step changes;
 - update `docs/59_ASF_CODEX_READONLY_REPEATABLE_TRIAL_PACK.md` when repeatable trial modes, classifications, tmp layout, approval rules or compare flow change;
 - update `docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md` when STEP 450 trial evidence, Codex availability, target cleanliness or next step changes;
+- update `docs/70_ASF_PWSH_COMMAND_PACK_SKILL_FINALIZATION.md` when PowerShell command pack canonical rules, skill draft, parser Git, `ArgList`, output naming or guardrails change;
 - update `docs/65_ASF_OPENAI_API_ADAPTER.md` when OpenAI adapter payloads, dry-run/mock behavior, key redaction, environment checks or live boundary rules change;
 - update `docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md` when OpenAI live boundary decisions, credential gate rules, live request plan or future smoke prerequisites change;
 - update `docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md` when OpenAI live smoke commands, result fields, failure classifications, artifact rules or one-call constraints change;
@@ -111,6 +112,7 @@ Examples:
 - update `templates/codex_tasks/asf_openai_api_adapter_template.md` when OpenAI adapter task packet safety, verification or command examples change;
 - update `templates/codex_tasks/asf_openai_api_live_boundary_gate_template.md` when OpenAI live boundary task packet safety, gate inputs or verification commands change;
 - update `templates/codex_tasks/asf_openai_api_live_smoke_test_template.md` when OpenAI live smoke safety, preflight, one-call command or verification commands change;
+- update `templates/pwsh_command_pack/README.md` and `templates/pwsh_command_pack/as-common-pwsh-command-pack-SKILL.md` when the canonical command-pack skill draft or checklist changes;
 - update `templates/pwsh_command_pack/step_540_openai_controlled_live_execution_pack_template.ps1` when the controlled live operator command pack, safe bootstrap, output naming or dry-run/live consent rules change;
 - update `docs/05_SECURITY_MODEL.md` or `policies/**` only when the Safety Model changes and the risk level is approved.
 
