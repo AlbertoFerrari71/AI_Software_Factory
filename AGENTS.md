@@ -13,6 +13,8 @@ AI Software Factory is a local-first workflow framework for turning software ide
 The project goal is not blind automation.
 The project goal is safe, repeatable, diagnosable, human-gated automation.
 
+For Alberto's operational vision of AI as a verifiable collaborator, see docs/project_context/VISIONE_OPERATIVA_AI.md.
+
 ## General rules
 
 - Preserve the local-first and safety-first architecture.
