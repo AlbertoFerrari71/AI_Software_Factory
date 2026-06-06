@@ -94,6 +94,7 @@ Examples:
 - update `docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md` when STEP 450 trial evidence, Codex availability, target cleanliness or next step changes;
 - update `docs/70_ASF_PWSH_COMMAND_PACK_SKILL_FINALIZATION.md` when PowerShell command pack canonical rules, skill draft, parser Git, `ArgList`, output naming or guardrails change;
 - update `docs/71_ASF_PWSH_COMMAND_PACK_SKILL_EXPORT_INSTALL.md` when the command-pack skill export layout, installer, dry-run/apply flow, backup behavior or cross-repo guardrails change;
+- update `docs/72_ASF_GIT_LINE_ENDINGS_WARNING_CLEANUP.md` when repository `.gitattributes`, LF/CRLF warning interpretation, or renormalization guardrails change;
 - update `docs/65_ASF_OPENAI_API_ADAPTER.md` when OpenAI adapter payloads, dry-run/mock behavior, key redaction, environment checks or live boundary rules change;
 - update `docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md` when OpenAI live boundary decisions, credential gate rules, live request plan or future smoke prerequisites change;
 - update `docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md` when OpenAI live smoke commands, result fields, failure classifications, artifact rules or one-call constraints change;

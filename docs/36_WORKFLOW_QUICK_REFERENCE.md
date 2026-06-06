@@ -107,7 +107,7 @@ Regole rapide:
 - output numerati e `LAST` restano obbligatori;
 - DOCX e' best-effort e non blocca se TXT/MD sono validi;
 - usare `git --no-pager` per log, diff e output lunghi;
-- warning LF/CRLF non sono bloccanti se `diff --check`, test, health e verify passano.
+- warning LF/CRLF non sono bloccanti se `diff --check`, test, health e verify passano; per diagnosi `.gitattributes` usare `docs/72_ASF_GIT_LINE_ENDINGS_WARNING_CLEANUP.md`.
 
 Per pubblicare verso `main`, default PR-first:
 

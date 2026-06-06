@@ -1,2 +1,22 @@
-# Auto detect text files and perform LF normalization
+# Auto-detect text files and normalize repository content.
 * text=auto
+
+# Keep source, documentation, config and text templates stable as LF.
+*.md text eol=lf
+*.py text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+*.toml text eol=lf
+*.txt text eol=lf
+*.example text eol=lf
+*.gitignore text eol=lf
+*.gitattributes text eol=lf
+
+# Explicit guardrail for the STEP 548 warning target.
+templates/test_plans/test_plan_template.md text eol=lf
+
+# Windows command scripts can keep CRLF working-tree endings.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf

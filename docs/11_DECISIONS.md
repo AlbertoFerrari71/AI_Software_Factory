@@ -2097,6 +2097,53 @@ Il prossimo step consigliato resta:
 
 ---
 
+## DEC-068 - Git line endings warning cleanup
+
+**Data:** 2026-06-06
+**Stato:** Accettata
+
+### Contesto
+
+Durante step recenti Git ha segnalato warning LF/CRLF non bloccanti, incluso:
+
+```text
+warning: in the working copy of 'templates/test_plans/test_plan_template.md', LF will be replaced by CRLF the next time Git touches it
+```
+
+La repository aveva `.gitattributes` tracciato, ma con sola regola `* text=auto`. Questa regola normalizza i contenuti testuali nell'index, ma non rende esplicita la EOL policy del working tree per documentazione, sorgenti e template.
+
+### Decisione
+
+Gestire la policy fine riga a livello repository tramite `.gitattributes`, non tramite configurazione globale utente.
+
+La policy:
+
+- mantiene `* text=auto`;
+- forza LF per Markdown, Python, YAML, JSON, TOML, TXT e file testuali di progetto;
+- forza LF per `templates/test_plans/test_plan_template.md`;
+- mantiene CRLF per script Windows `.bat`, `.cmd` e `.ps1`;
+- vieta normalizzazione massiva non misurata.
+
+### Motivazione
+
+Una policy repository-level e' versionata, verificabile e coerente tra operatori Windows e Git, mentre modificare `core.autocrlf` globale cambierebbe il comportamento di altre repository dell'utente.
+
+La correzione e' mirata: riduce warning futuri sul file noto e sui tipi testuali principali senza riscrivere centinaia di file gia' tracciati.
+
+### Conseguenze
+
+I futuri step devono distinguere warning LF/CRLF da errori reali: restano non bloccanti solo se `git --no-pager diff --check`, test, health check e verify gate passano.
+
+Qualunque rinormalizzazione ampia deve essere preceduta da dry-run e revisione manuale se supera 10 file.
+
+Il prossimo step consigliato resta:
+
+```text
+550) OpenAI API Adapter First Authorized Live Run
+```
+
+---
+
 ## DEC-067 - PowerShell command pack skill export install
 
 **Data:** 2026-06-06

@@ -83,6 +83,7 @@ Esempio:
 | 540 | OpenAI API Adapter Controlled Live Execution Pack | Preparare un pack separato per eventuale futura esecuzione live controllata | Dry-run default, doppio consenso, artifact safe, runbook, template operatore | SaaS-ready | Completato |
 | 545 | PowerShell Command Pack Skill Finalization | Finalizzare lo standard command pack come skill/istruzione canonica riusabile | README template, skill draft, parser Git robusto, ArgList, test guardrail | MVP personale | Completato |
 | 546 | Export/Install as-common-pwsh-command-pack Skill | Trasformare il draft in export installabile con installer dry-run/apply e guardrail | Export folder, installer, runbook, test guardrail | MVP personale | Completato |
+| 548 | Git Line Endings Warning Cleanup | Diagnosticare e mitigare warning LF/CRLF con policy repository-level controllata | `.gitattributes`, documento STEP 548, test guardrail | MVP personale | Completato |
 | 550 | OpenAI API Adapter First Authorized Live Run | Eseguire una prima live reale futura solo con autorizzazione esplicita di Alberto | Preflight finale, una sola chiamata live, artifact redatti, stop conditions | SaaS-ready | Da fare |
 
 ---
@@ -1222,7 +1223,23 @@ Trasformare la skill draft dello STEP 545 in una struttura realmente installabil
 
 ---
 
-## 61. STEP 550 - OpenAI API Adapter First Authorized Live Run
+## 61. STEP 548 - Git Line Endings Warning Cleanup
+
+### Obiettivo
+
+Diagnosticare e mitigare i warning Git LF/CRLF della repository senza modificare configurazione globale, senza normalizzazione massiva e senza azioni Git remote.
+
+### Output realizzati
+
+- policy `.gitattributes` repository-level per file sorgente, documentazione, configurazione, template e script Windows;
+- documento `docs/72_ASF_GIT_LINE_ENDINGS_WARNING_CLEANUP.md`;
+- riferimento esplicito a `templates/test_plans/test_plan_template.md` con `eol=lf`;
+- guardrail contro `git add --renormalize .` non misurato;
+- test automatico `tests/unit/test_git_line_endings_warning_cleanup.py`.
+
+---
+
+## 62. STEP 550 - OpenAI API Adapter First Authorized Live Run
 
 ### Obiettivo
 
