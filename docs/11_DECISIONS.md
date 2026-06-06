@@ -1824,7 +1824,7 @@ La live smoke richiede:
 - `ASF_OPENAI_LIVE_ENABLED=1`;
 - flag `--allow-live`;
 - conferma `--live-confirm I_UNDERSTAND_THIS_CALLS_OPENAI_API`;
-- prompt tiny `Return exactly ASF_LIVE_SMOKE_OK.`;
+- prompt tiny `Return exactly ASF_OPENAI_LIVE_SMOKE_OK.`;
 - `store: false`;
 - artifact solo sotto `tmp/`.
 
@@ -2094,6 +2094,55 @@ Il prossimo step consigliato resta:
 
 ```text
 560) OpenAI API Adapter First Authorized Live Run
+```
+
+---
+
+## DEC-070 - OpenAI API Adapter first authorized live run evidence gate
+
+**Data:** 2026-06-06
+**Stato:** Accettata
+
+### Contesto
+
+STEP 0560 autorizza un primo tentativo live reale dell'OpenAI API Adapter, ma deve restare fail-closed se mancano credenziali locali, autorizzazione esplicita, rete, quota o condizioni esterne.
+
+La fonte ufficiale resta Git con file versionati. Il Bridge e qualunque artifact temporaneo non sono autorevoli.
+
+### Decisione
+
+Introdurre `scripts/asf_openai_first_authorized_live_run.py` come wrapper STEP 0560 sopra `scripts/asf_openai_api_adapter.py`.
+
+Il wrapper:
+
+- richiede `--live` oppure `ASF_OPENAI_LIVE_RUN=1`;
+- richiede `OPENAI_API_KEY` presente solo nell'ambiente;
+- usa `ASF_OPENAI_MODEL` se presente, altrimenti il default adapter;
+- usa il prompt tiny `Return exactly ASF_OPENAI_LIVE_SMOKE_OK.`;
+- limita l'output massimo;
+- delega la chiamata reale a `adapter.run_live`;
+- scrive sempre il report versionato `docs/0560-01-Report_OpenAI_API_Adapter_First_Authorized_Live_Run.md`;
+- scrive `docs/0560-02-Evidence_OpenAI_API_Live_Run_Sanitized.json` solo se il risultato e' success;
+- non esegue retry automatici.
+
+Il primo tentativo STEP 0560 e' risultato `BLOCKED` per `OPENAI_API_KEY` assente, con `request_count=0`.
+
+I tentativi live locali autorizzati successivi hanno raggiunto il provider con `request_count=1`, ma non hanno prodotto evidence positiva. Lo stato consolidato STEP 0560-E e' `BLOCKED_BY_RATE_LIMIT_OR_QUOTA`, con diagnostica sanitizzata coerente con HTTP 429 `insufficient_quota`.
+
+Il diagnostic pack versionato `docs/0560-03-Diagnostic_OpenAI_Provider_HTTP_Error_And_Rate_Limit.md` documenta il blocco provider-side senza creare `docs/0560-02-Evidence_OpenAI_API_Live_Run_Sanitized.json`.
+
+### Motivazione
+
+Separare wrapper autorizzato, adapter e report versionato evita chiamate raw esterne, mantiene i test offline/mockati e impedisce che una run bloccata produca evidenza positiva.
+
+### Conseguenze
+
+Un eventuale nuovo tentativo live richiede uno step separato e autorizzato, dopo verifica manuale di quota, billing, organization/project e accesso modello nella dashboard OpenAI. Gli errori live futuri devono restare classificati con retry policy esplicita prima di qualunque ulteriore automazione.
+
+Il prossimo step consigliato e':
+
+```text
+0560-F) Publish Provider-Blocked Live Run Diagnostic Pack
 ```
 
 ---

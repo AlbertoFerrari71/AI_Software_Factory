@@ -59,6 +59,8 @@ L'indice orienta il lavoro. Non sostituisce i documenti specifici, il Verificati
 | Eseguire ASF OpenAI API Adapter First Controlled Live Smoke Test | `docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md` | `scripts/asf_openai_api_adapter.py`, `templates/codex_tasks/asf_openai_api_live_smoke_test_template.md` | Quando uno step autorizza esplicitamente una singola smoke live OpenAI API | Richiede tutti i gate, `store: false`, artifact sotto `tmp/` e nessun leak di secret |
 | Verificare ASF OpenAI API Adapter Live Smoke Result Hardening | `docs/68_ASF_OPENAI_API_ADAPTER_LIVE_SMOKE_RESULT_HARDENING.md` | `scripts/asf_openai_api_adapter.py`, `templates/codex_tasks/asf_openai_api_live_smoke_test_template.md` | Quando serve classificare risultati live smoke con test mockati | No live call; schema stabile, artifact sicuri e classificazioni fail-closed |
 | Preparare ASF OpenAI API Adapter Controlled Live Execution Pack | `docs/69_ASF_OPENAI_API_ADAPTER_CONTROLLED_LIVE_EXECUTION_PACK.md` | `scripts/asf_openai_controlled_live_execution_pack.py`, `templates/pwsh_command_pack/step_540_openai_controlled_live_execution_pack_template.ps1` | Quando serve preparare artifact e preflight per una futura esecuzione live autorizzata | Dry-run default; richiede `ASF_OPENAI_LIVE_ENABLED=1` e `--confirm-live-openai` per live futuro |
+| Eseguire OpenAI API Adapter First Authorized Live Run | `docs/0560-01-Report_OpenAI_API_Adapter_First_Authorized_Live_Run.md` | `scripts/asf_openai_first_authorized_live_run.py`, `scripts/asf_openai_api_adapter.py` | Quando lo step autorizza un solo tentativo live OpenAI via adapter | `--live` o `ASF_OPENAI_LIVE_RUN=1`; JSON evidence solo su success; nessun secret |
+| OpenAI Provider HTTP Error and Rate Limit Diagnostic | `docs/0560-03-Diagnostic_OpenAI_Provider_HTTP_Error_And_Rate_Limit.md` | `scripts/asf_openai_first_authorized_live_run.py`, `scripts/asf_openai_api_adapter.py` | Dopo una live run autorizzata provider-blocked | No live call; classifica quota/rate/model/project/auth e prepara retry separato |
 | Controllare Documentation Sync | `docs/21_DOCUMENTATION_SYNC.md` | Nessuno | Ogni step documentale o operativo | Valuta changelog, roadmap, decisions e documenti specifici |
 | Controllare Soft Protection Guardrails | `docs/24_SOFT_PROTECTION_GUARDRAILS.md` | `scripts/git/check_soft_guardrails.ps1` | Prima del commit o come controllo locale | Read-only; non installa hook |
 | Eseguire Workflow Health Check | `docs/35_WORKFLOW_HEALTH_CHECK.md` | `scripts/check_workflow_health.py` | Quando workflow docs, script o riferimenti centrali cambiano | Read-only; non sostituisce Verification Gate |
@@ -155,6 +157,8 @@ Regole operative:
 - `docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md`: prima smoke live controllata OpenAI API con gate espliciti, `store: false` e output redatto sotto `tmp/`.
 - `docs/68_ASF_OPENAI_API_ADAPTER_LIVE_SMOKE_RESULT_HARDENING.md`: schema risultato live smoke, classificazioni fail-closed, artifact sicuri e test mockati.
 - `docs/69_ASF_OPENAI_API_ADAPTER_CONTROLLED_LIVE_EXECUTION_PACK.md`: pack dry-run-default per futura esecuzione live controllata con doppio consenso e artifact safe.
+- `docs/0560-01-Report_OpenAI_API_Adapter_First_Authorized_Live_Run.md`: report sanitizzato STEP 0560, attualmente `BLOCKED_BY_RATE_LIMIT_OR_QUOTA` per HTTP 429 `insufficient_quota`.
+- `docs/0560-03-Diagnostic_OpenAI_Provider_HTTP_Error_And_Rate_Limit.md`: diagnostic pack provider-side STEP 0560-E, senza live call e senza evidence positiva inventata.
 
 ---
 
@@ -180,6 +184,7 @@ Regole operative:
 - `scripts/asf_codex_readonly_trial_compare.py`: confronto Markdown di due o piu' report repeatable trial.
 - `scripts/asf_openai_api_adapter.py`: adapter dry-run/mock, live boundary gate, smoke live controllata e hardening risultati per payload OpenAI Responses-style.
 - `scripts/asf_openai_controlled_live_execution_pack.py`: pack operativo dry-run-default per preflight, mock provider e futura live OpenAI con doppio consenso.
+- `scripts/asf_openai_first_authorized_live_run.py`: wrapper STEP 0560 per un solo tentativo live autorizzato, sempre tramite adapter e con report/evidence sanitizzati.
 
 Questi script non devono essere usati per automatizzare commit, push, PR o merge.
 
@@ -319,8 +324,8 @@ python scripts/asf_openai_api_adapter.py --mode live --input "ping" --output-jso
 Per eseguire la smoke live controllata solo dopo preflight positivo e gate espliciti:
 
 ```powershell
-python scripts/asf_openai_api_adapter.py --mode live --gate-only --allow-live --live-confirm I_UNDERSTAND_THIS_CALLS_OPENAI_API --input "Return exactly ASF_LIVE_SMOKE_OK." --reasoning-effort none --text-verbosity low --max-output-tokens 32 --output-json tmp/asf_openai_live_smoke_gate.json --output-markdown tmp/asf_openai_live_smoke_gate.md
-python scripts/asf_openai_api_adapter.py --mode live --allow-live --live-confirm I_UNDERSTAND_THIS_CALLS_OPENAI_API --input "Return exactly ASF_LIVE_SMOKE_OK." --reasoning-effort none --text-verbosity low --max-output-tokens 32 --output-json tmp/asf_openai_live_smoke_result.json --output-markdown tmp/asf_openai_live_smoke_result.md
+python scripts/asf_openai_api_adapter.py --mode live --gate-only --allow-live --live-confirm I_UNDERSTAND_THIS_CALLS_OPENAI_API --input "Return exactly ASF_OPENAI_LIVE_SMOKE_OK." --reasoning-effort none --text-verbosity low --max-output-tokens 32 --output-json tmp/asf_openai_live_smoke_gate.json --output-markdown tmp/asf_openai_live_smoke_gate.md
+python scripts/asf_openai_api_adapter.py --mode live --allow-live --live-confirm I_UNDERSTAND_THIS_CALLS_OPENAI_API --input "Return exactly ASF_OPENAI_LIVE_SMOKE_OK." --reasoning-effort none --text-verbosity low --max-output-tokens 32 --output-json tmp/asf_openai_live_smoke_result.json --output-markdown tmp/asf_openai_live_smoke_result.md
 ```
 
 Per lo STEP 530 usare solo test mockati: Codex non deve eseguire una chiamata live reale.

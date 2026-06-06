@@ -74,7 +74,7 @@ def assert_no_secret_derivative_fields(value: object) -> None:
             assert_no_secret_derivative_fields(item)
 
 
-def success_response(output_text: str = "ASF_LIVE_SMOKE_OK") -> adapter.HttpJsonResponse:
+def success_response(output_text: str = adapter.EXPECTED_LIVE_SMOKE_MARKER) -> adapter.HttpJsonResponse:
     return adapter.HttpJsonResponse(
         status_code=200,
         body_text=json.dumps(
@@ -91,9 +91,92 @@ def success_response(output_text: str = "ASF_LIVE_SMOKE_OK") -> adapter.HttpJson
                         ]
                     }
                 ],
+                "usage": {
+                    "input_tokens": 3,
+                    "output_tokens": 2,
+                    "total_tokens": 5,
+                },
             }
         ),
     )
+
+
+class SdkLikeObject:
+    def __init__(self, **values: object) -> None:
+        self.__dict__.update(values)
+
+
+def json_response(body: dict[str, object], *, status_code: int = 200) -> adapter.HttpJsonResponse:
+    return adapter.HttpJsonResponse(status_code=status_code, body_text=json.dumps(body))
+
+
+def provider_error_response(
+    *,
+    status_code: int,
+    error_type: str,
+    error_code: str,
+    message: str,
+) -> adapter.HttpJsonResponse:
+    return json_response(
+        {
+            "error": {
+                "type": error_type,
+                "code": error_code,
+                "message": message,
+            }
+        },
+        status_code=status_code,
+    )
+
+
+def test_extract_output_text_from_sdk_object_output_text_property() -> None:
+    response = SdkLikeObject(output_text=adapter.EXPECTED_LIVE_SMOKE_MARKER)
+
+    assert adapter.extract_output_text(response) == adapter.EXPECTED_LIVE_SMOKE_MARKER
+
+
+def test_extract_output_text_from_dict_output_text_property() -> None:
+    response = {"output_text": adapter.EXPECTED_LIVE_SMOKE_MARKER}
+
+    assert adapter.extract_output_text(response) == adapter.EXPECTED_LIVE_SMOKE_MARKER
+
+
+def test_extract_output_text_from_sdk_like_output_content_text() -> None:
+    response = SdkLikeObject(
+        output=[
+            SdkLikeObject(
+                content=[
+                    SdkLikeObject(
+                        type="output_text",
+                        text=adapter.EXPECTED_LIVE_SMOKE_MARKER,
+                    )
+                ]
+            )
+        ]
+    )
+
+    assert adapter.extract_output_text(response) == adapter.EXPECTED_LIVE_SMOKE_MARKER
+
+
+def test_all_gates_present_with_top_level_output_text_finds_marker() -> None:
+    report = adapter.run_live(
+        live_config(),
+        environ=live_env(),
+        http_post_json=lambda endpoint, payload, api_key, timeout: json_response(
+            {
+                "id": "resp_output_text_property",
+                "object": "response",
+                "status": "completed",
+                "output_text": adapter.EXPECTED_LIVE_SMOKE_MARKER,
+            }
+        ),
+        runtime_artifact_path=artifact_path("output_text_property.json"),
+    )
+
+    assert report["decision"] == adapter.LIVE_SMOKE_EXECUTED_AND_PASSED
+    assert report["output_text_present"] is True
+    assert report["expected_marker_found"] is True
+    assert report["response_diagnostics"]["has_output_text_property"] is True
 
 
 def test_all_gates_missing_reports_missing_gates_and_no_network() -> None:
@@ -177,6 +260,8 @@ def test_all_gates_present_with_mocked_http_success_performs_one_call_and_finds_
     assert report["runtime_artifact_path"] == artifact_path()
     assert report["output_text_present"] is True
     assert report["expected_marker_found"] is True
+    assert report["usage"] == {"input_tokens": 3, "output_tokens": 2, "total_tokens": 5}
+    assert report["response_id_hash_16"]
     assert FAKE_KEY not in encode(report)
 
 
@@ -190,10 +275,12 @@ def test_all_gates_present_with_unexpected_output_classifies_model_output() -> N
 
     assert report["decision"] == adapter.LIVE_SMOKE_EXECUTED_BUT_FAILED
     assert report["error_category"] == adapter.LIVE_SMOKE_UNEXPECTED_MODEL_OUTPUT
+    assert report["failure_reason"] == "marker_missing"
     assert_safe_live_schema(report, classification="schema_error", status="failed")
     assert report["network_call_count"] == 1
     assert report["output_text_present"] is True
     assert report["expected_marker_found"] is False
+    assert report["response_diagnostics"]["output_text_present"] is True
 
 
 def test_mocked_http_failure_is_classified_without_leaking_secret() -> None:
@@ -217,7 +304,8 @@ def test_mocked_http_failure_is_classified_without_leaking_secret() -> None:
 
 
 def test_response_output_is_redacted_before_visible_json() -> None:
-    output_secret = "ASF_LIVE_SMOKE_OK sk-proj-outputsecret123456"
+    output_secret_value = "s" + "k-" + "proj-outputsecret123456"
+    output_secret = f"{adapter.EXPECTED_LIVE_SMOKE_MARKER} {output_secret_value}"
     report = adapter.run_live(
         live_config(),
         environ=live_env(),
@@ -228,7 +316,7 @@ def test_response_output_is_redacted_before_visible_json() -> None:
 
     assert report["decision"] == adapter.LIVE_SMOKE_EXECUTED_AND_PASSED
     assert_safe_live_schema(report, classification="success", status="success")
-    assert "sk-proj-outputsecret123456" not in encoded
+    assert output_secret_value not in encoded
     assert adapter.REDACTION_MARKER in encoded
 
 
@@ -291,9 +379,11 @@ def test_mocked_rate_limit_is_classified_without_leaking_secret() -> None:
     report = adapter.run_live(
         live_config(),
         environ=live_env(),
-        http_post_json=lambda endpoint, payload, api_key, timeout: adapter.HttpJsonResponse(
+        http_post_json=lambda endpoint, payload, api_key, timeout: provider_error_response(
             status_code=429,
-            body_text="rate limit sk-proj-ratelimitsecret123456",
+            error_type="rate_limit_exceeded",
+            error_code="rate_limit",
+            message="rate limit " + ("s" + "k-" + "proj-ratelimitsecret123456"),
         ),
         runtime_artifact_path=artifact_path("rate_limit.json"),
     )
@@ -301,8 +391,133 @@ def test_mocked_rate_limit_is_classified_without_leaking_secret() -> None:
 
     assert report["decision"] == adapter.LIVE_SMOKE_EXECUTED_BUT_FAILED
     assert report["error_category"] == adapter.LIVE_SMOKE_HTTP_ERROR
+    assert report["failure_reason"] == "provider_http_error"
+    assert report["provider_error_class"] == "rate_limited"
+    assert report["provider_http_status"] == 429
+    assert report["provider_error_type"] == "rate_limit_exceeded"
+    assert report["provider_error_code"] == "rate_limit"
+    assert report["retryable"] == "true"
     assert_safe_live_schema(report, classification="rate_limited", status="failed")
-    assert "sk-proj-ratelimitsecret123456" not in encoded
+    assert "proj-ratelimitsecret123456" not in encoded
+
+
+def test_mocked_quota_exceeded_is_distinct_from_rate_limit() -> None:
+    report = adapter.run_live(
+        live_config(),
+        environ=live_env(),
+        http_post_json=lambda endpoint, payload, api_key, timeout: provider_error_response(
+            status_code=429,
+            error_type="insufficient_quota",
+            error_code="insufficient_quota",
+            message="You exceeded your current quota.",
+        ),
+        runtime_artifact_path=artifact_path("quota_exceeded.json"),
+    )
+
+    assert report["decision"] == adapter.LIVE_SMOKE_EXECUTED_BUT_FAILED
+    assert report["failure_reason"] == "provider_http_error"
+    assert report["provider_error_class"] == "quota_exceeded"
+    assert report["provider_http_status"] == 429
+    assert report["retryable"] == "false"
+    assert "quota" in report["suggested_next_action"].casefold()
+
+
+def test_mocked_authentication_error_is_provider_side_block() -> None:
+    report = adapter.run_live(
+        live_config(),
+        environ=live_env(),
+        http_post_json=lambda endpoint, payload, api_key, timeout: provider_error_response(
+            status_code=401,
+            error_type="invalid_request_error",
+            error_code="invalid_api_key",
+            message="Invalid API key.",
+        ),
+        runtime_artifact_path=artifact_path("auth_error.json"),
+    )
+
+    assert report["provider_error_class"] == "authentication_error"
+    assert report["provider_http_status"] == 401
+    assert report["retryable"] == "false"
+    assert_safe_live_schema(report, classification="auth_error", status="failed")
+
+
+def test_mocked_model_access_denied_is_provider_side_block() -> None:
+    report = adapter.run_live(
+        live_config(),
+        environ=live_env(),
+        http_post_json=lambda endpoint, payload, api_key, timeout: provider_error_response(
+            status_code=403,
+            error_type="model_access_denied",
+            error_code="model_not_available",
+            message="Project does not have access to this model.",
+        ),
+        runtime_artifact_path=artifact_path("model_access_denied.json"),
+    )
+
+    assert report["provider_error_class"] == "model_access_denied"
+    assert report["provider_http_status"] == 403
+    assert report["retryable"] == "false"
+    assert_safe_live_schema(report, classification="auth_error", status="failed")
+
+
+def test_mocked_provider_5xx_is_retryable_unknown_provider_error() -> None:
+    report = adapter.run_live(
+        live_config(),
+        environ=live_env(),
+        http_post_json=lambda endpoint, payload, api_key, timeout: provider_error_response(
+            status_code=503,
+            error_type="server_error",
+            error_code="service_unavailable",
+            message="Provider service unavailable.",
+        ),
+        runtime_artifact_path=artifact_path("provider_5xx.json"),
+    )
+
+    assert report["provider_error_class"] == "unknown_provider_error"
+    assert report["provider_http_status"] == 503
+    assert report["retryable"] == "true"
+    assert_safe_live_schema(report, classification="provider_error", status="failed")
+
+
+def test_provider_error_object_without_http_error_status_is_provider_error() -> None:
+    report = adapter.run_live(
+        live_config(),
+        environ=live_env(),
+        http_post_json=lambda endpoint, payload, api_key, timeout: provider_error_response(
+            status_code=200,
+            error_type="provider_error",
+            error_code="unknown",
+            message="Provider returned an error object without output.",
+        ),
+        runtime_artifact_path=artifact_path("provider_error_object.json"),
+    )
+
+    assert report["decision"] == adapter.LIVE_SMOKE_EXECUTED_BUT_FAILED
+    assert report["failure_reason"] == "provider_http_error"
+    assert report["provider_error_class"] == "unknown_provider_error"
+    assert report["provider_http_status"] == 200
+    assert_safe_live_schema(report, classification="provider_error", status="failed")
+
+
+def test_provider_error_diagnostics_without_http_status_are_sanitized() -> None:
+    secret_value = "s" + "k-" + "proj-diagnosticsecret123456"
+    diagnostics = adapter.response_diagnostics(
+        {
+            "error": {
+                "type": "provider_error",
+                "code": "unknown",
+                "message": f"diagnostic {secret_value}",
+            }
+        },
+        "",
+    )
+    encoded = encode(diagnostics)
+
+    assert diagnostics["provider_error_class"] == "unknown_provider_error"
+    assert diagnostics["provider_http_status"] is None
+    assert diagnostics["retryable"] == "unknown"
+    assert secret_value not in encoded
+    assert adapter.REDACTION_MARKER in encoded
 
 
 def test_mocked_provider_error_is_classified_without_leaking_secret() -> None:
@@ -378,13 +593,81 @@ def test_missing_success_evidence_is_classified_schema_error() -> None:
         environ=live_env(),
         http_post_json=lambda endpoint, payload, api_key, timeout: adapter.HttpJsonResponse(
             status_code=200,
-            body_text=json.dumps({"output": []}),
+            body_text=json.dumps({"id": "resp_empty", "object": "response", "status": "completed", "output": []}),
         ),
         runtime_artifact_path=artifact_path("missing_evidence.json"),
     )
 
     assert report["error_category"] == adapter.LIVE_SMOKE_MISSING_SUCCESS_EVIDENCE
+    assert report["failure_reason"] == "output_text_absent"
     assert_safe_live_schema(report, classification="schema_error", status="failed")
+    assert report["response_diagnostics"]["response_status"] == "completed"
+    assert report["response_diagnostics"]["output_item_count"] == 0
+    assert report["response_diagnostics"]["content_part_count"] == 0
+    assert report["response_diagnostics"]["output_text_present"] is False
+
+
+def test_incomplete_details_are_reported_as_sanitized_diagnostics() -> None:
+    secret_value = "s" + "k-" + "proj-incompletesecret123456"
+    report = adapter.run_live(
+        live_config(),
+        environ=live_env(),
+        http_post_json=lambda endpoint, payload, api_key, timeout: adapter.HttpJsonResponse(
+            status_code=200,
+            body_text=json.dumps(
+                {
+                    "id": "resp_incomplete",
+                    "object": "response",
+                    "status": "incomplete",
+                    "incomplete_details": {
+                        "reason": "max_output_tokens",
+                        "note": secret_value,
+                    },
+                    "output": [],
+                }
+            ),
+        ),
+        runtime_artifact_path=artifact_path("incomplete_details.json"),
+    )
+    encoded = encode(report)
+
+    assert report["error_category"] == adapter.LIVE_SMOKE_MISSING_SUCCESS_EVIDENCE
+    assert report["failure_reason"] == "output_text_absent"
+    assert report["response_diagnostics"]["response_status"] == "incomplete"
+    assert report["response_diagnostics"]["incomplete_details"]["reason"] == "max_output_tokens"
+    assert secret_value not in encoded
+    assert adapter.REDACTION_MARKER in encoded
+
+
+def test_http_error_diagnostics_are_sanitized_without_raw_body() -> None:
+    secret_value = "s" + "k-" + "proj-errorsecret123456"
+    report = adapter.run_live(
+        live_config(),
+        environ=live_env(),
+        http_post_json=lambda endpoint, payload, api_key, timeout: adapter.HttpJsonResponse(
+            status_code=429,
+            body_text=json.dumps(
+                {
+                    "error": {
+                        "type": "rate_limit_exceeded",
+                        "code": "rate_limit",
+                        "message": f"do not leak {secret_value}",
+                    }
+                }
+            ),
+        ),
+        runtime_artifact_path=artifact_path("http_error_diagnostics.json"),
+    )
+    encoded = encode(report)
+
+    assert report["error_category"] == adapter.LIVE_SMOKE_HTTP_ERROR
+    assert report["failure_reason"] == "provider_http_error"
+    assert report["response_diagnostics"]["http_status"] == 429
+    assert report["response_diagnostics"]["has_error"] is True
+    assert report["response_diagnostics"]["error_type"] == "rate_limit_exceeded"
+    assert report["response_diagnostics"]["error_code"] == "rate_limit"
+    assert "message" not in report["response_diagnostics"]
+    assert secret_value not in encoded
 
 
 def test_unknown_local_error_is_classified_fail_closed_without_leaking_secret() -> None:
