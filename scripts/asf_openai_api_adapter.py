@@ -6,9 +6,11 @@ import json
 import os
 import re
 import sys
+import time
 import urllib.error
 import urllib.request
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable, Mapping
 
@@ -45,6 +47,7 @@ LIVE_SMOKE_UNEXPECTED_MODEL_OUTPUT = "LIVE_SMOKE_UNEXPECTED_MODEL_OUTPUT"
 LIVE_SMOKE_HTTP_ERROR = "LIVE_SMOKE_HTTP_ERROR"
 LIVE_SMOKE_INVALID_JSON = "LIVE_SMOKE_INVALID_JSON"
 LIVE_SMOKE_MISSING_SUCCESS_EVIDENCE = "LIVE_SMOKE_MISSING_SUCCESS_EVIDENCE"
+LIVE_SMOKE_UNKNOWN_ERROR = "LIVE_SMOKE_UNKNOWN_ERROR"
 OPENAI_RESPONSES_ENDPOINT = "https://api.openai.com/v1/responses"
 OPENAI_RESPONSES_ENDPOINT_PATH = "/v1/responses"
 OPENAI_API_KEY_ENV = "OPENAI_API_KEY"
@@ -53,6 +56,21 @@ ASF_OPENAI_LIVE_ENABLED_VALUE = "1"
 LIVE_CONFIRMATION_VALUE = "I_UNDERSTAND_THIS_CALLS_OPENAI_API"
 MOCK_OUTPUT_TEXT = "ASF OpenAI adapter mock response."
 EXPECTED_LIVE_SMOKE_MARKER = "ASF_LIVE_SMOKE_OK"
+LIVE_SMOKE_RESULT_SCHEMA_VERSION = "1.0"
+LIVE_SMOKE_CLASSIFICATIONS = (
+    "not_configured",
+    "disabled",
+    "credential_missing",
+    "live_not_allowed",
+    "success",
+    "provider_error",
+    "network_error",
+    "rate_limited",
+    "auth_error",
+    "schema_error",
+    "unknown_error",
+)
+LIVE_SMOKE_STATUSES = ("success", "failed", "skipped")
 
 OPENAI_API_KEY_PATTERN = re.compile(r"sk-(?:proj-|svcacct-)?[A-Za-z0-9_-]{8,}")
 BEARER_TOKEN_PATTERN = re.compile(r"(?i)\bBearer\s+[A-Za-z0-9._-]{8,}")
@@ -117,6 +135,12 @@ class OpenAIAdapterResult:
         if self.input_sha256_16 is not None:
             result["input_sha256_16"] = self.input_sha256_16
         return result
+
+
+@dataclass(frozen=True)
+class LiveResultClock:
+    timestamp: str
+    started_perf: float
 
 
 def repo_root() -> Path:
@@ -230,6 +254,18 @@ def check_credential_gate(environ: Mapping[str, str] | None = None) -> dict[str,
         "openai_api_key_present": bool(source.get(OPENAI_API_KEY_ENV)),
         "secret_value_logged": False,
     }
+
+
+def utc_timestamp() -> str:
+    return datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
+
+
+def start_live_result_clock() -> LiveResultClock:
+    return LiveResultClock(timestamp=utc_timestamp(), started_perf=time.perf_counter())
+
+
+def elapsed_ms(clock: LiveResultClock) -> int:
+    return max(0, int(round((time.perf_counter() - clock.started_perf) * 1000)))
 
 
 def stable_checksum(value: str) -> str:
@@ -353,6 +389,36 @@ def evaluate_live_smoke_gates(
     return missing_gates
 
 
+def classify_missing_live_smoke_gate(missing_gates: list[str], source: Mapping[str, str]) -> str:
+    if OPENAI_API_KEY_ENV in missing_gates:
+        return "credential_missing"
+    if f"{ASF_OPENAI_LIVE_ENABLED_ENV}={ASF_OPENAI_LIVE_ENABLED_VALUE}" in missing_gates:
+        if ASF_OPENAI_LIVE_ENABLED_ENV not in source:
+            return "not_configured"
+        return "disabled"
+    if "tiny non-sensitive live smoke prompt" in missing_gates:
+        return "not_configured"
+    if "--allow-live" in missing_gates or any(gate.startswith("--live-confirm ") for gate in missing_gates):
+        return "live_not_allowed"
+    if "runtime artifact path under tmp/" in missing_gates:
+        return "live_not_allowed"
+    return "not_configured"
+
+
+def classify_http_status(status_code: int) -> str:
+    if status_code in {401, 403}:
+        return "auth_error"
+    if status_code == 429:
+        return "rate_limited"
+    return "provider_error"
+
+
+def classify_live_exception(exc: BaseException) -> str:
+    if isinstance(exc, (OSError, TimeoutError, urllib.error.URLError)):
+        return "network_error"
+    return "unknown_error"
+
+
 def build_live_payload(config: OpenAIAdapterConfig) -> dict[str, Any]:
     return build_responses_payload(
         config.input_text,
@@ -457,6 +523,64 @@ def base_live_result(
     }
 
 
+def live_safe_details(result: dict[str, Any]) -> dict[str, Any]:
+    keys = [
+        "decision",
+        "error_category",
+        "missing_gates",
+        "http_status",
+        "network_call_attempted",
+        "network_call_performed",
+        "network_call_count",
+        "store",
+        "gate_only",
+        "runtime_artifact_path",
+        "output_text_present",
+        "expected_marker_found",
+        "response_id_present",
+        "minimal_success_evidence_present",
+    ]
+    return redact_data({key: result[key] for key in keys if key in result})
+
+
+def live_next_step(status: str, classification: str) -> str:
+    if status == "success":
+        return "Review the redacted artifact and require a separate human-approved step before any further live call."
+    if classification == "credential_missing":
+        return "Set a credential only in the local shell when a future approved live step explicitly requires it."
+    if classification in {"not_configured", "disabled", "live_not_allowed"}:
+        return "Keep the live smoke blocked until all gates are intentionally configured and separately authorized."
+    return "Review the classified failure, keep fail-closed behavior, and retry only in a separately authorized step."
+
+
+def finalize_live_result(
+    result: dict[str, Any],
+    *,
+    status: str,
+    classification: str,
+    message: str,
+    clock: LiveResultClock,
+) -> dict[str, Any]:
+    if status not in LIVE_SMOKE_STATUSES:
+        raise InputError(f"Unsupported live result status: {status}")
+    if classification not in LIVE_SMOKE_CLASSIFICATIONS:
+        raise InputError(f"Unsupported live result classification: {classification}")
+
+    result["legacy_status"] = "LIVE_SMOKE"
+    result["status"] = status
+    result["classification"] = classification
+    result["message"] = redact_secret(message)
+    result["safe_details"] = live_safe_details(result)
+    result["provider"] = "openai"
+    result["live_enabled"] = bool(result.get("gate_inputs", {}).get("asf_openai_live_enabled"))
+    result["credential_present"] = bool(result.get("openai_api_key_present"))
+    result["duration_ms"] = elapsed_ms(clock)
+    result["timestamp"] = clock.timestamp
+    result["schema_version"] = LIVE_SMOKE_RESULT_SCHEMA_VERSION
+    result["operator_next_step"] = live_next_step(status, classification)
+    return redact_data(result)
+
+
 def run_live(
     config: OpenAIAdapterConfig,
     environ: Mapping[str, str] | None = None,
@@ -464,6 +588,7 @@ def run_live(
     http_post_json: HttpPostJson | None = None,
     runtime_artifact_path: str | None = None,
 ) -> dict[str, Any]:
+    clock = start_live_result_clock()
     validate_adapter_config(config)
     source = environment_source(environ)
     result = base_live_result(config, source, runtime_artifact_path=runtime_artifact_path)
@@ -476,20 +601,37 @@ def run_live(
     if missing_gates:
         result["decision"] = LIVE_SMOKE_NOT_RUN_MISSING_GATE
         result["error_category"] = LIVE_SMOKE_NOT_RUN_MISSING_GATE
-        result["message"] = "Live smoke was not run because one or more mandatory gates are missing."
-        return redact_data(result)
+        classification = classify_missing_live_smoke_gate(missing_gates, source)
+        return finalize_live_result(
+            result,
+            status="skipped",
+            classification=classification,
+            message="Live smoke was not run because one or more mandatory gates are missing.",
+            clock=clock,
+        )
 
     if config.gate_only:
         result["decision"] = LIVE_SMOKE_READY_FOR_CALL
-        result["message"] = "All live smoke gates are present; gate-only mode performed no network call."
-        return redact_data(result)
+        return finalize_live_result(
+            result,
+            status="skipped",
+            classification="disabled",
+            message="All live smoke gates are present; gate-only preflight performed no network call.",
+            clock=clock,
+        )
 
     api_key = source.get(OPENAI_API_KEY_ENV)
     if not api_key:
         result["decision"] = LIVE_SMOKE_NOT_RUN_MISSING_GATE
         result["error_category"] = LIVE_SMOKE_NOT_RUN_MISSING_GATE
         result["missing_gates"] = [OPENAI_API_KEY_ENV]
-        return redact_data(result)
+        return finalize_live_result(
+            result,
+            status="skipped",
+            classification="credential_missing",
+            message="Live smoke was not run because the credential gate is missing.",
+            clock=clock,
+        )
 
     payload = build_live_payload(config)
     result["network_call_attempted"] = True
@@ -500,8 +642,23 @@ def run_live(
     except (OSError, TimeoutError, urllib.error.URLError) as exc:
         result["decision"] = LIVE_SMOKE_EXECUTED_BUT_FAILED
         result["error_category"] = LIVE_SMOKE_NOT_RUN_NETWORK_BLOCKED
-        result["message"] = redact_secret(str(exc))
-        return redact_data(result)
+        return finalize_live_result(
+            result,
+            status="failed",
+            classification=classify_live_exception(exc),
+            message=f"Live smoke network call failed before a usable provider response: {redact_secret(str(exc))}",
+            clock=clock,
+        )
+    except Exception as exc:
+        result["decision"] = LIVE_SMOKE_EXECUTED_BUT_FAILED
+        result["error_category"] = LIVE_SMOKE_UNKNOWN_ERROR
+        return finalize_live_result(
+            result,
+            status="failed",
+            classification=classify_live_exception(exc),
+            message=f"Live smoke failed with an unexpected local error: {redact_secret(str(exc))}",
+            clock=clock,
+        )
 
     result["network_performed"] = True
     result["network_call_performed"] = True
@@ -510,16 +667,26 @@ def run_live(
     if http_response.status_code < 200 or http_response.status_code >= 300:
         result["decision"] = LIVE_SMOKE_EXECUTED_BUT_FAILED
         result["error_category"] = LIVE_SMOKE_HTTP_ERROR
-        result["message"] = "OpenAI Responses API returned a non-success HTTP status."
-        return redact_data(result)
+        return finalize_live_result(
+            result,
+            status="failed",
+            classification=classify_http_status(http_response.status_code),
+            message="OpenAI Responses API returned a non-success HTTP status.",
+            clock=clock,
+        )
 
     try:
         response_json = json.loads(http_response.body_text)
     except json.JSONDecodeError as exc:
         result["decision"] = LIVE_SMOKE_EXECUTED_BUT_FAILED
         result["error_category"] = LIVE_SMOKE_INVALID_JSON
-        result["message"] = redact_secret(str(exc))
-        return redact_data(result)
+        return finalize_live_result(
+            result,
+            status="failed",
+            classification="schema_error",
+            message=f"OpenAI Responses API returned JSON that could not be parsed safely: {redact_secret(str(exc))}",
+            clock=clock,
+        )
 
     output_text = extract_output_text(response_json)
     response_id_present = isinstance(response_json, dict) and bool(response_json.get("id"))
@@ -533,16 +700,26 @@ def run_live(
 
     if marker_found and minimal_success_evidence and payload.get("store") is False and result["network_call_count"] == 1:
         result["decision"] = LIVE_SMOKE_EXECUTED_AND_PASSED
-        result["message"] = "Live smoke executed exactly once and returned the expected marker."
-        return redact_data(result)
+        return finalize_live_result(
+            result,
+            status="success",
+            classification="success",
+            message="Live smoke executed exactly once and returned the expected marker.",
+            clock=clock,
+        )
 
     result["decision"] = LIVE_SMOKE_EXECUTED_BUT_FAILED
     if output_text and not marker_found:
         result["error_category"] = LIVE_SMOKE_UNEXPECTED_MODEL_OUTPUT
     else:
         result["error_category"] = LIVE_SMOKE_MISSING_SUCCESS_EVIDENCE
-    result["message"] = "Live smoke response did not satisfy the expected marker and success evidence contract."
-    return redact_data(result)
+    return finalize_live_result(
+        result,
+        status="failed",
+        classification="schema_error",
+        message="Live smoke response did not satisfy the expected marker and success evidence contract.",
+        clock=clock,
+    )
 
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
@@ -592,6 +769,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         help=f"HTTP timeout for the live smoke call. Default: {DEFAULT_LIVE_TIMEOUT_SECONDS}.",
     )
     parser.add_argument("--output-json", help="Optional path for deterministic JSON evidence.")
+    parser.add_argument("--output-markdown", help="Optional path for an operator Markdown summary.")
     return parser.parse_args(argv)
 
 
@@ -646,6 +824,15 @@ def live_runtime_artifact_path(path_value: str | None) -> str | None:
     return relative_display_path(path)
 
 
+def operator_markdown_output_path(path_value: str | None, *, mode: str) -> Path | None:
+    if not path_value:
+        return None
+    path = resolve_output_path(path_value)
+    if mode == "live" and not is_under_repo_tmp(path):
+        raise InputError("--output-markdown for live mode must stay under tmp/.")
+    return path
+
+
 def write_json(path_value: str, data: dict[str, Any]) -> Path:
     path = resolve_output_path(path_value)
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -653,18 +840,71 @@ def write_json(path_value: str, data: dict[str, Any]) -> Path:
     return path
 
 
-def emit_result(data: dict[str, Any], output_json: str | None) -> None:
+def build_operator_markdown(data: dict[str, Any]) -> str:
+    safe_data = redact_data(data)
+    if safe_data.get("mode") != "live":
+        return "\n".join(
+            [
+                "# ASF OpenAI API Adapter Result",
+                "",
+                f"- Status: {safe_data.get('status')}",
+                f"- Network performed: {safe_data.get('network_performed')}",
+                f"- Message: {safe_data.get('message', '')}",
+                "",
+            ]
+        )
+
+    safe_details_json = json.dumps(safe_data.get("safe_details", {}), indent=2, sort_keys=True)
+    return "\n".join(
+        [
+            "# ASF OpenAI Live Smoke Result",
+            "",
+            f"- Status: {safe_data.get('status')}",
+            f"- Classification: {safe_data.get('classification')}",
+            f"- Provider: {safe_data.get('provider')}",
+            f"- Model: {safe_data.get('model')}",
+            f"- Live enabled: {safe_data.get('live_enabled')}",
+            f"- Credential present: {safe_data.get('credential_present')}",
+            f"- Network attempted: {safe_data.get('network_call_attempted')}",
+            f"- Network performed: {safe_data.get('network_call_performed')}",
+            f"- Decision: {safe_data.get('decision')}",
+            f"- Message: {safe_data.get('message', '')}",
+            f"- Next step: {safe_data.get('operator_next_step')}",
+            "",
+            "## Safe Details",
+            "",
+            "```json",
+            safe_details_json,
+            "```",
+            "",
+        ]
+    )
+
+
+def write_markdown(path: Path, data: dict[str, Any]) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(build_operator_markdown(data), encoding="utf-8", newline="\n")
+    return path
+
+
+def emit_result(data: dict[str, Any], output_json: str | None, output_markdown: str | None, *, mode: str) -> None:
     safe_data = redact_data(data)
     if output_json:
         output_path = write_json(output_json, safe_data)
         print(f"OpenAI adapter evidence written: {redact_secret(str(output_path))}")
-        return
-    print(json.dumps(safe_data, indent=2, sort_keys=True))
+    else:
+        print(json.dumps(safe_data, indent=2, sort_keys=True))
+
+    markdown_path = operator_markdown_output_path(output_markdown, mode=mode)
+    if markdown_path:
+        written_path = write_markdown(markdown_path, safe_data)
+        print(f"OpenAI adapter operator summary written: {redact_secret(str(written_path))}")
 
 
 def run(argv: list[str]) -> int:
     args = parse_args(argv)
     config = build_config(args)
+    operator_markdown_output_path(args.output_markdown, mode=config.mode)
 
     if config.mode == "check-env":
         data = run_check_env()
@@ -677,7 +917,7 @@ def run(argv: list[str]) -> int:
     else:
         raise InputError(f"Unsupported mode: {config.mode}")
 
-    emit_result(data, args.output_json)
+    emit_result(data, args.output_json, args.output_markdown, mode=config.mode)
     return EXIT_SUCCESS
 
 

@@ -27,6 +27,8 @@ Describe the exact live smoke or result-hardening change in one paragraph.
 
 The default posture is deterministic and no-network unless all live gates are explicitly present.
 
+For result-hardening steps, Codex must use mocked tests only and must not execute a real live OpenAI API call.
+
 ## Mandatory live gates
 
 - `OPENAI_API_KEY` must exist in the local process environment.
@@ -37,6 +39,7 @@ The default posture is deterministic and no-network unless all live gates are ex
 - The request must use `store: false`.
 - Runtime artifacts must stay under `tmp/`.
 - API key values must never be printed, logged, stored, hashed, truncated or fingerprinted.
+- Result artifacts may report credential presence only as a boolean.
 
 ## Safety constraints
 
@@ -63,7 +66,7 @@ LIVE_SMOKE_READY_FOR_CALL
 ## One-call live command
 
 ```powershell
-python scripts/asf_openai_api_adapter.py --mode live --allow-live --live-confirm I_UNDERSTAND_THIS_CALLS_OPENAI_API --input "Return exactly ASF_LIVE_SMOKE_OK." --reasoning-effort none --text-verbosity low --max-output-tokens 32 --output-json tmp/asf_openai_live_smoke_result.json
+python scripts/asf_openai_api_adapter.py --mode live --allow-live --live-confirm I_UNDERSTAND_THIS_CALLS_OPENAI_API --input "Return exactly ASF_LIVE_SMOKE_OK." --reasoning-effort none --text-verbosity low --max-output-tokens 32 --output-json tmp/asf_openai_live_smoke_result.json --output-markdown tmp/asf_openai_live_smoke_result.md
 ```
 
 ## Required classifications
@@ -79,10 +82,26 @@ LIVE_SMOKE_INVALID_JSON
 LIVE_SMOKE_MISSING_SUCCESS_EVIDENCE
 ```
 
+STEP 530 result hardening also requires the stable lowercase classifications:
+
+```text
+not_configured
+disabled
+credential_missing
+live_not_allowed
+success
+provider_error
+network_error
+rate_limited
+auth_error
+schema_error
+unknown_error
+```
+
 ## Required tests
 
 ```powershell
-python -m pytest tests/unit/test_asf_openai_api_adapter.py tests/unit/test_asf_openai_api_adapter_docs.py tests/unit/test_asf_openai_api_adapter_live_boundary_gate.py tests/unit/test_asf_openai_api_adapter_live_boundary_docs.py tests/unit/test_asf_openai_api_adapter_live_smoke.py tests/unit/test_asf_openai_api_adapter_live_smoke_docs.py
+python -m pytest tests/unit/test_asf_openai_api_adapter.py tests/unit/test_asf_openai_api_adapter_docs.py tests/unit/test_asf_openai_api_adapter_live_boundary_gate.py tests/unit/test_asf_openai_api_adapter_live_boundary_docs.py tests/unit/test_asf_openai_api_adapter_live_smoke.py tests/unit/test_asf_openai_api_adapter_live_smoke_docs.py tests/unit/test_asf_openai_api_adapter_live_smoke_result_hardening_docs.py
 python -m pytest
 python scripts/check_workflow_health.py
 pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1
@@ -93,6 +112,7 @@ git --no-pager status --short
 ## Documentation to evaluate
 
 - `docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md`
+- `docs/68_ASF_OPENAI_API_ADAPTER_LIVE_SMOKE_RESULT_HARDENING.md`
 - `docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md`
 - `docs/65_ASF_OPENAI_API_ADAPTER.md`
 - `docs/34_PROJECT_WORKFLOW_INDEX.md`

@@ -1,7 +1,7 @@
 # AI Software Factory
 
 **Metodo interno:** Codex Alchemy Method  
-**Stato:** STEP 520 - OpenAI API Adapter First Controlled Live Smoke Test
+**Stato:** STEP 530 - OpenAI API Adapter Live Smoke Result Hardening
 **Data bootstrap:** 2026-05-25  
 **Strategia:** local-first personale, progettato per evoluzione SaaS
 
@@ -28,7 +28,7 @@ Il metodo interno si chiama **Codex Alchemy Method**: l'idea grezza viene trasfo
 
 ## 2. Stato repository
 
-Questo repository è nello stato **STEP 520 - OpenAI API Adapter First Controlled Live Smoke Test**.
+Questo repository è nello stato **STEP 530 - OpenAI API Adapter Live Smoke Result Hardening**.
 
 Sono presenti:
 
@@ -47,7 +47,8 @@ Sono presenti:
 - test automatici sulle regole critiche di sicurezza;
 - adapter OpenAI API dry-run/mock senza chiamate live;
 - live boundary e credential gate deterministici;
-- primo percorso live smoke OpenAI API controllato, human-gated e con output redatto sotto `tmp/`.
+- primo percorso live smoke OpenAI API controllato, human-gated e con output redatto sotto `tmp/`;
+- schema risultato live smoke stabile, classificazioni fail-closed e artifact JSON/Markdown sicuri.
 
 Non sono ancora presenti:
 
@@ -287,6 +288,12 @@ OpenAI API Adapter first controlled live smoke test:
 docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md
 ```
 
+OpenAI API Adapter live smoke result hardening:
+
+```text
+docs/68_ASF_OPENAI_API_ADAPTER_LIVE_SMOKE_RESULT_HARDENING.md
+```
+
 ---
 
 ## 8. Setup locale minimo
@@ -343,7 +350,7 @@ policies/path_policy.v0.json
 ## 11. Prossimo step
 
 ```text
-530) OpenAI API Adapter Live Smoke Result Hardening
+540) OpenAI API Adapter Controlled Live Execution Pack
 ```
 
-Obiettivo: consolidare parsing, classificazioni e report della smoke live dopo il primo test controllato, mantenendo gate umani, `store: false`, artifact sotto `tmp/` e nessun leak di secret.
+Obiettivo: preparare un pack separato per eventuale futura esecuzione live controllata, mantenendo gate umani, `store: false`, artifact sotto `tmp/`, nessun leak di secret e autorizzazione esplicita distinta.

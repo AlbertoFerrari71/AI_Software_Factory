@@ -80,6 +80,8 @@ The covered areas include:
 - ASF PowerShell Command Pack Skill Hardening;
 - ASF OpenAI API Adapter;
 - ASF OpenAI API Adapter Live Boundary Credential Gate;
+- ASF OpenAI API Adapter First Controlled Live Smoke Test;
+- ASF OpenAI API Adapter Live Smoke Result Hardening;
 - Project Workflow Index.
 
 ---
@@ -235,3 +237,5 @@ After STEP 500, it also treats `docs/65_ASF_OPENAI_API_ADAPTER.md`, `scripts/asf
 After STEP 510, it also treats `docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md` and `templates/codex_tasks/asf_openai_api_live_boundary_gate_template.md` as core workflow references because the OpenAI API Adapter live boundary produces deterministic no-network gate reports before any future controlled live smoke test.
 
 After STEP 520, it also treats `docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md` and `templates/codex_tasks/asf_openai_api_live_smoke_test_template.md` as core workflow references because the OpenAI API Adapter can perform one controlled live smoke call only after explicit local gates, with `store: false`, sanitized evidence under `tmp/` and no default test dependency on network or real credentials.
+
+After STEP 530, it also treats `docs/68_ASF_OPENAI_API_ADAPTER_LIVE_SMOKE_RESULT_HARDENING.md` as a core workflow reference because the OpenAI API Adapter live smoke result now has a stable schema, fail-closed classifications, safe JSON/Markdown artifacts and mocked test coverage before any future live execution.

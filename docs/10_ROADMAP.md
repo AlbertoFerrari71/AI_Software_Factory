@@ -77,8 +77,9 @@ Esempio:
 | 500 | OpenAI API Adapter | Creare adapter dry-run/mock per payload Responses-style senza chiamate live | Script adapter, doc, template, test, JSON evidence | SaaS-ready | Completato |
 | 510 | OpenAI API Adapter Live Boundary and Credential Gate | Definire confine live e gate credenziali senza esporre secret | Credential gate, stop conditions, live boundary documentato | SaaS-ready | Completato |
 | 520 | OpenAI API Adapter First Controlled Live Smoke Test | Eseguire una prima prova live controllata solo dopo gate umano esplicito | Live smoke test controllato, evidenza redatta, stop conditions | SaaS-ready | Completato |
-| 530 | OpenAI API Adapter Live Smoke Result Hardening | Rafforzare parsing, classificazioni e report della smoke live dopo il primo test controllato | Hardening risultato live, edge case response, report stabile | SaaS-ready | Da fare |
-| 540 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
+| 530 | OpenAI API Adapter Live Smoke Result Hardening | Rafforzare parsing, classificazioni e report della smoke live dopo il primo test controllato | Schema risultato live, classificazioni, artifact sicuri, test mockati | SaaS-ready | Completato |
+| 540 | OpenAI API Adapter Controlled Live Execution Pack | Preparare un pack separato per eventuale futura esecuzione live controllata | Gate finale, procedura live separata, stop conditions, artifact sotto `tmp/` | SaaS-ready | Da fare |
+| 550 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
 
 ---
 
@@ -1120,16 +1121,33 @@ Prossimo step consigliato:
 
 Rafforzare parsing, classificazioni, report e casi limite della live smoke dopo il primo test controllato.
 
-### Output previsti
+### Output realizzati
 
-- hardening estrazione output da risposte Responses API;
-- classificazioni piu' granulari per HTTP, JSON, output e policy;
-- report stabile per confrontare smoke successive;
-- nessun allargamento verso integrazione produttiva.
+- schema risultato live stabile con `status`, `classification`, `safe_details`, `provider`, `model`, `live_enabled`, `credential_present`, `duration_ms` e `timestamp`;
+- classificazioni granulari per gate, provider, rete, auth, rate limit, schema e unknown error;
+- artifact JSON machine-readable e Markdown operatore opzionale, entrambi redatti;
+- test mockati per tutti i casi minimi senza rete e senza credenziali reali;
+- nessun allargamento verso integrazione produttiva e nessuna chiamata live reale.
 
 ---
 
-## 56. STEP 540 - SaaS Evolution Plan
+## 56. STEP 540 - OpenAI API Adapter Controlled Live Execution Pack
+
+### Obiettivo
+
+Preparare un pack separato per eventuale futura esecuzione live controllata, solo con autorizzazione esplicita.
+
+### Output previsti
+
+- procedura live separata;
+- gate finale prima della chiamata;
+- artifact JSON/Markdown sotto `tmp/`;
+- stop conditions e no retry automatico;
+- nessun uso di chiavi nei test di default.
+
+---
+
+## 57. STEP 550 - SaaS Evolution Plan
 
 ### Obiettivo
 

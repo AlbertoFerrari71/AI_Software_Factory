@@ -115,7 +115,9 @@ def test_live_mode_emits_gate_report_without_network() -> None:
 
     assert result.returncode == 0, result.stdout + result.stderr
     data = json.loads(result.stdout)
-    assert data["status"] == "LIVE_SMOKE"
+    assert data["status"] == "skipped"
+    assert data["legacy_status"] == "LIVE_SMOKE"
+    assert data["classification"] == "credential_missing"
     assert data["decision"] == adapter.LIVE_SMOKE_NOT_RUN_MISSING_GATE
     assert data["error_category"] == adapter.LIVE_SMOKE_NOT_RUN_MISSING_GATE
     assert data["network_performed"] is False
@@ -145,4 +147,5 @@ def test_cli_help_has_no_api_key_argument() -> None:
     assert result.returncode == 0
     assert "--mode" in result.stdout
     assert "--output-json" in result.stdout
+    assert "--output-markdown" in result.stdout
     assert "api-key" not in result.stdout.casefold()
