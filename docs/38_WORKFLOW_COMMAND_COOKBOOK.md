@@ -151,7 +151,7 @@ Clean Codex prompt first by default.
 PowerShell only when archiving, auditing, or publishing.
 ```
 
-Usare il Codex command pack PowerShell solo se Alberto chiede salvataggio nel Bridge Dropbox / ChatGPT Bridge, file numerati, file `LAST` o audit trail formale.
+Usare il Codex command pack PowerShell solo se Alberto chiede salvataggio nel Bridge Dropbox / ChatGPT Bridge, artefatti progressivi `NNNN-II-Tipo_Nome.ext` o audit trail formale. Non generare o leggere file `LAST-*`.
 
 Dopo il report Codex, usare l'intake gate. Il pwsh/publication command pack entra solo dopo review e verifiche locali, per commit, push, PR/merge e verifica finale presidiata.
 
@@ -174,7 +174,7 @@ Non mettere comandi Git, commit, push, PR, merge o verifiche finali dentro il pr
 
 ### Quando usarla
 
-Quando Alberto chiede un command pack PowerShell per Bridge Dropbox / ChatGPT Bridge, audit trail, file numerati/`LAST` o pubblicazione controllata.
+Quando Alberto chiede un command pack PowerShell per Bridge Dropbox / ChatGPT Bridge, audit trail, artefatti progressivi `NNNN-II-Tipo_Nome.ext` o pubblicazione controllata.
 
 ### Comandi / standard
 
@@ -197,11 +197,12 @@ Se il parse-check fallisce, il bootstrap non esegue Git, produce output completo
 Tutta la logica complessa vive nel file generato:
 
 ```text
-NNNN-Comando_Eseguito_<nome>.ps1
-LAST-Comando_Eseguito.ps1
+NNNN-II-Comando_Eseguito_<nome>.ps1
 ```
 
 Dentro lo script `.ps1` possono stare native command wrapper, test, health check, verify gate, PR/merge, output completo/compatto e DOCX best-effort.
+
+Per copiare negli appunti il contenuto di un file, non usare `Set-Clipboard -Path`: usare `Get-Content -Path <file> -Raw | Set-Clipboard`.
 
 I wrapper nativi devono usare `ArgList`, non `$Args`. I parser Git di scope devono usare:
 
@@ -228,17 +229,14 @@ Se `main...origin/main [ahead N]` contiene merge locali gia' verificati, creare 
 Mantenere sempre:
 
 ```text
-NNNN-Richiesta_Generazione_<nome>.txt
-NNNN-Comando_Eseguito_<nome>.ps1
-NNNN-Output_Completo_<nome>.txt
-NNNN-Output_Compatto_<nome>.md
-NNNN-Output_Compatto_<nome>.docx
-LAST-Richiesta_Generazione.txt
-LAST-Comando_Eseguito.ps1
-LAST-Output_Completo.txt
-LAST-Output_Compatto.md
-LAST-Output_Compatto.docx
+NNNN-II-Richiesta_Generazione_<nome>.txt
+NNNN-II-Comando_Eseguito_<nome>.ps1
+NNNN-II-Output_Completo_<nome>.txt
+NNNN-II-Output_Compatto_<nome>.md
+NNNN-II-Output_Compatto_<nome>.docx
 ```
+
+Per trovare l'ultimo artefatto di un tipo per uno step, usare `max(II)` per `(step, tipo)`. Il Bridge resta operativo; Git e file versionati restano autorevoli.
 
 DOCX e' non bloccante: se fallisce, mantenere TXT/MD, scrivere warning nel compatto e creare opzionalmente `.docx.failed.txt`.
 

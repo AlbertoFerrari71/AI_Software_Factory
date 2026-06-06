@@ -84,7 +84,8 @@ Esempio:
 | 545 | PowerShell Command Pack Skill Finalization | Finalizzare lo standard command pack come skill/istruzione canonica riusabile | README template, skill draft, parser Git robusto, ArgList, test guardrail | MVP personale | Completato |
 | 546 | Export/Install as-common-pwsh-command-pack Skill | Trasformare il draft in export installabile con installer dry-run/apply e guardrail | Export folder, installer, runbook, test guardrail | MVP personale | Completato |
 | 548 | Git Line Endings Warning Cleanup | Diagnosticare e mitigare warning LF/CRLF con policy repository-level controllata | `.gitattributes`, documento STEP 548, test guardrail | MVP personale | Completato |
-| 550 | OpenAI API Adapter First Authorized Live Run | Eseguire una prima live reale futura solo con autorizzazione esplicita di Alberto | Preflight finale, una sola chiamata live, artifact redatti, stop conditions | SaaS-ready | Da fare |
+| 550 | LAST Deprecation and 4-Digit Artifact Naming Standard | Deprecare `LAST-*` e standardizzare artefatti progressivi `NNNN-II-Tipo_Nome.ext` | Documento standard, utility migrazione dry-run/apply, template e test aggiornati | MVP personale | Completato |
+| 560 | OpenAI API Adapter First Authorized Live Run | Eseguire una prima live reale futura solo con autorizzazione esplicita di Alberto | Preflight finale, una sola chiamata live, artifact redatti, stop conditions | SaaS-ready | Da fare |
 
 ---
 
@@ -1147,7 +1148,7 @@ Chiarire il flusso ChatGPT -> Codex stabilendo che il default e' un prompt Codex
 - regola clean-first in `AGENTS.md` e `docs/08_CODEX_WORKFLOW.md`;
 - tabella livelli per prompt Codex pulito, Codex command pack PowerShell, intake gate, pwsh/publication command pack e Codex;
 - richiami brevi in Project Workflow Index, Workflow Quick Reference, Workflow Command Cookbook e documento PowerShell Command Pack;
-- conferma che Bridge Dropbox / ChatGPT Bridge, file numerati, file `LAST` e audit trail restano validi quando richiesti;
+- conferma la separazione da Bridge Dropbox / ChatGPT Bridge e audit trail, poi aggiornata dallo STEP 0550 con artefatti progressivi senza `LAST-*`;
 - conferma che Codex lascia il working tree modificato e non fa commit, push, PR, merge o deploy salvo richiesta esplicita;
 - test documentale a protezione della regola operativa.
 
@@ -1239,7 +1240,25 @@ Diagnosticare e mitigare i warning Git LF/CRLF della repository senza modificare
 
 ---
 
-## 62. STEP 550 - OpenAI API Adapter First Authorized Live Run
+## 62. STEP 550 - LAST Deprecation and 4-Digit Artifact Naming Standard
+
+### Obiettivo
+
+Deprecare l'uso operativo dei file `LAST-*` e introdurre lo standard progressivo `NNNN-II-Tipo_Nome.ext`.
+
+### Output realizzati
+
+- documento `docs/73_LAST_DEPRECATION_4_DIGIT_ARTIFACT_NAMING_STANDARD.md`;
+- utility `scripts/migrate_artifact_names_4digit.py` dry-run di default e apply solo con `--apply`;
+- test `tests/unit/test_migrate_artifact_names_4digit.py` per conversioni, skip, collisioni, contenuto e timestamp;
+- template PowerShell command pack aggiornati per non generare `LAST-*`;
+- skill draft/export repository-local aggiornati, senza modificare skill esterne;
+- regola `max(II)` per trovare l'ultimo artefatto di un tipo per uno step;
+- distinzione esplicita: Bridge operativo, Git + file versionato autorevoli.
+
+---
+
+## 63. STEP 560 - OpenAI API Adapter First Authorized Live Run
 
 ### Obiettivo
 

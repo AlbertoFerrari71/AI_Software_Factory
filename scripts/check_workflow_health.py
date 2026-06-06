@@ -76,6 +76,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/64_ASF_PWSH_COMMAND_PACK_SKILL_HARDENING.md",
         "docs/70_ASF_PWSH_COMMAND_PACK_SKILL_FINALIZATION.md",
         "docs/71_ASF_PWSH_COMMAND_PACK_SKILL_EXPORT_INSTALL.md",
+        "docs/73_LAST_DEPRECATION_4_DIGIT_ARTIFACT_NAMING_STANDARD.md",
         "docs/65_ASF_OPENAI_API_ADAPTER.md",
         "docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md",
         "docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md",
@@ -85,6 +86,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "scripts/asf_openai_api_adapter.py",
         "scripts/asf_openai_controlled_live_execution_pack.py",
         "scripts/install_pwsh_command_pack_skill.py",
+        "scripts/migrate_artifact_names_4digit.py",
         "scripts/asf_codex_invocation_dry_run.py",
         "scripts/asf_codex_readonly_invoke.py",
         "scripts/asf_codex_readonly_repeatable_trial.py",
@@ -216,6 +218,10 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             ("ASF PowerShell Command Pack Skill Hardening", ["ASF PowerShell Command Pack Skill Hardening"]),
             ("ASF PowerShell Command Pack Skill Finalization", ["ASF PowerShell Command Pack Skill Finalization"]),
             ("ASF PowerShell Command Pack Skill Export Install", ["ASF PowerShell Command Pack Skill Export Install"]),
+            (
+                "LAST Deprecation and 4-Digit Artifact Naming Standard",
+                ["LAST Deprecation and 4-Digit Artifact Naming Standard"],
+            ),
             ("ASF OpenAI API Adapter", ["ASF OpenAI API Adapter"]),
             (
                 "ASF OpenAI API Adapter Live Boundary Credential Gate",
@@ -249,6 +255,10 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             (
                 "ASF OpenAI API Adapter Controlled Live Execution Pack script",
                 ["scripts/asf_openai_controlled_live_execution_pack.py"],
+            ),
+            (
+                "artifact naming migration script",
+                ["scripts/migrate_artifact_names_4digit.py"],
             ),
             ("verification gate script", ["scripts/verify.ps1"]),
             ("soft guardrails check script", ["scripts/git/check_soft_guardrails.ps1"]),
@@ -322,6 +332,10 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             (
                 "ASF PowerShell Command Pack Skill Export Install document",
                 ["docs/71_ASF_PWSH_COMMAND_PACK_SKILL_EXPORT_INSTALL.md"],
+            ),
+            (
+                "LAST Deprecation and 4-Digit Artifact Naming Standard document",
+                ["docs/73_LAST_DEPRECATION_4_DIGIT_ARTIFACT_NAMING_STANDARD.md"],
             ),
             (
                 "ASF OpenAI API Adapter document",
@@ -508,6 +522,7 @@ def check_script_safety(root: Path) -> list[HealthIssue]:
         "scripts/asf_codex_readonly_trial_compare.py",
         "scripts/asf_openai_api_adapter.py",
         "scripts/asf_openai_controlled_live_execution_pack.py",
+        "scripts/migrate_artifact_names_4digit.py",
     ]
     patterns = forbidden_script_patterns()
     issues: list[HealthIssue] = []

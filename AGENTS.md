@@ -47,13 +47,16 @@ For Alberto's operational vision of AI as a verifiable collaborator, see docs/pr
 - Do not put complex Git logic, DOCX XML, long functions, nested here-strings, or fragile outer `finally` blocks in the pasted bootstrap.
 - In generated command-pack scripts, use `ArgList` for native command argument parameters; do not use `$Args` as a function parameter name.
 - For scope-sensitive Git parsing, use `git status --porcelain=v1 --untracked-files=all` so untracked directories are expanded to individual files before guarded staging.
+- Command packs must generate only progressive artifacts using `NNNN-II-Tipo_Nome.ext`; do not generate or read `LAST-*` artifacts.
+- To find the latest artifact of a type for a step, use `max(II)` for `(step, type)`.
+- The ChatGPT Bridge is operational storage, not the authoritative source; Git and versioned files are authoritative.
 - Publication command packs must use branch + PR by default for `main`; direct push to `main` is forbidden unless Alberto explicitly requests an emergency bypass.
 - Treat LF/CRLF warnings as non-blocking when `git --no-pager diff --check`, tests, health check, and verify gate pass.
 
 ## Codex prompt and command-pack separation
 
 - For prompts destined to Codex, default to a clean, self-contained prompt that can be copied directly into Codex, without a PowerShell wrapper.
-- Use the Codex command pack PowerShell only when Alberto explicitly asks to save the prompt in the ChatGPT Bridge with numbered files, LAST files, or a formal audit trail.
+- Use the Codex command pack PowerShell only when Alberto explicitly asks to save the prompt in the ChatGPT Bridge with progressive `NNNN-II-Tipo_Nome.ext` artifacts or a formal audit trail.
 - Use the pwsh/publication command pack only after the Codex report, for intake gate, local verification, commit, push, PR/merge, and final verification.
 - Always keep these layers separate: clean Codex prompt; optional Bridge save; intake gate; controlled Git publication.
 - Do not mix a Codex prompt, Bridge save script, Git commands, publication, and final checks in the same block unless Alberto explicitly asks for that combined artifact.

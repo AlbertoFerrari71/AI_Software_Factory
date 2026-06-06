@@ -1703,7 +1703,7 @@ La skill deve:
 - spostare standard e fonti tecniche in `references/pwsh-command-pack-standard.md`;
 - fornire un template robusto in `references/pwsh-command-pack-template.ps1`;
 - includere esempi progressivi in `examples/demo-prompts.md`;
-- generare command pack `.ps1` con output numerati e `LAST-*`, Markdown/DOCX compatto, clipboard e guardrail Git/Codex/ASF.
+- generare command pack `.ps1` con output numerati e, nello stato storico STEP 490, `LAST-*`, Markdown/DOCX compatto, clipboard e guardrail Git/Codex/ASF. Questa parte e' superseded da DEC-069: i nuovi command pack usano solo `NNNN-II-Tipo_Nome.ext`.
 
 ### Motivazione
 
@@ -2037,7 +2037,7 @@ Codex non deve eseguire live call, chiedere API key o leggere/stampare valori di
 Il prossimo step consigliato e':
 
 ```text
-550) OpenAI API Adapter First Authorized Live Run
+560) OpenAI API Adapter First Authorized Live Run
 ```
 
 ---
@@ -2073,7 +2073,8 @@ Lo standard finalizzato richiede:
 - parametro `ArgList`, non `$Args`;
 - parser Git `git status --porcelain=v1 --untracked-files=all`;
 - PR-first publishing;
-- output numerati e `LAST`;
+- artefatti progressivi `NNNN-II-Tipo_Nome.ext`;
+- nessuna generazione o lettura di `LAST-*`;
 - DOCX best-effort;
 - warning LF/CRLF non bloccanti quando diff-check, test, health check e verify gate passano.
 
@@ -2092,7 +2093,48 @@ Il command pack non diventa il default per i prompt Codex: la regola clean-first
 Il prossimo step consigliato resta:
 
 ```text
-550) OpenAI API Adapter First Authorized Live Run
+560) OpenAI API Adapter First Authorized Live Run
+```
+
+---
+
+## DEC-069 - LAST deprecation and 4-digit artifact naming standard
+
+**Data:** 2026-06-06
+**Stato:** Accettata
+
+### Contesto
+
+Gli step precedenti usavano file `LAST-*` nel ChatGPT Bridge per ispezionare rapidamente l'ultimo output. Questo crea stato ambiguo: il Bridge e' operativo, mentre la fonte autorevole deve restare Git con file versionati e nomi progressivi.
+
+### Decisione
+
+Deprecare l'uso operativo di `LAST-*` e adottare lo standard:
+
+```text
+NNNN-II-Tipo_Nome.ext
+```
+
+Per trovare l'ultimo artefatto di un tipo per uno step si usa:
+
+```text
+max(II) per (step, tipo)
+```
+
+La repository mantiene gli artefatti storici `LAST-*` se esistono, ma i nuovi template, runbook e skill export non devono generarli o leggerli come input.
+
+La futura live OpenAI gia' pianificata viene spostata da STEP 550 a STEP 560, per evitare due significati autorevoli dello stesso numero step.
+
+### Conseguenze
+
+`docs/73_LAST_DEPRECATION_4_DIGIT_ARTIFACT_NAMING_STANDARD.md` diventa il riferimento operativo dello standard.
+
+`scripts/migrate_artifact_names_4digit.py` fornisce una migrazione prudente: dry-run di default, `--apply` esplicito, nessun overwrite, skip dei file `LAST-*`, skip dei documenti `NN_...`, skip dei file gia' `NNNN-II-...` e blocco su collisioni.
+
+Il prossimo step consigliato e':
+
+```text
+560) OpenAI API Adapter First Authorized Live Run
 ```
 
 ---
@@ -2139,7 +2181,7 @@ Qualunque rinormalizzazione ampia deve essere preceduta da dry-run e revisione m
 Il prossimo step consigliato resta:
 
 ```text
-550) OpenAI API Adapter First Authorized Live Run
+560) OpenAI API Adapter First Authorized Live Run
 ```
 
 ---
@@ -2186,5 +2228,5 @@ Gli aggiornamenti futuri della skill devono passare da ASF export, dry-run, inta
 Il prossimo step consigliato resta:
 
 ```text
-550) OpenAI API Adapter First Authorized Live Run
+560) OpenAI API Adapter First Authorized Live Run
 ```

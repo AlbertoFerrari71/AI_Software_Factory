@@ -70,8 +70,11 @@ def test_skill_finalization_documents_canonical_standard() -> None:
         "git add -- @AllowedPaths",
         "PR-first",
         "main...origin/main [ahead N]",
-        "NNNN-Richiesta_Generazione_<name>.txt",
-        "LAST-Output_Compatto.docx",
+        "NNNN-II-Richiesta_Generazione_<name>.txt",
+        "NNNN-II-Output_Compatto_<name>.docx",
+        "Do not generate `LAST-*` files",
+        "Non usare `Set-Clipboard -Path`",
+        "Get-Content -Path <file> -Raw | Set-Clipboard",
         "DOCX is best-effort",
         "LF/CRLF",
         "STEP 536 introduced",
@@ -92,6 +95,7 @@ def test_templates_use_arglist_and_porcelain_git_status() -> None:
     assert '--porcelain=v1", "--untracked-files=all' in script
     assert "Test-GitScope" in script
     assert "Set-Clipboard" in script
+    assert "Get-Content -LiteralPath $CompactOutputPath -Raw | Set-Clipboard" in script
 
 
 def test_templates_avoid_forbidden_patterns() -> None:
@@ -108,6 +112,15 @@ def test_templates_avoid_forbidden_patterns() -> None:
 
     assert not re.search(r"param\s*\([^)]*\$Args\b", combined, flags=re.IGNORECASE | re.DOTALL)
     assert "[string[]] $Args" not in combined
+
+
+def test_templates_do_not_use_set_clipboard_path_for_file_copy() -> None:
+    combined = "\n".join([read(BOOTSTRAP_TEMPLATE), read(SCRIPT_TEMPLATE), read(STEP_540_TEMPLATE)])
+
+    assert not re.search(r"Set-Clipboard\s+-Path\b", combined, flags=re.IGNORECASE)
+    assert not re.search(r"Set-Clipboard\s+-LiteralPath\b", combined, flags=re.IGNORECASE)
+    assert not re.search(r"Set-Clipboard[^\n]*Path", combined, flags=re.IGNORECASE)
+    assert "Get-Content -LiteralPath $CompactPath -Raw | Set-Clipboard" in combined
 
 
 def test_skill_finalization_tracking_documents_are_updated() -> None:
@@ -137,7 +150,7 @@ def test_skill_finalization_tracking_documents_are_updated() -> None:
         SKILL_DRAFT,
         "ArgList",
         "git status --porcelain=v1 --untracked-files=all",
-        "550) OpenAI API Adapter First Authorized Live Run",
+        "560) OpenAI API Adapter First Authorized Live Run",
     ]:
         assert fragment in combined
 

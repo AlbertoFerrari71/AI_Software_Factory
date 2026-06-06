@@ -209,7 +209,7 @@ Il template segue STEP 536:
 - script `.ps1` generato;
 - parse-check con `[scriptblock]::Create(...)`;
 - esecuzione via `pwsh -NoProfile -ExecutionPolicy Bypass -File`;
-- output numerati e `LAST`;
+- artefatti progressivi `NNNN-II-Tipo_Nome.ext`, senza `LAST-*`;
 - DOCX best-effort/non bloccante;
 - `git --no-pager`;
 - nessuna pubblicazione Git;
@@ -241,5 +241,5 @@ I test devono restare mock/dry-run, senza rete e senza credenziali reali.
 ## 13. Prossimo step
 
 ```text
-550) OpenAI API Adapter First Authorized Live Run
+560) OpenAI API Adapter First Authorized Live Run
 ```

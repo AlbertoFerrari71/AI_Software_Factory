@@ -5,6 +5,10 @@
 # $env:OPENAI_API_KEY = "<set in environment, never printed>"
 
 $PackName = "step-540-openai-controlled-live-execution-pack"
+$StepNumber = "0540"
+$Iteration = "01"
+$ArtifactSlug = "openai_controlled_live_execution_pack"
+$ArtifactPrefix = "{0}-{1}" -f $StepNumber, $Iteration
 $ExecutionMode = "dry-run"
 $ConfirmLiveOpenAI = $false
 $RepoRoot = "C:\Users\alberto.ferrari\source\repos\AI_Software_Factory"
@@ -14,24 +18,20 @@ $RunId = "{0}-{1}" -f $Stamp, $PackName
 $OutDir = Join-Path $BridgeRoot $RunId
 New-Item -ItemType Directory -Path $OutDir -Force | Out-Null
 
-$RequestPath = Join-Path $OutDir ("{0}-Richiesta_Generazione_{1}.txt" -f $Stamp, $PackName)
-$ScriptPath = Join-Path $OutDir ("{0}-Comando_Eseguito_{1}.ps1" -f $Stamp, $PackName)
-$FullPath = Join-Path $OutDir ("{0}-Output_Completo_{1}.txt" -f $Stamp, $PackName)
-$CompactPath = Join-Path $OutDir ("{0}-Output_Compatto_{1}.md" -f $Stamp, $PackName)
-$DocxPath = Join-Path $OutDir ("{0}-Output_Compatto_{1}.docx" -f $Stamp, $PackName)
-$DocxFailedPath = Join-Path $OutDir ("{0}-Output_Compatto_{1}.docx.failed.txt" -f $Stamp, $PackName)
-$LastRequestPath = Join-Path $BridgeRoot "LAST-Richiesta_Generazione.txt"
-$LastScriptPath = Join-Path $BridgeRoot "LAST-Comando_Eseguito.ps1"
-$LastFullPath = Join-Path $BridgeRoot "LAST-Output_Completo.txt"
-$LastCompactPath = Join-Path $BridgeRoot "LAST-Output_Compatto.md"
-$LastDocxPath = Join-Path $BridgeRoot "LAST-Output_Compatto.docx"
-$LastDocxFailedPath = Join-Path $BridgeRoot "LAST-Output_Compatto.docx.failed.txt"
+$RequestPath = Join-Path $OutDir ("{0}-Richiesta_Generazione_{1}.txt" -f $ArtifactPrefix, $ArtifactSlug)
+$ScriptPath = Join-Path $OutDir ("{0}-Comando_Eseguito_{1}.ps1" -f $ArtifactPrefix, $ArtifactSlug)
+$FullPath = Join-Path $OutDir ("{0}-Output_Completo_{1}.txt" -f $ArtifactPrefix, $ArtifactSlug)
+$CompactPath = Join-Path $OutDir ("{0}-Output_Compatto_{1}.md" -f $ArtifactPrefix, $ArtifactSlug)
+$DocxPath = Join-Path $OutDir ("{0}-Output_Compatto_{1}.docx" -f $ArtifactPrefix, $ArtifactSlug)
+$DocxFailedPath = Join-Path $OutDir ("{0}-Output_Compatto_{1}.docx.failed.txt" -f $ArtifactPrefix, $ArtifactSlug)
 
 $RequestLines = @(
     "Safe Bootstrap PowerShell Command Pack",
     "Pack: $PackName",
     "Generated: $(Get-Date -Format o)",
     "Execution mode: $ExecutionMode",
+    "Artifact rule: NNNN-II-Tipo_Nome.ext; no LAST artifacts.",
+    "Compact artifact example: 0540-01-Output_Compatto_openai_controlled_live_execution_pack.md",
     "Default posture: dry-run, no OpenAI network call.",
     "Live requires ASF_OPENAI_LIVE_ENABLED=1 and --confirm-live-openai.",
     "API key presence is not authorization.",
@@ -40,7 +40,6 @@ $RequestLines = @(
     "If publication is later required, use branch + PR; direct push to main is not the default."
 )
 Set-Content -LiteralPath $RequestPath -Value $RequestLines -Encoding utf8
-Copy-Item -LiteralPath $RequestPath -Destination $LastRequestPath -Force
 
 $ScriptLines = @(
     "#Requires -Version 7.0",
@@ -74,7 +73,6 @@ $ScriptLines += @(
 )
 $ScriptText = $ScriptLines -join [Environment]::NewLine
 Set-Content -LiteralPath $ScriptPath -Value $ScriptText -Encoding utf8
-Copy-Item -LiteralPath $ScriptPath -Destination $LastScriptPath -Force
 
 $ParseOk = $false
 $ParseError = ""
@@ -96,9 +94,6 @@ if (-not $ParseOk) {
     Set-Content -LiteralPath $FullPath -Value $BlockedLines -Encoding utf8
     Set-Content -LiteralPath $CompactPath -Value $BlockedLines -Encoding utf8
     Set-Content -LiteralPath $DocxFailedPath -Value "DOCX skipped because parse check failed." -Encoding utf8
-    Copy-Item -LiteralPath $FullPath -Destination $LastFullPath -Force
-    Copy-Item -LiteralPath $CompactPath -Destination $LastCompactPath -Force
-    Copy-Item -LiteralPath $DocxFailedPath -Destination $LastDocxFailedPath -Force
     Set-Clipboard -Value ($BlockedLines -join [Environment]::NewLine)
     Write-Host "Parse check failed. Generated script was not executed."
     Write-Host ";"
@@ -137,13 +132,7 @@ $CompactLines += $Fence
 Set-Content -LiteralPath $CompactPath -Value $CompactLines -Encoding utf8
 Set-Content -LiteralPath $DocxFailedPath -Value "DOCX generation was not required for this dry-run template; non-blocking." -Encoding utf8
 
-Copy-Item -LiteralPath $FullPath -Destination $LastFullPath -Force
-Copy-Item -LiteralPath $CompactPath -Destination $LastCompactPath -Force
-if (Test-Path -LiteralPath $DocxPath) {
-    Copy-Item -LiteralPath $DocxPath -Destination $LastDocxPath -Force
-}
-Copy-Item -LiteralPath $DocxFailedPath -Destination $LastDocxFailedPath -Force
-Set-Clipboard -Value (Get-Content -LiteralPath $CompactPath -Raw)
+Get-Content -LiteralPath $CompactPath -Raw | Set-Clipboard
 
 Write-Host ("Generated script exit code: {0}" -f $ExitCode)
 if ($ExitCode -ne 0) {

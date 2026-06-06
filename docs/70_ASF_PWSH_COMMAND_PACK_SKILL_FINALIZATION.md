@@ -67,10 +67,9 @@ The bootstrap must include:
 - `$ErrorActionPreference = "Stop"`;
 - `$PSNativeCommandUseErrorActionPreference = $false`;
 - Bridge directory creation;
-- request file generation;
-- command `.ps1` file generation;
-- `LAST-Richiesta_Generazione.txt`;
-- `LAST-Comando_Eseguito.ps1`;
+- request artifact generation with `NNNN-II-Richiesta_Generazione_<name>.txt`;
+- command `.ps1` artifact generation with `NNNN-II-Comando_Eseguito_<name>.ps1`;
+- no `LAST-*` artifact generation;
 - parse-check:
 
 ```powershell
@@ -103,8 +102,9 @@ The generated `.ps1` should contain, when pertinent:
 - full output artifact;
 - compact Markdown artifact;
 - DOCX best-effort/non-blocking artifact;
-- `LAST` files always updated;
-- `Set-Clipboard` best-effort;
+- progressive `NNNN-II-Tipo_Nome.ext` artifacts only;
+- `Set-Clipboard` best-effort for content only;
+- file-to-clipboard copies must use `Get-Content -Path <file> -Raw | Set-Clipboard`;
 - native command wrapper with explicit allowed exit codes;
 - `git --no-pager` for long Git output;
 - robust Git parser;
@@ -126,6 +126,15 @@ function Invoke-NativeCommand {
 ```
 
 Do not use `$Args` as a parameter name. `$args` is a PowerShell automatic variable and can create ambiguity, fragile diagnostics and accidental behavior.
+
+### Clipboard Rule
+
+Non usare `Set-Clipboard -Path`: il cmdlet non supporta il parametro `-Path`.
+Per copiare negli appunti il contenuto di un file usare:
+
+```powershell
+Get-Content -Path <file> -Raw | Set-Clipboard
+```
 
 ---
 
@@ -216,22 +225,17 @@ Use a four-digit step number, for example:
 0550
 ```
 
-Required numbered and `LAST` artifacts:
+Required progressive artifacts:
 
 ```text
-NNNN-Richiesta_Generazione_<name>.txt
-NNNN-Comando_Eseguito_<name>.ps1
-NNNN-Output_Completo_<name>.txt
-NNNN-Output_Compatto_<name>.md
-NNNN-Output_Compatto_<name>.docx
-LAST-Richiesta_Generazione.txt
-LAST-Comando_Eseguito.ps1
-LAST-Output_Completo.txt
-LAST-Output_Compatto.md
-LAST-Output_Compatto.docx
+NNNN-II-Richiesta_Generazione_<name>.txt
+NNNN-II-Comando_Eseguito_<name>.ps1
+NNNN-II-Output_Completo_<name>.txt
+NNNN-II-Output_Compatto_<name>.md
+NNNN-II-Output_Compatto_<name>.docx
 ```
 
-`LAST-*` files make the newest pack easy to inspect and copy. Numbered artifacts preserve audit history.
+`LAST-*` files are deprecated. The newest artifact is found by `max(II)` for `(step, type)`. The Bridge is operational, not authoritative; Git and versioned files preserve audit history.
 
 ---
 
@@ -276,7 +280,8 @@ Before handing off a new command pack template or generated pack:
 - Git parser uses `git status --porcelain=v1 --untracked-files=all`;
 - no direct `git push origin main` default exists;
 - publication flow is PR-first;
-- numbered and `LAST` artifacts are documented;
+- progressive `NNNN-II-Tipo_Nome.ext` artifacts are documented;
+- `LAST-*` artifacts are not generated or read as input;
 - DOCX is best-effort/non-blocking;
 - LF/CRLF warning rule is documented;
 - no secret values or secret derivatives are written.
@@ -329,5 +334,5 @@ This step does not:
 ## 14. Next Step
 
 ```text
-550) OpenAI API Adapter First Authorized Live Run
+560) OpenAI API Adapter First Authorized Live Run
 ```

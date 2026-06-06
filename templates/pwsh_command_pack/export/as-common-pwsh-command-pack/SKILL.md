@@ -1,6 +1,6 @@
 ---
 name: as-common-pwsh-command-pack
-description: Generate safe logged PowerShell command packs for Alberto with short safe bootstraps, generated .ps1 scripts, numbered and LAST outputs, compact Markdown/DOCX reports, clipboard copy, robust Git parsing, PR-first publication, and Git/Codex/ASF guardrails.
+description: Generate safe logged PowerShell command packs for Alberto with short safe bootstraps, generated .ps1 scripts, progressive NNNN-II artifacts, compact Markdown/DOCX reports, clipboard copy, robust Git parsing, PR-first publication, and Git/Codex/ASF guardrails.
 ---
 
 # as-common-pwsh-command-pack
@@ -23,6 +23,8 @@ Safe Bootstrap PowerShell Command Pack:
 8. The outer wrapper does not contain nested here-strings.
 9. The outer wrapper does not use fragile `try/finally`.
 10. The final line is actually executable, for example `Write-Host ";"`.
+11. The pack generates only progressive `NNNN-II-Tipo_Nome.ext` artifacts.
+12. The pack does not generate or read `LAST-*` artifacts.
 
 ## Bootstrap Requirements
 
@@ -34,8 +36,7 @@ The bootstrap must include:
 - Bridge directory creation;
 - request file generation;
 - command `.ps1` generation;
-- `LAST-Richiesta_Generazione.txt`;
-- `LAST-Comando_Eseguito.ps1`;
+- no `LAST-*` artifacts;
 - parse-check with `[scriptblock]::Create($ScriptText) | Out-Null`;
 - execution with `pwsh -NoProfile -ExecutionPolicy Bypass -File $CommandFile`;
 - explicit `$LASTEXITCODE` handling;
@@ -50,8 +51,9 @@ The `.ps1` script should contain, when pertinent:
 - full output artifact;
 - compact Markdown artifact;
 - DOCX best-effort/non-blocking artifact;
-- `LAST` files always updated;
-- `Set-Clipboard` best-effort;
+- progressive `NNNN-II-Tipo_Nome.ext` artifacts only;
+- `Set-Clipboard` best-effort for content only;
+- file-to-clipboard copies must use `Get-Content -Path <file> -Raw | Set-Clipboard`;
 - native command wrapper with allowed exit codes;
 - `git --no-pager` for long Git output;
 - robust Git status parser;
@@ -73,6 +75,15 @@ function Invoke-NativeCommand {
 ```
 
 Do not use `$Args` as a parameter name. `$args` is a PowerShell automatic variable and can cause ambiguity and fragile diagnostics.
+
+## Clipboard Rule
+
+Non usare `Set-Clipboard -Path`: il cmdlet non supporta il parametro `-Path`.
+Per copiare negli appunti il contenuto di un file usare:
+
+```powershell
+Get-Content -Path <file> -Raw | Set-Clipboard
+```
 
 ## Robust Git Parser
 
@@ -122,28 +133,28 @@ Do not expose secrets:
 
 ## Output Contract
 
-Use four-digit step numbers:
+Use four-digit step numbers and two-digit intra-step iterations:
 
 ```text
-0540
-0545
-0550
+0540-01
+0545-01
+0550-01
+0550-02
 ```
 
-Generate numbered and `LAST` artifacts:
+Generate progressive artifacts only:
 
 ```text
-NNNN-Richiesta_Generazione_<name>.txt
-NNNN-Comando_Eseguito_<name>.ps1
-NNNN-Output_Completo_<name>.txt
-NNNN-Output_Compatto_<name>.md
-NNNN-Output_Compatto_<name>.docx
-LAST-Richiesta_Generazione.txt
-LAST-Comando_Eseguito.ps1
-LAST-Output_Completo.txt
-LAST-Output_Compatto.md
-LAST-Output_Compatto.docx
+NNNN-II-Richiesta_Generazione_<name>.txt
+NNNN-II-Comando_Eseguito_<name>.ps1
+NNNN-II-Output_Completo_<name>.txt
+NNNN-II-Output_Compatto_<name>.md
+NNNN-II-Output_Compatto_<name>.docx
 ```
+
+Do not generate `LAST-*` files. Do not read `LAST-*` files as input. To find
+the latest artifact of one type for one step, use `max(II)` for `(step, type)`.
+The Bridge is operational storage; Git and versioned files are authoritative.
 
 DOCX is best-effort. Produce full TXT and compact Markdown first. If DOCX fails, write a non-blocking warning and a `.docx.failed.txt` or placeholder where useful.
 
@@ -180,4 +191,4 @@ LF/CRLF warnings on Windows are non-blocking only when all of these pass:
 
 ## Provenance
 
-STEP 536 introduced the Safe Bootstrap hardening. STEP 540 validated it in a real ASF publication flow with safe bootstrap plus branch/PR. STEP 545 finalized the reusable draft. STEP 546 exports this file as the installable skill form.
+STEP 536 introduced the Safe Bootstrap hardening. STEP 540 validated it in a real ASF publication flow with safe bootstrap plus branch/PR. STEP 545 finalized the reusable draft. STEP 546 exports this file as the installable skill form. STEP 0550 deprecated `LAST-*` artifacts.

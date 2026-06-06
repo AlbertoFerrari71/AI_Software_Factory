@@ -219,18 +219,20 @@ PowerShell only when archiving, auditing, or publishing.
 
 Il primo output deve essere un prompt Codex pulito, autosufficiente e direttamente copiabile in Codex, senza wrapper PowerShell, senza script di salvataggio Bridge, senza comandi Git di pubblicazione e senza blocchi di verifica finale mescolati al prompt.
 
-Usare il Codex command pack PowerShell solo quando Alberto chiede esplicitamente di salvare il prompt nel Bridge Dropbox / ChatGPT Bridge con file numerati, file `LAST` o audit trail formale.
+Usare il Codex command pack PowerShell solo quando Alberto chiede esplicitamente di salvare il prompt nel Bridge Dropbox / ChatGPT Bridge con artefatti progressivi `NNNN-II-Tipo_Nome.ext` o audit trail formale. Non generare o leggere file `LAST-*`.
 
 Dopo il report Codex, usare prima l'intake gate. Solo dopo review, test e gate locali positivi si puo' preparare un pwsh/publication command pack per commit, push, PR/merge e verifica finale presidiata. La pubblicazione resta bloccata se test, health check, Verification Gate o guardrail falliscono.
 
-Da STEP 536, quando serve davvero un PowerShell command pack, usare il Safe Bootstrap standard: bootstrap corto, script `.ps1` completo sotto `pwsh_command`, parse-check con `[scriptblock]::Create(...)`, esecuzione via `pwsh -NoProfile -ExecutionPolicy Bypass -File`, output numerati/`LAST` e pubblicazione `main` PR-first. Il bootstrap non deve contenere here-string annidate, logica Git complessa o `finally` fragile.
+Da STEP 536, quando serve davvero un PowerShell command pack, usare il Safe Bootstrap standard: bootstrap corto, script `.ps1` completo sotto `pwsh_command`, parse-check con `[scriptblock]::Create(...)`, esecuzione via `pwsh -NoProfile -ExecutionPolicy Bypass -File`, artefatti progressivi `NNNN-II-Tipo_Nome.ext` e pubblicazione `main` PR-first. Il bootstrap non deve contenere here-string annidate, logica Git complessa o `finally` fragile.
 
-Da STEP 545, lo standard canonico vive in `docs/70_ASF_PWSH_COMMAND_PACK_SKILL_FINALIZATION.md` e `templates/pwsh_command_pack/`. I wrapper nativi devono usare `ArgList`, non `$Args`, e i parser Git di scope devono usare `git status --porcelain=v1 --untracked-files=all`.
+Per copiare negli appunti il contenuto di un file nei command pack, non usare `Set-Clipboard -Path`: usare `Get-Content -Path <file> -Raw | Set-Clipboard`.
+
+Da STEP 545, lo standard canonico vive in `docs/70_ASF_PWSH_COMMAND_PACK_SKILL_FINALIZATION.md` e `templates/pwsh_command_pack/`. Da STEP 0550, la naming policy vive anche in `docs/73_LAST_DEPRECATION_4_DIGIT_ARTIFACT_NAMING_STANDARD.md`: `LAST-*` e' deprecato, il Bridge e' operativo e la fonte autorevole resta Git + file versionato. I wrapper nativi devono usare `ArgList`, non `$Args`, e i parser Git di scope devono usare `git status --porcelain=v1 --untracked-files=all`.
 
 | Livello | Uso corretto |
 |---|---|
 | Prompt Codex pulito | Default per dare istruzioni direttamente a Codex |
-| Codex command pack PowerShell | Solo per salvataggio Bridge, file numerati, `LAST` e audit trail |
+| Codex command pack PowerShell | Solo per salvataggio Bridge, artefatti progressivi `NNNN-II-Tipo_Nome.ext` e audit trail |
 | Intake gate | Dopo report Codex, prima della pubblicazione |
 | Pwsh/publication command pack | Commit, push, PR/merge e verifica finale dopo gate positivi |
 | Codex | Lascia il working tree modificato; niente commit, push, PR, merge o deploy salvo richiesta esplicita |
