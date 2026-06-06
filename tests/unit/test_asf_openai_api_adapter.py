@@ -110,11 +110,22 @@ def test_check_env_never_emits_api_key_value() -> None:
     assert secret not in encoded
 
 
-def test_live_mode_fails_closed_without_network() -> None:
+def test_live_mode_emits_gate_report_without_network() -> None:
     result = run_script("--mode", "live", "--input", "ping")
 
-    assert result.returncode == adapter.EXIT_INPUT_ERROR
-    assert adapter.LIVE_MODE_NOT_IMPLEMENTED in result.stderr
+    assert result.returncode == 0, result.stdout + result.stderr
+    data = json.loads(result.stdout)
+    assert data["status"] == "LIVE_BOUNDARY_GATE"
+    assert data["decision"] in {
+        adapter.CREDENTIAL_MISSING,
+        adapter.LIVE_ENV_FLAG_MISSING,
+        adapter.LIVE_FLAG_MISSING,
+        adapter.LIVE_CONFIRMATION_MISSING,
+        adapter.LIVE_READY_FOR_SEPARATE_SMOKE_STEP,
+    }
+    assert data["network_performed"] is False
+    assert data["network_call_performed"] is False
+    assert data["live_call_status"] == adapter.LIVE_CALLS_NOT_IMPLEMENTED
 
 
 def test_cli_writes_dry_run_json_without_requiring_key(tmp_path: Path) -> None:

@@ -262,6 +262,24 @@ python scripts/asf_openai_api_adapter.py --mode mock --input "ping" --output-jso
 
 Questi comandi non usano network, non richiedono `OPENAI_API_KEY`, non usano SDK OpenAI e devono riportare `network_performed: false`.
 
+## 7.14 Generare OpenAI API Adapter live boundary gate
+
+Gate report no-network con credenziale assente:
+
+```powershell
+python scripts/asf_openai_api_adapter.py --mode live --input "ping" --output-json tmp/asf_openai_live_boundary_gate.json
+```
+
+Gate report per readiness futura, sempre senza chiamata live:
+
+```powershell
+$env:OPENAI_API_KEY = "<set locally, never paste into chat or commit>"
+$env:ASF_OPENAI_LIVE_ENABLED = "1"
+python scripts/asf_openai_api_adapter.py --mode live --input "ping" --allow-live --live-confirm I_UNDERSTAND_THIS_CALLS_OPENAI_API --output-json tmp/asf_openai_live_boundary_gate_ready.json
+```
+
+L'esito `LIVE_READY_FOR_SEPARATE_SMOKE_STEP` non esegue una chiamata OpenAI. Lo STEP 510 deve riportare `network_performed: false`, `network_call_performed: false` e `LIVE_CALLS_NOT_IMPLEMENTED_IN_STEP_510`.
+
 ---
 
 ## 8. Eseguire Verification Gate
@@ -388,5 +406,6 @@ Solo dopo questa verifica lo step puo' essere considerato presente su `main`.
 - `docs/59_ASF_CODEX_READONLY_REPEATABLE_TRIAL_PACK.md`: repeatable trial pack per run read-only comparabili.
 - `docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md`: risultati STEP 450.
 - `docs/65_ASF_OPENAI_API_ADAPTER.md`: adapter OpenAI dry-run/mock senza chiamate live.
+- `docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md`: live boundary e credential gate no-network.
 - `docs/20_VERIFICATION_GATE.md`: criteri di verifica locale e CI.
 - `docs/28_PROMPT_PACKET_VALIDATION_STRICT_MODE.md`: dettagli della validazione Strict.

@@ -1758,3 +1758,45 @@ Il prossimo step consigliato e':
 ```
 
 Qualunque chiamata live futura richiedera' un nuovo gate umano, regole credenziali esplicite, stop conditions, redazione verificata e test che non dipendono da credenziali reali di default.
+
+---
+
+## DEC-060 - OpenAI API Adapter live boundary and credential gate
+
+**Data:** 2026-06-06
+**Stato:** Accettata
+
+### Contesto
+
+STEP 500 ha introdotto l'adapter OpenAI API dry-run/mock, ma il mode `live` era ancora un placeholder fail-closed.
+
+Prima di qualunque smoke test reale serve un gate deterministico che distingua credenziale presente, consenso locale, conferma CLI e assenza di chiamate network.
+
+### Decisione
+
+Estendere `scripts/asf_openai_api_adapter.py` con un live boundary report per il mode `live`.
+
+Il gate richiede, in ordine:
+
+- presenza boolean di `OPENAI_API_KEY`;
+- `ASF_OPENAI_LIVE_ENABLED=1`;
+- flag CLI `--allow-live`;
+- conferma `--live-confirm I_UNDERSTAND_THIS_CALLS_OPENAI_API`.
+
+Quando tutti i gate sono presenti, la decisione e' `LIVE_READY_FOR_SEPARATE_SMOKE_STEP`, ma il report mantiene `LIVE_CALLS_NOT_IMPLEMENTED_IN_STEP_510`, `network_performed: false` e `network_call_performed: false`.
+
+### Motivazione
+
+Separare credential gate, live boundary e live smoke test evita che la sola presenza di una API key abiliti chiamate OpenAI non presidiate.
+
+Il report JSON rende verificabile la readiness futura senza stampare secret, hash, fingerprint, prefissi, suffissi o lunghezze della chiave.
+
+### Conseguenze
+
+Il prossimo step consigliato e':
+
+```text
+520) OpenAI API Adapter First Controlled Live Smoke Test
+```
+
+Lo STEP 520 dovra' essere un task separato, human-gated, con stop conditions, redazione verificata e nessun requisito di credenziali reali nei test di default.

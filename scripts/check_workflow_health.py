@@ -75,6 +75,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md",
         "docs/64_ASF_PWSH_COMMAND_PACK_SKILL_HARDENING.md",
         "docs/65_ASF_OPENAI_API_ADAPTER.md",
+        "docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md",
         "config/asf_project_profiles.json",
         "scripts/asf_openai_api_adapter.py",
         "scripts/asf_codex_invocation_dry_run.py",
@@ -112,6 +113,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "templates/codex_tasks/asf_codex_readonly_repeatable_trial_template.md",
         "templates/codex_tasks/asf_codex_readonly_trial_compare_template.md",
         "templates/codex_tasks/asf_openai_api_adapter_template.md",
+        "templates/codex_tasks/asf_openai_api_live_boundary_gate_template.md",
     ]
 
     issues: list[HealthIssue] = []
@@ -201,6 +203,10 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             ("ASF Codex Read-Only Trial Compare", ["ASF Codex Read-Only Trial Compare"]),
             ("ASF PowerShell Command Pack Skill Hardening", ["ASF PowerShell Command Pack Skill Hardening"]),
             ("ASF OpenAI API Adapter", ["ASF OpenAI API Adapter"]),
+            (
+                "ASF OpenAI API Adapter Live Boundary Credential Gate",
+                ["ASF OpenAI API Adapter Live Boundary Credential Gate"],
+            ),
             ("generate task packet script", ["scripts/generate_task_packet.py"]),
             ("task packet validator script", ["scripts/validate_task_packet.py"]),
             ("ASF Next Step Runner script", ["scripts/asf_next_step.py"]),
@@ -283,6 +289,10 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                 "ASF OpenAI API Adapter document",
                 ["docs/65_ASF_OPENAI_API_ADAPTER.md"],
             ),
+            (
+                "ASF OpenAI API Adapter Live Boundary Credential Gate document",
+                ["docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md"],
+            ),
             ("ASF project profiles config", ["config/asf_project_profiles.json"]),
             (
                 "ASF Next Step Runner handoff template",
@@ -331,6 +341,10 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             (
                 "ASF OpenAI API Adapter template",
                 ["templates/codex_tasks/asf_openai_api_adapter_template.md"],
+            ),
+            (
+                "ASF OpenAI API Adapter Live Boundary Credential Gate template",
+                ["templates/codex_tasks/asf_openai_api_live_boundary_gate_template.md"],
             ),
         ],
     )

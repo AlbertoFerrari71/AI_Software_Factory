@@ -4,6 +4,37 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.51.0] - 2026-06-06
+
+### Added
+
+- STEP 510 - OpenAI API Adapter Live Boundary and Credential Gate.
+- Documento `docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md`.
+- Template `templates/codex_tasks/asf_openai_api_live_boundary_gate_template.md`.
+- Test automatici `tests/unit/test_asf_openai_api_adapter_live_boundary_gate.py` e `tests/unit/test_asf_openai_api_adapter_live_boundary_docs.py`.
+
+### Changed
+
+- Esteso `scripts/asf_openai_api_adapter.py` con un report JSON deterministico per il mode `live`.
+- Aggiunti gate espliciti per `OPENAI_API_KEY`, `ASF_OPENAI_LIVE_ENABLED=1`, `--allow-live` e `--live-confirm I_UNDERSTAND_THIS_CALLS_OPENAI_API`.
+- Aggiornati README, roadmap, decision log, Documentation Sync, Project Workflow Index, Workflow Health Check, Quick Reference, Command Cookbook, Workflow Status Dashboard e script `scripts/check_workflow_health.py` / `scripts/show_workflow_status.py` con i riferimenti allo STEP 510.
+- Aggiornato il prossimo step consigliato a `520) OpenAI API Adapter First Controlled Live Smoke Test`.
+
+### Security
+
+- Il gate controlla solo la presenza di `OPENAI_API_KEY` e non stampa valore, lunghezza, prefisso, suffisso, hash o fingerprint.
+- Il mode `live` resta no-network e produce sempre `network_performed: false` e `network_call_performed: false`.
+- Rafforzata la redazione di stringhe OpenAI-key-like e secret-like prima dell'output.
+
+### Not included
+
+- Nessuna chiamata live OpenAI API.
+- Nessun requisito di credenziali reali per i test.
+- Nessun SDK OpenAI o nuova dipendenza.
+- Nessun commit, push, PR, merge, release o deploy.
+
+---
+
 ## [0.50.0] - 2026-06-06
 
 ### Added

@@ -49,6 +49,7 @@ L'indice orienta il lavoro. Non sostituisce i documenti specifici, il Verificati
 | Eseguire ASF Codex Read-Only Repeatable Trial Pack / ASF Codex Read-Only Trial Compare | `docs/59_ASF_CODEX_READONLY_REPEATABLE_TRIAL_PACK.md`, `docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md` | `scripts/asf_codex_readonly_repeatable_trial.py`, `scripts/asf_codex_readonly_trial_compare.py` | Dopo STEP 440 su `main` | Prepara trial ripetibili, gestisce `CODEX_NOT_AVAILABLE` e confronta run senza autorizzare workspace-write |
 | Eseguire Verification Gate | `docs/20_VERIFICATION_GATE.md` | `scripts/verify.ps1` | Prima di commit/push/PR e dopo merge quando richiesto | Include test, `git diff --check`, `git status --short` |
 | Usare ASF OpenAI API Adapter | `docs/65_ASF_OPENAI_API_ADAPTER.md` | `scripts/asf_openai_api_adapter.py`, `templates/codex_tasks/asf_openai_api_adapter_template.md` | Quando serve costruire payload Responses-style e JSON evidence dry-run/mock | Non fa chiamate live, non richiede `OPENAI_API_KEY`, non usa SDK |
+| Usare ASF OpenAI API Adapter Live Boundary Credential Gate | `docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md` | `scripts/asf_openai_api_adapter.py`, `templates/codex_tasks/asf_openai_api_live_boundary_gate_template.md` | Quando serve produrre un gate report per futura smoke live | Non fa chiamate live, non stampa secret, non usa SDK |
 | Controllare Documentation Sync | `docs/21_DOCUMENTATION_SYNC.md` | Nessuno | Ogni step documentale o operativo | Valuta changelog, roadmap, decisions e documenti specifici |
 | Controllare Soft Protection Guardrails | `docs/24_SOFT_PROTECTION_GUARDRAILS.md` | `scripts/git/check_soft_guardrails.ps1` | Prima del commit o come controllo locale | Read-only; non installa hook |
 | Eseguire Workflow Health Check | `docs/35_WORKFLOW_HEALTH_CHECK.md` | `scripts/check_workflow_health.py` | Quando workflow docs, script o riferimenti centrali cambiano | Read-only; non sostituisce Verification Gate |
@@ -120,6 +121,7 @@ Regole operative:
 - `docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md`: risultati STEP 450, inclusa gestione `CODEX_NOT_AVAILABLE`.
 - `docs/64_ASF_PWSH_COMMAND_PACK_SKILL_HARDENING.md`: riferimento ASF per la skill esterna `as-common-pwsh-command-pack`.
 - `docs/65_ASF_OPENAI_API_ADAPTER.md`: adapter OpenAI API dry-run/mock con payload Responses-style e redazione API key.
+- `docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md`: live boundary e credential gate no-network per futura smoke controllata.
 
 ---
 
@@ -143,7 +145,7 @@ Regole operative:
 - `scripts/asf_codex_result_capture.py`: capture read-only di stdout, stderr, exit code e working tree.
 - `scripts/asf_codex_readonly_safety_gate.py`: safety gate read-only su result capture.
 - `scripts/asf_codex_readonly_trial_compare.py`: confronto Markdown di due o piu' report repeatable trial.
-- `scripts/asf_openai_api_adapter.py`: adapter dry-run/mock per payload OpenAI Responses-style, senza chiamate live.
+- `scripts/asf_openai_api_adapter.py`: adapter dry-run/mock e live boundary gate per payload OpenAI Responses-style, senza chiamate live.
 
 Questi script non devono essere usati per automatizzare commit, push, PR o merge.
 
@@ -173,6 +175,7 @@ Config centrale:
 - `templates/codex_tasks/asf_codex_readonly_repeatable_trial_template.md`: struttura del report repeatable trial.
 - `templates/codex_tasks/asf_codex_readonly_trial_compare_template.md`: struttura del report di confronto trial.
 - `templates/codex_tasks/asf_openai_api_adapter_template.md`: struttura task packet per step futuri sull'adapter OpenAI.
+- `templates/codex_tasks/asf_openai_api_live_boundary_gate_template.md`: struttura task packet per live boundary, credential gate e futura smoke controllata.
 
 ---
 
@@ -265,6 +268,12 @@ Per costruire evidenza dry-run/mock dell'OpenAI API Adapter senza rete e senza c
 python scripts/asf_openai_api_adapter.py --mode check-env --output-json tmp/asf_openai_adapter_env.json
 python scripts/asf_openai_api_adapter.py --mode dry-run --input "ping" --output-json tmp/asf_openai_adapter_dry_run.json
 python scripts/asf_openai_api_adapter.py --mode mock --input "ping" --output-json tmp/asf_openai_adapter_mock.json
+```
+
+Per produrre un gate report live no-network per una futura smoke controllata:
+
+```powershell
+python scripts/asf_openai_api_adapter.py --mode live --input "ping" --output-json tmp/asf_openai_live_boundary_gate.json
 ```
 
 I comandi di commit, push, PR e merge restano azioni manuali di Alberto e non sono raccolti qui in una sequenza automatica.

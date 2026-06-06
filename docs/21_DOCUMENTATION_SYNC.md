@@ -92,6 +92,7 @@ Examples:
 - update `docs/59_ASF_CODEX_READONLY_REPEATABLE_TRIAL_PACK.md` when repeatable trial modes, classifications, tmp layout, approval rules or compare flow change;
 - update `docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md` when STEP 450 trial evidence, Codex availability, target cleanliness or next step changes;
 - update `docs/65_ASF_OPENAI_API_ADAPTER.md` when OpenAI adapter payloads, dry-run/mock behavior, key redaction, environment checks or live boundary rules change;
+- update `docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md` when OpenAI live boundary decisions, credential gate rules, live request plan or future smoke prerequisites change;
 - update `config/asf_project_profiles.json` only when profile defaults need to change and no secrets are introduced;
 - update `templates/codex_tasks/asf_runner_verification_pack_template.md` when the Verification Pack structure changes;
 - update `templates/codex_tasks/asf_codex_report_intake_template.md` when intake report structure changes;
@@ -104,6 +105,7 @@ Examples:
 - update `templates/codex_tasks/asf_codex_readonly_repeatable_trial_template.md` when repeatable trial report structure changes;
 - update `templates/codex_tasks/asf_codex_readonly_trial_compare_template.md` when trial comparison structure changes;
 - update `templates/codex_tasks/asf_openai_api_adapter_template.md` when OpenAI adapter task packet safety, verification or command examples change;
+- update `templates/codex_tasks/asf_openai_api_live_boundary_gate_template.md` when OpenAI live boundary task packet safety, gate inputs or verification commands change;
 - update `docs/05_SECURITY_MODEL.md` or `policies/**` only when the Safety Model changes and the risk level is approved.
 
 ### Do not touch unless needed

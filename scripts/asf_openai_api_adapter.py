@@ -24,10 +24,26 @@ SUPPORTED_TEXT_VERBOSITY = ("low", "medium", "high")
 SUPPORTED_MODES = ("check-env", "dry-run", "mock", "live")
 
 LIVE_MODE_NOT_IMPLEMENTED = "LIVE_MODE_NOT_IMPLEMENTED_IN_STEP_500"
+LIVE_CALLS_NOT_IMPLEMENTED = "LIVE_CALLS_NOT_IMPLEMENTED_IN_STEP_510"
+LIVE_DISABLED_BY_DEFAULT = "LIVE_DISABLED_BY_DEFAULT"
+CREDENTIAL_MISSING = "CREDENTIAL_MISSING"
+LIVE_ENV_FLAG_MISSING = "LIVE_ENV_FLAG_MISSING"
+LIVE_FLAG_MISSING = "LIVE_FLAG_MISSING"
+LIVE_CONFIRMATION_MISSING = "LIVE_CONFIRMATION_MISSING"
+LIVE_READY_FOR_SEPARATE_SMOKE_STEP = "LIVE_READY_FOR_SEPARATE_SMOKE_STEP"
+OPENAI_API_KEY_ENV = "OPENAI_API_KEY"
+ASF_OPENAI_LIVE_ENABLED_ENV = "ASF_OPENAI_LIVE_ENABLED"
+ASF_OPENAI_LIVE_ENABLED_VALUE = "1"
+LIVE_CONFIRMATION_VALUE = "I_UNDERSTAND_THIS_CALLS_OPENAI_API"
 MOCK_OUTPUT_TEXT = "ASF OpenAI adapter mock response."
 
 OPENAI_API_KEY_PATTERN = re.compile(r"sk-(?:proj-|svcacct-)?[A-Za-z0-9_-]{8,}")
+BEARER_TOKEN_PATTERN = re.compile(r"(?i)\bBearer\s+[A-Za-z0-9._-]{8,}")
+SECRET_ASSIGNMENT_PATTERN = re.compile(
+    r"(?i)\b(openai_api_key|api[_-]?key|authorization|token|secret)\b\s*([:=])\s*([\"']?)[^\s,\"'}]+"
+)
 REDACTION_MARKER = "[REDACTED_OPENAI_API_KEY]"
+SECRET_REDACTION_MARKER = "[REDACTED_SECRET]"
 
 
 class InputError(ValueError):
@@ -42,6 +58,8 @@ class OpenAIAdapterConfig:
     model: str = DEFAULT_MODEL
     reasoning_effort: str = DEFAULT_REASONING_EFFORT
     text_verbosity: str = DEFAULT_TEXT_VERBOSITY
+    allow_live: bool = False
+    live_confirm: str | None = None
 
 
 @dataclass(frozen=True)
@@ -79,8 +97,16 @@ def repo_root() -> Path:
     return Path(__file__).resolve().parents[1]
 
 
+def redact_secret_assignment(match: re.Match[str]) -> str:
+    key, separator, quote = match.groups()
+    closing_quote = quote if quote else ""
+    return f"{key}{separator}{quote}{SECRET_REDACTION_MARKER}{closing_quote}"
+
+
 def redact_secret(value: str) -> str:
-    return OPENAI_API_KEY_PATTERN.sub(REDACTION_MARKER, value)
+    redacted = OPENAI_API_KEY_PATTERN.sub(REDACTION_MARKER, value)
+    redacted = BEARER_TOKEN_PATTERN.sub(f"Bearer {SECRET_REDACTION_MARKER}", redacted)
+    return SECRET_ASSIGNMENT_PATTERN.sub(redact_secret_assignment, redacted)
 
 
 def redact_data(value: Any) -> Any:
@@ -149,9 +175,22 @@ def build_responses_payload(
     return payload
 
 
+def environment_source(environ: Mapping[str, str] | None = None) -> Mapping[str, str]:
+    return os.environ if environ is None else environ
+
+
 def check_environment(environ: Mapping[str, str] | None = None) -> dict[str, bool]:
-    source = os.environ if environ is None else environ
-    return {"openai_api_key_present": bool(source.get("OPENAI_API_KEY"))}
+    source = environment_source(environ)
+    return {"openai_api_key_present": bool(source.get(OPENAI_API_KEY_ENV))}
+
+
+def check_credential_gate(environ: Mapping[str, str] | None = None) -> dict[str, Any]:
+    source = environment_source(environ)
+    return {
+        "credential_source": OPENAI_API_KEY_ENV,
+        "openai_api_key_present": bool(source.get(OPENAI_API_KEY_ENV)),
+        "secret_value_logged": False,
+    }
 
 
 def stable_checksum(value: str) -> str:
@@ -208,9 +247,62 @@ def run_mock(config: OpenAIAdapterConfig) -> dict[str, Any]:
     return redact_data(result.to_dict())
 
 
-def run_live(config: OpenAIAdapterConfig) -> dict[str, Any]:
+def build_live_request_plan(config: OpenAIAdapterConfig) -> dict[str, Any]:
+    payload_preview = build_responses_payload(
+        config.input_text,
+        instructions=config.instructions,
+        model=config.model,
+        reasoning_effort=config.reasoning_effort,
+        text_verbosity=config.text_verbosity,
+    )
+    return {
+        "api_surface": "responses",
+        "endpoint": "/v1/responses",
+        "model": config.model,
+        "store": False,
+        "network_call_performed": False,
+        "payload_preview": redact_data(payload_preview),
+    }
+
+
+def evaluate_live_boundary(config: OpenAIAdapterConfig, environ: Mapping[str, str] | None = None) -> str:
+    source = environment_source(environ)
+    if not source.get(OPENAI_API_KEY_ENV):
+        return CREDENTIAL_MISSING
+    if source.get(ASF_OPENAI_LIVE_ENABLED_ENV) != ASF_OPENAI_LIVE_ENABLED_VALUE:
+        return LIVE_ENV_FLAG_MISSING
+    if not config.allow_live:
+        return LIVE_FLAG_MISSING
+    if config.live_confirm != LIVE_CONFIRMATION_VALUE:
+        return LIVE_CONFIRMATION_MISSING
+    return LIVE_READY_FOR_SEPARATE_SMOKE_STEP
+
+
+def run_live(config: OpenAIAdapterConfig, environ: Mapping[str, str] | None = None) -> dict[str, Any]:
     validate_adapter_config(config)
-    raise InputError(LIVE_MODE_NOT_IMPLEMENTED)
+    source = environment_source(environ)
+    credential_gate = check_credential_gate(source)
+    decision = evaluate_live_boundary(config, source)
+    result: dict[str, Any] = {
+        "status": "LIVE_BOUNDARY_GATE",
+        "decision": decision,
+        "credential_source": credential_gate["credential_source"],
+        "openai_api_key_present": credential_gate["openai_api_key_present"],
+        "secret_value_logged": credential_gate["secret_value_logged"],
+        "network_performed": False,
+        "network_call_performed": False,
+        "live_call_status": LIVE_CALLS_NOT_IMPLEMENTED,
+        "live_default": LIVE_DISABLED_BY_DEFAULT,
+        "gate_inputs": {
+            "asf_openai_live_enabled": source.get(ASF_OPENAI_LIVE_ENABLED_ENV) == ASF_OPENAI_LIVE_ENABLED_VALUE,
+            "allow_live_flag": config.allow_live,
+            "live_confirmation_present": bool(config.live_confirm),
+            "live_confirmation_matches": config.live_confirm == LIVE_CONFIRMATION_VALUE,
+        },
+        "live_request_plan": build_live_request_plan(config),
+        "message": "STEP 510 produced a gate report only; no live OpenAI API call was performed.",
+    }
+    return redact_data(result)
 
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
@@ -234,6 +326,15 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         choices=SUPPORTED_TEXT_VERBOSITY,
         help=f"Text verbosity. Default: {DEFAULT_TEXT_VERBOSITY}.",
     )
+    parser.add_argument(
+        "--allow-live",
+        action="store_true",
+        help="Acknowledge the live boundary gate. STEP 510 still performs no live API call.",
+    )
+    parser.add_argument(
+        "--live-confirm",
+        help=f"Required confirmation string for future live readiness: {LIVE_CONFIRMATION_VALUE}.",
+    )
     parser.add_argument("--output-json", help="Optional path for deterministic JSON evidence.")
     return parser.parse_args(argv)
 
@@ -246,6 +347,8 @@ def build_config(args: argparse.Namespace) -> OpenAIAdapterConfig:
         model=args.model,
         reasoning_effort=args.reasoning_effort,
         text_verbosity=args.text_verbosity,
+        allow_live=args.allow_live,
+        live_confirm=args.live_confirm,
     )
 
 
@@ -262,7 +365,7 @@ def emit_result(data: dict[str, Any], output_json: str | None) -> None:
     safe_data = redact_data(data)
     if output_json:
         output_path = write_json(output_json, safe_data)
-        print(f"OpenAI adapter evidence written: {output_path}")
+        print(f"OpenAI adapter evidence written: {redact_secret(str(output_path))}")
         return
     print(json.dumps(safe_data, indent=2, sort_keys=True))
 
@@ -290,10 +393,10 @@ def main(argv: list[str] | None = None) -> int:
     try:
         return run(sys.argv[1:] if argv is None else argv)
     except InputError as exc:
-        print(f"ERROR: {exc}", file=sys.stderr)
+        print(f"ERROR: {redact_secret(str(exc))}", file=sys.stderr)
         return EXIT_INPUT_ERROR
     except OSError as exc:
-        print(f"ERROR: {exc}", file=sys.stderr)
+        print(f"ERROR: {redact_secret(str(exc))}", file=sys.stderr)
         return EXIT_RUNTIME_ERROR
 
 
