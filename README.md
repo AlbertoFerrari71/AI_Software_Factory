@@ -1,7 +1,7 @@
 # AI Software Factory
 
 **Metodo interno:** Codex Alchemy Method  
-**Stato:** STEP 510 - OpenAI API Adapter Live Boundary and Credential Gate
+**Stato:** STEP 520 - OpenAI API Adapter First Controlled Live Smoke Test
 **Data bootstrap:** 2026-05-25  
 **Strategia:** local-first personale, progettato per evoluzione SaaS
 
@@ -28,7 +28,7 @@ Il metodo interno si chiama **Codex Alchemy Method**: l'idea grezza viene trasfo
 
 ## 2. Stato repository
 
-Questo repository è nello stato **STEP 510 - OpenAI API Adapter Live Boundary and Credential Gate**.
+Questo repository è nello stato **STEP 520 - OpenAI API Adapter First Controlled Live Smoke Test**.
 
 Sono presenti:
 
@@ -46,14 +46,15 @@ Sono presenti:
 - template approval, dry-run, risk assessment e rollback;
 - test automatici sulle regole critiche di sicurezza;
 - adapter OpenAI API dry-run/mock senza chiamate live;
-- live boundary e credential gate deterministici senza chiamate live.
+- live boundary e credential gate deterministici;
+- primo percorso live smoke OpenAI API controllato, human-gated e con output redatto sotto `tmp/`.
 
 Non sono ancora presenti:
 
 - orchestratore locale;
 - API FastAPI;
 - database;
-- integrazioni OpenAI API live;
+- integrazioni OpenAI API live produttive;
 - integrazioni MCP;
 - automazioni Codex operative;
 - logica applicativa reale.
@@ -274,10 +275,16 @@ OpenAI API Adapter dry-run/mock, senza SDK e senza chiamate live:
 docs/65_ASF_OPENAI_API_ADAPTER.md
 ```
 
-OpenAI API Adapter live boundary e credential gate, senza chiamate live:
+OpenAI API Adapter live boundary e credential gate dello STEP 510:
 
 ```text
 docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md
+```
+
+OpenAI API Adapter first controlled live smoke test:
+
+```text
+docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md
 ```
 
 ---
@@ -336,7 +343,7 @@ policies/path_policy.v0.json
 ## 11. Prossimo step
 
 ```text
-520) OpenAI API Adapter First Controlled Live Smoke Test
+530) OpenAI API Adapter Live Smoke Result Hardening
 ```
 
-Obiettivo: eseguire solo dopo gate umano una prima prova live controllata, con credenziali locali, stop conditions esplicite e nessun leak di secret.
+Obiettivo: consolidare parsing, classificazioni e report della smoke live dopo il primo test controllato, mantenendo gate umani, `store: false`, artifact sotto `tmp/` e nessun leak di secret.

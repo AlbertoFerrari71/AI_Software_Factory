@@ -1800,3 +1800,58 @@ Il prossimo step consigliato e':
 ```
 
 Lo STEP 520 dovra' essere un task separato, human-gated, con stop conditions, redazione verificata e nessun requisito di credenziali reali nei test di default.
+
+---
+
+## DEC-061 - OpenAI API Adapter first controlled live smoke test
+
+**Data:** 2026-06-06
+**Stato:** Accettata
+
+### Contesto
+
+STEP 510 ha introdotto gate e boundary live senza chiamate network.
+
+Alberto ha autorizzato una prima smoke live controllata solo se tutti i gate locali sono presenti e dopo il passaggio dei test deterministici.
+
+### Decisione
+
+Estendere `scripts/asf_openai_api_adapter.py` con una live smoke limitata a una sola richiesta `POST https://api.openai.com/v1/responses`.
+
+La live smoke richiede:
+
+- presenza boolean di `OPENAI_API_KEY`;
+- `ASF_OPENAI_LIVE_ENABLED=1`;
+- flag `--allow-live`;
+- conferma `--live-confirm I_UNDERSTAND_THIS_CALLS_OPENAI_API`;
+- prompt tiny `Return exactly ASF_LIVE_SMOKE_OK.`;
+- `store: false`;
+- artifact solo sotto `tmp/`.
+
+Il comando `--gate-only` permette di verificare localmente se la chiamata sarebbe consentita senza usare network.
+
+### Motivazione
+
+Il primo smoke test deve dimostrare che il boundary live puo' essere attraversato in modo controllato, verificabile e reversibile, senza introdurre SDK, retry automatici o produzione implicita.
+
+La API key resta una credenziale locale: il report mostra solo se e' presente e non stampa valore, lunghezza, hash, prefissi, suffissi o fingerprint.
+
+### Conseguenze
+
+I test di default restano mockati e non richiedono rete o credenziali reali.
+
+Le classificazioni principali sono:
+
+```text
+LIVE_SMOKE_EXECUTED_AND_PASSED
+LIVE_SMOKE_EXECUTED_BUT_FAILED
+LIVE_SMOKE_NOT_RUN_MISSING_GATE
+LIVE_SMOKE_NOT_RUN_NETWORK_BLOCKED
+LIVE_SMOKE_UNEXPECTED_MODEL_OUTPUT
+```
+
+Il prossimo step consigliato e':
+
+```text
+530) OpenAI API Adapter Live Smoke Result Hardening
+```

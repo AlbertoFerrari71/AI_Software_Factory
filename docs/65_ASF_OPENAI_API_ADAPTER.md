@@ -8,6 +8,8 @@ The adapter builds deterministic Responses-style payloads, validates model and r
 
 This step makes no live API calls and does not execute live OpenAI API calls.
 
+Later steps extend this foundation: STEP 510 is documented in `docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md`, and STEP 520 is documented in `docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md`.
+
 ---
 
 ## 2. Why Responses-style payloads
@@ -184,6 +186,8 @@ Recommended next step:
 ```
 
 STEP 510 is documented in `docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md`.
+
+STEP 520 is documented in `docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md`.
 
 ---
 

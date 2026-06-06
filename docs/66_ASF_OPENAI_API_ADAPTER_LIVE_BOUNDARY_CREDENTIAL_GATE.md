@@ -6,6 +6,8 @@ STEP 510 adds a deterministic live boundary and credential gate to the ASF OpenA
 
 The goal is to prepare a future controlled live smoke test without performing any live OpenAI API call in this step.
 
+The later controlled live smoke test is documented in `docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md`.
+
 This step preserves the local-first adapter foundation from STEP 500:
 
 - Responses-style request planning;
@@ -225,3 +227,5 @@ The next step is:
 ```text
 520) OpenAI API Adapter First Controlled Live Smoke Test
 ```
+
+STEP 520 is documented in `docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md`.

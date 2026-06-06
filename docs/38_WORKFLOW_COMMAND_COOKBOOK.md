@@ -849,6 +849,58 @@ Documenti:
 
 ---
 
+## 16.4 Ricetta - OpenAI API Adapter first controlled live smoke
+
+### Quando usarla
+
+Quando uno step autorizza esplicitamente una singola smoke live OpenAI API dopo test locali passati e gate umani presenti.
+
+### Comandi
+
+Impostare la credenziale solo nella sessione locale, senza incollarla in chat o file tracciati:
+
+```powershell
+$env:OPENAI_API_KEY = "<your local OpenAI API key>"
+$env:ASF_OPENAI_LIVE_ENABLED = "1"
+```
+
+Preflight no-network:
+
+```powershell
+python scripts/asf_openai_api_adapter.py --mode live --gate-only --allow-live --live-confirm I_UNDERSTAND_THIS_CALLS_OPENAI_API --input "Return exactly ASF_LIVE_SMOKE_OK." --reasoning-effort none --text-verbosity low --max-output-tokens 32 --output-json tmp/asf_openai_live_smoke_gate.json
+```
+
+Una sola chiamata live:
+
+```powershell
+python scripts/asf_openai_api_adapter.py --mode live --allow-live --live-confirm I_UNDERSTAND_THIS_CALLS_OPENAI_API --input "Return exactly ASF_LIVE_SMOKE_OK." --reasoning-effort none --text-verbosity low --max-output-tokens 32 --output-json tmp/asf_openai_live_smoke_result.json
+```
+
+### Esito atteso
+
+Il preflight restituisce `LIVE_SMOKE_READY_FOR_CALL` con `network_call_count: 0`.
+
+La chiamata live riuscita restituisce `LIVE_SMOKE_EXECUTED_AND_PASSED`, `network_call_count: 1`, `store: false` e `expected_marker_found: true`.
+
+### Se qualcosa va storto
+
+Se manca un gate, fermarsi su `LIVE_SMOKE_NOT_RUN_MISSING_GATE`.
+
+Se la rete e' bloccata dall'ambiente, classificare `LIVE_SMOKE_NOT_RUN_NETWORK_BLOCKED` e non considerarlo crash dell'adapter.
+
+Se l'output non contiene `ASF_LIVE_SMOKE_OK`, classificare `LIVE_SMOKE_UNEXPECTED_MODEL_OUTPUT`.
+
+### Cosa non fare
+
+Non incollare API key, non includere Authorization headers, non inviare contenuti privati o repository, non ritentare automaticamente e non trattare questa smoke come integrazione produttiva.
+
+Documenti:
+
+- `docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md`;
+- `templates/codex_tasks/asf_openai_api_live_smoke_test_template.md`.
+
+---
+
 ## 17. Ricetta - Verification Gate fallito
 
 ### Quando usarla

@@ -4,6 +4,38 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.52.0] - 2026-06-06
+
+### Added
+
+- STEP 520 - OpenAI API Adapter First Controlled Live Smoke Test.
+- Documento `docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md`.
+- Template `templates/codex_tasks/asf_openai_api_live_smoke_test_template.md`.
+- Test automatici `tests/unit/test_asf_openai_api_adapter_live_smoke.py` e `tests/unit/test_asf_openai_api_adapter_live_smoke_docs.py`.
+
+### Changed
+
+- Esteso `scripts/asf_openai_api_adapter.py` con preflight `--gate-only` e smoke live controllata per `POST https://api.openai.com/v1/responses`.
+- Aggiunti campi JSON `mode`, `network_call_attempted`, `network_call_count`, `store`, `runtime_artifact_path`, `output_text_present`, `expected_marker_found` ed `error_category`.
+- Aggiornati README, roadmap, decision log, Documentation Sync, Project Workflow Index, Workflow Health Check, Quick Reference, Command Cookbook, Workflow Status Dashboard e script `scripts/check_workflow_health.py` / `scripts/show_workflow_status.py` con i riferimenti allo STEP 520.
+- Aggiornato il prossimo step consigliato a `530) OpenAI API Adapter Live Smoke Result Hardening`.
+
+### Security
+
+- La live smoke richiede `OPENAI_API_KEY`, `ASF_OPENAI_LIVE_ENABLED=1`, `--allow-live`, conferma esatta e prompt tiny non sensibile.
+- La richiesta live usa `store: false`, `max_output_tokens: 32` e artifact sotto `tmp/`.
+- La API key non viene stampata, loggata, salvata, hashata, troncata o fingerprintata.
+
+### Not included
+
+- Nessun SDK OpenAI o nuova dipendenza.
+- Nessun requisito di credenziali reali o network per i test automatici.
+- Nessun retry automatico della richiesta live.
+- Nessuna integrazione produttiva OpenAI API.
+- Nessun commit, push, PR, merge, release o deploy.
+
+---
+
 ## [0.51.0] - 2026-06-06
 
 ### Added

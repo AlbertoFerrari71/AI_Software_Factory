@@ -20,6 +20,12 @@ Use the next controlled live smoke step only when the live boundary gate is gree
 520) OpenAI API Adapter First Controlled Live Smoke Test
 ```
 
+After STEP 520, use a result-hardening step for response parsing and report stability:
+
+```text
+530) OpenAI API Adapter Live Smoke Result Hardening
+```
+
 ## Repository
 
 ```text
@@ -41,7 +47,7 @@ The default for adapter work is local-first, deterministic and testable without 
 
 ## Safety constraints
 
-- Do not make live API calls unless the step explicitly authorizes a live boundary.
+- Do not make live API calls unless the step explicitly authorizes a controlled live smoke test.
 - Do not require `OPENAI_API_KEY` for default tests.
 - Do not paste API keys.
 - Do not print, log, store or commit API key values.
@@ -58,7 +64,7 @@ The default for adapter work is local-first, deterministic and testable without 
 - Emit `network_performed: false` for dry-run and mock modes.
 - Redact strings that resemble OpenAI API keys.
 - Keep mock output deterministic.
-- Keep live execution blocked unless a later controlled smoke step explicitly authorizes it.
+- Keep live execution blocked unless all controlled smoke gates are present.
 
 Required fail-closed marker:
 
@@ -70,6 +76,14 @@ Current live boundary marker:
 
 ```text
 LIVE_CALLS_NOT_IMPLEMENTED_IN_STEP_510
+```
+
+Current controlled live smoke markers:
+
+```text
+LIVE_SMOKE_READY_FOR_CALL
+LIVE_SMOKE_EXECUTED_AND_PASSED
+LIVE_SMOKE_NOT_RUN_MISSING_GATE
 ```
 
 ## Example commands
@@ -95,6 +109,7 @@ git --no-pager status --short
 
 - `docs/65_ASF_OPENAI_API_ADAPTER.md`
 - `docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md`
+- `docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md`
 - `docs/34_PROJECT_WORKFLOW_INDEX.md`
 - `docs/35_WORKFLOW_HEALTH_CHECK.md`
 - `docs/36_WORKFLOW_QUICK_REFERENCE.md`
@@ -105,6 +120,7 @@ git --no-pager status --short
 - `docs/10_ROADMAP.md`
 - `docs/11_DECISIONS.md`
 - `docs/21_DOCUMENTATION_SYNC.md`
+- `templates/codex_tasks/asf_openai_api_live_smoke_test_template.md`
 
 ## Final report
 

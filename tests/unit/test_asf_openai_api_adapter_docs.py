@@ -107,7 +107,6 @@ def test_openai_api_adapter_script_avoids_forbidden_patterns() -> None:
         "git clean",
         "Set-ExecutionPolicy",
         "setx PATH",
-        "urllib",
         "requests",
         "openai import",
         "shell=True",

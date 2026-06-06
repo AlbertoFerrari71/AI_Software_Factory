@@ -233,3 +233,5 @@ After STEP 490, it also treats `docs/64_ASF_PWSH_COMMAND_PACK_SKILL_HARDENING.md
 After STEP 500, it also treats `docs/65_ASF_OPENAI_API_ADAPTER.md`, `scripts/asf_openai_api_adapter.py` and `templates/codex_tasks/asf_openai_api_adapter_template.md` as core workflow references because the OpenAI API Adapter produces local dry-run/mock evidence without SDK dependencies, live calls or API key leakage.
 
 After STEP 510, it also treats `docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md` and `templates/codex_tasks/asf_openai_api_live_boundary_gate_template.md` as core workflow references because the OpenAI API Adapter live boundary produces deterministic no-network gate reports before any future controlled live smoke test.
+
+After STEP 520, it also treats `docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md` and `templates/codex_tasks/asf_openai_api_live_smoke_test_template.md` as core workflow references because the OpenAI API Adapter can perform one controlled live smoke call only after explicit local gates, with `store: false`, sanitized evidence under `tmp/` and no default test dependency on network or real credentials.
