@@ -80,8 +80,8 @@ Esempio:
 | 530 | OpenAI API Adapter Live Smoke Result Hardening | Rafforzare parsing, classificazioni e report della smoke live dopo il primo test controllato | Schema risultato live, classificazioni, artifact sicuri, test mockati | SaaS-ready | Completato |
 | 535 | Codex Prompt Clean-First Workflow Update | Chiarire il default ChatGPT -> Codex con prompt pulito separato da Bridge, intake gate e pubblicazione | Regola operativa, richiami workflow, test documentale | MVP personale | Completato |
 | 536 | PowerShell Command Pack Safe Bootstrap Hardening | Rafforzare command pack e publication pack contro incolla fragile, here-string annidate, DOCX rumoroso e push diretto a main | Safe bootstrap, template, PR-first, test documentale | MVP personale | Completato |
-| 540 | OpenAI API Adapter Controlled Live Execution Pack | Preparare un pack separato per eventuale futura esecuzione live controllata | Gate finale, procedura live separata, stop conditions, artifact sotto `tmp/` | SaaS-ready | Da fare |
-| 550 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
+| 540 | OpenAI API Adapter Controlled Live Execution Pack | Preparare un pack separato per eventuale futura esecuzione live controllata | Dry-run default, doppio consenso, artifact safe, runbook, template operatore | SaaS-ready | Completato |
+| 550 | OpenAI API Adapter First Authorized Live Run | Eseguire una prima live reale futura solo con autorizzazione esplicita di Alberto | Preflight finale, una sola chiamata live, artifact redatti, stop conditions | SaaS-ready | Da fare |
 
 ---
 
@@ -1174,28 +1174,31 @@ Rafforzare il PowerShell Command Pack / publication pack ASF per evitare blocchi
 
 Preparare un pack separato per eventuale futura esecuzione live controllata, solo con autorizzazione esplicita.
 
-### Output previsti
+### Output realizzati
 
-- procedura live separata;
-- gate finale prima della chiamata;
+- script `scripts/asf_openai_controlled_live_execution_pack.py`;
+- runbook `docs/69_ASF_OPENAI_API_ADAPTER_CONTROLLED_LIVE_EXECUTION_PACK.md`;
+- template PowerShell operatore `templates/pwsh_command_pack/step_540_openai_controlled_live_execution_pack_template.ps1`;
+- dry-run default senza rete;
+- doppio consenso per live futuro con `ASF_OPENAI_LIVE_ENABLED=1` e `--confirm-live-openai`;
 - artifact JSON/Markdown sotto `tmp/`;
-- stop conditions e no retry automatico;
-- nessun uso di chiavi nei test di default.
+- stop conditions, no retry automatico, no loop e no chiamate parallele;
+- test mockati senza rete e senza chiavi reali.
 
 ---
 
-## 59. STEP 550 - SaaS Evolution Plan
+## 59. STEP 550 - OpenAI API Adapter First Authorized Live Run
 
 ### Obiettivo
 
-Preparare il passaggio futuro a SaaS.
+Eseguire una prima live reale futura solo se Alberto autorizza esplicitamente lo step e fornisce l'ambiente locale necessario.
 
 ### Output previsti
 
-- workspace;
-- utenti;
-- ruoli;
-- audit log;
-- billing;
-- secrets vault;
-- marketplace template.
+- preflight finale con controlled live execution pack;
+- una sola chiamata live OpenAI API;
+- prompt tiny non sensibile;
+- `store: false`;
+- artifact JSON/Markdown redatti sotto `tmp/`;
+- classificazione risultato e stop conditions;
+- nessun retry aggressivo o loop live.

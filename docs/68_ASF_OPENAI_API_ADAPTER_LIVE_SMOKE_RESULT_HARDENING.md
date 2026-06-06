@@ -139,9 +139,11 @@ STEP 530 tests classify all required cases without network and without real cred
 
 STEP 530 does not authorize another real live smoke.
 
-A future real live execution requires a separate task packet, explicit human approval, local gate setup, `store: false`, artifact paths under `tmp/`, and tests passing before the run.
+A future real live execution requires the STEP 540 controlled live execution pack, a separate task packet, explicit human approval, local gate setup, `store: false`, artifact paths under `tmp/`, and tests passing before the run.
 
 Codex must not execute live OpenAI API tests unless a future step explicitly authorizes that live execution.
+
+STEP 540 is documented in `docs/69_ASF_OPENAI_API_ADAPTER_CONTROLLED_LIVE_EXECUTION_PACK.md`.
 
 ---
 
@@ -170,5 +172,5 @@ Default tests must not require network, real credentials or live OpenAI calls.
 ## 9. Next step
 
 ```text
-540) OpenAI API Adapter Controlled Live Execution Pack
+550) OpenAI API Adapter First Authorized Live Run
 ```

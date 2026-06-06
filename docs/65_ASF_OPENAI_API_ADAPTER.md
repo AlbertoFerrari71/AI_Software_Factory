@@ -191,6 +191,8 @@ STEP 520 is documented in `docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_
 
 STEP 530 is documented in `docs/68_ASF_OPENAI_API_ADAPTER_LIVE_SMOKE_RESULT_HARDENING.md`.
 
+STEP 540 is documented in `docs/69_ASF_OPENAI_API_ADAPTER_CONTROLLED_LIVE_EXECUTION_PACK.md` and provides the dry-run-default pack for future live execution.
+
 ---
 
 ## 8. Tests and verification

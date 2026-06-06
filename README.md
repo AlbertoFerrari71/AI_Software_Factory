@@ -1,7 +1,7 @@
 # AI Software Factory
 
 **Metodo interno:** Codex Alchemy Method  
-**Stato:** STEP 536 - PowerShell Command Pack Safe Bootstrap Hardening
+**Stato:** STEP 540 - OpenAI API Adapter Controlled Live Execution Pack
 **Data bootstrap:** 2026-05-25  
 **Strategia:** local-first personale, progettato per evoluzione SaaS
 
@@ -28,7 +28,7 @@ Il metodo interno si chiama **Codex Alchemy Method**: l'idea grezza viene trasfo
 
 ## 2. Stato repository
 
-Questo repository è nello stato **STEP 536 - PowerShell Command Pack Safe Bootstrap Hardening**.
+Questo repository è nello stato **STEP 540 - OpenAI API Adapter Controlled Live Execution Pack**.
 
 Sono presenti:
 
@@ -51,6 +51,7 @@ Sono presenti:
 - schema risultato live smoke stabile, classificazioni fail-closed e artifact JSON/Markdown sicuri.
 - regola clean-first per prompt Codex, con separazione tra prompt pulito, Bridge, intake gate e publication command pack.
 - standard Safe Bootstrap PowerShell Command Pack con bootstrap corto, parse-check, script `.ps1` completo, output numerati/`LAST`, DOCX non bloccante e pubblicazione PR-first.
+- controlled live execution pack OpenAI dry-run-default con doppio consenso futuro, artifact safe sotto `tmp/` e template operatore PowerShell.
 
 Non sono ancora presenti:
 
@@ -307,6 +308,12 @@ OpenAI API Adapter live smoke result hardening:
 docs/68_ASF_OPENAI_API_ADAPTER_LIVE_SMOKE_RESULT_HARDENING.md
 ```
 
+OpenAI API Adapter controlled live execution pack:
+
+```text
+docs/69_ASF_OPENAI_API_ADAPTER_CONTROLLED_LIVE_EXECUTION_PACK.md
+```
+
 ---
 
 ## 8. Setup locale minimo
@@ -363,7 +370,7 @@ policies/path_policy.v0.json
 ## 11. Prossimo step
 
 ```text
-540) OpenAI API Adapter Controlled Live Execution Pack
+550) OpenAI API Adapter First Authorized Live Run
 ```
 
-Obiettivo: preparare un pack separato per eventuale futura esecuzione live controllata, mantenendo gate umani, `store: false`, artifact sotto `tmp/`, nessun leak di secret e autorizzazione esplicita distinta.
+Obiettivo: eseguire una prima live reale futura solo con autorizzazione esplicita di Alberto, passando dal controlled live execution pack, con una sola chiamata prevista, `store: false`, artifact sotto `tmp/` e nessun leak di secret.

@@ -41,6 +41,7 @@ The script `scripts/check_workflow_health.py` checks:
 - `docs/64_ASF_PWSH_COMMAND_PACK_SKILL_HARDENING.md` is present and linked from the Project Workflow Index;
 - `docs/65_ASF_OPENAI_API_ADAPTER.md`, `scripts/asf_openai_api_adapter.py` and `templates/codex_tasks/asf_openai_api_adapter_template.md` are present and linked from the Project Workflow Index;
 - `docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md` and `templates/codex_tasks/asf_openai_api_live_boundary_gate_template.md` are present and linked from the Project Workflow Index;
+- `docs/69_ASF_OPENAI_API_ADAPTER_CONTROLLED_LIVE_EXECUTION_PACK.md`, `scripts/asf_openai_controlled_live_execution_pack.py` and `templates/pwsh_command_pack/step_540_openai_controlled_live_execution_pack_template.ps1` are present and linked from the Project Workflow Index;
 - operational scripts do not contain dangerous Git/GitHub command patterns.
 
 The covered areas include:
@@ -82,6 +83,7 @@ The covered areas include:
 - ASF OpenAI API Adapter Live Boundary Credential Gate;
 - ASF OpenAI API Adapter First Controlled Live Smoke Test;
 - ASF OpenAI API Adapter Live Smoke Result Hardening;
+- ASF OpenAI API Adapter Controlled Live Execution Pack;
 - Project Workflow Index.
 
 ---
@@ -239,3 +241,5 @@ After STEP 510, it also treats `docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CRE
 After STEP 520, it also treats `docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md` and `templates/codex_tasks/asf_openai_api_live_smoke_test_template.md` as core workflow references because the OpenAI API Adapter can perform one controlled live smoke call only after explicit local gates, with `store: false`, sanitized evidence under `tmp/` and no default test dependency on network or real credentials.
 
 After STEP 530, it also treats `docs/68_ASF_OPENAI_API_ADAPTER_LIVE_SMOKE_RESULT_HARDENING.md` as a core workflow reference because the OpenAI API Adapter live smoke result now has a stable schema, fail-closed classifications, safe JSON/Markdown artifacts and mocked test coverage before any future live execution.
+
+After STEP 540, it also treats `docs/69_ASF_OPENAI_API_ADAPTER_CONTROLLED_LIVE_EXECUTION_PACK.md`, `scripts/asf_openai_controlled_live_execution_pack.py` and `templates/pwsh_command_pack/step_540_openai_controlled_live_execution_pack_template.ps1` as core workflow references because future OpenAI live execution must use a separate dry-run-default, double-consent, artifact-safe pack.

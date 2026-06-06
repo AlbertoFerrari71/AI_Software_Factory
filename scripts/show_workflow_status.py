@@ -41,6 +41,7 @@ CENTRAL_DOCUMENTS = [
     "docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md",
     "docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md",
     "docs/68_ASF_OPENAI_API_ADAPTER_LIVE_SMOKE_RESULT_HARDENING.md",
+    "docs/69_ASF_OPENAI_API_ADAPTER_CONTROLLED_LIVE_EXECUTION_PACK.md",
 ]
 
 MAIN_SCRIPTS = [
@@ -55,6 +56,7 @@ MAIN_SCRIPTS = [
     "scripts/asf_codex_readonly_safety_gate.py",
     "scripts/asf_codex_readonly_trial_compare.py",
     "scripts/asf_openai_api_adapter.py",
+    "scripts/asf_openai_controlled_live_execution_pack.py",
     "scripts/check_workflow_health.py",
     "scripts/show_workflow_status.py",
     "scripts/generate_task_packet.py",

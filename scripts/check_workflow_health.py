@@ -78,8 +78,10 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md",
         "docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md",
         "docs/68_ASF_OPENAI_API_ADAPTER_LIVE_SMOKE_RESULT_HARDENING.md",
+        "docs/69_ASF_OPENAI_API_ADAPTER_CONTROLLED_LIVE_EXECUTION_PACK.md",
         "config/asf_project_profiles.json",
         "scripts/asf_openai_api_adapter.py",
+        "scripts/asf_openai_controlled_live_execution_pack.py",
         "scripts/asf_codex_invocation_dry_run.py",
         "scripts/asf_codex_readonly_invoke.py",
         "scripts/asf_codex_readonly_repeatable_trial.py",
@@ -117,6 +119,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "templates/codex_tasks/asf_openai_api_adapter_template.md",
         "templates/codex_tasks/asf_openai_api_live_boundary_gate_template.md",
         "templates/codex_tasks/asf_openai_api_live_smoke_test_template.md",
+        "templates/pwsh_command_pack/step_540_openai_controlled_live_execution_pack_template.ps1",
     ]
 
     issues: list[HealthIssue] = []
@@ -218,6 +221,10 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                 "ASF OpenAI API Adapter Live Smoke Result Hardening",
                 ["ASF OpenAI API Adapter Live Smoke Result Hardening"],
             ),
+            (
+                "ASF OpenAI API Adapter Controlled Live Execution Pack",
+                ["ASF OpenAI API Adapter Controlled Live Execution Pack"],
+            ),
             ("generate task packet script", ["scripts/generate_task_packet.py"]),
             ("task packet validator script", ["scripts/validate_task_packet.py"]),
             ("ASF Next Step Runner script", ["scripts/asf_next_step.py"]),
@@ -231,6 +238,10 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             ("ASF Codex Read-Only Safety Gate script", ["scripts/asf_codex_readonly_safety_gate.py"]),
             ("ASF Codex Read-Only Trial Compare script", ["scripts/asf_codex_readonly_trial_compare.py"]),
             ("ASF OpenAI API Adapter script", ["scripts/asf_openai_api_adapter.py"]),
+            (
+                "ASF OpenAI API Adapter Controlled Live Execution Pack script",
+                ["scripts/asf_openai_controlled_live_execution_pack.py"],
+            ),
             ("verification gate script", ["scripts/verify.ps1"]),
             ("soft guardrails check script", ["scripts/git/check_soft_guardrails.ps1"]),
             ("Workflow Health Check document", ["docs/35_WORKFLOW_HEALTH_CHECK.md"]),
@@ -312,6 +323,10 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                 "ASF OpenAI API Adapter Live Smoke Result Hardening document",
                 ["docs/68_ASF_OPENAI_API_ADAPTER_LIVE_SMOKE_RESULT_HARDENING.md"],
             ),
+            (
+                "ASF OpenAI API Adapter Controlled Live Execution Pack document",
+                ["docs/69_ASF_OPENAI_API_ADAPTER_CONTROLLED_LIVE_EXECUTION_PACK.md"],
+            ),
             ("ASF project profiles config", ["config/asf_project_profiles.json"]),
             (
                 "ASF Next Step Runner handoff template",
@@ -368,6 +383,10 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             (
                 "ASF OpenAI API Adapter First Controlled Live Smoke Test template",
                 ["templates/codex_tasks/asf_openai_api_live_smoke_test_template.md"],
+            ),
+            (
+                "STEP 540 OpenAI controlled live execution pack PowerShell template",
+                ["templates/pwsh_command_pack/step_540_openai_controlled_live_execution_pack_template.ps1"],
             ),
         ],
     )
@@ -456,6 +475,7 @@ def check_script_safety(root: Path) -> list[HealthIssue]:
         "scripts/asf_codex_readonly_safety_gate.py",
         "scripts/asf_codex_readonly_trial_compare.py",
         "scripts/asf_openai_api_adapter.py",
+        "scripts/asf_openai_controlled_live_execution_pack.py",
     ]
     patterns = forbidden_script_patterns()
     issues: list[HealthIssue] = []

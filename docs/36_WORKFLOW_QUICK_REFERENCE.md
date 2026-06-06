@@ -357,6 +357,24 @@ L'evidenza resta sotto `tmp/`, la richiesta usa `store: false` e la chiave non d
 
 Dopo STEP 530 i report live includono `status`, `classification`, `safe_details`, `credential_present`, `live_enabled`, `duration_ms` e `timestamp`. Per step di hardening risultato usare solo test mockati: Codex non deve eseguire chiamate live reali.
 
+## 7.16 Preparare OpenAI API Adapter controlled live execution pack
+
+Dry-run default, senza rete e senza richiedere credenziali reali:
+
+```powershell
+python scripts/asf_openai_controlled_live_execution_pack.py
+```
+
+Mock provider no-network, solo per validare gate e artifact:
+
+```powershell
+$env:OPENAI_API_KEY = "<set in environment, never printed>"
+$env:ASF_OPENAI_LIVE_ENABLED = "1"
+python scripts/asf_openai_controlled_live_execution_pack.py --execution-mode mock --confirm-live-openai
+```
+
+Live reale futura: usare solo in uno step separato autorizzato da Alberto, con `--execution-mode live`, `ASF_OPENAI_LIVE_ENABLED=1`, `--confirm-live-openai`, artifact sotto `tmp/` e una sola chiamata prevista. Codex non deve eseguire questo comando live.
+
 ---
 
 ## 8. Eseguire Verification Gate
@@ -486,5 +504,6 @@ Solo dopo questa verifica lo step puo' essere considerato presente su `main`.
 - `docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md`: live boundary e credential gate no-network.
 - `docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md`: prima smoke live controllata.
 - `docs/68_ASF_OPENAI_API_ADAPTER_LIVE_SMOKE_RESULT_HARDENING.md`: schema risultato e classificazioni live smoke.
+- `docs/69_ASF_OPENAI_API_ADAPTER_CONTROLLED_LIVE_EXECUTION_PACK.md`: pack dry-run-default per futura live controllata.
 - `docs/20_VERIFICATION_GATE.md`: criteri di verifica locale e CI.
 - `docs/28_PROMPT_PACKET_VALIDATION_STRICT_MODE.md`: dettagli della validazione Strict.

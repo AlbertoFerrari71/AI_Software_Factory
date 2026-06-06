@@ -1061,6 +1061,60 @@ Documento:
 
 ---
 
+## 16.6 Ricetta - OpenAI API Adapter controlled live execution pack
+
+### Quando usarla
+
+Quando serve preparare artifact, preflight e template operatore per una futura live reale, senza eseguire una chiamata OpenAI API durante lo step corrente.
+
+### Comandi
+
+Dry-run default, senza rete:
+
+```powershell
+python scripts/asf_openai_controlled_live_execution_pack.py
+```
+
+Mock provider no-network, per validare gate e artifact:
+
+```powershell
+$env:OPENAI_API_KEY = "<set in environment, never printed>"
+$env:ASF_OPENAI_LIVE_ENABLED = "1"
+python scripts/asf_openai_controlled_live_execution_pack.py --execution-mode mock --confirm-live-openai
+```
+
+Template safe bootstrap operatore:
+
+```text
+templates/pwsh_command_pack/step_540_openai_controlled_live_execution_pack_template.ps1
+```
+
+### Esito atteso
+
+Il JSON e il Markdown sotto `tmp/asf_openai_controlled_live_execution_pack/` riportano:
+
+- `status`;
+- `classification`;
+- `provider`;
+- `model`;
+- `live_enabled`;
+- `credential_present`;
+- `dry_run`;
+- `network_call_count`;
+- `duration_ms`;
+- `timestamp`;
+- `operator_next_step`.
+
+### Cosa non fare
+
+Non eseguire `--execution-mode live` da Codex. Non considerare `OPENAI_API_KEY` come autorizzazione. Non stampare, salvare, hashare, troncare, fingerprintare o serializzare API key.
+
+Documento:
+
+- `docs/69_ASF_OPENAI_API_ADAPTER_CONTROLLED_LIVE_EXECUTION_PACK.md`.
+
+---
+
 ## 17. Ricetta - Verification Gate fallito
 
 ### Quando usarla

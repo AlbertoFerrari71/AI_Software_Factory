@@ -1948,8 +1948,6 @@ Il prossimo step consigliato resta:
 540) OpenAI API Adapter Controlled Live Execution Pack
 ```
 
----
-
 ## DEC-064 - PowerShell command pack safe bootstrap
 
 **Data:** 2026-06-06
@@ -1994,4 +1992,50 @@ Il prossimo step consigliato resta:
 
 ```text
 540) OpenAI API Adapter Controlled Live Execution Pack
+```
+
+---
+
+## DEC-065 - OpenAI API Adapter controlled live execution pack
+
+**Data:** 2026-06-06
+**Stato:** Accettata
+
+### Contesto
+
+STEP 530 ha reso stabile lo schema risultato live smoke, ma una nuova live reale non deve essere eseguita direttamente da Codex o da un comando ambiguo.
+
+Serve un pack operativo separato che prepari artifact, preflight, cost guard e template operatore, mantenendo dry-run come default e richiedendo consenso esplicito prima di qualunque live futura.
+
+### Decisione
+
+Introdurre `scripts/asf_openai_controlled_live_execution_pack.py` come layer operativo sopra l'adapter OpenAI:
+
+- `--execution-mode dry-run` e' il default;
+- `--execution-mode mock` usa provider finto e nessuna rete;
+- `--execution-mode live` e' previsto solo per un futuro step autorizzato;
+- la live reale richiede `ASF_OPENAI_LIVE_ENABLED=1` e `--confirm-live-openai`;
+- la sola presenza di `OPENAI_API_KEY` non autorizza la chiamata;
+- artifact JSON/Markdown restano sotto `tmp/`;
+- la credenziale puo' comparire solo come boolean `credential_present`;
+- cost guard minimale: prompt tiny, `store: false`, max output basso, timeout basso, una sola chiamata prevista, nessun retry aggressivo, nessun loop e nessuna chiamata parallela.
+
+Aggiungere il runbook `docs/69_ASF_OPENAI_API_ADAPTER_CONTROLLED_LIVE_EXECUTION_PACK.md` e il template PowerShell `templates/pwsh_command_pack/step_540_openai_controlled_live_execution_pack_template.ps1` coerente con lo standard Safe Bootstrap STEP 536.
+
+### Motivazione
+
+Separare pack operativo e live reale riduce il rischio che credenziali presenti nell'ambiente o comandi copiati fuori contesto producano chiamate OpenAI non presidiate.
+
+Il dry-run default consente a operatore e test di verificare schema, artifact e stop conditions senza rete e senza chiavi reali.
+
+### Conseguenze
+
+Ogni futura live OpenAI deve passare dal controlled live execution pack, produrre artifact redatti e dichiarare esplicitamente i gate usati.
+
+Codex non deve eseguire live call, chiedere API key o leggere/stampare valori di credenziali.
+
+Il prossimo step consigliato e':
+
+```text
+550) OpenAI API Adapter First Authorized Live Run
 ```
