@@ -2039,3 +2039,58 @@ Il prossimo step consigliato e':
 ```text
 550) OpenAI API Adapter First Authorized Live Run
 ```
+
+---
+
+## DEC-066 - PowerShell command pack skill finalization
+
+**Data:** 2026-06-06
+**Stato:** Accettata
+
+### Contesto
+
+STEP 536 ha introdotto il Safe Bootstrap PowerShell Command Pack per evitare incolla fragile, esecuzioni parziali, here-string annidate, DOCX bloccante e push diretto a `main`.
+
+STEP 540 ha validato lo standard in una pubblicazione reale riuscita con safe bootstrap, branch e PR.
+
+Serve ora trasformare lo standard in un pacchetto canonico riusabile dentro la repository, senza modificare direttamente la skill esterna sotto `%USERPROFILE%\.agents\skills`.
+
+### Decisione
+
+Creare il pacchetto canonico in `templates/pwsh_command_pack/`:
+
+- `README.md`;
+- `as-common-pwsh-command-pack-SKILL.md`;
+- `safe_bootstrap_template.ps1`;
+- `safe_command_pack_script_template.ps1`.
+
+Lo standard finalizzato richiede:
+
+- bootstrap corto con `& { ... }`;
+- parse-check con `[scriptblock]::Create($ScriptText) | Out-Null`;
+- esecuzione con `pwsh -NoProfile -ExecutionPolicy Bypass -File $CommandFile`;
+- logica complessa solo nel `.ps1` generato;
+- parametro `ArgList`, non `$Args`;
+- parser Git `git status --porcelain=v1 --untracked-files=all`;
+- PR-first publishing;
+- output numerati e `LAST`;
+- DOCX best-effort;
+- warning LF/CRLF non bloccanti quando diff-check, test, health check e verify gate passano.
+
+### Motivazione
+
+Un draft esportabile dentro la repository rende lo standard verificabile, versionato e riusabile senza editare cartelle esterne al progetto durante gli step ASF.
+
+Il parser Git porcelain riduce errori di scope guard, specialmente con directory untracked e path il cui primo carattere potrebbe essere perso da slicing fragile.
+
+### Conseguenze
+
+I futuri command pack ASF devono usare il pacchetto canonico come riferimento.
+
+Il command pack non diventa il default per i prompt Codex: la regola clean-first dello STEP 535 resta valida.
+
+Il prossimo step consigliato resta:
+
+```text
+550) OpenAI API Adapter First Authorized Live Run
+```

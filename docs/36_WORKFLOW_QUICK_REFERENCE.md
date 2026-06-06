@@ -102,6 +102,8 @@ Regole rapide:
 - niente logica Git complessa nel bootstrap;
 - niente here-string annidate;
 - niente `finally` fragile nel wrapper esterno;
+- usare `ArgList`, non `$Args`, per parametri wrapper nativi;
+- usare `git status --porcelain=v1 --untracked-files=all` per parser/scope guard;
 - output numerati e `LAST` restano obbligatori;
 - DOCX e' best-effort e non blocca se TXT/MD sono validi;
 - usare `git --no-pager` per log, diff e output lunghi;
@@ -120,6 +122,9 @@ Template:
 ```text
 templates/pwsh_command_pack/safe_bootstrap_template.ps1
 templates/pwsh_command_pack/safe_command_pack_script_template.ps1
+templates/pwsh_command_pack/README.md
+templates/pwsh_command_pack/as-common-pwsh-command-pack-SKILL.md
+docs/70_ASF_PWSH_COMMAND_PACK_SKILL_FINALIZATION.md
 ```
 
 ---
@@ -500,6 +505,7 @@ Solo dopo questa verifica lo step puo' essere considerato presente su `main`.
 - `docs/54_ASF_CODEX_READONLY_SAFETY_GATE.md`: safety gate read-only prima di qualunque step futuro piu' ampio.
 - `docs/59_ASF_CODEX_READONLY_REPEATABLE_TRIAL_PACK.md`: repeatable trial pack per run read-only comparabili.
 - `docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md`: risultati STEP 450.
+- `docs/70_ASF_PWSH_COMMAND_PACK_SKILL_FINALIZATION.md`: standard canonico PowerShell command pack e skill draft.
 - `docs/65_ASF_OPENAI_API_ADAPTER.md`: adapter OpenAI dry-run/mock senza chiamate live.
 - `docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md`: live boundary e credential gate no-network.
 - `docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md`: prima smoke live controllata.

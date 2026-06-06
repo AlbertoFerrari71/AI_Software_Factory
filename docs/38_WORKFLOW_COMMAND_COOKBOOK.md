@@ -203,6 +203,14 @@ LAST-Comando_Eseguito.ps1
 
 Dentro lo script `.ps1` possono stare native command wrapper, test, health check, verify gate, PR/merge, output completo/compatto e DOCX best-effort.
 
+I wrapper nativi devono usare `ArgList`, non `$Args`. I parser Git di scope devono usare:
+
+```powershell
+git status --porcelain=v1 --untracked-files=all
+```
+
+Questo evita di perdere il primo carattere dei path, espande directory untracked in singoli file e rende piu' sicuro `git add -- @AllowedPaths`.
+
 ### Pubblicazione PR-first
 
 Per `main`, il default e':
@@ -245,6 +253,9 @@ Template:
 ```text
 templates/pwsh_command_pack/safe_bootstrap_template.ps1
 templates/pwsh_command_pack/safe_command_pack_script_template.ps1
+templates/pwsh_command_pack/README.md
+templates/pwsh_command_pack/as-common-pwsh-command-pack-SKILL.md
+docs/70_ASF_PWSH_COMMAND_PACK_SKILL_FINALIZATION.md
 ```
 
 ---

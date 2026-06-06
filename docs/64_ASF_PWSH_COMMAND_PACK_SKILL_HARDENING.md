@@ -12,6 +12,16 @@ The skill is not renamed and no second skill is introduced.
 
 This repository document records the ASF-facing behavior, verification checks and safety boundaries for the updated skill. The skill files themselves live outside this repository.
 
+STEP 545 finalizes the repository-local canonical package and exportable skill draft in:
+
+```text
+docs/70_ASF_PWSH_COMMAND_PACK_SKILL_FINALIZATION.md
+templates/pwsh_command_pack/README.md
+templates/pwsh_command_pack/as-common-pwsh-command-pack-SKILL.md
+```
+
+STEP 536 introduced the Safe Bootstrap structure. STEP 540 validated it in a real safe-bootstrap plus branch/PR publication flow.
+
 ---
 
 ## 2. Updated Skill Files
@@ -145,7 +155,11 @@ The ASF-facing templates for STEP 536 are:
 ```text
 templates/pwsh_command_pack/safe_bootstrap_template.ps1
 templates/pwsh_command_pack/safe_command_pack_script_template.ps1
+templates/pwsh_command_pack/README.md
+templates/pwsh_command_pack/as-common-pwsh-command-pack-SKILL.md
 ```
+
+After STEP 545, the canonical template requirements also include `ArgList` for native wrapper parameters and `git status --porcelain=v1 --untracked-files=all` for scope-sensitive Git parsing.
 
 ---
 
@@ -327,14 +341,10 @@ git --no-pager status --short
 git --no-pager diff --check
 pwsh -NoProfile -Command "[scriptblock]::Create((Get-Content -Raw -LiteralPath 'templates/pwsh_command_pack/safe_bootstrap_template.ps1')) | Out-Null; 'safe bootstrap syntax ok'"
 pwsh -NoProfile -Command "[scriptblock]::Create((Get-Content -Raw -LiteralPath 'templates/pwsh_command_pack/safe_command_pack_script_template.ps1')) | Out-Null; 'safe command pack script syntax ok'"
-pwsh -NoProfile -Command "[scriptblock]::Create((Get-Content -Raw -LiteralPath \"$env:USERPROFILE\.agents\skills\as-common-pwsh-command-pack\references\pwsh-command-pack-template.ps1\")) | Out-Null; 'syntax ok'"
+pwsh -NoProfile -Command "[scriptblock]::Create((Get-Content -Raw -LiteralPath 'templates/pwsh_command_pack/step_540_openai_controlled_live_execution_pack_template.ps1')) | Out-Null; 'step 540 template syntax ok'"
 ```
 
-If available, run:
-
-```powershell
-Invoke-ScriptAnalyzer -Path "$env:USERPROFILE\.agents\skills\as-common-pwsh-command-pack\references\pwsh-command-pack-template.ps1" -Severity Warning,Error
-```
+Do not modify external skill folders during repository verification. The export draft for future skill updates is `templates/pwsh_command_pack/as-common-pwsh-command-pack-SKILL.md`.
 
 If present, also run:
 

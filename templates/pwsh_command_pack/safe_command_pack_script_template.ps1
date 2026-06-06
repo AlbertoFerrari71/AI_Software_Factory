@@ -5,20 +5,28 @@ $ErrorActionPreference = "Stop"
 $PSNativeCommandUseErrorActionPreference = $false
 
 $PackName = "step-XXXX-safe-command-pack-example"
+$StepNumber = "NNNN"
 $OutputRoot = "D:\FG-SAB Dropbox\Alberto Ferrari\ChatGPT_Bridge\AI_Software_Factory\pwsh_command"
 $Stamp = Get-Date -Format "yyyyMMdd-HHmmss"
 $RunId = "{0}-{1}" -f $Stamp, $PackName
 $OutDir = Join-Path $OutputRoot $RunId
 New-Item -ItemType Directory -Path $OutDir -Force | Out-Null
 
-$FullOutputPath = Join-Path $OutDir ("{0}-Output_Completo_{1}.txt" -f $Stamp, $PackName)
-$CompactOutputPath = Join-Path $OutDir ("{0}-Output_Compatto_{1}.md" -f $Stamp, $PackName)
-$DocxOutputPath = Join-Path $OutDir ("{0}-Output_Compatto_{1}.docx" -f $Stamp, $PackName)
-$DocxFailedPath = Join-Path $OutDir ("{0}-Output_Compatto_{1}.docx.failed.txt" -f $Stamp, $PackName)
+$FullOutputPath = Join-Path $OutDir ("{0}-Output_Completo_{1}.txt" -f $StepNumber, $PackName)
+$CompactOutputPath = Join-Path $OutDir ("{0}-Output_Compatto_{1}.md" -f $StepNumber, $PackName)
+$DocxOutputPath = Join-Path $OutDir ("{0}-Output_Compatto_{1}.docx" -f $StepNumber, $PackName)
+$DocxFailedPath = Join-Path $OutDir ("{0}-Output_Compatto_{1}.docx.failed.txt" -f $StepNumber, $PackName)
 $LastFullOutputPath = Join-Path $OutputRoot "LAST-Output_Completo.txt"
 $LastCompactOutputPath = Join-Path $OutputRoot "LAST-Output_Compatto.md"
 $LastDocxOutputPath = Join-Path $OutputRoot "LAST-Output_Compatto.docx"
 $LastDocxFailedPath = Join-Path $OutputRoot "LAST-Output_Compatto.docx.failed.txt"
+$AllowedPaths = @(
+    "README.md",
+    "CHANGELOG.md",
+    "docs/",
+    "templates/pwsh_command_pack/",
+    "tests/unit/"
+)
 
 function Write-Log {
     param(
@@ -37,7 +45,7 @@ function Invoke-NativeCommand {
         [string] $FileName,
 
         [Parameter()]
-        [string[]] $Arguments = @(),
+        [string[]] $ArgList = @(),
 
         [Parameter()]
         [int[]] $AllowedExitCodes = @(0),
@@ -46,14 +54,14 @@ function Invoke-NativeCommand {
         [string] $Label
     )
 
-    Write-Log ("START {0}: {1} {2}" -f $Label, $FileName, ($Arguments -join " "))
+    Write-Log ("START {0}: {1} {2}" -f $Label, $FileName, ($ArgList -join " "))
 
     $StartInfo = [System.Diagnostics.ProcessStartInfo]::new()
     $StartInfo.FileName = $FileName
     $StartInfo.UseShellExecute = $false
     $StartInfo.RedirectStandardOutput = $true
     $StartInfo.RedirectStandardError = $true
-    foreach ($Argument in $Arguments) {
+    foreach ($Argument in $ArgList) {
         [void] $StartInfo.ArgumentList.Add($Argument)
     }
 
@@ -91,8 +99,54 @@ function Test-BranchExists {
         [string] $BranchName
     )
 
-    $Result = Invoke-NativeCommand -FileName "git" -Arguments @("rev-parse", "--verify", $BranchName) -AllowedExitCodes @(0, 128) -Label "branch exists check"
+    $Result = Invoke-NativeCommand -FileName "git" -ArgList @("rev-parse", "--verify", $BranchName) -AllowedExitCodes @(0, 128) -Label "branch exists check"
     return ($Result.ExitCode -eq 0)
+}
+
+function Get-GitPorcelainStatus {
+    $Result = Invoke-NativeCommand -FileName "git" -ArgList @("status", "--porcelain=v1", "--untracked-files=all") -AllowedExitCodes @(0) -Label "git porcelain status"
+    $Entries = @()
+    foreach ($Line in ($Result.Stdout -split "\r?\n")) {
+        if ([string]::IsNullOrWhiteSpace($Line)) {
+            continue
+        }
+        if ($Line -notmatch "^(?<Status>.{2}) (?<Path>.+)$") {
+            throw ("Unexpected git porcelain status line: {0}" -f $Line)
+        }
+        $PathValue = $Matches["Path"]
+        if ($PathValue.Contains(" -> ")) {
+            $PathValue = ($PathValue -split " -> ", 2)[1]
+        }
+        $Entries += [pscustomobject]@{
+            Status = $Matches["Status"]
+            Path = $PathValue.Trim('"')
+        }
+    }
+    return $Entries
+}
+
+function Test-GitScope {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string[]] $AllowedPathList
+    )
+
+    $Entries = Get-GitPorcelainStatus
+    foreach ($Entry in $Entries) {
+        $NormalizedPath = ($Entry.Path -replace "\\", "/")
+        $InScope = $false
+        foreach ($AllowedPath in $AllowedPathList) {
+            $NormalizedAllowedPath = ($AllowedPath -replace "\\", "/")
+            if ($NormalizedPath -eq $NormalizedAllowedPath -or $NormalizedPath.StartsWith($NormalizedAllowedPath)) {
+                $InScope = $true
+                break
+            }
+        }
+        if (-not $InScope) {
+            throw ("Git scope guard blocked out-of-scope path: {0}" -f $Entry.Path)
+        }
+    }
+    return $Entries
 }
 
 function New-CompactReport {
@@ -207,14 +261,35 @@ function Write-DocxBestEffort {
     }
 }
 
+function Copy-CompactReportToClipboard {
+    if (-not (Test-Path -LiteralPath $CompactOutputPath)) {
+        Write-Log "Clipboard copy skipped because compact Markdown is missing."
+        return
+    }
+
+    try {
+        Set-Clipboard -Value (Get-Content -LiteralPath $CompactOutputPath -Raw)
+        Write-Log "Copied compact Markdown to clipboard."
+    } catch {
+        Write-Log ("Clipboard copy failed without blocking command pack: {0}" -f $_.Exception.Message)
+    }
+}
+
 try {
     Set-Content -LiteralPath $FullOutputPath -Value @("Safe command pack started: $(Get-Date -Format o)") -Encoding utf8
     Write-Log "Use branch + PR for publication to main. Never use direct push to main as the default."
     Write-Log "If local main is ahead of origin/main, create and push a publish branch, open PR, merge PR, realign main, then verify."
+    Write-Log "Use git status --porcelain=v1 --untracked-files=all before scope-sensitive git add operations."
+    Write-Log "Use ArgList as the native-command argument parameter name; do not use the PowerShell automatic variable name."
 
-    [void] (Invoke-NativeCommand -FileName "git" -Arguments @("--no-pager", "status", "--short", "--branch") -AllowedExitCodes @(0) -Label "git status")
+    [void] (Invoke-NativeCommand -FileName "git" -ArgList @("--no-pager", "status", "--short", "--branch") -AllowedExitCodes @(0) -Label "git status")
+    [void] (Test-GitScope -AllowedPathList $AllowedPaths)
 
     # Add step-specific commands here. Use Invoke-NativeCommand for native tools.
+    # Use Invoke-NativeCommand -FileName "python" -ArgList @("-m", "pytest") for tests.
+    # Use Invoke-NativeCommand -FileName "python" -ArgList @("scripts/check_workflow_health.py") for health check.
+    # Use Invoke-NativeCommand -FileName "pwsh" -ArgList @("-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "scripts/verify.ps1") for verify gate.
+    # Use git --no-pager for long output and publish to main by branch + PR only when explicitly requested.
     # Treat LF/CRLF warnings as controlled warnings only when diff-check, tests, health and verify pass.
 
     New-CompactReport -Status "COMPLETED_OR_READY_FOR_REVIEW" -WarningText "DOCX is best-effort and non-blocking."
@@ -234,4 +309,4 @@ if (Test-Path -LiteralPath $DocxOutputPath) {
 if (Test-Path -LiteralPath $DocxFailedPath) {
     Copy-Item -LiteralPath $DocxFailedPath -Destination $LastDocxFailedPath -Force
 }
-Set-Clipboard -Value (Get-Content -LiteralPath $CompactOutputPath -Raw)
+Copy-CompactReportToClipboard

@@ -45,6 +45,8 @@ For Alberto's operational vision of AI as a verifiable collaborator, see docs/pr
 - Avoid fragile try/finally structures in long pasted command blocks when a simpler explicit flow is possible.
 - For command packs, prefer a short safe bootstrap that writes a full `.ps1`, validates it with `[scriptblock]::Create(...)`, then executes it with `pwsh -NoProfile -ExecutionPolicy Bypass -File`.
 - Do not put complex Git logic, DOCX XML, long functions, nested here-strings, or fragile outer `finally` blocks in the pasted bootstrap.
+- In generated command-pack scripts, use `ArgList` for native command argument parameters; do not use `$Args` as a function parameter name.
+- For scope-sensitive Git parsing, use `git status --porcelain=v1 --untracked-files=all` so untracked directories are expanded to individual files before guarded staging.
 - Publication command packs must use branch + PR by default for `main`; direct push to `main` is forbidden unless Alberto explicitly requests an emergency bypass.
 - Treat LF/CRLF warnings as non-blocking when `git --no-pager diff --check`, tests, health check, and verify gate pass.
 

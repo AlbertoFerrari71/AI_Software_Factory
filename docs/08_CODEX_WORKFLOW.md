@@ -225,6 +225,8 @@ Dopo il report Codex, usare prima l'intake gate. Solo dopo review, test e gate l
 
 Da STEP 536, quando serve davvero un PowerShell command pack, usare il Safe Bootstrap standard: bootstrap corto, script `.ps1` completo sotto `pwsh_command`, parse-check con `[scriptblock]::Create(...)`, esecuzione via `pwsh -NoProfile -ExecutionPolicy Bypass -File`, output numerati/`LAST` e pubblicazione `main` PR-first. Il bootstrap non deve contenere here-string annidate, logica Git complessa o `finally` fragile.
 
+Da STEP 545, lo standard canonico vive in `docs/70_ASF_PWSH_COMMAND_PACK_SKILL_FINALIZATION.md` e `templates/pwsh_command_pack/`. I wrapper nativi devono usare `ArgList`, non `$Args`, e i parser Git di scope devono usare `git status --porcelain=v1 --untracked-files=all`.
+
 | Livello | Uso corretto |
 |---|---|
 | Prompt Codex pulito | Default per dare istruzioni direttamente a Codex |

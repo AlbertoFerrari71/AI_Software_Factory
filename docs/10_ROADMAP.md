@@ -81,6 +81,7 @@ Esempio:
 | 535 | Codex Prompt Clean-First Workflow Update | Chiarire il default ChatGPT -> Codex con prompt pulito separato da Bridge, intake gate e pubblicazione | Regola operativa, richiami workflow, test documentale | MVP personale | Completato |
 | 536 | PowerShell Command Pack Safe Bootstrap Hardening | Rafforzare command pack e publication pack contro incolla fragile, here-string annidate, DOCX rumoroso e push diretto a main | Safe bootstrap, template, PR-first, test documentale | MVP personale | Completato |
 | 540 | OpenAI API Adapter Controlled Live Execution Pack | Preparare un pack separato per eventuale futura esecuzione live controllata | Dry-run default, doppio consenso, artifact safe, runbook, template operatore | SaaS-ready | Completato |
+| 545 | PowerShell Command Pack Skill Finalization | Finalizzare lo standard command pack come skill/istruzione canonica riusabile | README template, skill draft, parser Git robusto, ArgList, test guardrail | MVP personale | Completato |
 | 550 | OpenAI API Adapter First Authorized Live Run | Eseguire una prima live reale futura solo con autorizzazione esplicita di Alberto | Preflight finale, una sola chiamata live, artifact redatti, stop conditions | SaaS-ready | Da fare |
 
 ---
@@ -1187,7 +1188,24 @@ Preparare un pack separato per eventuale futura esecuzione live controllata, sol
 
 ---
 
-## 59. STEP 550 - OpenAI API Adapter First Authorized Live Run
+## 59. STEP 545 - PowerShell Command Pack Skill Finalization
+
+### Obiettivo
+
+Finalizzare lo standard PowerShell Command Pack come skill/istruzione canonica riusabile per i prossimi step ASF e per i progetti di Alberto.
+
+### Output realizzati
+
+- documento `docs/70_ASF_PWSH_COMMAND_PACK_SKILL_FINALIZATION.md`;
+- README template `templates/pwsh_command_pack/README.md`;
+- skill draft esportabile `templates/pwsh_command_pack/as-common-pwsh-command-pack-SKILL.md`;
+- template canonici aggiornati con `ArgList`, file prefix a 4 cifre, parser Git robusto e clipboard best-effort;
+- guardrail su PR-first, DOCX best-effort, warning LF/CRLF e divieto di `$Args` come parametro;
+- test automatici per standard e parse-check.
+
+---
+
+## 60. STEP 550 - OpenAI API Adapter First Authorized Live Run
 
 ### Obiettivo
 
