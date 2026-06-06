@@ -4,6 +4,69 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.53.5] - 2026-06-06
+
+### Added
+
+- STEP 535 - Codex Prompt Clean-First Workflow Update.
+- Test documentale `tests/unit/test_codex_prompt_clean_first_workflow.py`.
+
+### Changed
+
+- Aggiornati `AGENTS.md` e `docs/08_CODEX_WORKFLOW.md` con la regola clean-first per i prompt Codex.
+- Chiarita la separazione tra prompt Codex pulito, eventuale salvataggio Bridge, intake gate e publication command pack in Project Workflow Index, Quick Reference, Command Cookbook e documento PowerShell Command Pack.
+- Aggiornati README, roadmap e decision log con il riferimento allo STEP 535.
+- Confermato il prossimo step consigliato: `540) OpenAI API Adapter Controlled Live Execution Pack`.
+
+### Guardrails
+
+- Il prompt Codex pulito e direttamente copiabile e' il default.
+- Il Codex command pack PowerShell resta valido per Bridge Dropbox / ChatGPT Bridge, file numerati, file `LAST` e audit trail formale.
+- Il pwsh/publication command pack resta successivo al report Codex e all'intake gate, per pubblicazione Git controllata.
+- Codex non deve fare commit, push, PR, merge o deploy salvo richiesta esplicita.
+
+### Not included
+
+- Nessuna modifica di logica applicativa.
+- Nessun nuovo script di automazione.
+- Nessuna modifica agli stash.
+- Nessun commit, push, PR, merge, release o deploy.
+
+---
+
+## [0.53.0] - 2026-06-06
+
+### Added
+
+- STEP 530 - OpenAI API Adapter Live Smoke Result Hardening.
+- Documento `docs/68_ASF_OPENAI_API_ADAPTER_LIVE_SMOKE_RESULT_HARDENING.md`.
+- Test documentale `tests/unit/test_asf_openai_api_adapter_live_smoke_result_hardening_docs.py`.
+- Artifact Markdown opzionale `--output-markdown` per riepilogo operatore sicuro.
+
+### Changed
+
+- Rafforzato `scripts/asf_openai_api_adapter.py` con schema live stabile `status`, `classification`, `safe_details`, `provider`, `model`, `live_enabled`, `credential_present`, `duration_ms` e `timestamp`.
+- Centralizzata la classificazione live in `not_configured`, `disabled`, `credential_missing`, `live_not_allowed`, `success`, `provider_error`, `network_error`, `rate_limited`, `auth_error`, `schema_error` e `unknown_error`.
+- Estesi i test mockati di `tests/unit/test_asf_openai_api_adapter_live_smoke.py` per gate mancanti, successo, auth, rate limit, provider, network, schema e unknown error.
+- Aggiornati README, roadmap, decision log, Documentation Sync, Project Workflow Index, Workflow Health Check, Quick Reference, Command Cookbook, Workflow Status Dashboard e script `scripts/check_workflow_health.py` / `scripts/show_workflow_status.py` con i riferimenti allo STEP 530.
+- Aggiornato il prossimo step consigliato a `540) OpenAI API Adapter Controlled Live Execution Pack`.
+
+### Security
+
+- I report indicano la credenziale solo come boolean `credential_present`.
+- Nessuna chiave viene stampata, salvata, hashata, troncata, fingerprintata o serializzata.
+- I test dello step sono mockati e non richiedono rete o credenziali reali.
+- Codex non deve eseguire live test; qualunque futura prova live richiede uno step separato e autorizzazione esplicita.
+
+### Not included
+
+- Nessuna chiamata live OpenAI API.
+- Nessun SDK OpenAI o nuova dipendenza.
+- Nessun retry automatico della richiesta live.
+- Nessun commit, push, PR, merge, release o deploy.
+
+---
+
 ## [0.52.0] - 2026-06-06
 
 ### Added

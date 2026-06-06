@@ -77,8 +77,10 @@ Esempio:
 | 500 | OpenAI API Adapter | Creare adapter dry-run/mock per payload Responses-style senza chiamate live | Script adapter, doc, template, test, JSON evidence | SaaS-ready | Completato |
 | 510 | OpenAI API Adapter Live Boundary and Credential Gate | Definire confine live e gate credenziali senza esporre secret | Credential gate, stop conditions, live boundary documentato | SaaS-ready | Completato |
 | 520 | OpenAI API Adapter First Controlled Live Smoke Test | Eseguire una prima prova live controllata solo dopo gate umano esplicito | Live smoke test controllato, evidenza redatta, stop conditions | SaaS-ready | Completato |
-| 530 | OpenAI API Adapter Live Smoke Result Hardening | Rafforzare parsing, classificazioni e report della smoke live dopo il primo test controllato | Hardening risultato live, edge case response, report stabile | SaaS-ready | Da fare |
-| 540 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
+| 530 | OpenAI API Adapter Live Smoke Result Hardening | Rafforzare parsing, classificazioni e report della smoke live dopo il primo test controllato | Schema risultato live, classificazioni, artifact sicuri, test mockati | SaaS-ready | Completato |
+| 535 | Codex Prompt Clean-First Workflow Update | Chiarire il default ChatGPT -> Codex con prompt pulito separato da Bridge, intake gate e pubblicazione | Regola operativa, richiami workflow, test documentale | MVP personale | Completato |
+| 540 | OpenAI API Adapter Controlled Live Execution Pack | Preparare un pack separato per eventuale futura esecuzione live controllata | Gate finale, procedura live separata, stop conditions, artifact sotto `tmp/` | SaaS-ready | Da fare |
+| 550 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
 
 ---
 
@@ -1120,16 +1122,50 @@ Prossimo step consigliato:
 
 Rafforzare parsing, classificazioni, report e casi limite della live smoke dopo il primo test controllato.
 
-### Output previsti
+### Output realizzati
 
-- hardening estrazione output da risposte Responses API;
-- classificazioni piu' granulari per HTTP, JSON, output e policy;
-- report stabile per confrontare smoke successive;
-- nessun allargamento verso integrazione produttiva.
+- schema risultato live stabile con `status`, `classification`, `safe_details`, `provider`, `model`, `live_enabled`, `credential_present`, `duration_ms` e `timestamp`;
+- classificazioni granulari per gate, provider, rete, auth, rate limit, schema e unknown error;
+- artifact JSON machine-readable e Markdown operatore opzionale, entrambi redatti;
+- test mockati per tutti i casi minimi senza rete e senza credenziali reali;
+- nessun allargamento verso integrazione produttiva e nessuna chiamata live reale.
 
 ---
 
-## 56. STEP 540 - SaaS Evolution Plan
+## 56. STEP 535 - Codex Prompt Clean-First Workflow Update
+
+### Obiettivo
+
+Chiarire il flusso ChatGPT -> Codex stabilendo che il default e' un prompt Codex pulito, autosufficiente e direttamente copiabile, separato da PowerShell, Bridge, intake gate e pubblicazione.
+
+### Output realizzati
+
+- regola clean-first in `AGENTS.md` e `docs/08_CODEX_WORKFLOW.md`;
+- tabella livelli per prompt Codex pulito, Codex command pack PowerShell, intake gate, pwsh/publication command pack e Codex;
+- richiami brevi in Project Workflow Index, Workflow Quick Reference, Workflow Command Cookbook e documento PowerShell Command Pack;
+- conferma che Bridge Dropbox / ChatGPT Bridge, file numerati, file `LAST` e audit trail restano validi quando richiesti;
+- conferma che Codex lascia il working tree modificato e non fa commit, push, PR, merge o deploy salvo richiesta esplicita;
+- test documentale a protezione della regola operativa.
+
+---
+
+## 57. STEP 540 - OpenAI API Adapter Controlled Live Execution Pack
+
+### Obiettivo
+
+Preparare un pack separato per eventuale futura esecuzione live controllata, solo con autorizzazione esplicita.
+
+### Output previsti
+
+- procedura live separata;
+- gate finale prima della chiamata;
+- artifact JSON/Markdown sotto `tmp/`;
+- stop conditions e no retry automatico;
+- nessun uso di chiavi nei test di default.
+
+---
+
+## 58. STEP 550 - SaaS Evolution Plan
 
 ### Obiettivo
 

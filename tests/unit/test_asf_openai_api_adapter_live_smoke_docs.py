@@ -7,6 +7,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 NEW_FILES = [
     "docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md",
+    "docs/68_ASF_OPENAI_API_ADAPTER_LIVE_SMOKE_RESULT_HARDENING.md",
     "templates/codex_tasks/asf_openai_api_live_smoke_test_template.md",
     "tests/unit/test_asf_openai_api_adapter_live_smoke.py",
 ]
@@ -26,6 +27,7 @@ def test_live_smoke_docs_cover_required_safety_topics() -> None:
         read(path)
         for path in [
             "docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md",
+            "docs/68_ASF_OPENAI_API_ADAPTER_LIVE_SMOKE_RESULT_HARDENING.md",
             "templates/codex_tasks/asf_openai_api_live_smoke_test_template.md",
         ]
     )
@@ -43,7 +45,8 @@ def test_live_smoke_docs_cover_required_safety_topics() -> None:
         "LIVE_SMOKE_NOT_RUN_NETWORK_BLOCKED",
         "LIVE_SMOKE_UNEXPECTED_MODEL_OUTPUT",
         "LIVE_SMOKE_EXECUTED_AND_PASSED",
-        "530) OpenAI API Adapter Live Smoke Result Hardening",
+        "STEP 530",
+        "540) OpenAI API Adapter Controlled Live Execution Pack",
     ]:
         assert fragment in combined
 
@@ -52,6 +55,7 @@ def test_live_smoke_uses_document_number_67_and_preserves_65_66() -> None:
     assert (ROOT / "docs/65_ASF_OPENAI_API_ADAPTER.md").exists()
     assert (ROOT / "docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md").exists()
     assert (ROOT / "docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md").exists()
+    assert (ROOT / "docs/68_ASF_OPENAI_API_ADAPTER_LIVE_SMOKE_RESULT_HARDENING.md").exists()
 
     combined = "\n".join(
         read(path)
@@ -72,6 +76,7 @@ def test_live_smoke_uses_document_number_67_and_preserves_65_66() -> None:
     assert "docs/65_ASF_OPENAI_API_ADAPTER.md" in combined
     assert "docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md" in combined
     assert "docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md" in combined
+    assert "docs/68_ASF_OPENAI_API_ADAPTER_LIVE_SMOKE_RESULT_HARDENING.md" in combined
 
 
 def test_live_smoke_health_and_status_references_are_present() -> None:
@@ -80,12 +85,15 @@ def test_live_smoke_health_and_status_references_are_present() -> None:
 
     for fragment in [
         "docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md",
+        "docs/68_ASF_OPENAI_API_ADAPTER_LIVE_SMOKE_RESULT_HARDENING.md",
         "templates/codex_tasks/asf_openai_api_live_smoke_test_template.md",
         "ASF OpenAI API Adapter First Controlled Live Smoke Test",
+        "ASF OpenAI API Adapter Live Smoke Result Hardening",
     ]:
         assert fragment in health
 
     assert "docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md" in dashboard
+    assert "docs/68_ASF_OPENAI_API_ADAPTER_LIVE_SMOKE_RESULT_HARDENING.md" in dashboard
 
 
 def test_live_smoke_docs_do_not_contain_real_key_like_values_or_auth_headers() -> None:

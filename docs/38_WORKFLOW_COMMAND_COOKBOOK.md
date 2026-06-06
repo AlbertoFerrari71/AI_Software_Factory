@@ -136,6 +136,40 @@ Non aggirare il validatore rimuovendo sezioni o vincoli dal task.
 
 ---
 
+## 6.1 Ricetta - Preparare prompt Codex clean-first
+
+### Quando usarla
+
+Prima di copiare istruzioni in Codex.
+
+### Comandi / output
+
+Il default non e' uno script. Preparare prima un prompt Codex pulito, autosufficiente e direttamente copiabile:
+
+```text
+Clean Codex prompt first by default.
+PowerShell only when archiving, auditing, or publishing.
+```
+
+Usare il Codex command pack PowerShell solo se Alberto chiede salvataggio nel Bridge Dropbox / ChatGPT Bridge, file numerati, file `LAST` o audit trail formale.
+
+Dopo il report Codex, usare l'intake gate. Il pwsh/publication command pack entra solo dopo review e verifiche locali, per commit, push, PR/merge e verifica finale presidiata.
+
+### Esito atteso
+
+- prompt Codex pulito separato;
+- eventuale salvataggio Bridge separato;
+- intake gate dopo report Codex;
+- pubblicazione Git controllata separata.
+
+### Cosa non fare
+
+Non mischiare prompt Codex e script PowerShell nello stesso blocco, salvo richiesta esplicita.
+
+Non mettere comandi Git, commit, push, PR, merge o verifiche finali dentro il prompt Codex se Alberto ha chiesto solo il prompt pulito.
+
+---
+
 ## 7. Ricetta - Dopo il report Codex
 
 ### Quando usarla
@@ -867,20 +901,20 @@ $env:ASF_OPENAI_LIVE_ENABLED = "1"
 Preflight no-network:
 
 ```powershell
-python scripts/asf_openai_api_adapter.py --mode live --gate-only --allow-live --live-confirm I_UNDERSTAND_THIS_CALLS_OPENAI_API --input "Return exactly ASF_LIVE_SMOKE_OK." --reasoning-effort none --text-verbosity low --max-output-tokens 32 --output-json tmp/asf_openai_live_smoke_gate.json
+python scripts/asf_openai_api_adapter.py --mode live --gate-only --allow-live --live-confirm I_UNDERSTAND_THIS_CALLS_OPENAI_API --input "Return exactly ASF_LIVE_SMOKE_OK." --reasoning-effort none --text-verbosity low --max-output-tokens 32 --output-json tmp/asf_openai_live_smoke_gate.json --output-markdown tmp/asf_openai_live_smoke_gate.md
 ```
 
 Una sola chiamata live:
 
 ```powershell
-python scripts/asf_openai_api_adapter.py --mode live --allow-live --live-confirm I_UNDERSTAND_THIS_CALLS_OPENAI_API --input "Return exactly ASF_LIVE_SMOKE_OK." --reasoning-effort none --text-verbosity low --max-output-tokens 32 --output-json tmp/asf_openai_live_smoke_result.json
+python scripts/asf_openai_api_adapter.py --mode live --allow-live --live-confirm I_UNDERSTAND_THIS_CALLS_OPENAI_API --input "Return exactly ASF_LIVE_SMOKE_OK." --reasoning-effort none --text-verbosity low --max-output-tokens 32 --output-json tmp/asf_openai_live_smoke_result.json --output-markdown tmp/asf_openai_live_smoke_result.md
 ```
 
 ### Esito atteso
 
 Il preflight restituisce `LIVE_SMOKE_READY_FOR_CALL` con `network_call_count: 0`.
 
-La chiamata live riuscita restituisce `LIVE_SMOKE_EXECUTED_AND_PASSED`, `network_call_count: 1`, `store: false` e `expected_marker_found: true`.
+La chiamata live riuscita restituisce `LIVE_SMOKE_EXECUTED_AND_PASSED`, `network_call_count: 1`, `store: false`, `expected_marker_found: true`, `status: success` e `classification: success`.
 
 ### Se qualcosa va storto
 
@@ -897,7 +931,54 @@ Non incollare API key, non includere Authorization headers, non inviare contenut
 Documenti:
 
 - `docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md`;
+- `docs/68_ASF_OPENAI_API_ADAPTER_LIVE_SMOKE_RESULT_HARDENING.md`;
 - `templates/codex_tasks/asf_openai_api_live_smoke_test_template.md`.
+
+---
+
+## 16.5 Ricetta - OpenAI API Adapter live smoke result hardening
+
+### Quando usarla
+
+Quando serve verificare classificazioni e artifact live smoke senza eseguire chiamate OpenAI API reali.
+
+### Comandi
+
+Test focalizzati mockati:
+
+```powershell
+python -m pytest tests/unit/test_asf_openai_api_adapter.py tests/unit/test_asf_openai_api_adapter_live_boundary_gate.py tests/unit/test_asf_openai_api_adapter_live_smoke.py
+```
+
+Artifact gate-only no-network con JSON e Markdown:
+
+```powershell
+python scripts/asf_openai_api_adapter.py --mode live --gate-only --allow-live --live-confirm I_UNDERSTAND_THIS_CALLS_OPENAI_API --input "Return exactly ASF_LIVE_SMOKE_OK." --reasoning-effort none --text-verbosity low --max-output-tokens 32 --output-json tmp/asf_openai_live_smoke_gate.json --output-markdown tmp/asf_openai_live_smoke_gate.md
+```
+
+### Esito atteso
+
+I report includono:
+
+- `status`;
+- `classification`;
+- `safe_details`;
+- `provider`;
+- `model`;
+- `live_enabled`;
+- `credential_present`;
+- `duration_ms`;
+- `timestamp`.
+
+Le classificazioni attese sono `not_configured`, `disabled`, `credential_missing`, `live_not_allowed`, `success`, `provider_error`, `network_error`, `rate_limited`, `auth_error`, `schema_error` e `unknown_error`.
+
+### Cosa non fare
+
+Non eseguire una chiamata live reale durante result hardening. Non stampare, salvare, hashare, troncare, fingerprintare o serializzare API key. Non registrare lunghezza, prefisso o suffisso della chiave.
+
+Documento:
+
+- `docs/68_ASF_OPENAI_API_ADAPTER_LIVE_SMOKE_RESULT_HARDENING.md`.
 
 ---
 

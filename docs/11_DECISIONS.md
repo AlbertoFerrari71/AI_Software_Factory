@@ -1855,3 +1855,95 @@ Il prossimo step consigliato e':
 ```text
 530) OpenAI API Adapter Live Smoke Result Hardening
 ```
+
+---
+
+## DEC-062 - OpenAI API Adapter live smoke result hardening
+
+**Data:** 2026-06-06
+**Stato:** Accettata
+
+### Contesto
+
+STEP 520 ha introdotto una prima smoke live controllata, ma prima di qualunque ulteriore prova live serve rendere piu' stabile e leggibile il risultato.
+
+Il rischio e' confondere HTTP status, rete, schema risposta, gate mancanti e autorizzazione live in un unico errore generico, oppure produrre artifact difficili da confrontare.
+
+### Decisione
+
+Estendere `scripts/asf_openai_api_adapter.py` con un contratto live result stabile:
+
+- `status` in `success`, `failed` o `skipped`;
+- `classification` in `not_configured`, `disabled`, `credential_missing`, `live_not_allowed`, `success`, `provider_error`, `network_error`, `rate_limited`, `auth_error`, `schema_error` o `unknown_error`;
+- `safe_details` redatto;
+- `credential_present` solo booleano;
+- artifact JSON machine-readable e Markdown opzionale per operatore.
+
+Lo step usa solo test mockati. Non autorizza una nuova chiamata live.
+
+### Motivazione
+
+Una classificazione centrale rende i risultati confrontabili e impedisce di promuovere errori ambientali o provider a readiness operativa.
+
+Il contratto stabile aiuta i futuri gate umani e mantiene la regola fail-closed prima di ogni prova live successiva.
+
+### Conseguenze
+
+Qualunque futura esecuzione live dovra' usare questo schema, mantenere artifact sotto `tmp/`, non emettere segreti o derivati e richiedere autorizzazione separata.
+
+Il prossimo step consigliato e':
+
+```text
+540) OpenAI API Adapter Controlled Live Execution Pack
+```
+
+---
+
+## DEC-063 - Codex prompt clean-first workflow
+
+**Data:** 2026-06-06
+**Stato:** Accettata
+
+### Contesto
+
+Il workflow ASF usa sia prompt Codex direttamente copiabili sia command pack PowerShell per salvataggio, audit trail e pubblicazione controllata.
+
+Il rischio operativo e' mischiare nello stesso blocco prompt Codex, script PowerShell, salvataggio Bridge, comandi Git, pubblicazione e verifiche finali, rendendo i prompt piu' sporchi, meno leggibili e piu' fragili.
+
+### Decisione
+
+Stabilire la regola:
+
+```text
+Clean Codex prompt first by default.
+PowerShell only when archiving, auditing, or publishing.
+```
+
+Per i prompt destinati a Codex, il default e' un prompt pulito, autosufficiente e direttamente copiabile, senza wrapper PowerShell.
+
+Il Codex command pack PowerShell si usa solo quando Alberto chiede esplicitamente salvataggio nel Bridge Dropbox / ChatGPT Bridge, file numerati, file `LAST` o audit trail formale.
+
+Il pwsh/publication command pack si usa dopo il report Codex e l'intake gate, per commit, push, PR/merge e verifica finale presidiata. La pubblicazione resta bloccata se test, health check, Verification Gate o guardrail falliscono.
+
+### Motivazione
+
+Separare i livelli riduce ambiguita' tra istruzioni a Codex, archiviazione del prompt e pubblicazione Git.
+
+Il Bridge Dropbox resta utile per audit trail, ripartenze, output tracciati e report finali, ma non deve diventare il wrapper obbligatorio per ogni prompt veloce.
+
+### Conseguenze
+
+I documenti operativi principali devono distinguere:
+
+- prompt Codex pulito;
+- eventuale salvataggio Bridge;
+- intake gate dopo report Codex;
+- publication command pack per chiusura Git controllata.
+
+Codex lascia il working tree modificato per review manuale e non fa commit, push, PR, merge o deploy salvo richiesta esplicita.
+
+Il prossimo step consigliato resta:
+
+```text
+540) OpenAI API Adapter Controlled Live Execution Pack
+```

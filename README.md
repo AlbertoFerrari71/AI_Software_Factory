@@ -1,7 +1,7 @@
 # AI Software Factory
 
 **Metodo interno:** Codex Alchemy Method  
-**Stato:** STEP 520 - OpenAI API Adapter First Controlled Live Smoke Test
+**Stato:** STEP 535 - Codex Prompt Clean-First Workflow Update
 **Data bootstrap:** 2026-05-25  
 **Strategia:** local-first personale, progettato per evoluzione SaaS
 
@@ -28,7 +28,7 @@ Il metodo interno si chiama **Codex Alchemy Method**: l'idea grezza viene trasfo
 
 ## 2. Stato repository
 
-Questo repository è nello stato **STEP 520 - OpenAI API Adapter First Controlled Live Smoke Test**.
+Questo repository è nello stato **STEP 535 - Codex Prompt Clean-First Workflow Update**.
 
 Sono presenti:
 
@@ -47,7 +47,9 @@ Sono presenti:
 - test automatici sulle regole critiche di sicurezza;
 - adapter OpenAI API dry-run/mock senza chiamate live;
 - live boundary e credential gate deterministici;
-- primo percorso live smoke OpenAI API controllato, human-gated e con output redatto sotto `tmp/`.
+- primo percorso live smoke OpenAI API controllato, human-gated e con output redatto sotto `tmp/`;
+- schema risultato live smoke stabile, classificazioni fail-closed e artifact JSON/Markdown sicuri.
+- regola clean-first per prompt Codex, con separazione tra prompt pulito, Bridge, intake gate e publication command pack.
 
 Non sono ancora presenti:
 
@@ -269,6 +271,15 @@ Hardening della skill comune per PowerShell Command Pack robusti:
 docs/64_ASF_PWSH_COMMAND_PACK_SKILL_HARDENING.md
 ```
 
+Regola prompt Codex clean-first e separazione da Bridge, intake gate e publication command pack:
+
+```text
+docs/08_CODEX_WORKFLOW.md
+docs/34_PROJECT_WORKFLOW_INDEX.md
+docs/36_WORKFLOW_QUICK_REFERENCE.md
+docs/38_WORKFLOW_COMMAND_COOKBOOK.md
+```
+
 OpenAI API Adapter dry-run/mock, senza SDK e senza chiamate live:
 
 ```text
@@ -285,6 +296,12 @@ OpenAI API Adapter first controlled live smoke test:
 
 ```text
 docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md
+```
+
+OpenAI API Adapter live smoke result hardening:
+
+```text
+docs/68_ASF_OPENAI_API_ADAPTER_LIVE_SMOKE_RESULT_HARDENING.md
 ```
 
 ---
@@ -343,7 +360,7 @@ policies/path_policy.v0.json
 ## 11. Prossimo step
 
 ```text
-530) OpenAI API Adapter Live Smoke Result Hardening
+540) OpenAI API Adapter Controlled Live Execution Pack
 ```
 
-Obiettivo: consolidare parsing, classificazioni e report della smoke live dopo il primo test controllato, mantenendo gate umani, `store: false`, artifact sotto `tmp/` e nessun leak di secret.
+Obiettivo: preparare un pack separato per eventuale futura esecuzione live controllata, mantenendo gate umani, `store: false`, artifact sotto `tmp/`, nessun leak di secret e autorizzazione esplicita distinta.

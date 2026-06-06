@@ -8,6 +8,8 @@ The goal is to prepare a future controlled live smoke test without performing an
 
 The later controlled live smoke test is documented in `docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md`.
 
+The result hardening step is documented in `docs/68_ASF_OPENAI_API_ADAPTER_LIVE_SMOKE_RESULT_HARDENING.md`.
+
 This step preserves the local-first adapter foundation from STEP 500:
 
 - Responses-style request planning;

@@ -77,6 +77,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/65_ASF_OPENAI_API_ADAPTER.md",
         "docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md",
         "docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md",
+        "docs/68_ASF_OPENAI_API_ADAPTER_LIVE_SMOKE_RESULT_HARDENING.md",
         "config/asf_project_profiles.json",
         "scripts/asf_openai_api_adapter.py",
         "scripts/asf_codex_invocation_dry_run.py",
@@ -213,6 +214,10 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                 "ASF OpenAI API Adapter First Controlled Live Smoke Test",
                 ["ASF OpenAI API Adapter First Controlled Live Smoke Test"],
             ),
+            (
+                "ASF OpenAI API Adapter Live Smoke Result Hardening",
+                ["ASF OpenAI API Adapter Live Smoke Result Hardening"],
+            ),
             ("generate task packet script", ["scripts/generate_task_packet.py"]),
             ("task packet validator script", ["scripts/validate_task_packet.py"]),
             ("ASF Next Step Runner script", ["scripts/asf_next_step.py"]),
@@ -302,6 +307,10 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             (
                 "ASF OpenAI API Adapter First Controlled Live Smoke Test document",
                 ["docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md"],
+            ),
+            (
+                "ASF OpenAI API Adapter Live Smoke Result Hardening document",
+                ["docs/68_ASF_OPENAI_API_ADAPTER_LIVE_SMOKE_RESULT_HARDENING.md"],
             ),
             ("ASF project profiles config", ["config/asf_project_profiles.json"]),
             (
