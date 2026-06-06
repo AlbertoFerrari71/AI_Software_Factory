@@ -806,6 +806,49 @@ Documenti:
 
 ---
 
+## 16.3 Ricetta - OpenAI API Adapter live boundary gate
+
+### Quando usarla
+
+Quando serve verificare in modo deterministico se una futura smoke live potrebbe essere preparata, senza fare chiamate OpenAI API e senza stampare secret.
+
+### Comandi
+
+Gate report con default sicuro:
+
+```powershell
+python scripts/asf_openai_api_adapter.py --mode live --input "ping" --output-json tmp/asf_openai_live_boundary_gate.json
+```
+
+Gate report con tutti i segnali di readiness futura, sempre no-network:
+
+```powershell
+$env:OPENAI_API_KEY = "<set locally, never paste into chat or commit>"
+$env:ASF_OPENAI_LIVE_ENABLED = "1"
+python scripts/asf_openai_api_adapter.py --mode live --input "ping" --allow-live --live-confirm I_UNDERSTAND_THIS_CALLS_OPENAI_API --output-json tmp/asf_openai_live_boundary_gate_ready.json
+```
+
+### Esito atteso
+
+Il report JSON indica una decisione tra `CREDENTIAL_MISSING`, `LIVE_ENV_FLAG_MISSING`, `LIVE_FLAG_MISSING`, `LIVE_CONFIRMATION_MISSING` e `LIVE_READY_FOR_SEPARATE_SMOKE_STEP`.
+
+Anche con tutti i gate presenti, il report deve includere `LIVE_CALLS_NOT_IMPLEMENTED_IN_STEP_510`, `network_performed: false` e `network_call_performed: false`.
+
+### Se qualcosa va storto
+
+Se compaiono valore, lunghezza, prefisso, suffisso, hash o fingerprint della chiave, fermarsi: e' un safety failure.
+
+### Cosa non fare
+
+Non usare `setx` per credenziali OpenAI nei documenti di progetto, non incollare API key, non includere Authorization headers, non aggiungere SDK e non chiamare network nello STEP 510.
+
+Documenti:
+
+- `docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md`;
+- `templates/codex_tasks/asf_openai_api_live_boundary_gate_template.md`.
+
+---
+
 ## 17. Ricetta - Verification Gate fallito
 
 ### Quando usarla

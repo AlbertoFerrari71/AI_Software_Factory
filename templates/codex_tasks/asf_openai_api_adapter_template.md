@@ -6,10 +6,18 @@
 <STEP_NUMBER>) <TITLE>
 ```
 
-Use STEP 500 for the adapter foundation already implemented here. Use the next gated step only when the live boundary and credential rules are explicit:
+Use STEP 500 for the adapter foundation already implemented here.
+
+STEP 510 adds the live boundary and credential gate:
 
 ```text
 510) OpenAI API Adapter Live Boundary and Credential Gate
+```
+
+Use the next controlled live smoke step only when the live boundary gate is green and the task explicitly authorizes a live smoke test:
+
+```text
+520) OpenAI API Adapter First Controlled Live Smoke Test
 ```
 
 ## Repository
@@ -50,12 +58,18 @@ The default for adapter work is local-first, deterministic and testable without 
 - Emit `network_performed: false` for dry-run and mock modes.
 - Redact strings that resemble OpenAI API keys.
 - Keep mock output deterministic.
-- Fail closed for live mode until a future gated step.
+- Keep live execution blocked unless a later controlled smoke step explicitly authorizes it.
 
 Required fail-closed marker:
 
 ```text
 LIVE_MODE_NOT_IMPLEMENTED_IN_STEP_500
+```
+
+Current live boundary marker:
+
+```text
+LIVE_CALLS_NOT_IMPLEMENTED_IN_STEP_510
 ```
 
 ## Example commands
@@ -80,6 +94,7 @@ git --no-pager status --short
 ## Documentation to evaluate
 
 - `docs/65_ASF_OPENAI_API_ADAPTER.md`
+- `docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md`
 - `docs/34_PROJECT_WORKFLOW_INDEX.md`
 - `docs/35_WORKFLOW_HEALTH_CHECK.md`
 - `docs/36_WORKFLOW_QUICK_REFERENCE.md`

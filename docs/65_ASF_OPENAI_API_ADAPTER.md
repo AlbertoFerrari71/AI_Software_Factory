@@ -183,6 +183,8 @@ Recommended next step:
 510) OpenAI API Adapter Live Boundary and Credential Gate
 ```
 
+STEP 510 is documented in `docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md`.
+
 ---
 
 ## 8. Tests and verification

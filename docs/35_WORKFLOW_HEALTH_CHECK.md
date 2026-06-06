@@ -40,6 +40,7 @@ The script `scripts/check_workflow_health.py` checks:
 - `docs/59_ASF_CODEX_READONLY_REPEATABLE_TRIAL_PACK.md`, `docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md`, `scripts/asf_codex_readonly_repeatable_trial.py`, `scripts/asf_codex_readonly_trial_compare.py`, `templates/codex_tasks/asf_codex_readonly_repeatable_trial_template.md` and `templates/codex_tasks/asf_codex_readonly_trial_compare_template.md` are present and linked from the Project Workflow Index;
 - `docs/64_ASF_PWSH_COMMAND_PACK_SKILL_HARDENING.md` is present and linked from the Project Workflow Index;
 - `docs/65_ASF_OPENAI_API_ADAPTER.md`, `scripts/asf_openai_api_adapter.py` and `templates/codex_tasks/asf_openai_api_adapter_template.md` are present and linked from the Project Workflow Index;
+- `docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md` and `templates/codex_tasks/asf_openai_api_live_boundary_gate_template.md` are present and linked from the Project Workflow Index;
 - operational scripts do not contain dangerous Git/GitHub command patterns.
 
 The covered areas include:
@@ -78,6 +79,7 @@ The covered areas include:
 - ASF Codex Read-Only Trial Compare;
 - ASF PowerShell Command Pack Skill Hardening;
 - ASF OpenAI API Adapter;
+- ASF OpenAI API Adapter Live Boundary Credential Gate;
 - Project Workflow Index.
 
 ---
@@ -229,3 +231,5 @@ After STEP 450, it also treats the Codex Read-Only Repeatable Trial Pack documen
 After STEP 490, it also treats `docs/64_ASF_PWSH_COMMAND_PACK_SKILL_HARDENING.md` as a core workflow reference because Alberto's PowerShell command pack skill is used to generate robust, logged and human-gated local command packs for ASF operations.
 
 After STEP 500, it also treats `docs/65_ASF_OPENAI_API_ADAPTER.md`, `scripts/asf_openai_api_adapter.py` and `templates/codex_tasks/asf_openai_api_adapter_template.md` as core workflow references because the OpenAI API Adapter produces local dry-run/mock evidence without SDK dependencies, live calls or API key leakage.
+
+After STEP 510, it also treats `docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md` and `templates/codex_tasks/asf_openai_api_live_boundary_gate_template.md` as core workflow references because the OpenAI API Adapter live boundary produces deterministic no-network gate reports before any future controlled live smoke test.

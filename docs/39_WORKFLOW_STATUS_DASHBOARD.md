@@ -55,6 +55,7 @@ Lo script `scripts/show_workflow_status.py` mostra:
   - `docs/59_ASF_CODEX_READONLY_REPEATABLE_TRIAL_PACK.md`;
   - `docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md`;
   - `docs/65_ASF_OPENAI_API_ADAPTER.md`;
+  - `docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md`;
 - presenza degli script principali:
   - `scripts/asf_next_step.py`;
   - `scripts/asf_codex_report_intake.py`;
@@ -134,7 +135,7 @@ La dashboard mostra se documenti, config e script del runner sono presenti, incl
 
 ### ASF OpenAI API Adapter
 
-La dashboard mostra se il documento e lo script dell'OpenAI API Adapter sono presenti, ma non esegue dry-run, mock, controlli environment o chiamate live.
+La dashboard mostra se i documenti e lo script dell'OpenAI API Adapter sono presenti, ma non esegue dry-run, mock, controlli environment, gate report o chiamate live.
 
 ---
 
@@ -238,6 +239,7 @@ La dashboard non sostituisce test, Verification Gate, Workflow Health Check, PR 
 - `docs/59_ASF_CODEX_READONLY_REPEATABLE_TRIAL_PACK.md`
 - `docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md`
 - `docs/65_ASF_OPENAI_API_ADAPTER.md`
+- `docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md`
 - `docs/40_RELEASE_READINESS.md`
 - `docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md`
 - `docs/42_ASF_NEXT_STEP_RUNNER.md`

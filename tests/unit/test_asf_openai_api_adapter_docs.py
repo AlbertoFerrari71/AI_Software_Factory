@@ -67,16 +67,22 @@ def test_openai_api_adapter_health_and_status_references_are_present() -> None:
         assert fragment in dashboard
 
 
-def test_openai_api_adapter_central_docs_track_step_500_and_next_step_510() -> None:
+def test_openai_api_adapter_central_docs_track_step_500_and_live_boundary_context() -> None:
     changelog = read("CHANGELOG.md")
     roadmap = read("docs/10_ROADMAP.md")
     decisions = read("docs/11_DECISIONS.md")
     readme = read("README.md")
 
-    for content in [changelog, roadmap, decisions, readme]:
+    for content in [changelog, roadmap, decisions]:
         assert "STEP 500" in content
         assert "OpenAI API Adapter" in content
-        assert "510) OpenAI API Adapter Live Boundary and Credential Gate" in content
+
+    assert "STEP 510" in readme
+    assert "OpenAI API Adapter" in readme
+
+    combined = "\n".join([changelog, roadmap, decisions, readme])
+    assert "510) OpenAI API Adapter Live Boundary and Credential Gate" in combined
+    assert "520) OpenAI API Adapter First Controlled Live Smoke Test" in combined
 
 
 def test_openai_api_adapter_script_and_docs_use_step_500_boundary() -> None:

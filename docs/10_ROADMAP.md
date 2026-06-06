@@ -75,8 +75,8 @@ Esempio:
 | 480 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
 | 490 | ASF PowerShell Command Pack Skill Hardening | Rafforzare la skill comune per command pack PowerShell robusti | Skill esterna aggiornata, template `.ps1`, esempi, documento STEP 490 | MVP personale | Completato |
 | 500 | OpenAI API Adapter | Creare adapter dry-run/mock per payload Responses-style senza chiamate live | Script adapter, doc, template, test, JSON evidence | SaaS-ready | Completato |
-| 510 | OpenAI API Adapter Live Boundary and Credential Gate | Definire confine live e gate credenziali senza esporre secret | Credential gate, stop conditions, live boundary documentato | SaaS-ready | Da fare |
-| 520 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
+| 510 | OpenAI API Adapter Live Boundary and Credential Gate | Definire confine live e gate credenziali senza esporre secret | Credential gate, stop conditions, live boundary documentato | SaaS-ready | Completato |
+| 520 | OpenAI API Adapter First Controlled Live Smoke Test | Eseguire una prima prova live controllata solo dopo gate umano esplicito | Live smoke test controllato, evidenza redatta, stop conditions | SaaS-ready | Da fare |
 | 530 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
 
 ---
@@ -1069,28 +1069,39 @@ Prossimo step consigliato:
 
 Definire il confine per una futura integrazione live e il gate credenziali senza esporre secret e senza trasformare il mock/dry-run in produzione.
 
-### Output previsti
+### Output realizzati
 
-- credential gate;
-- stop conditions;
-- redazione e logging sicuro;
-- classificazione errori network/API;
-- test senza credenziali reali di default.
+- credential gate su presenza boolean di `OPENAI_API_KEY`;
+- live boundary con `ASF_OPENAI_LIVE_ENABLED=1`, `--allow-live` e conferma esplicita;
+- decisioni deterministiche per gate mancanti e readiness futura;
+- live request plan no-network per `/v1/responses`;
+- documento `docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md`;
+- template `templates/codex_tasks/asf_openai_api_live_boundary_gate_template.md`;
+- test unitari e documentali;
+- nessuna chiamata live OpenAI API;
+- nessun SDK OpenAI o nuova dipendenza.
+
+Prossimo step consigliato:
+
+```text
+520) OpenAI API Adapter First Controlled Live Smoke Test
+```
 
 ---
 
-## 54. STEP 520 - Guided Mode
+## 54. STEP 520 - OpenAI API Adapter First Controlled Live Smoke Test
 
 ### Obiettivo
 
-Rendere il framework utilizzabile da utenti non tecnici.
+Eseguire una prima prova live controllata dell'adapter OpenAI solo dopo gate umano esplicito, credenziali locali, stop conditions e redazione verificata.
 
 ### Output previsti
 
-- wizard;
-- domande A/B/C/D;
-- default sicuri;
-- spiegazioni brevi.
+- comando smoke test live separato;
+- evidenza JSON redatta sotto `tmp/`;
+- classificazione errori API/network;
+- nessuna esposizione di secret;
+- test default ancora senza credenziali reali.
 
 ---
 
