@@ -6,7 +6,9 @@
 <STEP_NUMBER>) <TITLE>
 ```
 
-Use this template for work that changes the OpenAI API Adapter live boundary, credential gate or future smoke-test prerequisites.
+Use this template for work that changes the OpenAI API Adapter live boundary, credential gate or smoke-test prerequisites.
+
+Use `templates/codex_tasks/asf_openai_api_live_smoke_test_template.md` when the step explicitly authorizes a one-call live smoke test.
 
 ## Repository
 
@@ -48,6 +50,8 @@ For STEP 510, all gate checks produce reports only:
 - `--live-confirm I_UNDERSTAND_THIS_CALLS_OPENAI_API` is required for future-live readiness;
 - `network_performed` and `network_call_performed` must remain `false`.
 
+For STEP 520 and later controlled smoke steps, use the live smoke template instead.
+
 Required decisions:
 
 ```text
@@ -82,6 +86,7 @@ git --no-pager status --short
 ## Documentation to evaluate
 
 - `docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md`
+- `docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md`
 - `docs/65_ASF_OPENAI_API_ADAPTER.md`
 - `docs/64_ASF_PWSH_COMMAND_PACK_SKILL_HARDENING.md`
 - `docs/34_PROJECT_WORKFLOW_INDEX.md`
@@ -94,6 +99,7 @@ git --no-pager status --short
 - `docs/10_ROADMAP.md`
 - `docs/11_DECISIONS.md`
 - `docs/21_DOCUMENTATION_SYNC.md`
+- `templates/codex_tasks/asf_openai_api_live_smoke_test_template.md`
 
 ## Final report
 

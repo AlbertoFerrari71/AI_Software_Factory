@@ -280,6 +280,26 @@ python scripts/asf_openai_api_adapter.py --mode live --input "ping" --allow-live
 
 L'esito `LIVE_READY_FOR_SEPARATE_SMOKE_STEP` non esegue una chiamata OpenAI. Lo STEP 510 deve riportare `network_performed: false`, `network_call_performed: false` e `LIVE_CALLS_NOT_IMPLEMENTED_IN_STEP_510`.
 
+## 7.15 Eseguire OpenAI API Adapter first controlled live smoke
+
+La smoke live e' permessa solo se tutti i test locali sono passati, la API key e' impostata localmente e i gate espliciti sono presenti.
+
+Preflight no-network:
+
+```powershell
+$env:OPENAI_API_KEY = "<your local OpenAI API key>"
+$env:ASF_OPENAI_LIVE_ENABLED = "1"
+python scripts/asf_openai_api_adapter.py --mode live --gate-only --allow-live --live-confirm I_UNDERSTAND_THIS_CALLS_OPENAI_API --input "Return exactly ASF_LIVE_SMOKE_OK." --reasoning-effort none --text-verbosity low --max-output-tokens 32 --output-json tmp/asf_openai_live_smoke_gate.json
+```
+
+Una sola chiamata live, senza retry automatico:
+
+```powershell
+python scripts/asf_openai_api_adapter.py --mode live --allow-live --live-confirm I_UNDERSTAND_THIS_CALLS_OPENAI_API --input "Return exactly ASF_LIVE_SMOKE_OK." --reasoning-effort none --text-verbosity low --max-output-tokens 32 --output-json tmp/asf_openai_live_smoke_result.json
+```
+
+L'evidenza resta sotto `tmp/`, la richiesta usa `store: false` e la chiave non deve comparire in output, log o file.
+
 ---
 
 ## 8. Eseguire Verification Gate

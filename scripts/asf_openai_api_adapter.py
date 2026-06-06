@@ -6,9 +6,11 @@ import json
 import os
 import re
 import sys
+import urllib.error
+import urllib.request
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Mapping
+from typing import Any, Callable, Mapping
 
 
 EXIT_SUCCESS = 0
@@ -18,6 +20,9 @@ EXIT_RUNTIME_ERROR = 3
 DEFAULT_MODEL = "gpt-5.5"
 DEFAULT_REASONING_EFFORT = "medium"
 DEFAULT_TEXT_VERBOSITY = "medium"
+DEFAULT_LIVE_SMOKE_INPUT = "Return exactly ASF_LIVE_SMOKE_OK."
+DEFAULT_LIVE_MAX_OUTPUT_TOKENS = 32
+DEFAULT_LIVE_TIMEOUT_SECONDS = 30.0
 
 SUPPORTED_REASONING_EFFORTS = ("none", "low", "medium", "high", "xhigh")
 SUPPORTED_TEXT_VERBOSITY = ("low", "medium", "high")
@@ -31,11 +36,23 @@ LIVE_ENV_FLAG_MISSING = "LIVE_ENV_FLAG_MISSING"
 LIVE_FLAG_MISSING = "LIVE_FLAG_MISSING"
 LIVE_CONFIRMATION_MISSING = "LIVE_CONFIRMATION_MISSING"
 LIVE_READY_FOR_SEPARATE_SMOKE_STEP = "LIVE_READY_FOR_SEPARATE_SMOKE_STEP"
+LIVE_SMOKE_READY_FOR_CALL = "LIVE_SMOKE_READY_FOR_CALL"
+LIVE_SMOKE_EXECUTED_AND_PASSED = "LIVE_SMOKE_EXECUTED_AND_PASSED"
+LIVE_SMOKE_EXECUTED_BUT_FAILED = "LIVE_SMOKE_EXECUTED_BUT_FAILED"
+LIVE_SMOKE_NOT_RUN_MISSING_GATE = "LIVE_SMOKE_NOT_RUN_MISSING_GATE"
+LIVE_SMOKE_NOT_RUN_NETWORK_BLOCKED = "LIVE_SMOKE_NOT_RUN_NETWORK_BLOCKED"
+LIVE_SMOKE_UNEXPECTED_MODEL_OUTPUT = "LIVE_SMOKE_UNEXPECTED_MODEL_OUTPUT"
+LIVE_SMOKE_HTTP_ERROR = "LIVE_SMOKE_HTTP_ERROR"
+LIVE_SMOKE_INVALID_JSON = "LIVE_SMOKE_INVALID_JSON"
+LIVE_SMOKE_MISSING_SUCCESS_EVIDENCE = "LIVE_SMOKE_MISSING_SUCCESS_EVIDENCE"
+OPENAI_RESPONSES_ENDPOINT = "https://api.openai.com/v1/responses"
+OPENAI_RESPONSES_ENDPOINT_PATH = "/v1/responses"
 OPENAI_API_KEY_ENV = "OPENAI_API_KEY"
 ASF_OPENAI_LIVE_ENABLED_ENV = "ASF_OPENAI_LIVE_ENABLED"
 ASF_OPENAI_LIVE_ENABLED_VALUE = "1"
 LIVE_CONFIRMATION_VALUE = "I_UNDERSTAND_THIS_CALLS_OPENAI_API"
 MOCK_OUTPUT_TEXT = "ASF OpenAI adapter mock response."
+EXPECTED_LIVE_SMOKE_MARKER = "ASF_LIVE_SMOKE_OK"
 
 OPENAI_API_KEY_PATTERN = re.compile(r"sk-(?:proj-|svcacct-)?[A-Za-z0-9_-]{8,}")
 BEARER_TOKEN_PATTERN = re.compile(r"(?i)\bBearer\s+[A-Za-z0-9._-]{8,}")
@@ -51,6 +68,12 @@ class InputError(ValueError):
 
 
 @dataclass(frozen=True)
+class HttpJsonResponse:
+    status_code: int
+    body_text: str
+
+
+@dataclass(frozen=True)
 class OpenAIAdapterConfig:
     mode: str = "dry-run"
     input_text: str = ""
@@ -60,6 +83,9 @@ class OpenAIAdapterConfig:
     text_verbosity: str = DEFAULT_TEXT_VERBOSITY
     allow_live: bool = False
     live_confirm: str | None = None
+    max_output_tokens: int | None = None
+    gate_only: bool = False
+    timeout_seconds: float = DEFAULT_LIVE_TIMEOUT_SECONDS
 
 
 @dataclass(frozen=True)
@@ -145,6 +171,12 @@ def validate_adapter_config(config: OpenAIAdapterConfig) -> None:
     if config.text_verbosity not in SUPPORTED_TEXT_VERBOSITY:
         allowed = ", ".join(SUPPORTED_TEXT_VERBOSITY)
         raise InputError(f"--text-verbosity must be one of: {allowed}")
+    if config.max_output_tokens is not None and config.max_output_tokens < 1:
+        raise InputError("--max-output-tokens must be greater than zero.")
+    if config.max_output_tokens is not None and config.max_output_tokens > 4096:
+        raise InputError("--max-output-tokens must be 4096 or less.")
+    if config.timeout_seconds <= 0:
+        raise InputError("--timeout-seconds must be greater than zero.")
 
 
 def build_responses_payload(
@@ -154,6 +186,8 @@ def build_responses_payload(
     model: str = DEFAULT_MODEL,
     reasoning_effort: str = DEFAULT_REASONING_EFFORT,
     text_verbosity: str = DEFAULT_TEXT_VERBOSITY,
+    store: bool | None = None,
+    max_output_tokens: int | None = None,
 ) -> dict[str, Any]:
     config = OpenAIAdapterConfig(
         input_text=input_text,
@@ -161,6 +195,7 @@ def build_responses_payload(
         model=model,
         reasoning_effort=reasoning_effort,
         text_verbosity=text_verbosity,
+        max_output_tokens=max_output_tokens,
     )
     validate_adapter_config(config)
 
@@ -170,6 +205,10 @@ def build_responses_payload(
     }
     if instructions and instructions.strip():
         payload["instructions"] = instructions
+    if store is not None:
+        payload["store"] = store
+    if max_output_tokens is not None:
+        payload["max_output_tokens"] = max_output_tokens
     payload["reasoning"] = {"effort": reasoning_effort}
     payload["text"] = {"verbosity": text_verbosity}
     return payload
@@ -254,10 +293,12 @@ def build_live_request_plan(config: OpenAIAdapterConfig) -> dict[str, Any]:
         model=config.model,
         reasoning_effort=config.reasoning_effort,
         text_verbosity=config.text_verbosity,
+        store=False,
+        max_output_tokens=live_max_output_tokens(config),
     )
     return {
         "api_surface": "responses",
-        "endpoint": "/v1/responses",
+        "endpoint": OPENAI_RESPONSES_ENDPOINT_PATH,
         "model": config.model,
         "store": False,
         "network_call_performed": False,
@@ -278,30 +319,229 @@ def evaluate_live_boundary(config: OpenAIAdapterConfig, environ: Mapping[str, st
     return LIVE_READY_FOR_SEPARATE_SMOKE_STEP
 
 
-def run_live(config: OpenAIAdapterConfig, environ: Mapping[str, str] | None = None) -> dict[str, Any]:
-    validate_adapter_config(config)
+def live_max_output_tokens(config: OpenAIAdapterConfig) -> int:
+    return config.max_output_tokens or DEFAULT_LIVE_MAX_OUTPUT_TOKENS
+
+
+def is_tiny_non_sensitive_live_prompt(input_text: str) -> bool:
+    text = input_text.strip()
+    if text != DEFAULT_LIVE_SMOKE_INPUT:
+        return False
+    if len(text) > 80:
+        return False
+    if OPENAI_API_KEY_PATTERN.search(text) or BEARER_TOKEN_PATTERN.search(text):
+        return False
+    return True
+
+
+def evaluate_live_smoke_gates(
+    config: OpenAIAdapterConfig,
+    environ: Mapping[str, str] | None = None,
+) -> list[str]:
     source = environment_source(environ)
+    missing_gates: list[str] = []
+    if not source.get(OPENAI_API_KEY_ENV):
+        missing_gates.append(OPENAI_API_KEY_ENV)
+    if source.get(ASF_OPENAI_LIVE_ENABLED_ENV) != ASF_OPENAI_LIVE_ENABLED_VALUE:
+        missing_gates.append(f"{ASF_OPENAI_LIVE_ENABLED_ENV}={ASF_OPENAI_LIVE_ENABLED_VALUE}")
+    if not config.allow_live:
+        missing_gates.append("--allow-live")
+    if config.live_confirm != LIVE_CONFIRMATION_VALUE:
+        missing_gates.append(f"--live-confirm {LIVE_CONFIRMATION_VALUE}")
+    if not is_tiny_non_sensitive_live_prompt(config.input_text):
+        missing_gates.append("tiny non-sensitive live smoke prompt")
+    return missing_gates
+
+
+def build_live_payload(config: OpenAIAdapterConfig) -> dict[str, Any]:
+    return build_responses_payload(
+        config.input_text,
+        instructions=config.instructions,
+        model=config.model,
+        reasoning_effort=config.reasoning_effort,
+        text_verbosity=config.text_verbosity,
+        store=False,
+        max_output_tokens=live_max_output_tokens(config),
+    )
+
+
+def post_openai_responses(
+    endpoint: str,
+    payload: dict[str, Any],
+    api_key: str,
+    timeout_seconds: float,
+) -> HttpJsonResponse:
+    body = json.dumps(payload).encode("utf-8")
+    request = urllib.request.Request(
+        endpoint,
+        data=body,
+        headers={
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+        },
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=timeout_seconds) as response:
+            response_body = response.read().decode("utf-8", errors="replace")
+            return HttpJsonResponse(status_code=response.getcode(), body_text=response_body)
+    except urllib.error.HTTPError as exc:
+        response_body = exc.read().decode("utf-8", errors="replace")
+        return HttpJsonResponse(status_code=exc.code, body_text=response_body)
+
+
+HttpPostJson = Callable[[str, dict[str, Any], str, float], HttpJsonResponse]
+
+
+def collect_response_text_fragments(value: Any) -> list[str]:
+    fragments: list[str] = []
+    if isinstance(value, dict):
+        for key, item in value.items():
+            if key in {"output_text", "text"} and isinstance(item, str):
+                fragments.append(item)
+            else:
+                fragments.extend(collect_response_text_fragments(item))
+    elif isinstance(value, list):
+        for item in value:
+            fragments.extend(collect_response_text_fragments(item))
+    return fragments
+
+
+def extract_output_text(response_json: Any) -> str:
+    return "\n".join(fragment for fragment in collect_response_text_fragments(response_json) if fragment)
+
+
+def response_has_minimal_success_evidence(response_json: Any, output_text: str) -> bool:
+    if isinstance(response_json, dict):
+        if bool(response_json.get("id")):
+            return True
+        if response_json.get("object") == "response":
+            return True
+    return bool(output_text)
+
+
+def base_live_result(
+    config: OpenAIAdapterConfig,
+    source: Mapping[str, str],
+    *,
+    runtime_artifact_path: str | None = None,
+) -> dict[str, Any]:
     credential_gate = check_credential_gate(source)
-    decision = evaluate_live_boundary(config, source)
-    result: dict[str, Any] = {
-        "status": "LIVE_BOUNDARY_GATE",
-        "decision": decision,
+    return {
+        "status": "LIVE_SMOKE",
+        "mode": "live",
+        "decision": LIVE_SMOKE_NOT_RUN_MISSING_GATE,
         "credential_source": credential_gate["credential_source"],
         "openai_api_key_present": credential_gate["openai_api_key_present"],
         "secret_value_logged": credential_gate["secret_value_logged"],
         "network_performed": False,
+        "network_call_attempted": False,
         "network_call_performed": False,
-        "live_call_status": LIVE_CALLS_NOT_IMPLEMENTED,
-        "live_default": LIVE_DISABLED_BY_DEFAULT,
+        "network_call_count": 0,
+        "store": False,
+        "model": config.model,
+        "runtime_artifact_path": runtime_artifact_path,
+        "output_text_present": False,
+        "expected_marker_found": False,
+        "response_id_present": False,
+        "minimal_success_evidence_present": False,
+        "gate_only": config.gate_only,
         "gate_inputs": {
             "asf_openai_live_enabled": source.get(ASF_OPENAI_LIVE_ENABLED_ENV) == ASF_OPENAI_LIVE_ENABLED_VALUE,
             "allow_live_flag": config.allow_live,
             "live_confirmation_present": bool(config.live_confirm),
             "live_confirmation_matches": config.live_confirm == LIVE_CONFIRMATION_VALUE,
+            "tiny_non_sensitive_prompt": is_tiny_non_sensitive_live_prompt(config.input_text),
         },
         "live_request_plan": build_live_request_plan(config),
-        "message": "STEP 510 produced a gate report only; no live OpenAI API call was performed.",
     }
+
+
+def run_live(
+    config: OpenAIAdapterConfig,
+    environ: Mapping[str, str] | None = None,
+    *,
+    http_post_json: HttpPostJson | None = None,
+    runtime_artifact_path: str | None = None,
+) -> dict[str, Any]:
+    validate_adapter_config(config)
+    source = environment_source(environ)
+    result = base_live_result(config, source, runtime_artifact_path=runtime_artifact_path)
+    missing_gates = evaluate_live_smoke_gates(config, source)
+    if not missing_gates and not config.gate_only and runtime_artifact_path is None:
+        missing_gates.append("runtime artifact path under tmp/")
+    result["missing_gates"] = missing_gates
+    result["live_boundary_decision"] = evaluate_live_boundary(config, source)
+
+    if missing_gates:
+        result["decision"] = LIVE_SMOKE_NOT_RUN_MISSING_GATE
+        result["error_category"] = LIVE_SMOKE_NOT_RUN_MISSING_GATE
+        result["message"] = "Live smoke was not run because one or more mandatory gates are missing."
+        return redact_data(result)
+
+    if config.gate_only:
+        result["decision"] = LIVE_SMOKE_READY_FOR_CALL
+        result["message"] = "All live smoke gates are present; gate-only mode performed no network call."
+        return redact_data(result)
+
+    api_key = source.get(OPENAI_API_KEY_ENV)
+    if not api_key:
+        result["decision"] = LIVE_SMOKE_NOT_RUN_MISSING_GATE
+        result["error_category"] = LIVE_SMOKE_NOT_RUN_MISSING_GATE
+        result["missing_gates"] = [OPENAI_API_KEY_ENV]
+        return redact_data(result)
+
+    payload = build_live_payload(config)
+    result["network_call_attempted"] = True
+    result["network_call_count"] = 1
+    post_json = post_openai_responses if http_post_json is None else http_post_json
+    try:
+        http_response = post_json(OPENAI_RESPONSES_ENDPOINT, payload, api_key, config.timeout_seconds)
+    except (OSError, TimeoutError, urllib.error.URLError) as exc:
+        result["decision"] = LIVE_SMOKE_EXECUTED_BUT_FAILED
+        result["error_category"] = LIVE_SMOKE_NOT_RUN_NETWORK_BLOCKED
+        result["message"] = redact_secret(str(exc))
+        return redact_data(result)
+
+    result["network_performed"] = True
+    result["network_call_performed"] = True
+    result["http_status"] = http_response.status_code
+
+    if http_response.status_code < 200 or http_response.status_code >= 300:
+        result["decision"] = LIVE_SMOKE_EXECUTED_BUT_FAILED
+        result["error_category"] = LIVE_SMOKE_HTTP_ERROR
+        result["message"] = "OpenAI Responses API returned a non-success HTTP status."
+        return redact_data(result)
+
+    try:
+        response_json = json.loads(http_response.body_text)
+    except json.JSONDecodeError as exc:
+        result["decision"] = LIVE_SMOKE_EXECUTED_BUT_FAILED
+        result["error_category"] = LIVE_SMOKE_INVALID_JSON
+        result["message"] = redact_secret(str(exc))
+        return redact_data(result)
+
+    output_text = extract_output_text(response_json)
+    response_id_present = isinstance(response_json, dict) and bool(response_json.get("id"))
+    minimal_success_evidence = response_has_minimal_success_evidence(response_json, output_text)
+    marker_found = EXPECTED_LIVE_SMOKE_MARKER in output_text
+    result["output_text_present"] = bool(output_text)
+    result["expected_marker_found"] = marker_found
+    result["response_id_present"] = response_id_present
+    result["minimal_success_evidence_present"] = minimal_success_evidence
+    result["output_text"] = redact_secret(output_text)
+
+    if marker_found and minimal_success_evidence and payload.get("store") is False and result["network_call_count"] == 1:
+        result["decision"] = LIVE_SMOKE_EXECUTED_AND_PASSED
+        result["message"] = "Live smoke executed exactly once and returned the expected marker."
+        return redact_data(result)
+
+    result["decision"] = LIVE_SMOKE_EXECUTED_BUT_FAILED
+    if output_text and not marker_found:
+        result["error_category"] = LIVE_SMOKE_UNEXPECTED_MODEL_OUTPUT
+    else:
+        result["error_category"] = LIVE_SMOKE_MISSING_SUCCESS_EVIDENCE
+    result["message"] = "Live smoke response did not satisfy the expected marker and success evidence contract."
     return redact_data(result)
 
 
@@ -335,6 +575,22 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         "--live-confirm",
         help=f"Required confirmation string for future live readiness: {LIVE_CONFIRMATION_VALUE}.",
     )
+    parser.add_argument(
+        "--gate-only",
+        action="store_true",
+        help="Evaluate live smoke gates without performing a network call.",
+    )
+    parser.add_argument(
+        "--max-output-tokens",
+        type=int,
+        help=f"Maximum output tokens for a live Responses API smoke call. Default: {DEFAULT_LIVE_MAX_OUTPUT_TOKENS}.",
+    )
+    parser.add_argument(
+        "--timeout-seconds",
+        type=float,
+        default=DEFAULT_LIVE_TIMEOUT_SECONDS,
+        help=f"HTTP timeout for the live smoke call. Default: {DEFAULT_LIVE_TIMEOUT_SECONDS}.",
+    )
     parser.add_argument("--output-json", help="Optional path for deterministic JSON evidence.")
     return parser.parse_args(argv)
 
@@ -349,13 +605,49 @@ def build_config(args: argparse.Namespace) -> OpenAIAdapterConfig:
         text_verbosity=args.text_verbosity,
         allow_live=args.allow_live,
         live_confirm=args.live_confirm,
+        max_output_tokens=args.max_output_tokens,
+        gate_only=args.gate_only,
+        timeout_seconds=args.timeout_seconds,
     )
 
 
-def write_json(path_value: str, data: dict[str, Any]) -> Path:
+def resolve_output_path(path_value: str) -> Path:
     path = Path(path_value)
     if not path.is_absolute():
         path = repo_root() / path
+    return path
+
+
+def relative_display_path(path: Path) -> str:
+    root = repo_root().resolve()
+    resolved = path.resolve()
+    try:
+        return resolved.relative_to(root).as_posix()
+    except ValueError:
+        return str(resolved)
+
+
+def is_under_repo_tmp(path: Path) -> bool:
+    tmp_root = (repo_root() / "tmp").resolve()
+    resolved = path.resolve()
+    try:
+        resolved.relative_to(tmp_root)
+    except ValueError:
+        return False
+    return True
+
+
+def live_runtime_artifact_path(path_value: str | None) -> str | None:
+    if not path_value:
+        return None
+    path = resolve_output_path(path_value)
+    if not is_under_repo_tmp(path):
+        raise InputError("--output-json for live mode must stay under tmp/.")
+    return relative_display_path(path)
+
+
+def write_json(path_value: str, data: dict[str, Any]) -> Path:
+    path = resolve_output_path(path_value)
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(redact_data(data), indent=2, sort_keys=True) + "\n", encoding="utf-8", newline="\n")
     return path
@@ -381,7 +673,7 @@ def run(argv: list[str]) -> int:
     elif config.mode == "mock":
         data = run_mock(config)
     elif config.mode == "live":
-        data = run_live(config)
+        data = run_live(config, runtime_artifact_path=live_runtime_artifact_path(args.output_json))
     else:
         raise InputError(f"Unsupported mode: {config.mode}")
 

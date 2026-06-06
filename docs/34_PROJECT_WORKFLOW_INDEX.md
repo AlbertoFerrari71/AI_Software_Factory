@@ -50,6 +50,7 @@ L'indice orienta il lavoro. Non sostituisce i documenti specifici, il Verificati
 | Eseguire Verification Gate | `docs/20_VERIFICATION_GATE.md` | `scripts/verify.ps1` | Prima di commit/push/PR e dopo merge quando richiesto | Include test, `git diff --check`, `git status --short` |
 | Usare ASF OpenAI API Adapter | `docs/65_ASF_OPENAI_API_ADAPTER.md` | `scripts/asf_openai_api_adapter.py`, `templates/codex_tasks/asf_openai_api_adapter_template.md` | Quando serve costruire payload Responses-style e JSON evidence dry-run/mock | Non fa chiamate live, non richiede `OPENAI_API_KEY`, non usa SDK |
 | Usare ASF OpenAI API Adapter Live Boundary Credential Gate | `docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md` | `scripts/asf_openai_api_adapter.py`, `templates/codex_tasks/asf_openai_api_live_boundary_gate_template.md` | Quando serve produrre un gate report per futura smoke live | Non fa chiamate live, non stampa secret, non usa SDK |
+| Eseguire ASF OpenAI API Adapter First Controlled Live Smoke Test | `docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md` | `scripts/asf_openai_api_adapter.py`, `templates/codex_tasks/asf_openai_api_live_smoke_test_template.md` | Quando uno step autorizza esplicitamente una singola smoke live OpenAI API | Richiede tutti i gate, `store: false`, artifact sotto `tmp/` e nessun leak di secret |
 | Controllare Documentation Sync | `docs/21_DOCUMENTATION_SYNC.md` | Nessuno | Ogni step documentale o operativo | Valuta changelog, roadmap, decisions e documenti specifici |
 | Controllare Soft Protection Guardrails | `docs/24_SOFT_PROTECTION_GUARDRAILS.md` | `scripts/git/check_soft_guardrails.ps1` | Prima del commit o come controllo locale | Read-only; non installa hook |
 | Eseguire Workflow Health Check | `docs/35_WORKFLOW_HEALTH_CHECK.md` | `scripts/check_workflow_health.py` | Quando workflow docs, script o riferimenti centrali cambiano | Read-only; non sostituisce Verification Gate |
@@ -122,6 +123,7 @@ Regole operative:
 - `docs/64_ASF_PWSH_COMMAND_PACK_SKILL_HARDENING.md`: riferimento ASF per la skill esterna `as-common-pwsh-command-pack`.
 - `docs/65_ASF_OPENAI_API_ADAPTER.md`: adapter OpenAI API dry-run/mock con payload Responses-style e redazione API key.
 - `docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md`: live boundary e credential gate no-network per futura smoke controllata.
+- `docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md`: prima smoke live controllata OpenAI API con gate espliciti, `store: false` e output redatto sotto `tmp/`.
 
 ---
 
@@ -145,7 +147,7 @@ Regole operative:
 - `scripts/asf_codex_result_capture.py`: capture read-only di stdout, stderr, exit code e working tree.
 - `scripts/asf_codex_readonly_safety_gate.py`: safety gate read-only su result capture.
 - `scripts/asf_codex_readonly_trial_compare.py`: confronto Markdown di due o piu' report repeatable trial.
-- `scripts/asf_openai_api_adapter.py`: adapter dry-run/mock e live boundary gate per payload OpenAI Responses-style, senza chiamate live.
+- `scripts/asf_openai_api_adapter.py`: adapter dry-run/mock, live boundary gate e prima smoke live controllata per payload OpenAI Responses-style.
 
 Questi script non devono essere usati per automatizzare commit, push, PR o merge.
 
@@ -176,6 +178,7 @@ Config centrale:
 - `templates/codex_tasks/asf_codex_readonly_trial_compare_template.md`: struttura del report di confronto trial.
 - `templates/codex_tasks/asf_openai_api_adapter_template.md`: struttura task packet per step futuri sull'adapter OpenAI.
 - `templates/codex_tasks/asf_openai_api_live_boundary_gate_template.md`: struttura task packet per live boundary, credential gate e futura smoke controllata.
+- `templates/codex_tasks/asf_openai_api_live_smoke_test_template.md`: struttura task packet per smoke live controllata e hardening risultati.
 
 ---
 
@@ -274,6 +277,13 @@ Per produrre un gate report live no-network per una futura smoke controllata:
 
 ```powershell
 python scripts/asf_openai_api_adapter.py --mode live --input "ping" --output-json tmp/asf_openai_live_boundary_gate.json
+```
+
+Per eseguire la smoke live controllata solo dopo preflight positivo e gate espliciti:
+
+```powershell
+python scripts/asf_openai_api_adapter.py --mode live --gate-only --allow-live --live-confirm I_UNDERSTAND_THIS_CALLS_OPENAI_API --input "Return exactly ASF_LIVE_SMOKE_OK." --reasoning-effort none --text-verbosity low --max-output-tokens 32 --output-json tmp/asf_openai_live_smoke_gate.json
+python scripts/asf_openai_api_adapter.py --mode live --allow-live --live-confirm I_UNDERSTAND_THIS_CALLS_OPENAI_API --input "Return exactly ASF_LIVE_SMOKE_OK." --reasoning-effort none --text-verbosity low --max-output-tokens 32 --output-json tmp/asf_openai_live_smoke_result.json
 ```
 
 I comandi di commit, push, PR e merge restano azioni manuali di Alberto e non sono raccolti qui in una sequenza automatica.

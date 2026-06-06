@@ -76,8 +76,9 @@ Esempio:
 | 490 | ASF PowerShell Command Pack Skill Hardening | Rafforzare la skill comune per command pack PowerShell robusti | Skill esterna aggiornata, template `.ps1`, esempi, documento STEP 490 | MVP personale | Completato |
 | 500 | OpenAI API Adapter | Creare adapter dry-run/mock per payload Responses-style senza chiamate live | Script adapter, doc, template, test, JSON evidence | SaaS-ready | Completato |
 | 510 | OpenAI API Adapter Live Boundary and Credential Gate | Definire confine live e gate credenziali senza esporre secret | Credential gate, stop conditions, live boundary documentato | SaaS-ready | Completato |
-| 520 | OpenAI API Adapter First Controlled Live Smoke Test | Eseguire una prima prova live controllata solo dopo gate umano esplicito | Live smoke test controllato, evidenza redatta, stop conditions | SaaS-ready | Da fare |
-| 530 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
+| 520 | OpenAI API Adapter First Controlled Live Smoke Test | Eseguire una prima prova live controllata solo dopo gate umano esplicito | Live smoke test controllato, evidenza redatta, stop conditions | SaaS-ready | Completato |
+| 530 | OpenAI API Adapter Live Smoke Result Hardening | Rafforzare parsing, classificazioni e report della smoke live dopo il primo test controllato | Hardening risultato live, edge case response, report stabile | SaaS-ready | Da fare |
+| 540 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
 
 ---
 
@@ -1095,17 +1096,40 @@ Prossimo step consigliato:
 
 Eseguire una prima prova live controllata dell'adapter OpenAI solo dopo gate umano esplicito, credenziali locali, stop conditions e redazione verificata.
 
-### Output previsti
+### Output realizzati
 
-- comando smoke test live separato;
+- comando preflight `--gate-only`;
+- comando smoke test live con massimo una richiesta Responses API;
+- payload live con `store: false`, prompt tiny e output massimo 32 token;
 - evidenza JSON redatta sotto `tmp/`;
-- classificazione errori API/network;
+- classificazione errori API/network/output;
 - nessuna esposizione di secret;
-- test default ancora senza credenziali reali.
+- test default ancora senza credenziali reali o network.
+
+Prossimo step consigliato:
+
+```text
+530) OpenAI API Adapter Live Smoke Result Hardening
+```
 
 ---
 
-## 55. STEP 530 - SaaS Evolution Plan
+## 55. STEP 530 - OpenAI API Adapter Live Smoke Result Hardening
+
+### Obiettivo
+
+Rafforzare parsing, classificazioni, report e casi limite della live smoke dopo il primo test controllato.
+
+### Output previsti
+
+- hardening estrazione output da risposte Responses API;
+- classificazioni piu' granulari per HTTP, JSON, output e policy;
+- report stabile per confrontare smoke successive;
+- nessun allargamento verso integrazione produttiva.
+
+---
+
+## 56. STEP 540 - SaaS Evolution Plan
 
 ### Obiettivo
 
