@@ -44,6 +44,15 @@ For Alberto's operational vision of AI as a verifiable collaborator, see docs/pr
 - Avoid fragile here-strings in long copy-paste command blocks.
 - Avoid fragile try/finally structures in long pasted command blocks when a simpler explicit flow is possible.
 
+## Codex prompt and command-pack separation
+
+- For prompts destined to Codex, default to a clean, self-contained prompt that can be copied directly into Codex, without a PowerShell wrapper.
+- Use the Codex command pack PowerShell only when Alberto explicitly asks to save the prompt in the ChatGPT Bridge with numbered files, LAST files, or a formal audit trail.
+- Use the pwsh/publication command pack only after the Codex report, for intake gate, local verification, commit, push, PR/merge, and final verification.
+- Always keep these layers separate: clean Codex prompt; optional Bridge save; intake gate; controlled Git publication.
+- Do not mix a Codex prompt, Bridge save script, Git commands, publication, and final checks in the same block unless Alberto explicitly asks for that combined artifact.
+- Codex leaves the working tree modified for manual review and does not commit, push, open PRs, merge, or deploy unless a future task explicitly authorizes the action.
+
 ## Codex invocation safety
 
 - Codex target invocation work must remain read-only unless a future step explicitly authorizes a different design.

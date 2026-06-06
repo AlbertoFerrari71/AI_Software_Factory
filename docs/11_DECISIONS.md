@@ -1896,3 +1896,54 @@ Il prossimo step consigliato e':
 ```text
 540) OpenAI API Adapter Controlled Live Execution Pack
 ```
+
+---
+
+## DEC-063 - Codex prompt clean-first workflow
+
+**Data:** 2026-06-06
+**Stato:** Accettata
+
+### Contesto
+
+Il workflow ASF usa sia prompt Codex direttamente copiabili sia command pack PowerShell per salvataggio, audit trail e pubblicazione controllata.
+
+Il rischio operativo e' mischiare nello stesso blocco prompt Codex, script PowerShell, salvataggio Bridge, comandi Git, pubblicazione e verifiche finali, rendendo i prompt piu' sporchi, meno leggibili e piu' fragili.
+
+### Decisione
+
+Stabilire la regola:
+
+```text
+Clean Codex prompt first by default.
+PowerShell only when archiving, auditing, or publishing.
+```
+
+Per i prompt destinati a Codex, il default e' un prompt pulito, autosufficiente e direttamente copiabile, senza wrapper PowerShell.
+
+Il Codex command pack PowerShell si usa solo quando Alberto chiede esplicitamente salvataggio nel Bridge Dropbox / ChatGPT Bridge, file numerati, file `LAST` o audit trail formale.
+
+Il pwsh/publication command pack si usa dopo il report Codex e l'intake gate, per commit, push, PR/merge e verifica finale presidiata. La pubblicazione resta bloccata se test, health check, Verification Gate o guardrail falliscono.
+
+### Motivazione
+
+Separare i livelli riduce ambiguita' tra istruzioni a Codex, archiviazione del prompt e pubblicazione Git.
+
+Il Bridge Dropbox resta utile per audit trail, ripartenze, output tracciati e report finali, ma non deve diventare il wrapper obbligatorio per ogni prompt veloce.
+
+### Conseguenze
+
+I documenti operativi principali devono distinguere:
+
+- prompt Codex pulito;
+- eventuale salvataggio Bridge;
+- intake gate dopo report Codex;
+- publication command pack per chiusura Git controllata.
+
+Codex lascia il working tree modificato per review manuale e non fa commit, push, PR, merge o deploy salvo richiesta esplicita.
+
+Il prossimo step consigliato resta:
+
+```text
+540) OpenAI API Adapter Controlled Live Execution Pack
+```

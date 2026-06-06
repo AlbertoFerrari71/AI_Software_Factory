@@ -136,6 +136,40 @@ Non aggirare il validatore rimuovendo sezioni o vincoli dal task.
 
 ---
 
+## 6.1 Ricetta - Preparare prompt Codex clean-first
+
+### Quando usarla
+
+Prima di copiare istruzioni in Codex.
+
+### Comandi / output
+
+Il default non e' uno script. Preparare prima un prompt Codex pulito, autosufficiente e direttamente copiabile:
+
+```text
+Clean Codex prompt first by default.
+PowerShell only when archiving, auditing, or publishing.
+```
+
+Usare il Codex command pack PowerShell solo se Alberto chiede salvataggio nel Bridge Dropbox / ChatGPT Bridge, file numerati, file `LAST` o audit trail formale.
+
+Dopo il report Codex, usare l'intake gate. Il pwsh/publication command pack entra solo dopo review e verifiche locali, per commit, push, PR/merge e verifica finale presidiata.
+
+### Esito atteso
+
+- prompt Codex pulito separato;
+- eventuale salvataggio Bridge separato;
+- intake gate dopo report Codex;
+- pubblicazione Git controllata separata.
+
+### Cosa non fare
+
+Non mischiare prompt Codex e script PowerShell nello stesso blocco, salvo richiesta esplicita.
+
+Non mettere comandi Git, commit, push, PR, merge o verifiche finali dentro il prompt Codex se Alberto ha chiesto solo il prompt pulito.
+
+---
+
 ## 7. Ricetta - Dopo il report Codex
 
 ### Quando usarla

@@ -69,6 +69,25 @@ Lite controlla i requisiti minimi. Strict e' piu' severo ed e' consigliato per t
 
 ---
 
+## 5.1 Preparare prompt Codex clean-first
+
+Default:
+
+```text
+Clean Codex prompt first by default.
+PowerShell only when archiving, auditing, or publishing.
+```
+
+Prima di lanciare Codex, preparare un prompt Codex pulito, autosufficiente e direttamente copiabile, senza wrapper PowerShell e senza comandi Git o pubblicazione nello stesso blocco.
+
+Usare il Codex command pack PowerShell solo se Alberto chiede salvataggio nel Bridge Dropbox / ChatGPT Bridge, file numerati, file `LAST` o audit trail formale.
+
+Dopo il report Codex, fare intake gate e verifiche locali. Solo dopo, se serve pubblicare, usare il pwsh/publication command pack per commit, push, PR/merge e verifica finale presidiata.
+
+Non mischiare prompt Codex e script PowerShell nello stesso blocco, salvo richiesta esplicita.
+
+---
+
 ## 6. Eseguire release smoke workflow
 
 ```powershell

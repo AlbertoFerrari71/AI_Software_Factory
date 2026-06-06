@@ -78,6 +78,7 @@ Esempio:
 | 510 | OpenAI API Adapter Live Boundary and Credential Gate | Definire confine live e gate credenziali senza esporre secret | Credential gate, stop conditions, live boundary documentato | SaaS-ready | Completato |
 | 520 | OpenAI API Adapter First Controlled Live Smoke Test | Eseguire una prima prova live controllata solo dopo gate umano esplicito | Live smoke test controllato, evidenza redatta, stop conditions | SaaS-ready | Completato |
 | 530 | OpenAI API Adapter Live Smoke Result Hardening | Rafforzare parsing, classificazioni e report della smoke live dopo il primo test controllato | Schema risultato live, classificazioni, artifact sicuri, test mockati | SaaS-ready | Completato |
+| 535 | Codex Prompt Clean-First Workflow Update | Chiarire il default ChatGPT -> Codex con prompt pulito separato da Bridge, intake gate e pubblicazione | Regola operativa, richiami workflow, test documentale | MVP personale | Completato |
 | 540 | OpenAI API Adapter Controlled Live Execution Pack | Preparare un pack separato per eventuale futura esecuzione live controllata | Gate finale, procedura live separata, stop conditions, artifact sotto `tmp/` | SaaS-ready | Da fare |
 | 550 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
 
@@ -1131,7 +1132,24 @@ Rafforzare parsing, classificazioni, report e casi limite della live smoke dopo 
 
 ---
 
-## 56. STEP 540 - OpenAI API Adapter Controlled Live Execution Pack
+## 56. STEP 535 - Codex Prompt Clean-First Workflow Update
+
+### Obiettivo
+
+Chiarire il flusso ChatGPT -> Codex stabilendo che il default e' un prompt Codex pulito, autosufficiente e direttamente copiabile, separato da PowerShell, Bridge, intake gate e pubblicazione.
+
+### Output realizzati
+
+- regola clean-first in `AGENTS.md` e `docs/08_CODEX_WORKFLOW.md`;
+- tabella livelli per prompt Codex pulito, Codex command pack PowerShell, intake gate, pwsh/publication command pack e Codex;
+- richiami brevi in Project Workflow Index, Workflow Quick Reference, Workflow Command Cookbook e documento PowerShell Command Pack;
+- conferma che Bridge Dropbox / ChatGPT Bridge, file numerati, file `LAST` e audit trail restano validi quando richiesti;
+- conferma che Codex lascia il working tree modificato e non fa commit, push, PR, merge o deploy salvo richiesta esplicita;
+- test documentale a protezione della regola operativa.
+
+---
+
+## 57. STEP 540 - OpenAI API Adapter Controlled Live Execution Pack
 
 ### Obiettivo
 
@@ -1147,7 +1165,7 @@ Preparare un pack separato per eventuale futura esecuzione live controllata, sol
 
 ---
 
-## 57. STEP 550 - SaaS Evolution Plan
+## 58. STEP 550 - SaaS Evolution Plan
 
 ### Obiettivo
 

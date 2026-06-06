@@ -69,6 +69,25 @@ Each command pack must generate numbered artifacts and matching `LAST-*` artifac
 
 ---
 
+## 3.1 Clean-first Boundary for Codex Prompts
+
+STEP 535 clarifies the ChatGPT -> Codex boundary:
+
+```text
+Clean Codex prompt first by default.
+PowerShell only when archiving, auditing, or publishing.
+```
+
+The default handoff to Codex is a clean, self-contained prompt that can be copied directly into Codex, without a PowerShell wrapper.
+
+Use the Codex command pack PowerShell only when Alberto explicitly asks to save the prompt in the Bridge Dropbox / ChatGPT Bridge with numbered artifacts, `LAST-*` artifacts, or a formal audit trail.
+
+Use the pwsh/publication command pack after the Codex report, intake gate, local verification and human review, for controlled commit, push, PR/merge and final verification. Publication remains blocked when tests, health check, Verification Gate or guardrails fail.
+
+Do not mix a Codex prompt, Bridge save script, Git commands, publication and final checks in the same block unless Alberto explicitly asks for that combined artifact.
+
+---
+
 ## 4. Guardrails
 
 The skill enforces these guardrails:
