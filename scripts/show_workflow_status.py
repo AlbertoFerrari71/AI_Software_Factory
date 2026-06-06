@@ -37,6 +37,7 @@ CENTRAL_DOCUMENTS = [
     "docs/58_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL_RESULTS.md",
     "docs/59_ASF_CODEX_READONLY_REPEATABLE_TRIAL_PACK.md",
     "docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md",
+    "docs/65_ASF_OPENAI_API_ADAPTER.md",
 ]
 
 MAIN_SCRIPTS = [
@@ -50,6 +51,7 @@ MAIN_SCRIPTS = [
     "scripts/asf_codex_result_capture.py",
     "scripts/asf_codex_readonly_safety_gate.py",
     "scripts/asf_codex_readonly_trial_compare.py",
+    "scripts/asf_openai_api_adapter.py",
     "scripts/check_workflow_health.py",
     "scripts/show_workflow_status.py",
     "scripts/generate_task_packet.py",

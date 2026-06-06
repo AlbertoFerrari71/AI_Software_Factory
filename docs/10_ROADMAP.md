@@ -71,11 +71,13 @@ Esempio:
 | 440 | ASF Codex Read-Only Invocation Clean Target Trial | Ripetere il trial su target pulito con branch/gate coerenti | Trial read-only reale su repo tmp, exit 0, target CLEAN, safety gate WARNING | MVP personale | Completato |
 | 450 | ASF Codex Read-Only Invocation Repeatable Trial Pack | Rendere ripetibile il trial e gestire meglio errori ambientali | Pack ripetibile, compare trial, CODEX_NOT_AVAILABLE, report e test | MVP personale | Completato |
 | 460 | ASF Codex Read-Only Invocation Diagnostics Hardening | Consolidare diagnostica stderr/output incompleto prima di step piu' ampi | Hardening diagnostico, criteri run comparabili, retry/stop piu' chiari | MVP personale | Da fare |
-| 470 | OpenAI API Adapter | Output strutturati e tool calling | Adapter Responses API, JSON Schema | SaaS-ready | Da fare |
+| 470 | Reserved | Numero non assegnato nello stato corrente | Nessun deliverable attivo | N/A | Superato |
 | 480 | MCP Tool Registry | Registro tool e permessi | Tool registry L0-L4 | SaaS-ready | Da fare |
 | 490 | ASF PowerShell Command Pack Skill Hardening | Rafforzare la skill comune per command pack PowerShell robusti | Skill esterna aggiornata, template `.ps1`, esempi, documento STEP 490 | MVP personale | Completato |
-| 500 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
-| 510 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
+| 500 | OpenAI API Adapter | Creare adapter dry-run/mock per payload Responses-style senza chiamate live | Script adapter, doc, template, test, JSON evidence | SaaS-ready | Completato |
+| 510 | OpenAI API Adapter Live Boundary and Credential Gate | Definire confine live e gate credenziali senza esporre secret | Credential gate, stop conditions, live boundary documentato | SaaS-ready | Da fare |
+| 520 | Guided Mode | Percorso per non tecnici | Wizard A/B/C/D | SaaS-ready | Da fare |
+| 530 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
 
 ---
 
@@ -990,19 +992,16 @@ Consolidare diagnostica, confronto run e criteri di retry/stop per stderr non vu
 
 ---
 
-## 49. STEP 470 - OpenAI API Adapter
+## 49. STEP 470 - Reserved
 
 ### Obiettivo
 
-Collegare Responses API e Structured Outputs.
+Numero non assegnato nello stato corrente.
 
-### Output previsti
+### Output
 
-- adapter;
-- JSON Schema;
-- tool calling layer;
-- test mockati;
-- no azioni rischiose senza policy.
+- nessun deliverable attivo;
+- nessun branch operativo associato.
 
 ---
 
@@ -1039,7 +1038,48 @@ Rafforzare la skill comune `as-common-pwsh-command-pack` per generare command pa
 
 ---
 
-## 52. STEP 500 - Guided Mode
+## 52. STEP 500 - OpenAI API Adapter
+
+### Obiettivo
+
+Creare una base standard-library-only per costruire payload Responses-style, validare impostazioni, controllare readiness ambiente senza leak di secret e produrre evidenza JSON dry-run/mock.
+
+### Output realizzati
+
+- script `scripts/asf_openai_api_adapter.py`;
+- documento `docs/65_ASF_OPENAI_API_ADAPTER.md`;
+- template `templates/codex_tasks/asf_openai_api_adapter_template.md`;
+- test unitari e documentali;
+- modalita' `check-env`, `dry-run`, `mock`;
+- placeholder `live` fail-closed;
+- nessuna chiamata live OpenAI API;
+- nessun SDK OpenAI o nuova dipendenza.
+
+Prossimo step consigliato:
+
+```text
+510) OpenAI API Adapter Live Boundary and Credential Gate
+```
+
+---
+
+## 53. STEP 510 - OpenAI API Adapter Live Boundary and Credential Gate
+
+### Obiettivo
+
+Definire il confine per una futura integrazione live e il gate credenziali senza esporre secret e senza trasformare il mock/dry-run in produzione.
+
+### Output previsti
+
+- credential gate;
+- stop conditions;
+- redazione e logging sicuro;
+- classificazione errori network/API;
+- test senza credenziali reali di default.
+
+---
+
+## 54. STEP 520 - Guided Mode
 
 ### Obiettivo
 
@@ -1054,7 +1094,7 @@ Rendere il framework utilizzabile da utenti non tecnici.
 
 ---
 
-## 53. STEP 510 - SaaS Evolution Plan
+## 55. STEP 530 - SaaS Evolution Plan
 
 ### Obiettivo
 

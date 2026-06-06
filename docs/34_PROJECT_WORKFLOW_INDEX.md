@@ -48,6 +48,7 @@ L'indice orienta il lavoro. Non sostituisce i documenti specifici, il Verificati
 | Eseguire ASF Codex Read-Only Clean Target Trial | `docs/57_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL.md`, `docs/58_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL_RESULTS.md` | `scripts/asf_human_approval_gate.py`, `scripts/asf_codex_readonly_invoke.py`, `scripts/asf_codex_result_capture.py`, `scripts/asf_codex_readonly_safety_gate.py` | Dopo STEP 430 su `main` | Usa repo temporanea sotto `tmp/`; execute-readonly solo con gate `GO`, target `CLEAN` e sandbox read-only |
 | Eseguire ASF Codex Read-Only Repeatable Trial Pack / ASF Codex Read-Only Trial Compare | `docs/59_ASF_CODEX_READONLY_REPEATABLE_TRIAL_PACK.md`, `docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md` | `scripts/asf_codex_readonly_repeatable_trial.py`, `scripts/asf_codex_readonly_trial_compare.py` | Dopo STEP 440 su `main` | Prepara trial ripetibili, gestisce `CODEX_NOT_AVAILABLE` e confronta run senza autorizzare workspace-write |
 | Eseguire Verification Gate | `docs/20_VERIFICATION_GATE.md` | `scripts/verify.ps1` | Prima di commit/push/PR e dopo merge quando richiesto | Include test, `git diff --check`, `git status --short` |
+| Usare ASF OpenAI API Adapter | `docs/65_ASF_OPENAI_API_ADAPTER.md` | `scripts/asf_openai_api_adapter.py`, `templates/codex_tasks/asf_openai_api_adapter_template.md` | Quando serve costruire payload Responses-style e JSON evidence dry-run/mock | Non fa chiamate live, non richiede `OPENAI_API_KEY`, non usa SDK |
 | Controllare Documentation Sync | `docs/21_DOCUMENTATION_SYNC.md` | Nessuno | Ogni step documentale o operativo | Valuta changelog, roadmap, decisions e documenti specifici |
 | Controllare Soft Protection Guardrails | `docs/24_SOFT_PROTECTION_GUARDRAILS.md` | `scripts/git/check_soft_guardrails.ps1` | Prima del commit o come controllo locale | Read-only; non installa hook |
 | Eseguire Workflow Health Check | `docs/35_WORKFLOW_HEALTH_CHECK.md` | `scripts/check_workflow_health.py` | Quando workflow docs, script o riferimenti centrali cambiano | Read-only; non sostituisce Verification Gate |
@@ -118,6 +119,7 @@ Regole operative:
 - `docs/59_ASF_CODEX_READONLY_REPEATABLE_TRIAL_PACK.md`: runbook del Repeatable Trial Pack read-only.
 - `docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md`: risultati STEP 450, inclusa gestione `CODEX_NOT_AVAILABLE`.
 - `docs/64_ASF_PWSH_COMMAND_PACK_SKILL_HARDENING.md`: riferimento ASF per la skill esterna `as-common-pwsh-command-pack`.
+- `docs/65_ASF_OPENAI_API_ADAPTER.md`: adapter OpenAI API dry-run/mock con payload Responses-style e redazione API key.
 
 ---
 
@@ -141,6 +143,7 @@ Regole operative:
 - `scripts/asf_codex_result_capture.py`: capture read-only di stdout, stderr, exit code e working tree.
 - `scripts/asf_codex_readonly_safety_gate.py`: safety gate read-only su result capture.
 - `scripts/asf_codex_readonly_trial_compare.py`: confronto Markdown di due o piu' report repeatable trial.
+- `scripts/asf_openai_api_adapter.py`: adapter dry-run/mock per payload OpenAI Responses-style, senza chiamate live.
 
 Questi script non devono essere usati per automatizzare commit, push, PR o merge.
 
@@ -169,6 +172,7 @@ Config centrale:
 - `templates/codex_tasks/asf_codex_readonly_safety_gate_template.md`: struttura del safety gate read-only.
 - `templates/codex_tasks/asf_codex_readonly_repeatable_trial_template.md`: struttura del report repeatable trial.
 - `templates/codex_tasks/asf_codex_readonly_trial_compare_template.md`: struttura del report di confronto trial.
+- `templates/codex_tasks/asf_openai_api_adapter_template.md`: struttura task packet per step futuri sull'adapter OpenAI.
 
 ---
 
@@ -254,6 +258,14 @@ Per preparare o ripetere un trial read-only confrontabile, usare `docs/59_ASF_CO
 Per confrontare due o piu' run, usare `scripts/asf_codex_readonly_trial_compare.py`.
 
 Per generare command pack PowerShell robusti, usare la skill esterna `as-common-pwsh-command-pack` e il riferimento `docs/64_ASF_PWSH_COMMAND_PACK_SKILL_HARDENING.md`.
+
+Per costruire evidenza dry-run/mock dell'OpenAI API Adapter senza rete e senza credenziali:
+
+```powershell
+python scripts/asf_openai_api_adapter.py --mode check-env --output-json tmp/asf_openai_adapter_env.json
+python scripts/asf_openai_api_adapter.py --mode dry-run --input "ping" --output-json tmp/asf_openai_adapter_dry_run.json
+python scripts/asf_openai_api_adapter.py --mode mock --input "ping" --output-json tmp/asf_openai_adapter_mock.json
+```
 
 I comandi di commit, push, PR e merge restano azioni manuali di Alberto e non sono raccolti qui in una sequenza automatica.
 

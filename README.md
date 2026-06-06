@@ -1,7 +1,7 @@
 # AI Software Factory
 
 **Metodo interno:** Codex Alchemy Method  
-**Stato:** STEP 030 — Safety Model  
+**Stato:** STEP 500 - OpenAI API Adapter
 **Data bootstrap:** 2026-05-25  
 **Strategia:** local-first personale, progettato per evoluzione SaaS
 
@@ -28,7 +28,7 @@ Il metodo interno si chiama **Codex Alchemy Method**: l'idea grezza viene trasfo
 
 ## 2. Stato repository
 
-Questo repository è nello stato **STEP 030 — Safety Model**.
+Questo repository è nello stato **STEP 500 - OpenAI API Adapter**.
 
 Sono presenti:
 
@@ -44,14 +44,15 @@ Sono presenti:
 - modello di sicurezza operativo L0-L4;
 - policy machine-readable in `policies/`;
 - template approval, dry-run, risk assessment e rollback;
-- test automatici sulle regole critiche di sicurezza.
+- test automatici sulle regole critiche di sicurezza;
+- adapter OpenAI API dry-run/mock senza chiamate live.
 
 Non sono ancora presenti:
 
 - orchestratore locale;
 - API FastAPI;
 - database;
-- integrazioni OpenAI API;
+- integrazioni OpenAI API live;
 - integrazioni MCP;
 - automazioni Codex operative;
 - logica applicativa reale.
@@ -266,6 +267,12 @@ Hardening della skill comune per PowerShell Command Pack robusti:
 docs/64_ASF_PWSH_COMMAND_PACK_SKILL_HARDENING.md
 ```
 
+OpenAI API Adapter dry-run/mock, senza SDK e senza chiamate live:
+
+```text
+docs/65_ASF_OPENAI_API_ADAPTER.md
+```
+
 ---
 
 ## 8. Setup locale minimo
@@ -322,7 +329,7 @@ policies/path_policy.v0.json
 ## 11. Prossimo step
 
 ```text
-460) ASF Codex Read-Only Invocation Diagnostics Hardening
+510) OpenAI API Adapter Live Boundary and Credential Gate
 ```
 
-Obiettivo: consolidare diagnostica e confronto dei trial Codex read-only prima di qualunque passo futuro piu' ampio.
+Obiettivo: definire confine live, gate credenziali e stop conditions prima di qualunque chiamata OpenAI API reale.

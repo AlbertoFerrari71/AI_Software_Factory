@@ -240,6 +240,28 @@ python scripts/asf_codex_readonly_trial_compare.py --reports tmp/asf_codex_reado
 
 Il Repeatable Trial Pack usa repo sintetiche sotto `tmp/`, richiede approval gate GO e target CLEAN per l'esecuzione, gestisce `CODEX_NOT_AVAILABLE` e non autorizza workspace-write.
 
+## 7.13 Generare OpenAI API Adapter evidence
+
+Check ambiente senza esporre chiavi:
+
+```powershell
+python scripts/asf_openai_api_adapter.py --mode check-env --output-json tmp/asf_openai_adapter_env.json
+```
+
+Dry-run payload Responses-style:
+
+```powershell
+python scripts/asf_openai_api_adapter.py --mode dry-run --input "ping" --output-json tmp/asf_openai_adapter_dry_run.json
+```
+
+Mock deterministico:
+
+```powershell
+python scripts/asf_openai_api_adapter.py --mode mock --input "ping" --output-json tmp/asf_openai_adapter_mock.json
+```
+
+Questi comandi non usano network, non richiedono `OPENAI_API_KEY`, non usano SDK OpenAI e devono riportare `network_performed: false`.
+
 ---
 
 ## 8. Eseguire Verification Gate
@@ -365,5 +387,6 @@ Solo dopo questa verifica lo step puo' essere considerato presente su `main`.
 - `docs/54_ASF_CODEX_READONLY_SAFETY_GATE.md`: safety gate read-only prima di qualunque step futuro piu' ampio.
 - `docs/59_ASF_CODEX_READONLY_REPEATABLE_TRIAL_PACK.md`: repeatable trial pack per run read-only comparabili.
 - `docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md`: risultati STEP 450.
+- `docs/65_ASF_OPENAI_API_ADAPTER.md`: adapter OpenAI dry-run/mock senza chiamate live.
 - `docs/20_VERIFICATION_GATE.md`: criteri di verifica locale e CI.
 - `docs/28_PROMPT_PACKET_VALIDATION_STRICT_MODE.md`: dettagli della validazione Strict.

@@ -1716,3 +1716,45 @@ Separare `SKILL.md`, riferimenti, template ed esempi segue il modello di progres
 La skill esterna diventa il riferimento operativo per generare command pack PowerShell robusti per ASF e per altri progetti locali di Alberto.
 
 Lo step non autorizza commit, push, PR, merge, release, deploy, modifiche a PATH, installazione moduli o modifiche a repository target esterni.
+
+---
+
+## DEC-059 - OpenAI API Adapter dry-run/mock foundation
+
+**Data:** 2026-06-06
+**Stato:** Accettata
+
+### Contesto
+
+ASF deve preparare una futura integrazione OpenAI API senza introdurre subito SDK, credenziali, rete o chiamate live.
+
+Il task packet dello STEP 500 corregge la numerazione dell'OpenAI API Adapter e impone che il lavoro corrente resti deterministico, standard-library-only e verificabile localmente.
+
+### Decisione
+
+Introdurre `scripts/asf_openai_api_adapter.py` come adapter foundation per:
+
+- costruire payload Responses-style;
+- validare modello, reasoning effort e text verbosity;
+- controllare solo la presenza di `OPENAI_API_KEY`;
+- produrre JSON evidence per `check-env`, `dry-run` e `mock`;
+- redigere stringhe che assomigliano a chiavi OpenAI;
+- mantenere `live` fail-closed con `LIVE_MODE_NOT_IMPLEMENTED_IN_STEP_500`.
+
+Lo step non esegue chiamate live OpenAI API, non richiede `OPENAI_API_KEY`, non aggiunge SDK e non usa network.
+
+### Motivazione
+
+Separare payload building, mock e dry-run dalla futura chiamata live permette di testare il contratto locale senza rischiare leak di secret o dipendenze non necessarie.
+
+Il fail-closed live boundary rende esplicito che il successo del mock non equivale a readiness produttiva.
+
+### Conseguenze
+
+Il prossimo step consigliato e':
+
+```text
+510) OpenAI API Adapter Live Boundary and Credential Gate
+```
+
+Qualunque chiamata live futura richiedera' un nuovo gate umano, regole credenziali esplicite, stop conditions, redazione verificata e test che non dipendono da credenziali reali di default.
