@@ -8,6 +8,7 @@ ROOT = Path(__file__).resolve().parents[2]
 NEW_FILES = [
     "docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md",
     "docs/68_ASF_OPENAI_API_ADAPTER_LIVE_SMOKE_RESULT_HARDENING.md",
+    "docs/0560-03-Diagnostic_OpenAI_Provider_HTTP_Error_And_Rate_Limit.md",
     "templates/codex_tasks/asf_openai_api_live_smoke_test_template.md",
     "tests/unit/test_asf_openai_api_adapter_live_smoke.py",
 ]
@@ -28,6 +29,7 @@ def test_live_smoke_docs_cover_required_safety_topics() -> None:
         for path in [
             "docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md",
             "docs/68_ASF_OPENAI_API_ADAPTER_LIVE_SMOKE_RESULT_HARDENING.md",
+            "docs/0560-03-Diagnostic_OpenAI_Provider_HTTP_Error_And_Rate_Limit.md",
             "templates/codex_tasks/asf_openai_api_live_smoke_test_template.md",
         ]
     )
@@ -38,7 +40,7 @@ def test_live_smoke_docs_cover_required_safety_topics() -> None:
         "ASF_OPENAI_LIVE_ENABLED=1",
         "--allow-live",
         "I_UNDERSTAND_THIS_CALLS_OPENAI_API",
-        "Return exactly ASF_LIVE_SMOKE_OK.",
+        "Return exactly ASF_OPENAI_LIVE_SMOKE_OK.",
         "store: false",
         "tmp/",
         "LIVE_SMOKE_NOT_RUN_MISSING_GATE",
@@ -47,6 +49,9 @@ def test_live_smoke_docs_cover_required_safety_topics() -> None:
         "LIVE_SMOKE_EXECUTED_AND_PASSED",
         "STEP 530",
         "540) OpenAI API Adapter Controlled Live Execution Pack",
+        "provider_http_error",
+        "quota_exceeded",
+        "0560-F) Publish Provider-Blocked Live Run Diagnostic Pack",
     ]:
         assert fragment in combined
 
@@ -56,6 +61,7 @@ def test_live_smoke_uses_document_number_67_and_preserves_65_66() -> None:
     assert (ROOT / "docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md").exists()
     assert (ROOT / "docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md").exists()
     assert (ROOT / "docs/68_ASF_OPENAI_API_ADAPTER_LIVE_SMOKE_RESULT_HARDENING.md").exists()
+    assert (ROOT / "docs/0560-03-Diagnostic_OpenAI_Provider_HTTP_Error_And_Rate_Limit.md").exists()
 
     combined = "\n".join(
         read(path)
@@ -77,6 +83,7 @@ def test_live_smoke_uses_document_number_67_and_preserves_65_66() -> None:
     assert "docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md" in combined
     assert "docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md" in combined
     assert "docs/68_ASF_OPENAI_API_ADAPTER_LIVE_SMOKE_RESULT_HARDENING.md" in combined
+    assert "docs/0560-03-Diagnostic_OpenAI_Provider_HTTP_Error_And_Rate_Limit.md" in combined
 
 
 def test_live_smoke_health_and_status_references_are_present() -> None:
@@ -86,9 +93,11 @@ def test_live_smoke_health_and_status_references_are_present() -> None:
     for fragment in [
         "docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md",
         "docs/68_ASF_OPENAI_API_ADAPTER_LIVE_SMOKE_RESULT_HARDENING.md",
+        "docs/0560-03-Diagnostic_OpenAI_Provider_HTTP_Error_And_Rate_Limit.md",
         "templates/codex_tasks/asf_openai_api_live_smoke_test_template.md",
         "ASF OpenAI API Adapter First Controlled Live Smoke Test",
         "ASF OpenAI API Adapter Live Smoke Result Hardening",
+        "OpenAI Provider HTTP Error and Rate Limit Diagnostic",
     ]:
         assert fragment in health
 

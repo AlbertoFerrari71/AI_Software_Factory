@@ -1026,13 +1026,13 @@ $env:ASF_OPENAI_LIVE_ENABLED = "1"
 Preflight no-network:
 
 ```powershell
-python scripts/asf_openai_api_adapter.py --mode live --gate-only --allow-live --live-confirm I_UNDERSTAND_THIS_CALLS_OPENAI_API --input "Return exactly ASF_LIVE_SMOKE_OK." --reasoning-effort none --text-verbosity low --max-output-tokens 32 --output-json tmp/asf_openai_live_smoke_gate.json --output-markdown tmp/asf_openai_live_smoke_gate.md
+python scripts/asf_openai_api_adapter.py --mode live --gate-only --allow-live --live-confirm I_UNDERSTAND_THIS_CALLS_OPENAI_API --input "Return exactly ASF_OPENAI_LIVE_SMOKE_OK." --reasoning-effort none --text-verbosity low --max-output-tokens 32 --output-json tmp/asf_openai_live_smoke_gate.json --output-markdown tmp/asf_openai_live_smoke_gate.md
 ```
 
 Una sola chiamata live:
 
 ```powershell
-python scripts/asf_openai_api_adapter.py --mode live --allow-live --live-confirm I_UNDERSTAND_THIS_CALLS_OPENAI_API --input "Return exactly ASF_LIVE_SMOKE_OK." --reasoning-effort none --text-verbosity low --max-output-tokens 32 --output-json tmp/asf_openai_live_smoke_result.json --output-markdown tmp/asf_openai_live_smoke_result.md
+python scripts/asf_openai_api_adapter.py --mode live --allow-live --live-confirm I_UNDERSTAND_THIS_CALLS_OPENAI_API --input "Return exactly ASF_OPENAI_LIVE_SMOKE_OK." --reasoning-effort none --text-verbosity low --max-output-tokens 32 --output-json tmp/asf_openai_live_smoke_result.json --output-markdown tmp/asf_openai_live_smoke_result.md
 ```
 
 ### Esito atteso
@@ -1047,7 +1047,7 @@ Se manca un gate, fermarsi su `LIVE_SMOKE_NOT_RUN_MISSING_GATE`.
 
 Se la rete e' bloccata dall'ambiente, classificare `LIVE_SMOKE_NOT_RUN_NETWORK_BLOCKED` e non considerarlo crash dell'adapter.
 
-Se l'output non contiene `ASF_LIVE_SMOKE_OK`, classificare `LIVE_SMOKE_UNEXPECTED_MODEL_OUTPUT`.
+Se l'output non contiene `ASF_OPENAI_LIVE_SMOKE_OK`, classificare `LIVE_SMOKE_UNEXPECTED_MODEL_OUTPUT`.
 
 ### Cosa non fare
 
@@ -1078,7 +1078,7 @@ python -m pytest tests/unit/test_asf_openai_api_adapter.py tests/unit/test_asf_o
 Artifact gate-only no-network con JSON e Markdown:
 
 ```powershell
-python scripts/asf_openai_api_adapter.py --mode live --gate-only --allow-live --live-confirm I_UNDERSTAND_THIS_CALLS_OPENAI_API --input "Return exactly ASF_LIVE_SMOKE_OK." --reasoning-effort none --text-verbosity low --max-output-tokens 32 --output-json tmp/asf_openai_live_smoke_gate.json --output-markdown tmp/asf_openai_live_smoke_gate.md
+python scripts/asf_openai_api_adapter.py --mode live --gate-only --allow-live --live-confirm I_UNDERSTAND_THIS_CALLS_OPENAI_API --input "Return exactly ASF_OPENAI_LIVE_SMOKE_OK." --reasoning-effort none --text-verbosity low --max-output-tokens 32 --output-json tmp/asf_openai_live_smoke_gate.json --output-markdown tmp/asf_openai_live_smoke_gate.md
 ```
 
 ### Esito atteso
@@ -1158,6 +1158,44 @@ Non eseguire `--execution-mode live` da Codex. Non considerare `OPENAI_API_KEY` 
 Documento:
 
 - `docs/69_ASF_OPENAI_API_ADAPTER_CONTROLLED_LIVE_EXECUTION_PACK.md`.
+
+---
+
+## 16.7 Ricetta - OpenAI API Adapter first authorized live run
+
+### Quando usarla
+
+Quando lo step autorizza esplicitamente un solo tentativo live reale OpenAI API via adapter, con evidenza sanitizzata e senza retry automatici.
+
+### Comandi
+
+```powershell
+$env:OPENAI_API_KEY = "<set in current shell only; never print>"
+$env:ASF_OPENAI_LIVE_RUN = "1"
+# Optional: $env:ASF_OPENAI_MODEL = "<model id>"
+python scripts/asf_openai_first_authorized_live_run.py --live
+```
+
+### Esito atteso
+
+Il report versionato viene sempre scritto:
+
+```text
+docs/0560-01-Report_OpenAI_API_Adapter_First_Authorized_Live_Run.md
+```
+
+Il JSON evidence viene scritto solo se la live ha successo:
+
+```text
+docs/0560-02-Evidence_OpenAI_API_Live_Run_Sanitized.json
+docs/0560-03-Diagnostic_OpenAI_Provider_HTTP_Error_And_Rate_Limit.md
+```
+
+Se il report indica un blocco provider-side, usare `docs/0560-03-Diagnostic_OpenAI_Provider_HTTP_Error_And_Rate_Limit.md` per la revisione manuale. I casi `provider_http_error`, `rate_limited`, `quota_exceeded`, `model_access_denied`, `authentication_error` e `project_limit_or_billing_block` non autorizzano un retry nello stesso step.
+
+### Cosa non fare
+
+Non rieseguire il live nello stesso step se `request_count=1`. Non stampare la key, non salvare header auth, non creare evidence JSON per run bloccate o fallite, non chiamare OpenAI fuori da `scripts/asf_openai_api_adapter.py`.
 
 ---
 

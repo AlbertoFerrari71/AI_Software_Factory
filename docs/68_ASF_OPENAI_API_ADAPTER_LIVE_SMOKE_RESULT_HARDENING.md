@@ -63,6 +63,18 @@ The previous live status marker is preserved as:
 | `schema_error` | Provider response is invalid JSON or does not satisfy the response contract. |
 | `unknown_error` | Controlled fallback for unexpected local errors. |
 
+STEP 0560-E keeps these top-level classifications stable and adds sanitized provider-side detail fields for HTTP/provider blocks:
+
+- `provider_error_class`: `rate_limited`, `quota_exceeded`, `model_access_denied`, `authentication_error`, `project_limit_or_billing_block` or `unknown_provider_error`;
+- `provider_http_status`;
+- `provider_error_type`;
+- `provider_error_code`;
+- `provider_message`, sanitized and truncated;
+- `retryable`;
+- `suggested_next_action`.
+
+These fields are diagnostics only. They do not turn a blocked or failed live run into positive evidence.
+
 ---
 
 ## 4. Artifact rules
@@ -72,7 +84,7 @@ JSON evidence remains the machine-readable artifact.
 For live mode, JSON output must stay under `tmp/` before any network call can be attempted:
 
 ```powershell
-python scripts/asf_openai_api_adapter.py --mode live --gate-only --allow-live --live-confirm I_UNDERSTAND_THIS_CALLS_OPENAI_API --input "Return exactly ASF_LIVE_SMOKE_OK." --reasoning-effort none --text-verbosity low --max-output-tokens 32 --output-json tmp/asf_openai_live_smoke_gate.json --output-markdown tmp/asf_openai_live_smoke_gate.md
+python scripts/asf_openai_api_adapter.py --mode live --gate-only --allow-live --live-confirm I_UNDERSTAND_THIS_CALLS_OPENAI_API --input "Return exactly ASF_OPENAI_LIVE_SMOKE_OK." --reasoning-effort none --text-verbosity low --max-output-tokens 32 --output-json tmp/asf_openai_live_smoke_gate.json --output-markdown tmp/asf_openai_live_smoke_gate.md
 ```
 
 The optional Markdown summary is also restricted to `tmp/` for live mode. It contains only safe fields:

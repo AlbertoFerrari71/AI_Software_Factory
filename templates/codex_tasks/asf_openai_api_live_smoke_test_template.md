@@ -35,7 +35,7 @@ For result-hardening steps, Codex must use mocked tests only and must not execut
 - `ASF_OPENAI_LIVE_ENABLED=1` must exist in the local process environment.
 - `--allow-live` must be present.
 - `--live-confirm I_UNDERSTAND_THIS_CALLS_OPENAI_API` must be present.
-- The prompt must be exactly `Return exactly ASF_LIVE_SMOKE_OK.`
+- The prompt must be exactly `Return exactly ASF_OPENAI_LIVE_SMOKE_OK.`
 - The request must use `store: false`.
 - Runtime artifacts must stay under `tmp/`.
 - API key values must never be printed, logged, stored, hashed, truncated or fingerprinted.
@@ -54,7 +54,7 @@ For result-hardening steps, Codex must use mocked tests only and must not execut
 ## Preflight command
 
 ```powershell
-python scripts/asf_openai_api_adapter.py --mode live --gate-only --allow-live --live-confirm I_UNDERSTAND_THIS_CALLS_OPENAI_API --input "Return exactly ASF_LIVE_SMOKE_OK." --reasoning-effort none --text-verbosity low --max-output-tokens 32 --output-json tmp/asf_openai_live_smoke_gate.json
+python scripts/asf_openai_api_adapter.py --mode live --gate-only --allow-live --live-confirm I_UNDERSTAND_THIS_CALLS_OPENAI_API --input "Return exactly ASF_OPENAI_LIVE_SMOKE_OK." --reasoning-effort none --text-verbosity low --max-output-tokens 32 --output-json tmp/asf_openai_live_smoke_gate.json
 ```
 
 Proceed only when the decision is:
@@ -66,7 +66,7 @@ LIVE_SMOKE_READY_FOR_CALL
 ## One-call live command
 
 ```powershell
-python scripts/asf_openai_api_adapter.py --mode live --allow-live --live-confirm I_UNDERSTAND_THIS_CALLS_OPENAI_API --input "Return exactly ASF_LIVE_SMOKE_OK." --reasoning-effort none --text-verbosity low --max-output-tokens 32 --output-json tmp/asf_openai_live_smoke_result.json --output-markdown tmp/asf_openai_live_smoke_result.md
+python scripts/asf_openai_api_adapter.py --mode live --allow-live --live-confirm I_UNDERSTAND_THIS_CALLS_OPENAI_API --input "Return exactly ASF_OPENAI_LIVE_SMOKE_OK." --reasoning-effort none --text-verbosity low --max-output-tokens 32 --output-json tmp/asf_openai_live_smoke_result.json --output-markdown tmp/asf_openai_live_smoke_result.md
 ```
 
 ## Required classifications

@@ -9,7 +9,8 @@ import sys
 import time
 import urllib.error
 import urllib.request
-from dataclasses import dataclass
+from collections.abc import Mapping as MappingABC
+from dataclasses import asdict, dataclass, is_dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable, Mapping
@@ -22,7 +23,7 @@ EXIT_RUNTIME_ERROR = 3
 DEFAULT_MODEL = "gpt-5.5"
 DEFAULT_REASONING_EFFORT = "medium"
 DEFAULT_TEXT_VERBOSITY = "medium"
-DEFAULT_LIVE_SMOKE_INPUT = "Return exactly ASF_LIVE_SMOKE_OK."
+DEFAULT_LIVE_SMOKE_INPUT = "Return exactly ASF_OPENAI_LIVE_SMOKE_OK."
 DEFAULT_LIVE_MAX_OUTPUT_TOKENS = 32
 DEFAULT_LIVE_TIMEOUT_SECONDS = 30.0
 
@@ -55,7 +56,7 @@ ASF_OPENAI_LIVE_ENABLED_ENV = "ASF_OPENAI_LIVE_ENABLED"
 ASF_OPENAI_LIVE_ENABLED_VALUE = "1"
 LIVE_CONFIRMATION_VALUE = "I_UNDERSTAND_THIS_CALLS_OPENAI_API"
 MOCK_OUTPUT_TEXT = "ASF OpenAI adapter mock response."
-EXPECTED_LIVE_SMOKE_MARKER = "ASF_LIVE_SMOKE_OK"
+EXPECTED_LIVE_SMOKE_MARKER = "ASF_OPENAI_LIVE_SMOKE_OK"
 LIVE_SMOKE_RESULT_SCHEMA_VERSION = "1.0"
 LIVE_SMOKE_CLASSIFICATIONS = (
     "not_configured",
@@ -79,6 +80,15 @@ SECRET_ASSIGNMENT_PATTERN = re.compile(
 )
 REDACTION_MARKER = "[REDACTED_OPENAI_API_KEY]"
 SECRET_REDACTION_MARKER = "[REDACTED_SECRET]"
+PROVIDER_MESSAGE_MAX_CHARS = 240
+PROVIDER_ERROR_CLASSES = (
+    "rate_limited",
+    "quota_exceeded",
+    "model_access_denied",
+    "authentication_error",
+    "project_limit_or_billing_block",
+    "unknown_provider_error",
+)
 
 
 class InputError(ValueError):
@@ -413,6 +423,107 @@ def classify_http_status(status_code: int) -> str:
     return "provider_error"
 
 
+def compact_safe_text(value: Any, *, max_chars: int = PROVIDER_MESSAGE_MAX_CHARS) -> str | None:
+    if not isinstance(value, str):
+        return None
+    compact = " ".join(redact_secret(value).split())
+    if not compact:
+        return None
+    if len(compact) <= max_chars:
+        return compact
+    return compact[: max_chars - 3].rstrip() + "..."
+
+
+def provider_error_object(response_data: Any) -> dict[str, Any]:
+    if isinstance(response_data, dict) and isinstance(response_data.get("error"), dict):
+        return response_data["error"]
+    return {}
+
+
+def provider_error_text(
+    error_type: Any,
+    error_code: Any,
+    provider_message: str | None,
+) -> str:
+    parts = [str(part).casefold() for part in (error_type, error_code, provider_message) if part]
+    return " ".join(parts)
+
+
+def classify_provider_error_class(
+    *,
+    http_status: int | None,
+    error_type: Any,
+    error_code: Any,
+    provider_message: str | None,
+) -> str:
+    text = provider_error_text(error_type, error_code, provider_message)
+    if http_status == 401 or "authentication" in text or "invalid_api_key" in text:
+        return "authentication_error"
+    if "insufficient_quota" in text or "quota" in text:
+        return "quota_exceeded"
+    if "billing" in text or "hard_limit" in text or "usage_limit" in text or "project limit" in text:
+        return "project_limit_or_billing_block"
+    if http_status == 429 or "rate_limit" in text or "rate limit" in text:
+        return "rate_limited"
+    if http_status == 403 and ("model" in text or "access" in text or "permission" in text):
+        return "model_access_denied"
+    if http_status == 403:
+        return "project_limit_or_billing_block"
+    return "unknown_provider_error"
+
+
+def provider_error_retryable(provider_error_class: str, http_status: int | None) -> str:
+    if provider_error_class == "rate_limited":
+        return "true"
+    if provider_error_class in {
+        "quota_exceeded",
+        "model_access_denied",
+        "authentication_error",
+        "project_limit_or_billing_block",
+    }:
+        return "false"
+    if http_status is not None and 500 <= http_status <= 599:
+        return "true"
+    return "unknown"
+
+
+def provider_error_next_action(provider_error_class: str) -> str:
+    actions = {
+        "rate_limited": "Wait for the provider limit window, verify project rate limits, then use one separately authorized retry.",
+        "quota_exceeded": "Check OpenAI project quota and billing before any separately authorized retry.",
+        "model_access_denied": "Verify model availability for the selected organization/project or choose an allowed smoke model.",
+        "authentication_error": "Verify the local credential, organization and project selection without logging the secret.",
+        "project_limit_or_billing_block": "Verify project limits, billing status and organization/project routing in the OpenAI dashboard.",
+        "unknown_provider_error": "Review sanitized provider details and retry only in a separate authorized step if still justified.",
+    }
+    return actions.get(provider_error_class, actions["unknown_provider_error"])
+
+
+def provider_error_details(response_data: Any, *, http_status: int | None) -> dict[str, Any]:
+    error_value = provider_error_object(response_data)
+    error_type = error_value.get("type")
+    error_code = error_value.get("code")
+    provider_message = compact_safe_text(error_value.get("message"))
+    provider_error_class = classify_provider_error_class(
+        http_status=http_status,
+        error_type=error_type,
+        error_code=error_code,
+        provider_message=provider_message,
+    )
+    retryable = provider_error_retryable(provider_error_class, http_status)
+    return redact_data(
+        {
+            "provider_error_class": provider_error_class,
+            "provider_http_status": http_status,
+            "provider_error_type": error_type,
+            "provider_error_code": error_code,
+            "provider_message": provider_message,
+            "retryable": retryable,
+            "suggested_next_action": provider_error_next_action(provider_error_class),
+        }
+    )
+
+
 def classify_live_exception(exc: BaseException) -> str:
     if isinstance(exc, (OSError, TimeoutError, urllib.error.URLError)):
         return "network_error"
@@ -459,31 +570,203 @@ def post_openai_responses(
 HttpPostJson = Callable[[str, dict[str, Any], str, float], HttpJsonResponse]
 
 
-def collect_response_text_fragments(value: Any) -> list[str]:
+def call_response_serializer(value: Any, name: str) -> Any:
+    serializer = getattr(value, name, None)
+    if not callable(serializer):
+        return None
+    try:
+        if name == "model_dump":
+            try:
+                return serializer(mode="json")
+            except TypeError:
+                return serializer()
+        return serializer()
+    except Exception:
+        return None
+
+
+def response_to_plain_data(value: Any, *, _depth: int = 0, _seen: set[int] | None = None) -> Any:
+    if _depth > 8:
+        return None
+    if value is None or isinstance(value, (str, int, float, bool)):
+        return value
+
+    if _seen is None:
+        _seen = set()
+    object_id = id(value)
+    if object_id in _seen:
+        return None
+    _seen.add(object_id)
+
+    if isinstance(value, MappingABC):
+        return {
+            str(key): response_to_plain_data(item, _depth=_depth + 1, _seen=_seen)
+            for key, item in value.items()
+        }
+    if isinstance(value, (list, tuple)):
+        return [response_to_plain_data(item, _depth=_depth + 1, _seen=_seen) for item in value]
+    if is_dataclass(value) and not isinstance(value, type):
+        return response_to_plain_data(asdict(value), _depth=_depth + 1, _seen=_seen)
+
+    for serializer_name in ("model_dump", "to_dict", "dict"):
+        serialized = call_response_serializer(value, serializer_name)
+        if serialized is not None and serialized is not value:
+            return response_to_plain_data(serialized, _depth=_depth + 1, _seen=_seen)
+
+    attrs: dict[str, Any] = {}
+    for attr_name in (
+        "id",
+        "object",
+        "status",
+        "output_text",
+        "output",
+        "content",
+        "text",
+        "type",
+        "usage",
+        "error",
+        "incomplete_details",
+    ):
+        try:
+            attr_value = getattr(value, attr_name)
+        except Exception:
+            continue
+        if attr_value is not None:
+            attrs[attr_name] = response_to_plain_data(attr_value, _depth=_depth + 1, _seen=_seen)
+
+    if attrs:
+        return attrs
+
+    public_attrs = getattr(value, "__dict__", None)
+    if isinstance(public_attrs, dict):
+        return {
+            str(key): response_to_plain_data(item, _depth=_depth + 1, _seen=_seen)
+            for key, item in public_attrs.items()
+            if not str(key).startswith("_")
+        }
+
+    return None
+
+
+def direct_output_text_property(value: Any) -> str | None:
+    if isinstance(value, MappingABC):
+        item = value.get("output_text")
+        return item if isinstance(item, str) else None
+    try:
+        item = getattr(value, "output_text")
+    except Exception:
+        return None
+    return item if isinstance(item, str) else None
+
+
+def append_unique_text(fragments: list[str], value: Any) -> None:
+    if isinstance(value, str) and value and value not in fragments:
+        fragments.append(value)
+
+
+def collect_plain_response_text_fragments(value: Any) -> list[str]:
     fragments: list[str] = []
     if isinstance(value, dict):
         for key, item in value.items():
             if key in {"output_text", "text"} and isinstance(item, str):
-                fragments.append(item)
+                append_unique_text(fragments, item)
             else:
-                fragments.extend(collect_response_text_fragments(item))
+                for fragment in collect_plain_response_text_fragments(item):
+                    append_unique_text(fragments, fragment)
     elif isinstance(value, list):
         for item in value:
-            fragments.extend(collect_response_text_fragments(item))
+            for fragment in collect_plain_response_text_fragments(item):
+                append_unique_text(fragments, fragment)
     return fragments
 
 
 def extract_output_text(response_json: Any) -> str:
-    return "\n".join(fragment for fragment in collect_response_text_fragments(response_json) if fragment)
+    fragments: list[str] = []
+    append_unique_text(fragments, direct_output_text_property(response_json))
+    plain_response = response_to_plain_data(response_json)
+    for fragment in collect_plain_response_text_fragments(plain_response):
+        append_unique_text(fragments, fragment)
+    return "\n".join(fragment for fragment in fragments if fragment)
 
 
 def response_has_minimal_success_evidence(response_json: Any, output_text: str) -> bool:
-    if isinstance(response_json, dict):
-        if bool(response_json.get("id")):
+    response_data = response_to_plain_data(response_json)
+    if isinstance(response_data, dict):
+        if bool(response_data.get("id")):
             return True
-        if response_json.get("object") == "response":
+        if response_data.get("object") == "response":
             return True
     return bool(output_text)
+
+
+def output_item_count(response_data: Any) -> int:
+    if not isinstance(response_data, dict):
+        return 0
+    output = response_data.get("output")
+    return len(output) if isinstance(output, list) else 0
+
+
+def content_part_count(response_data: Any) -> int:
+    if not isinstance(response_data, dict):
+        return 0
+    output = response_data.get("output")
+    if not isinstance(output, list):
+        return 0
+
+    count = 0
+    for item in output:
+        if not isinstance(item, dict):
+            continue
+        content = item.get("content")
+        if isinstance(content, list):
+            count += len(content)
+        elif content is not None:
+            count += 1
+    return count
+
+
+def response_error_field(response_data: Any) -> Any:
+    if isinstance(response_data, dict):
+        return response_data.get("error")
+    return None
+
+
+def response_diagnostics(
+    response_json: Any,
+    output_text: str,
+    *,
+    http_status: int | None = None,
+    body_parse_error: str | None = None,
+) -> dict[str, Any]:
+    response_data = response_to_plain_data(response_json)
+    error_value = response_error_field(response_data)
+    error_type = None
+    error_code = None
+    if isinstance(error_value, dict):
+        error_type = error_value.get("type")
+        error_code = error_value.get("code")
+    provider_details = (
+        provider_error_details(response_data, http_status=http_status)
+        if error_value is not None or (http_status is not None and (http_status < 200 or http_status >= 300))
+        else {}
+    )
+
+    diagnostics: dict[str, Any] = {
+        "http_status": http_status,
+        "response_status": response_data.get("status") if isinstance(response_data, dict) else None,
+        "output_item_count": output_item_count(response_data),
+        "content_part_count": content_part_count(response_data),
+        "has_output_text_property": isinstance(direct_output_text_property(response_json), str)
+        or (isinstance(response_data, dict) and isinstance(response_data.get("output_text"), str)),
+        "output_text_present": bool(output_text),
+        "has_error": error_value is not None,
+        "error_type": error_type,
+        "error_code": error_code,
+        "incomplete_details": response_data.get("incomplete_details") if isinstance(response_data, dict) else None,
+        "body_parse_error": body_parse_error,
+    }
+    diagnostics.update(provider_details)
+    return redact_data(diagnostics)
 
 
 def base_live_result(
@@ -539,8 +822,33 @@ def live_safe_details(result: dict[str, Any]) -> dict[str, Any]:
         "expected_marker_found",
         "response_id_present",
         "minimal_success_evidence_present",
+        "response_id_hash_16",
+        "usage",
+        "failure_reason",
+        "provider_error_class",
+        "provider_http_status",
+        "provider_error_type",
+        "provider_error_code",
+        "provider_message",
+        "retryable",
+        "suggested_next_action",
+        "response_diagnostics",
     ]
     return redact_data({key: result[key] for key in keys if key in result})
+
+
+def attach_provider_error_details(result: dict[str, Any], diagnostics: Mapping[str, Any]) -> None:
+    for key in (
+        "provider_error_class",
+        "provider_http_status",
+        "provider_error_type",
+        "provider_error_code",
+        "provider_message",
+        "retryable",
+        "suggested_next_action",
+    ):
+        if key in diagnostics:
+            result[key] = diagnostics[key]
 
 
 def live_next_step(status: str, classification: str) -> str:
@@ -642,6 +950,7 @@ def run_live(
     except (OSError, TimeoutError, urllib.error.URLError) as exc:
         result["decision"] = LIVE_SMOKE_EXECUTED_BUT_FAILED
         result["error_category"] = LIVE_SMOKE_NOT_RUN_NETWORK_BLOCKED
+        result["failure_reason"] = "network_error"
         return finalize_live_result(
             result,
             status="failed",
@@ -652,6 +961,7 @@ def run_live(
     except Exception as exc:
         result["decision"] = LIVE_SMOKE_EXECUTED_BUT_FAILED
         result["error_category"] = LIVE_SMOKE_UNKNOWN_ERROR
+        result["failure_reason"] = "local_error"
         return finalize_live_result(
             result,
             status="failed",
@@ -667,6 +977,25 @@ def run_live(
     if http_response.status_code < 200 or http_response.status_code >= 300:
         result["decision"] = LIVE_SMOKE_EXECUTED_BUT_FAILED
         result["error_category"] = LIVE_SMOKE_HTTP_ERROR
+        result["failure_reason"] = "provider_http_error"
+        try:
+            error_response_json: Any = json.loads(http_response.body_text)
+            diagnostics = response_diagnostics(
+                error_response_json,
+                "",
+                http_status=http_response.status_code,
+            )
+            result["response_diagnostics"] = diagnostics
+            attach_provider_error_details(result, diagnostics)
+        except json.JSONDecodeError as exc:
+            diagnostics = response_diagnostics(
+                {},
+                "",
+                http_status=http_response.status_code,
+                body_parse_error=redact_secret(str(exc)),
+            )
+            result["response_diagnostics"] = diagnostics
+            attach_provider_error_details(result, diagnostics)
         return finalize_live_result(
             result,
             status="failed",
@@ -680,6 +1009,13 @@ def run_live(
     except json.JSONDecodeError as exc:
         result["decision"] = LIVE_SMOKE_EXECUTED_BUT_FAILED
         result["error_category"] = LIVE_SMOKE_INVALID_JSON
+        result["failure_reason"] = "invalid_json"
+        result["response_diagnostics"] = response_diagnostics(
+            {},
+            "",
+            http_status=http_response.status_code,
+            body_parse_error=redact_secret(str(exc)),
+        )
         return finalize_live_result(
             result,
             status="failed",
@@ -688,15 +1024,41 @@ def run_live(
             clock=clock,
         )
 
-    output_text = extract_output_text(response_json)
-    response_id_present = isinstance(response_json, dict) and bool(response_json.get("id"))
-    minimal_success_evidence = response_has_minimal_success_evidence(response_json, output_text)
+    response_data = response_to_plain_data(response_json)
+    output_text = extract_output_text(response_data)
+    diagnostics = response_diagnostics(
+        response_data,
+        output_text,
+        http_status=http_response.status_code,
+    )
+    if isinstance(response_data, dict) and response_error_field(response_data) is not None and not output_text:
+        result["decision"] = LIVE_SMOKE_EXECUTED_BUT_FAILED
+        result["error_category"] = LIVE_SMOKE_HTTP_ERROR
+        result["failure_reason"] = "provider_http_error"
+        result["response_diagnostics"] = diagnostics
+        attach_provider_error_details(result, diagnostics)
+        return finalize_live_result(
+            result,
+            status="failed",
+            classification=classify_http_status(http_response.status_code),
+            message="OpenAI Responses API returned a provider error object without success output.",
+            clock=clock,
+        )
+
+    response_id = response_data.get("id") if isinstance(response_data, dict) else None
+    response_id_present = bool(response_id)
+    minimal_success_evidence = response_has_minimal_success_evidence(response_data, output_text)
     marker_found = EXPECTED_LIVE_SMOKE_MARKER in output_text
     result["output_text_present"] = bool(output_text)
     result["expected_marker_found"] = marker_found
     result["response_id_present"] = response_id_present
     result["minimal_success_evidence_present"] = minimal_success_evidence
     result["output_text"] = redact_secret(output_text)
+    result["response_diagnostics"] = diagnostics
+    if response_id_present:
+        result["response_id_hash_16"] = hashlib.sha256(str(response_id).encode("utf-8")).hexdigest()[:16]
+    if isinstance(response_data, dict) and isinstance(response_data.get("usage"), dict):
+        result["usage"] = redact_data(response_data["usage"])
 
     if marker_found and minimal_success_evidence and payload.get("store") is False and result["network_call_count"] == 1:
         result["decision"] = LIVE_SMOKE_EXECUTED_AND_PASSED
@@ -711,8 +1073,10 @@ def run_live(
     result["decision"] = LIVE_SMOKE_EXECUTED_BUT_FAILED
     if output_text and not marker_found:
         result["error_category"] = LIVE_SMOKE_UNEXPECTED_MODEL_OUTPUT
+        result["failure_reason"] = "marker_missing"
     else:
         result["error_category"] = LIVE_SMOKE_MISSING_SUCCESS_EVIDENCE
+        result["failure_reason"] = "output_text_absent"
     return finalize_live_result(
         result,
         status="failed",

@@ -88,6 +88,7 @@ The covered areas include:
 - ASF OpenAI API Adapter First Controlled Live Smoke Test;
 - ASF OpenAI API Adapter Live Smoke Result Hardening;
 - ASF OpenAI API Adapter Controlled Live Execution Pack;
+- OpenAI Provider HTTP Error and Rate Limit Diagnostic;
 - Project Workflow Index.
 
 ---
@@ -253,3 +254,5 @@ After STEP 520, it also treats `docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_
 After STEP 530, it also treats `docs/68_ASF_OPENAI_API_ADAPTER_LIVE_SMOKE_RESULT_HARDENING.md` as a core workflow reference because the OpenAI API Adapter live smoke result now has a stable schema, fail-closed classifications, safe JSON/Markdown artifacts and mocked test coverage before any future live execution.
 
 After STEP 540, it also treats `docs/69_ASF_OPENAI_API_ADAPTER_CONTROLLED_LIVE_EXECUTION_PACK.md`, `scripts/asf_openai_controlled_live_execution_pack.py` and `templates/pwsh_command_pack/step_540_openai_controlled_live_execution_pack_template.ps1` as core workflow references because future OpenAI live execution must use a separate dry-run-default, double-consent, artifact-safe pack.
+
+After STEP 0560, it also treats `scripts/asf_openai_first_authorized_live_run.py`, `docs/0560-01-Report_OpenAI_API_Adapter_First_Authorized_Live_Run.md` and `docs/0560-03-Diagnostic_OpenAI_Provider_HTTP_Error_And_Rate_Limit.md` as core workflow references because the first authorized live run must pass through the repository adapter, stay one-call, classify provider-side HTTP/rate/quota blocks, and record sanitized BLOCKED or success results without secrets.

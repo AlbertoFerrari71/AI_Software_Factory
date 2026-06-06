@@ -355,13 +355,13 @@ Preflight no-network:
 ```powershell
 $env:OPENAI_API_KEY = "<your local OpenAI API key>"
 $env:ASF_OPENAI_LIVE_ENABLED = "1"
-python scripts/asf_openai_api_adapter.py --mode live --gate-only --allow-live --live-confirm I_UNDERSTAND_THIS_CALLS_OPENAI_API --input "Return exactly ASF_LIVE_SMOKE_OK." --reasoning-effort none --text-verbosity low --max-output-tokens 32 --output-json tmp/asf_openai_live_smoke_gate.json --output-markdown tmp/asf_openai_live_smoke_gate.md
+python scripts/asf_openai_api_adapter.py --mode live --gate-only --allow-live --live-confirm I_UNDERSTAND_THIS_CALLS_OPENAI_API --input "Return exactly ASF_OPENAI_LIVE_SMOKE_OK." --reasoning-effort none --text-verbosity low --max-output-tokens 32 --output-json tmp/asf_openai_live_smoke_gate.json --output-markdown tmp/asf_openai_live_smoke_gate.md
 ```
 
 Una sola chiamata live, senza retry automatico:
 
 ```powershell
-python scripts/asf_openai_api_adapter.py --mode live --allow-live --live-confirm I_UNDERSTAND_THIS_CALLS_OPENAI_API --input "Return exactly ASF_LIVE_SMOKE_OK." --reasoning-effort none --text-verbosity low --max-output-tokens 32 --output-json tmp/asf_openai_live_smoke_result.json --output-markdown tmp/asf_openai_live_smoke_result.md
+python scripts/asf_openai_api_adapter.py --mode live --allow-live --live-confirm I_UNDERSTAND_THIS_CALLS_OPENAI_API --input "Return exactly ASF_OPENAI_LIVE_SMOKE_OK." --reasoning-effort none --text-verbosity low --max-output-tokens 32 --output-json tmp/asf_openai_live_smoke_result.json --output-markdown tmp/asf_openai_live_smoke_result.md
 ```
 
 L'evidenza resta sotto `tmp/`, la richiesta usa `store: false` e la chiave non deve comparire in output, log o file.
@@ -385,6 +385,29 @@ python scripts/asf_openai_controlled_live_execution_pack.py --execution-mode moc
 ```
 
 Live reale futura: usare solo in uno step separato autorizzato da Alberto, con `--execution-mode live`, `ASF_OPENAI_LIVE_ENABLED=1`, `--confirm-live-openai`, artifact sotto `tmp/` e una sola chiamata prevista. Codex non deve eseguire questo comando live.
+
+## 7.17 Eseguire OpenAI API Adapter first authorized live run
+
+Usare solo in uno step autorizzato. Il wrapper passa sempre da `scripts/asf_openai_api_adapter.py` e non crea JSON evidence se il risultato non e' success.
+
+```powershell
+$env:OPENAI_API_KEY = "<set locally, never print>"
+$env:ASF_OPENAI_LIVE_RUN = "1"
+# Optional: $env:ASF_OPENAI_MODEL = "<model id>"
+python scripts/asf_openai_first_authorized_live_run.py --live
+```
+
+Output versionato:
+
+```text
+docs/0560-01-Report_OpenAI_API_Adapter_First_Authorized_Live_Run.md
+docs/0560-02-Evidence_OpenAI_API_Live_Run_Sanitized.json
+docs/0560-03-Diagnostic_OpenAI_Provider_HTTP_Error_And_Rate_Limit.md
+```
+
+Il JSON evidence viene scritto solo se `status=COMPLETATO`, `request_count=1` e il marker `ASF_OPENAI_LIVE_SMOKE_OK` e' presente.
+
+Se il report indica `provider_http_error`, `rate_limited`, `quota_exceeded`, `model_access_denied`, `authentication_error` o `project_limit_or_billing_block`, non ripetere retry manuali nello stesso step. Verificare prima quota, billing, organization/project e accesso modello nella dashboard OpenAI, poi aprire uno step separato autorizzato.
 
 ---
 

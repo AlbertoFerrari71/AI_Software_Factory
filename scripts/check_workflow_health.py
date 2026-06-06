@@ -82,9 +82,12 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md",
         "docs/68_ASF_OPENAI_API_ADAPTER_LIVE_SMOKE_RESULT_HARDENING.md",
         "docs/69_ASF_OPENAI_API_ADAPTER_CONTROLLED_LIVE_EXECUTION_PACK.md",
+        "docs/0560-01-Report_OpenAI_API_Adapter_First_Authorized_Live_Run.md",
+        "docs/0560-03-Diagnostic_OpenAI_Provider_HTTP_Error_And_Rate_Limit.md",
         "config/asf_project_profiles.json",
         "scripts/asf_openai_api_adapter.py",
         "scripts/asf_openai_controlled_live_execution_pack.py",
+        "scripts/asf_openai_first_authorized_live_run.py",
         "scripts/install_pwsh_command_pack_skill.py",
         "scripts/migrate_artifact_names_4digit.py",
         "scripts/asf_codex_invocation_dry_run.py",
@@ -239,6 +242,14 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                 "ASF OpenAI API Adapter Controlled Live Execution Pack",
                 ["ASF OpenAI API Adapter Controlled Live Execution Pack"],
             ),
+            (
+                "OpenAI API Adapter First Authorized Live Run",
+                ["OpenAI API Adapter First Authorized Live Run"],
+            ),
+            (
+                "OpenAI Provider HTTP Error and Rate Limit Diagnostic",
+                ["OpenAI Provider HTTP Error and Rate Limit Diagnostic"],
+            ),
             ("generate task packet script", ["scripts/generate_task_packet.py"]),
             ("task packet validator script", ["scripts/validate_task_packet.py"]),
             ("ASF Next Step Runner script", ["scripts/asf_next_step.py"]),
@@ -255,6 +266,10 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             (
                 "ASF OpenAI API Adapter Controlled Live Execution Pack script",
                 ["scripts/asf_openai_controlled_live_execution_pack.py"],
+            ),
+            (
+                "OpenAI API Adapter First Authorized Live Run script",
+                ["scripts/asf_openai_first_authorized_live_run.py"],
             ),
             (
                 "artifact naming migration script",
@@ -356,6 +371,14 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             (
                 "ASF OpenAI API Adapter Controlled Live Execution Pack document",
                 ["docs/69_ASF_OPENAI_API_ADAPTER_CONTROLLED_LIVE_EXECUTION_PACK.md"],
+            ),
+            (
+                "OpenAI API Adapter First Authorized Live Run report",
+                ["docs/0560-01-Report_OpenAI_API_Adapter_First_Authorized_Live_Run.md"],
+            ),
+            (
+                "OpenAI Provider HTTP Error and Rate Limit Diagnostic document",
+                ["docs/0560-03-Diagnostic_OpenAI_Provider_HTTP_Error_And_Rate_Limit.md"],
             ),
             ("ASF project profiles config", ["config/asf_project_profiles.json"]),
             (

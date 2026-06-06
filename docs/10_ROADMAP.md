@@ -85,7 +85,8 @@ Esempio:
 | 546 | Export/Install as-common-pwsh-command-pack Skill | Trasformare il draft in export installabile con installer dry-run/apply e guardrail | Export folder, installer, runbook, test guardrail | MVP personale | Completato |
 | 548 | Git Line Endings Warning Cleanup | Diagnosticare e mitigare warning LF/CRLF con policy repository-level controllata | `.gitattributes`, documento STEP 548, test guardrail | MVP personale | Completato |
 | 550 | LAST Deprecation and 4-Digit Artifact Naming Standard | Deprecare `LAST-*` e standardizzare artefatti progressivi `NNNN-II-Tipo_Nome.ext` | Documento standard, utility migrazione dry-run/apply, template e test aggiornati | MVP personale | Completato |
-| 560 | OpenAI API Adapter First Authorized Live Run | Eseguire una prima live reale futura solo con autorizzazione esplicita di Alberto | Preflight finale, una sola chiamata live, artifact redatti, stop conditions | SaaS-ready | Da fare |
+| 560 | OpenAI API Adapter First Authorized Live Run | Eseguire una prima live reale futura solo con autorizzazione esplicita di Alberto | Wrapper autorizzato, report provider-side `BLOCKED_BY_RATE_LIMIT_OR_QUOTA`, diagnostic pack 0560-03, nessuna evidence positiva | SaaS-ready | Bloccato da provider |
+| 570 | OpenAI API Adapter Live Error Taxonomy and Retry Policy | Consolidare error taxonomy, stop policy e retry policy per futuri tentativi live separati | Tassonomia errori, retry policy, guardrail tentativi successivi | SaaS-ready | Da fare |
 
 ---
 
@@ -1264,12 +1265,27 @@ Deprecare l'uso operativo dei file `LAST-*` e introdurre lo standard progressivo
 
 Eseguire una prima live reale futura solo se Alberto autorizza esplicitamente lo step e fornisce l'ambiente locale necessario.
 
-### Output previsti
+### Output realizzati
 
-- preflight finale con controlled live execution pack;
-- una sola chiamata live OpenAI API;
-- prompt tiny non sensibile;
+- wrapper `scripts/asf_openai_first_authorized_live_run.py`;
+- report versionato `docs/0560-01-Report_OpenAI_API_Adapter_First_Authorized_Live_Run.md`;
+- diagnostic pack versionato `docs/0560-03-Diagnostic_OpenAI_Provider_HTTP_Error_And_Rate_Limit.md`;
+- live authorization via `--live` o `ASF_OPENAI_LIVE_RUN=1`;
+- modello configurabile via `ASF_OPENAI_MODEL`;
+- prompt tiny non sensibile `Return exactly ASF_OPENAI_LIVE_SMOKE_OK.`;
 - `store: false`;
-- artifact JSON/Markdown redatti sotto `tmp/`;
+- output massimo basso;
 - classificazione risultato e stop conditions;
+- test mockati per key assente, flag live assente, redazione secret, successo, errori API/rete/quota e no-leak.
+
+### Stato live
+
+- status: `BLOCKED_BY_RATE_LIMIT_OR_QUOTA`;
+- motivo consolidato: provider HTTP 429 `insufficient_quota`, coerente con quota/billing/project limit;
+- request count ultimo tentativo autorizzato: `1`;
+- evidence JSON non creato, perche' la live non e' stata eseguita con successo;
 - nessun retry aggressivo o loop live.
+
+### Prossimo step consigliato
+
+0560-F) Publish Provider-Blocked Live Run Diagnostic Pack

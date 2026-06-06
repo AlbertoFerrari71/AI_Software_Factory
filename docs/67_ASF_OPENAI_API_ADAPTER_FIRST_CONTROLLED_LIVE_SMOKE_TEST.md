@@ -28,7 +28,7 @@ The adapter may attempt the live smoke only when all gates are present:
 5. The prompt is exactly:
 
 ```text
-Return exactly ASF_LIVE_SMOKE_OK.
+Return exactly ASF_OPENAI_LIVE_SMOKE_OK.
 ```
 
 6. The request payload includes `store: false`.
@@ -64,7 +64,7 @@ The adapter reports only whether the key is present. It never emits the key valu
 Before a live call, run a gate-only command:
 
 ```powershell
-python scripts/asf_openai_api_adapter.py --mode live --gate-only --allow-live --live-confirm I_UNDERSTAND_THIS_CALLS_OPENAI_API --input "Return exactly ASF_LIVE_SMOKE_OK." --reasoning-effort none --text-verbosity low --max-output-tokens 32 --output-json tmp/asf_openai_live_smoke_gate.json
+python scripts/asf_openai_api_adapter.py --mode live --gate-only --allow-live --live-confirm I_UNDERSTAND_THIS_CALLS_OPENAI_API --input "Return exactly ASF_OPENAI_LIVE_SMOKE_OK." --reasoning-effort none --text-verbosity low --max-output-tokens 32 --output-json tmp/asf_openai_live_smoke_gate.json
 ```
 
 Expected preflight decisions:
@@ -92,7 +92,7 @@ The gate report must include:
 Run this command only after local tests pass and the gate-only preflight reports `LIVE_SMOKE_READY_FOR_CALL`:
 
 ```powershell
-python scripts/asf_openai_api_adapter.py --mode live --allow-live --live-confirm I_UNDERSTAND_THIS_CALLS_OPENAI_API --input "Return exactly ASF_LIVE_SMOKE_OK." --reasoning-effort none --text-verbosity low --max-output-tokens 32 --output-json tmp/asf_openai_live_smoke_result.json
+python scripts/asf_openai_api_adapter.py --mode live --allow-live --live-confirm I_UNDERSTAND_THIS_CALLS_OPENAI_API --input "Return exactly ASF_OPENAI_LIVE_SMOKE_OK." --reasoning-effort none --text-verbosity low --max-output-tokens 32 --output-json tmp/asf_openai_live_smoke_result.json
 ```
 
 The request target is:
@@ -106,7 +106,7 @@ The payload includes:
 ```json
 {
   "model": "gpt-5.5",
-  "input": "Return exactly ASF_LIVE_SMOKE_OK.",
+  "input": "Return exactly ASF_OPENAI_LIVE_SMOKE_OK.",
   "store": false,
   "max_output_tokens": 32,
   "text": {
@@ -163,7 +163,7 @@ The smoke passes only when:
 - HTTP status is successful;
 - response JSON parses;
 - a response id or equivalent minimal success evidence exists;
-- extracted output text contains `ASF_LIVE_SMOKE_OK`;
+- extracted output text contains `ASF_OPENAI_LIVE_SMOKE_OK`;
 - `store` is false;
 - exactly one network request was attempted;
 - no secret value is printed or persisted;

@@ -101,6 +101,9 @@ Examples:
 - update `docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md` when OpenAI live smoke commands, result fields, failure classifications, artifact rules or one-call constraints change;
 - update `docs/68_ASF_OPENAI_API_ADAPTER_LIVE_SMOKE_RESULT_HARDENING.md` when OpenAI live smoke result schema, classifications, safe artifact rules or mocked error coverage change;
 - update `docs/69_ASF_OPENAI_API_ADAPTER_CONTROLLED_LIVE_EXECUTION_PACK.md` when OpenAI controlled live preflight, dry-run default, double consent, artifact layout or operator template rules change;
+- update `docs/0560-01-Report_OpenAI_API_Adapter_First_Authorized_Live_Run.md` when the first authorized OpenAI live run result, blocked reason, model, request count, output check or retry guidance changes;
+- update `docs/0560-03-Diagnostic_OpenAI_Provider_HTTP_Error_And_Rate_Limit.md` when STEP 0560 provider-side diagnostics, quota/rate-limit interpretation, manual dashboard checks or retry guidance change;
+- update `scripts/asf_openai_first_authorized_live_run.py` and related tests when STEP 0560 live authorization gates, evidence schema or secret guardrails change;
 - update `config/asf_project_profiles.json` only when profile defaults need to change and no secrets are introduced;
 - update `templates/codex_tasks/asf_runner_verification_pack_template.md` when the Verification Pack structure changes;
 - update `templates/codex_tasks/asf_codex_report_intake_template.md` when intake report structure changes;

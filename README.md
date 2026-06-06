@@ -1,7 +1,7 @@
 # AI Software Factory
 
 **Metodo interno:** Codex Alchemy Method  
-**Stato:** STEP 0550 - LAST Deprecation and 4-Digit Artifact Naming Standard
+**Stato:** STEP 0560 - OpenAI Provider HTTP Error and Rate Limit Diagnostic Pack
 **Data bootstrap:** 2026-05-25  
 **Strategia:** local-first personale, progettato per evoluzione SaaS
 
@@ -28,7 +28,7 @@ Il metodo interno si chiama **Codex Alchemy Method**: l'idea grezza viene trasfo
 
 ## 2. Stato repository
 
-Questo repository e' nello stato **STEP 0550 - LAST Deprecation and 4-Digit Artifact Naming Standard**.
+Questo repository e' nello stato **STEP 0560 - OpenAI Provider HTTP Error and Rate Limit Diagnostic Pack**.
 
 Sono presenti:
 
@@ -55,6 +55,8 @@ Sono presenti:
 - export installabile della skill `as-common-pwsh-command-pack` dentro ASF, con installer dry-run/apply e guardrail anti-scrittura esterna non autorizzata.
 - deprecazione degli artefatti `LAST-*`, regola `max(II)` per trovare l'ultimo artefatto e utility prudente di migrazione dry-run/apply.
 - controlled live execution pack OpenAI dry-run-default con doppio consenso futuro, artifact safe sotto `tmp/` e template operatore PowerShell.
+- wrapper STEP 0560 per primo live run autorizzato via adapter, con report versionato `docs/0560-01-Report_OpenAI_API_Adapter_First_Authorized_Live_Run.md`.
+- diagnostic pack STEP 0560 provider-side, con `docs/0560-03-Diagnostic_OpenAI_Provider_HTTP_Error_And_Rate_Limit.md`, stato `BLOCKED_BY_RATE_LIMIT_OR_QUOTA` e nessuna evidence positiva inventata.
 
 Non sono ancora presenti:
 
@@ -381,7 +383,7 @@ policies/path_policy.v0.json
 ## 11. Prossimo step
 
 ```text
-560) OpenAI API Adapter First Authorized Live Run
+0560-F) Publish Provider-Blocked Live Run Diagnostic Pack
 ```
 
-Obiettivo: eseguire una prima live reale futura solo con autorizzazione esplicita di Alberto, passando dal controlled live execution pack, con una sola chiamata prevista, `store: false`, artifact sotto `tmp/` e nessun leak di secret.
+Obiettivo: pubblicare il diagnostic pack provider-blocked dopo revisione umana. Un eventuale `0560-D2` retry live con modello a costo/latenza minori resta separato e richiede prima verifica manuale di quota, billing, progetto e accesso modello nella dashboard OpenAI.

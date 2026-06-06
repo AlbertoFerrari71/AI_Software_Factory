@@ -4,6 +4,37 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.56.0] - 2026-06-06
+
+### Added
+
+- STEP 0560 - OpenAI API Adapter First Authorized Live Run.
+- Wrapper autorizzato `scripts/asf_openai_first_authorized_live_run.py`, che passa da `scripts/asf_openai_api_adapter.py`.
+- Report versionato `docs/0560-01-Report_OpenAI_API_Adapter_First_Authorized_Live_Run.md`.
+- Diagnostic pack provider-side `docs/0560-03-Diagnostic_OpenAI_Provider_HTTP_Error_And_Rate_Limit.md`.
+- Test mockati `tests/unit/test_asf_openai_first_authorized_live_run.py`.
+
+### Changed
+
+- Aggiornato il marker live smoke a `ASF_OPENAI_LIVE_SMOKE_OK`.
+- Il risultato live adapter include `usage` e `response_id_hash_16` quando disponibili.
+- Il wrapper distingue `success_with_marker`, `marker_missing`, `output_text_absent`, `provider_http_error`, `rate_limited`, `quota_exceeded`, `model_access_denied`, `authentication_error`, `project_limit_or_billing_block` e `unknown_provider_error`.
+- Aggiornati README, roadmap, Documentation Sync, Project Workflow Index, Workflow Health Check, Quick Reference e Command Cookbook.
+
+### Guardrails
+
+- Live run autorizzata via `--live`, ma consolidata come provider-side block: HTTP 429 `insufficient_quota`, `BLOCKED_BY_RATE_LIMIT_OR_QUOTA`.
+- Nessuna nuova chiamata live nello STEP 0560-E.
+- Nessun JSON evidence creato, perche' lo step non ha prodotto una live success.
+- Nessun secret, token, valore auth header o payload raw scritto nei nuovi artifact.
+
+### Not included
+
+- Nessun commit, push, PR, merge, release o deploy.
+- Nessun retry live e nessun bypass dell'adapter.
+
+---
+
 ## [0.55.0] - 2026-06-06
 
 ### Added
