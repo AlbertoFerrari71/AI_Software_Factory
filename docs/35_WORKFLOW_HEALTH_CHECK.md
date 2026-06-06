@@ -40,6 +40,7 @@ The script `scripts/check_workflow_health.py` checks:
 - `docs/59_ASF_CODEX_READONLY_REPEATABLE_TRIAL_PACK.md`, `docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md`, `scripts/asf_codex_readonly_repeatable_trial.py`, `scripts/asf_codex_readonly_trial_compare.py`, `templates/codex_tasks/asf_codex_readonly_repeatable_trial_template.md` and `templates/codex_tasks/asf_codex_readonly_trial_compare_template.md` are present and linked from the Project Workflow Index;
 - `docs/64_ASF_PWSH_COMMAND_PACK_SKILL_HARDENING.md` is present and linked from the Project Workflow Index;
 - `docs/70_ASF_PWSH_COMMAND_PACK_SKILL_FINALIZATION.md`, `templates/pwsh_command_pack/README.md` and `templates/pwsh_command_pack/as-common-pwsh-command-pack-SKILL.md` are present and linked from the Project Workflow Index;
+- `docs/71_ASF_PWSH_COMMAND_PACK_SKILL_EXPORT_INSTALL.md`, `templates/pwsh_command_pack/export/as-common-pwsh-command-pack/SKILL.md` and `scripts/install_pwsh_command_pack_skill.py` are present and linked from the Project Workflow Index;
 - `docs/65_ASF_OPENAI_API_ADAPTER.md`, `scripts/asf_openai_api_adapter.py` and `templates/codex_tasks/asf_openai_api_adapter_template.md` are present and linked from the Project Workflow Index;
 - `docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md` and `templates/codex_tasks/asf_openai_api_live_boundary_gate_template.md` are present and linked from the Project Workflow Index;
 - `docs/69_ASF_OPENAI_API_ADAPTER_CONTROLLED_LIVE_EXECUTION_PACK.md`, `scripts/asf_openai_controlled_live_execution_pack.py` and `templates/pwsh_command_pack/step_540_openai_controlled_live_execution_pack_template.ps1` are present and linked from the Project Workflow Index;
@@ -81,6 +82,7 @@ The covered areas include:
 - ASF Codex Read-Only Trial Compare;
 - ASF PowerShell Command Pack Skill Hardening;
 - ASF PowerShell Command Pack Skill Finalization;
+- ASF PowerShell Command Pack Skill Export Install;
 - ASF OpenAI API Adapter;
 - ASF OpenAI API Adapter Live Boundary Credential Gate;
 - ASF OpenAI API Adapter First Controlled Live Smoke Test;
@@ -237,6 +239,8 @@ After STEP 450, it also treats the Codex Read-Only Repeatable Trial Pack documen
 After STEP 490, it also treats `docs/64_ASF_PWSH_COMMAND_PACK_SKILL_HARDENING.md` as a core workflow reference because Alberto's PowerShell command pack skill is used to generate robust, logged and human-gated local command packs for ASF operations.
 
 After STEP 545, it also treats `docs/70_ASF_PWSH_COMMAND_PACK_SKILL_FINALIZATION.md`, `templates/pwsh_command_pack/README.md` and `templates/pwsh_command_pack/as-common-pwsh-command-pack-SKILL.md` as core workflow references because the PowerShell command pack standard is now a repository-local canonical package and exportable skill draft.
+
+After STEP 546, it also treats `docs/71_ASF_PWSH_COMMAND_PACK_SKILL_EXPORT_INSTALL.md`, `templates/pwsh_command_pack/export/as-common-pwsh-command-pack/SKILL.md` and `scripts/install_pwsh_command_pack_skill.py` as core workflow references because the shared skill now has a controlled installable export and dry-run/apply installer.
 
 After STEP 500, it also treats `docs/65_ASF_OPENAI_API_ADAPTER.md`, `scripts/asf_openai_api_adapter.py` and `templates/codex_tasks/asf_openai_api_adapter_template.md` as core workflow references because the OpenAI API Adapter produces local dry-run/mock evidence without SDK dependencies, live calls or API key leakage.
 

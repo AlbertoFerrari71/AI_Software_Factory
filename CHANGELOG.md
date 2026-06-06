@@ -4,6 +4,39 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.54.6] - 2026-06-06
+
+### Added
+
+- STEP 546 - Export/Install as-common-pwsh-command-pack Skill.
+- Export installabile `templates/pwsh_command_pack/export/as-common-pwsh-command-pack/SKILL.md`.
+- Installer dry-run/apply `scripts/install_pwsh_command_pack_skill.py`.
+- Documento `docs/71_ASF_PWSH_COMMAND_PACK_SKILL_EXPORT_INSTALL.md`.
+- Test guardrail `tests/unit/test_pwsh_command_pack_skill_export_install.py`.
+
+### Changed
+
+- Aggiornati README, roadmap, decision log, Documentation Sync, Project Workflow Index, Workflow Health Check, Quick Reference, Command Cookbook e README template con riferimenti a export/install.
+- Esteso il workflow health check per proteggere export skill e installer.
+- Confermato il prossimo step consigliato: `550) OpenAI API Adapter First Authorized Live Run`.
+
+### Guardrails
+
+- Dry-run default; nessuna scrittura senza `--apply`.
+- Target esplicito con `--target-user-skills` o `--target-dir`.
+- Backup timestamped prima di overwrite confermato.
+- Nessuna cancellazione di cartelle.
+- Nessuna installazione diretta in `%USERPROFILE%\.agents\skills` durante lo step ASF.
+- Nessuna modifica a `Codex_Skills`.
+
+### Not included
+
+- Nessun commit, push, PR, merge, release o deploy.
+- Nessuna modifica agli stash.
+- Nessuna scrittura fuori repository ASF eseguita da Codex.
+
+---
+
 ## [0.54.5] - 2026-06-06
 
 ### Added

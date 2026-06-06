@@ -2094,3 +2094,50 @@ Il prossimo step consigliato resta:
 ```text
 550) OpenAI API Adapter First Authorized Live Run
 ```
+
+---
+
+## DEC-067 - PowerShell command pack skill export install
+
+**Data:** 2026-06-06
+**Stato:** Accettata
+
+### Contesto
+
+STEP 545 ha creato una skill draft esportabile per `as-common-pwsh-command-pack`, ma il file draft non era ancora nella forma canonica installabile `skill-folder/SKILL.md`.
+
+Serve un passaggio controllato che prepari l'export e un installer verificabile senza scrivere direttamente in `%USERPROFILE%\.agents\skills` o in repository esterne come `Codex_Skills`.
+
+### Decisione
+
+Creare la forma installabile:
+
+```text
+templates/pwsh_command_pack/export/as-common-pwsh-command-pack/SKILL.md
+```
+
+Introdurre:
+
+- `scripts/install_pwsh_command_pack_skill.py`;
+- dry-run default;
+- `--apply` obbligatorio per scrivere;
+- target esplicito con `--target-user-skills` o `--target-dir`;
+- backup timestamped prima di overwrite confermato;
+- blocco su target sospetti, sorgente mancante, skill name errato o concetti standard mancanti;
+- test automatici senza scritture fuori repository.
+
+### Motivazione
+
+L'export installabile rende la skill comune versionabile e verificabile dentro ASF, mentre l'installer separa preparazione, dry-run e installazione reale.
+
+Mantenere l'installazione reale come operazione manuale dopo intake riduce il rischio di modifiche cross-repo o di aggiornamenti non presidiati a skill personali.
+
+### Conseguenze
+
+Gli aggiornamenti futuri della skill devono passare da ASF export, dry-run, intake manuale e solo poi installazione o pubblicazione separata in eventuale repository skill.
+
+Il prossimo step consigliato resta:
+
+```text
+550) OpenAI API Adapter First Authorized Live Run
+```
