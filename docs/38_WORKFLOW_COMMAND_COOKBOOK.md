@@ -761,6 +761,51 @@ Documenti:
 
 ---
 
+## 16.2 Ricetta - OpenAI API Adapter dry-run/mock
+
+### Quando usarla
+
+Quando serve verificare payload Responses-style, environment readiness o mock deterministici senza credenziali e senza chiamate live OpenAI API.
+
+### Comandi
+
+Check environment:
+
+```powershell
+python scripts/asf_openai_api_adapter.py --mode check-env --output-json tmp/asf_openai_adapter_env.json
+```
+
+Dry-run:
+
+```powershell
+python scripts/asf_openai_api_adapter.py --mode dry-run --input "ping" --output-json tmp/asf_openai_adapter_dry_run.json
+```
+
+Mock:
+
+```powershell
+python scripts/asf_openai_api_adapter.py --mode mock --input "ping" --output-json tmp/asf_openai_adapter_mock.json
+```
+
+### Esito atteso
+
+I report JSON indicano `network_performed: false`. `check-env` mostra solo se `OPENAI_API_KEY` e' presente, senza emettere il valore.
+
+### Se qualcosa va storto
+
+Se `live` viene selezionato, lo script deve fallire chiuso con `LIVE_MODE_NOT_IMPLEMENTED_IN_STEP_500`.
+
+### Cosa non fare
+
+Non incollare API key, non aggiungere SDK, non usare network e non trattare un mock positivo come integrazione live pronta.
+
+Documenti:
+
+- `docs/65_ASF_OPENAI_API_ADAPTER.md`;
+- `templates/codex_tasks/asf_openai_api_adapter_template.md`.
+
+---
+
 ## 17. Ricetta - Verification Gate fallito
 
 ### Quando usarla
@@ -923,4 +968,5 @@ Codex non deve fare commit, Codex non deve fare push, Codex non deve aprire PR e
 - `docs/58_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL_RESULTS.md`
 - `docs/59_ASF_CODEX_READONLY_REPEATABLE_TRIAL_PACK.md`
 - `docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md`
+- `docs/65_ASF_OPENAI_API_ADAPTER.md`
 - `templates/codex_tasks/step_closure_report_template.md`

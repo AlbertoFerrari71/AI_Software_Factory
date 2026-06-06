@@ -4,6 +4,36 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.50.0] - 2026-06-06
+
+### Added
+
+- STEP 500 - OpenAI API Adapter.
+- Script `scripts/asf_openai_api_adapter.py`.
+- Documento `docs/65_ASF_OPENAI_API_ADAPTER.md`.
+- Template `templates/codex_tasks/asf_openai_api_adapter_template.md`.
+- Test automatici `tests/unit/test_asf_openai_api_adapter.py` e `tests/unit/test_asf_openai_api_adapter_docs.py`.
+
+### Changed
+
+- Aggiunto adapter standard-library-only per payload Responses-style, validazione modello/reasoning/text, `check-env`, `dry-run` e `mock` deterministici.
+- Aggiornati README, roadmap, decision log, Project Workflow Index, Workflow Health Check, Quick Reference, Command Cookbook, Workflow Status Dashboard e script `scripts/check_workflow_health.py` / `scripts/show_workflow_status.py` con i riferimenti allo STEP 500.
+- Aggiornato il prossimo step consigliato a `510) OpenAI API Adapter Live Boundary and Credential Gate`.
+
+### Security
+
+- `OPENAI_API_KEY` viene controllata solo per presenza e non viene mai scritta nei report JSON.
+- Stringhe simili a chiavi OpenAI vengono redatte prima dell'output.
+
+### Not included
+
+- Nessuna chiamata live OpenAI API.
+- Nessun requisito di `OPENAI_API_KEY`.
+- Nessun SDK OpenAI o nuova dipendenza.
+- Nessun uso network, commit, push, PR, merge, release o deploy.
+
+---
+
 ## [0.49.0] - 2026-06-05
 
 ### Added
