@@ -42,7 +42,7 @@ as-common-pwsh-command-pack/
 
 ```yaml
 name: "as-common-pwsh-command-pack"
-description: "Generate safe logged PowerShell command packs for Alberto with robust .ps1 scripts, numbered and LAST outputs, compact Markdown/DOCX reports, clipboard copy, and Git/Codex/ASF guardrails."
+description: "Generate safe logged PowerShell command packs for Alberto with robust .ps1 scripts, progressive NNNN-II artifacts, compact Markdown/DOCX reports, clipboard copy, and Git/Codex/ASF guardrails."
 ```
 
 Long rules, technical sources and the robust template are kept in `references/`. Progressive examples are kept in `examples/`.
@@ -77,7 +77,7 @@ The pasted bootstrap may only:
 - create request text and generated script text;
 - write the generated `.ps1`;
 - validate parsing with `[scriptblock]::Create(...)`;
-- copy `LAST-*` artifacts;
+- write only progressive `NNNN-II-Tipo_Nome.ext` artifacts;
 - execute the generated `.ps1`;
 - print the exit code;
 - terminate with `Write-Host ";"`.
@@ -120,7 +120,7 @@ The robust template includes:
 - UTF-8 without BOM writes;
 - compact Markdown output built from arrays of lines or a string builder;
 - DOCX output as a non-blocking best-effort step;
-- `Set-Clipboard` for `LAST-Output_Compatto.md`.
+- `Set-Clipboard` for the compact Markdown artifact.
 
 The ASF output root is:
 
@@ -128,26 +128,22 @@ The ASF output root is:
 D:\FG-SAB Dropbox\Alberto Ferrari\ChatGPT_Bridge\AI_Software_Factory\pwsh_command
 ```
 
-Each command pack must generate numbered artifacts and matching `LAST-*` artifacts for request, executed script, full output, compact Markdown and compact DOCX:
+Each command pack must generate only progressive artifacts for request, executed script, full output, compact Markdown and compact DOCX:
 
 ```text
-NNNN-Richiesta_Generazione_<name>.txt
-NNNN-Comando_Eseguito_<name>.ps1
-NNNN-Output_Completo_<name>.txt
-NNNN-Output_Compatto_<name>.md
-NNNN-Output_Compatto_<name>.docx
-LAST-Richiesta_Generazione.txt
-LAST-Comando_Eseguito.ps1
-LAST-Output_Completo.txt
-LAST-Output_Compatto.md
-LAST-Output_Compatto.docx
+NNNN-II-Richiesta_Generazione_<name>.txt
+NNNN-II-Comando_Eseguito_<name>.ps1
+NNNN-II-Output_Completo_<name>.txt
+NNNN-II-Output_Compatto_<name>.md
+NNNN-II-Output_Compatto_<name>.docx
 ```
+
+Do not generate `LAST-*` artifacts. Do not read `LAST-*` artifacts as input. To find the latest artifact of one type for one step, use `max(II)` for `(step, type)`. The Bridge is operational, not authoritative.
 
 If DOCX generation fails, the command pack must not fail only for that reason when the TXT and Markdown artifacts were produced correctly. It must write a clear warning in the compact Markdown and may create:
 
 ```text
-NNNN-Output_Compatto_<name>.docx.failed.txt
-LAST-Output_Compatto.docx.failed.txt
+NNNN-II-Output_Compatto_<name>.docx.failed.txt
 ```
 
 The ASF-facing templates for STEP 536 are:
@@ -287,7 +283,7 @@ PowerShell only when archiving, auditing, or publishing.
 
 The default handoff to Codex is a clean, self-contained prompt that can be copied directly into Codex, without a PowerShell wrapper.
 
-Use the Codex command pack PowerShell only when Alberto explicitly asks to save the prompt in the Bridge Dropbox / ChatGPT Bridge with numbered artifacts, `LAST-*` artifacts, or a formal audit trail.
+Use the Codex command pack PowerShell only when Alberto explicitly asks to save the prompt in the Bridge Dropbox / ChatGPT Bridge with progressive `NNNN-II-Tipo_Nome.ext` artifacts or a formal audit trail.
 
 Use the pwsh/publication command pack after the Codex report, intake gate, local verification and human review, for controlled commit, push, PR/merge and final verification. Publication remains blocked when tests, health check, Verification Gate or guardrails fail.
 

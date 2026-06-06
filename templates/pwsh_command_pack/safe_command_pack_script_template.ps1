@@ -6,20 +6,18 @@ $PSNativeCommandUseErrorActionPreference = $false
 
 $PackName = "step-XXXX-safe-command-pack-example"
 $StepNumber = "NNNN"
+$Iteration = "01"
+$ArtifactPrefix = "{0}-{1}" -f $StepNumber, $Iteration
 $OutputRoot = "D:\FG-SAB Dropbox\Alberto Ferrari\ChatGPT_Bridge\AI_Software_Factory\pwsh_command"
 $Stamp = Get-Date -Format "yyyyMMdd-HHmmss"
 $RunId = "{0}-{1}" -f $Stamp, $PackName
 $OutDir = Join-Path $OutputRoot $RunId
 New-Item -ItemType Directory -Path $OutDir -Force | Out-Null
 
-$FullOutputPath = Join-Path $OutDir ("{0}-Output_Completo_{1}.txt" -f $StepNumber, $PackName)
-$CompactOutputPath = Join-Path $OutDir ("{0}-Output_Compatto_{1}.md" -f $StepNumber, $PackName)
-$DocxOutputPath = Join-Path $OutDir ("{0}-Output_Compatto_{1}.docx" -f $StepNumber, $PackName)
-$DocxFailedPath = Join-Path $OutDir ("{0}-Output_Compatto_{1}.docx.failed.txt" -f $StepNumber, $PackName)
-$LastFullOutputPath = Join-Path $OutputRoot "LAST-Output_Completo.txt"
-$LastCompactOutputPath = Join-Path $OutputRoot "LAST-Output_Compatto.md"
-$LastDocxOutputPath = Join-Path $OutputRoot "LAST-Output_Compatto.docx"
-$LastDocxFailedPath = Join-Path $OutputRoot "LAST-Output_Compatto.docx.failed.txt"
+$FullOutputPath = Join-Path $OutDir ("{0}-Output_Completo_{1}.txt" -f $ArtifactPrefix, $PackName)
+$CompactOutputPath = Join-Path $OutDir ("{0}-Output_Compatto_{1}.md" -f $ArtifactPrefix, $PackName)
+$DocxOutputPath = Join-Path $OutDir ("{0}-Output_Compatto_{1}.docx" -f $ArtifactPrefix, $PackName)
+$DocxFailedPath = Join-Path $OutDir ("{0}-Output_Compatto_{1}.docx.failed.txt" -f $ArtifactPrefix, $PackName)
 $AllowedPaths = @(
     "README.md",
     "CHANGELOG.md",
@@ -277,6 +275,7 @@ function Copy-CompactReportToClipboard {
 
 try {
     Set-Content -LiteralPath $FullOutputPath -Value @("Safe command pack started: $(Get-Date -Format o)") -Encoding utf8
+    Write-Log "Use progressive artifacts only: NNNN-II-Tipo_Nome.ext. Do not generate or read LAST-* artifacts."
     Write-Log "Use branch + PR for publication to main. Never use direct push to main as the default."
     Write-Log "If local main is ahead of origin/main, create and push a publish branch, open PR, merge PR, realign main, then verify."
     Write-Log "Use git status --porcelain=v1 --untracked-files=all before scope-sensitive git add operations."
@@ -301,12 +300,4 @@ try {
     throw
 }
 
-Copy-Item -LiteralPath $FullOutputPath -Destination $LastFullOutputPath -Force
-Copy-Item -LiteralPath $CompactOutputPath -Destination $LastCompactOutputPath -Force
-if (Test-Path -LiteralPath $DocxOutputPath) {
-    Copy-Item -LiteralPath $DocxOutputPath -Destination $LastDocxOutputPath -Force
-}
-if (Test-Path -LiteralPath $DocxFailedPath) {
-    Copy-Item -LiteralPath $DocxFailedPath -Destination $LastDocxFailedPath -Force
-}
 Copy-CompactReportToClipboard

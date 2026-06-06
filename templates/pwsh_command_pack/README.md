@@ -35,6 +35,8 @@ Safe Bootstrap PowerShell Command Pack:
 8. The pasted bootstrap does not contain nested here-strings.
 9. The pasted bootstrap does not use fragile outer `try/finally`.
 10. The final line must be executable, for example `Write-Host ";"`.
+11. The pack generates only progressive `NNNN-II-Tipo_Nome.ext` artifacts.
+12. The pack does not generate or read `LAST-*` artifacts.
 
 ## Required Patterns
 
@@ -46,8 +48,7 @@ Bootstrap:
 - Bridge output directory creation;
 - numbered request file;
 - numbered command `.ps1` file;
-- `LAST-Richiesta_Generazione.txt`;
-- `LAST-Comando_Eseguito.ps1`;
+- no `LAST-*` files;
 - parse-check with `[scriptblock]::Create($ScriptText) | Out-Null`;
 - execution with `pwsh -NoProfile -ExecutionPolicy Bypass -File $CommandFile`;
 - explicit `$LASTEXITCODE` read;
@@ -60,7 +61,7 @@ Generated `.ps1`:
 - full output;
 - compact Markdown;
 - DOCX best-effort/non-blocking;
-- `LAST` files always updated;
+- progressive `NNNN-II-Tipo_Nome.ext` files only;
 - `Set-Clipboard` best-effort;
 - native command wrapper with exit-code control;
 - `git --no-pager` for long Git output;
@@ -128,22 +129,23 @@ If local status shows `main...origin/main [ahead N]`, create a publish branch fr
 
 ## Output Contract
 
-Use a four-digit step number such as `0540`, `0545`, or `0550`:
+Use a four-digit step number and a two-digit intra-step iteration:
 
 ```text
-NNNN-Richiesta_Generazione_<name>.txt
-NNNN-Comando_Eseguito_<name>.ps1
-NNNN-Output_Completo_<name>.txt
-NNNN-Output_Compatto_<name>.md
-NNNN-Output_Compatto_<name>.docx
-LAST-Richiesta_Generazione.txt
-LAST-Comando_Eseguito.ps1
-LAST-Output_Completo.txt
-LAST-Output_Compatto.md
-LAST-Output_Compatto.docx
+NNNN-II-Richiesta_Generazione_<name>.txt
+NNNN-II-Comando_Eseguito_<name>.ps1
+NNNN-II-Output_Completo_<name>.txt
+NNNN-II-Output_Compatto_<name>.md
+NNNN-II-Output_Compatto_<name>.docx
 ```
 
+Do not generate `LAST-*` files. To find the latest artifact of one type for one
+step, use `max(II)` for `(step, type)`.
+
 DOCX is best-effort. TXT and Markdown are primary. If DOCX fails, write a non-blocking warning and optionally create `.docx.failed.txt`.
+
+The Bridge is operational storage, not the authoritative source. Git and
+versioned files are authoritative.
 
 ## LF/CRLF
 
@@ -158,4 +160,4 @@ Git LF/CRLF warnings on Windows are non-blocking when all of these pass:
 
 STEP 536 introduced the hardening standard. STEP 540 validated it in a real branch/PR publication flow using safe bootstrap.
 
-STEP 545 finalized the repository-local skill draft. STEP 546 added the installable export folder and dry-run/apply installer.
+STEP 545 finalized the repository-local skill draft. STEP 546 added the installable export folder and dry-run/apply installer. STEP 0550 deprecated `LAST-*` artifacts.

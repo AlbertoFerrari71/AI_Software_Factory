@@ -242,6 +242,8 @@ After STEP 545, it also treats `docs/70_ASF_PWSH_COMMAND_PACK_SKILL_FINALIZATION
 
 After STEP 546, it also treats `docs/71_ASF_PWSH_COMMAND_PACK_SKILL_EXPORT_INSTALL.md`, `templates/pwsh_command_pack/export/as-common-pwsh-command-pack/SKILL.md` and `scripts/install_pwsh_command_pack_skill.py` as core workflow references because the shared skill now has a controlled installable export and dry-run/apply installer.
 
+After STEP 0550, it also treats `docs/73_LAST_DEPRECATION_4_DIGIT_ARTIFACT_NAMING_STANDARD.md` and `scripts/migrate_artifact_names_4digit.py` as core workflow references because ASF artifact naming now deprecates `LAST-*`, uses `NNNN-II-Tipo_Nome.ext`, and resolves the latest artifact with `max(II)` for `(step, type)`.
+
 After STEP 500, it also treats `docs/65_ASF_OPENAI_API_ADAPTER.md`, `scripts/asf_openai_api_adapter.py` and `templates/codex_tasks/asf_openai_api_adapter_template.md` as core workflow references because the OpenAI API Adapter produces local dry-run/mock evidence without SDK dependencies, live calls or API key leakage.
 
 After STEP 510, it also treats `docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md` and `templates/codex_tasks/asf_openai_api_live_boundary_gate_template.md` as core workflow references because the OpenAI API Adapter live boundary produces deterministic no-network gate reports before any future controlled live smoke test.

@@ -39,7 +39,8 @@ The standard remains:
 - native command parameter name `ArgList`, not `$Args`;
 - `git status --porcelain=v1 --untracked-files=all`;
 - PR-first publishing;
-- numbered and `LAST` outputs;
+- progressive `NNNN-II-Tipo_Nome.ext` outputs;
+- no generated or input `LAST-*` artifacts;
 - DOCX best-effort/non-blocking;
 - no direct push to `main` by default.
 
@@ -197,7 +198,7 @@ After a manual install, verify:
 - target file exists;
 - folder name is `as-common-pwsh-command-pack`;
 - `SKILL.md` frontmatter declares `name: as-common-pwsh-command-pack`;
-- content mentions Safe Bootstrap, generated `.ps1`, parse-check, `ArgList`, porcelain Git status, PR-first publishing, numbered and `LAST`, DOCX best-effort and no direct push to `main`;
+- content mentions Safe Bootstrap, generated `.ps1`, parse-check, `ArgList`, porcelain Git status, PR-first publishing, `NNNN-II-Tipo_Nome.ext`, no generated `LAST-*`, DOCX best-effort and no direct push to `main`;
 - no real secrets or credentials were inserted.
 
 Optional dry-run comparison after install:
@@ -261,5 +262,5 @@ This step does not:
 ## 13. Next Step
 
 ```text
-550) OpenAI API Adapter First Authorized Live Run
+560) OpenAI API Adapter First Authorized Live Run
 ```

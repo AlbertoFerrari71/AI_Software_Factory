@@ -4,6 +4,36 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.55.0] - 2026-06-06
+
+### Added
+
+- STEP 0550 - LAST Deprecation and 4-Digit Artifact Naming Standard.
+- Documento `docs/73_LAST_DEPRECATION_4_DIGIT_ARTIFACT_NAMING_STANDARD.md`.
+- Utility dry-run/apply `scripts/migrate_artifact_names_4digit.py`.
+- Test `tests/unit/test_migrate_artifact_names_4digit.py`.
+
+### Changed
+
+- Aggiornati AGENTS, README, Codex Workflow, Documentation Sync, Project Workflow Index, Workflow Health Check, Quick Reference, Command Cookbook, Status Dashboard e template PowerShell command pack.
+- Aggiornati skill draft/export repository-local `as-common-pwsh-command-pack` senza modificare skill esterne installate.
+- Deprecata la generazione operativa di `LAST-*`; nuovo standard `NNNN-II-Tipo_Nome.ext` con ultimo artefatto = `max(II)` per `(step, tipo)`.
+- Spostato il futuro step OpenAI API Adapter First Authorized Live Run a `560)` per evitare collisione con STEP 0550.
+
+### Guardrails
+
+- Utility di migrazione dry-run di default, apply solo con `--apply`.
+- Nessun overwrite e blocco su collisioni.
+- Nessuna cancellazione di file storici `LAST-*`.
+- Nessuna modifica a skill esterne o repository esterne.
+
+### Not included
+
+- Nessun commit, push, PR, merge, release o deploy.
+- Nessuna installazione della skill fuori repository.
+
+---
+
 ## [0.54.8] - 2026-06-06
 
 ### Added
@@ -16,7 +46,7 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 - Aggiornata `.gitattributes` con policy EOL repository-level per sorgenti, documentazione, template e script Windows.
 - Aggiornati roadmap, decision log, Documentation Sync, Project Workflow Index, Quick Reference e Command Cookbook con la gestione LF/CRLF controllata.
-- Confermato il prossimo step consigliato: `550) OpenAI API Adapter First Authorized Live Run`.
+- Il prossimo step consigliato e' stato poi spostato a `560) OpenAI API Adapter First Authorized Live Run` dallo STEP 0550.
 
 ### Guardrails
 
@@ -47,7 +77,7 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 - Aggiornati README, roadmap, decision log, Documentation Sync, Project Workflow Index, Workflow Health Check, Quick Reference, Command Cookbook e README template con riferimenti a export/install.
 - Esteso il workflow health check per proteggere export skill e installer.
-- Confermato il prossimo step consigliato: `550) OpenAI API Adapter First Authorized Live Run`.
+- Il prossimo step consigliato e' stato poi spostato a `560) OpenAI API Adapter First Authorized Live Run` dallo STEP 0550.
 
 ### Guardrails
 
@@ -81,7 +111,7 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 - Aggiornati i template canonici `safe_bootstrap_template.ps1` e `safe_command_pack_script_template.ps1` con file prefix a 4 cifre, `ArgList`, parser Git `--porcelain=v1 --untracked-files=all`, scope guard e clipboard best-effort.
 - Aggiornati AGENTS, README, Codex Workflow, roadmap, decision log, Project Workflow Index, Quick Reference, Command Cookbook e documento PowerShell Command Pack con richiami allo standard finalizzato.
 - Confermato che lo standard STEP 536 e' stato validato concretamente dallo STEP 540 con safe bootstrap e branch/PR.
-- Confermato il prossimo step consigliato: `550) OpenAI API Adapter First Authorized Live Run`.
+- Il prossimo step consigliato e' stato poi spostato a `560) OpenAI API Adapter First Authorized Live Run` dallo STEP 0550.
 
 ### Guardrails
 
@@ -114,7 +144,7 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 - Aggiornati README, roadmap, decision log, Documentation Sync, Project Workflow Index, Workflow Health Check, Quick Reference e Command Cookbook con i riferimenti al pack controllato.
 - Rafforzata la separazione operativa tra dry-run/mock/preflight e futura live reale.
-- Aggiornato il prossimo step consigliato a `550) OpenAI API Adapter First Authorized Live Run`.
+- Il prossimo step consigliato e' stato poi spostato a `560) OpenAI API Adapter First Authorized Live Run` dallo STEP 0550.
 
 ### Guardrails
 

@@ -172,5 +172,5 @@ Default tests must not require network, real credentials or live OpenAI calls.
 ## 9. Next step
 
 ```text
-550) OpenAI API Adapter First Authorized Live Run
+560) OpenAI API Adapter First Authorized Live Run
 ```

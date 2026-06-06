@@ -200,7 +200,8 @@ def test_runbook_and_template_document_required_guardrails() -> None:
         "[scriptblock]::Create",
         "pwsh -NoProfile -ExecutionPolicy Bypass -File",
         "git --no-pager",
-        "LAST-Output_Compatto.md",
+        "0540-01-Output_Compatto_openai_controlled_live_execution_pack.md",
+        "Artifact rule: NNNN-II-Tipo_Nome.ext; no LAST artifacts.",
         "branch + PR",
     ]:
         assert fragment in combined

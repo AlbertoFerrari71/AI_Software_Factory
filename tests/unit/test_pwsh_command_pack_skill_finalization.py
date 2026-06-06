@@ -70,8 +70,9 @@ def test_skill_finalization_documents_canonical_standard() -> None:
         "git add -- @AllowedPaths",
         "PR-first",
         "main...origin/main [ahead N]",
-        "NNNN-Richiesta_Generazione_<name>.txt",
-        "LAST-Output_Compatto.docx",
+        "NNNN-II-Richiesta_Generazione_<name>.txt",
+        "NNNN-II-Output_Compatto_<name>.docx",
+        "Do not generate `LAST-*` files",
         "DOCX is best-effort",
         "LF/CRLF",
         "STEP 536 introduced",
@@ -137,7 +138,7 @@ def test_skill_finalization_tracking_documents_are_updated() -> None:
         SKILL_DRAFT,
         "ArgList",
         "git status --porcelain=v1 --untracked-files=all",
-        "550) OpenAI API Adapter First Authorized Live Run",
+        "560) OpenAI API Adapter First Authorized Live Run",
     ]:
         assert fragment in combined
 

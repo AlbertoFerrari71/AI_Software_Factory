@@ -72,16 +72,13 @@ def test_step_536_output_artifacts_and_docx_fallback_are_documented() -> None:
     )
 
     for fragment in [
-        "NNNN-Richiesta_Generazione_<name>.txt",
-        "NNNN-Comando_Eseguito_<name>.ps1",
-        "NNNN-Output_Completo_<name>.txt",
-        "NNNN-Output_Compatto_<name>.md",
-        "NNNN-Output_Compatto_<name>.docx",
-        "LAST-Richiesta_Generazione.txt",
-        "LAST-Comando_Eseguito.ps1",
-        "LAST-Output_Completo.txt",
-        "LAST-Output_Compatto.md",
-        "LAST-Output_Compatto.docx",
+        "NNNN-II-Richiesta_Generazione_<name>.txt",
+        "NNNN-II-Comando_Eseguito_<name>.ps1",
+        "NNNN-II-Output_Completo_<name>.txt",
+        "NNNN-II-Output_Compatto_<name>.md",
+        "NNNN-II-Output_Compatto_<name>.docx",
+        "Do not generate `LAST-*`",
+        "max(II)",
         ".docx.failed.txt",
         "best-effort",
         "non-blocking",

@@ -30,7 +30,8 @@ REQUIRED_SKILL_FRAGMENTS = (
     "ArgList",
     "git status --porcelain=v1 --untracked-files=all",
     "PR-first",
-    "numbered and `LAST`",
+    "NNNN-II-Tipo_Nome.ext",
+    "Do not generate `LAST-*` files",
     "DOCX is best-effort",
     "Do not default to `git push origin main`",
 )

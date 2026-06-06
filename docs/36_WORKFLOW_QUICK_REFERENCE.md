@@ -80,7 +80,7 @@ PowerShell only when archiving, auditing, or publishing.
 
 Prima di lanciare Codex, preparare un prompt Codex pulito, autosufficiente e direttamente copiabile, senza wrapper PowerShell e senza comandi Git o pubblicazione nello stesso blocco.
 
-Usare il Codex command pack PowerShell solo se Alberto chiede salvataggio nel Bridge Dropbox / ChatGPT Bridge, file numerati, file `LAST` o audit trail formale.
+Usare il Codex command pack PowerShell solo se Alberto chiede salvataggio nel Bridge Dropbox / ChatGPT Bridge, artefatti progressivi `NNNN-II-Tipo_Nome.ext` o audit trail formale. Non generare o leggere file `LAST-*`.
 
 Dopo il report Codex, fare intake gate e verifiche locali. Solo dopo, se serve pubblicare, usare il pwsh/publication command pack per commit, push, PR/merge e verifica finale presidiata.
 
@@ -104,7 +104,9 @@ Regole rapide:
 - niente `finally` fragile nel wrapper esterno;
 - usare `ArgList`, non `$Args`, per parametri wrapper nativi;
 - usare `git status --porcelain=v1 --untracked-files=all` per parser/scope guard;
-- output numerati e `LAST` restano obbligatori;
+- artefatti progressivi `NNNN-II-Tipo_Nome.ext` restano obbligatori;
+- per trovare l'ultimo artefatto di un tipo per uno step, usare `max(II)` per `(step, tipo)`;
+- il Bridge e' operativo, non autorevole: la fonte ufficiale e' Git + file versionato;
 - DOCX e' best-effort e non blocca se TXT/MD sono validi;
 - usare `git --no-pager` per log, diff e output lunghi;
 - warning LF/CRLF non sono bloccanti se `diff --check`, test, health e verify passano; per diagnosi `.gitattributes` usare `docs/72_ASF_GIT_LINE_ENDINGS_WARNING_CLEANUP.md`.
@@ -510,6 +512,7 @@ Solo dopo questa verifica lo step puo' essere considerato presente su `main`.
 - `docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md`: risultati STEP 450.
 - `docs/70_ASF_PWSH_COMMAND_PACK_SKILL_FINALIZATION.md`: standard canonico PowerShell command pack e skill draft.
 - `docs/71_ASF_PWSH_COMMAND_PACK_SKILL_EXPORT_INSTALL.md`: export installabile e installer dry-run/apply della skill comune.
+- `docs/73_LAST_DEPRECATION_4_DIGIT_ARTIFACT_NAMING_STANDARD.md`: deprecazione `LAST-*` e standard artefatti `NNNN-II-Tipo_Nome.ext`.
 - `docs/65_ASF_OPENAI_API_ADAPTER.md`: adapter OpenAI dry-run/mock senza chiamate live.
 - `docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md`: live boundary e credential gate no-network.
 - `docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md`: prima smoke live controllata.
