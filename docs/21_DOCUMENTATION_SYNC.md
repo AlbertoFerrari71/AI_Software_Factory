@@ -96,6 +96,7 @@ Examples:
 - update `docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md` when OpenAI live boundary decisions, credential gate rules, live request plan or future smoke prerequisites change;
 - update `docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md` when OpenAI live smoke commands, result fields, failure classifications, artifact rules or one-call constraints change;
 - update `docs/68_ASF_OPENAI_API_ADAPTER_LIVE_SMOKE_RESULT_HARDENING.md` when OpenAI live smoke result schema, classifications, safe artifact rules or mocked error coverage change;
+- update `docs/69_ASF_OPENAI_API_ADAPTER_CONTROLLED_LIVE_EXECUTION_PACK.md` when OpenAI controlled live preflight, dry-run default, double consent, artifact layout or operator template rules change;
 - update `config/asf_project_profiles.json` only when profile defaults need to change and no secrets are introduced;
 - update `templates/codex_tasks/asf_runner_verification_pack_template.md` when the Verification Pack structure changes;
 - update `templates/codex_tasks/asf_codex_report_intake_template.md` when intake report structure changes;
@@ -110,6 +111,7 @@ Examples:
 - update `templates/codex_tasks/asf_openai_api_adapter_template.md` when OpenAI adapter task packet safety, verification or command examples change;
 - update `templates/codex_tasks/asf_openai_api_live_boundary_gate_template.md` when OpenAI live boundary task packet safety, gate inputs or verification commands change;
 - update `templates/codex_tasks/asf_openai_api_live_smoke_test_template.md` when OpenAI live smoke safety, preflight, one-call command or verification commands change;
+- update `templates/pwsh_command_pack/step_540_openai_controlled_live_execution_pack_template.ps1` when the controlled live operator command pack, safe bootstrap, output naming or dry-run/live consent rules change;
 - update `docs/05_SECURITY_MODEL.md` or `policies/**` only when the Safety Model changes and the risk level is approved.
 
 ### Do not touch unless needed

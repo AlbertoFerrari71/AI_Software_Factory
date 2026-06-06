@@ -231,3 +231,5 @@ The next step is:
 ```
 
 STEP 520 is documented in `docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md`.
+
+STEP 540 is documented in `docs/69_ASF_OPENAI_API_ADAPTER_CONTROLLED_LIVE_EXECUTION_PACK.md` and keeps future live execution behind dry-run default and double consent.

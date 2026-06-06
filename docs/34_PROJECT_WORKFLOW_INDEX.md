@@ -54,6 +54,7 @@ L'indice orienta il lavoro. Non sostituisce i documenti specifici, il Verificati
 | Usare ASF OpenAI API Adapter Live Boundary Credential Gate | `docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md` | `scripts/asf_openai_api_adapter.py`, `templates/codex_tasks/asf_openai_api_live_boundary_gate_template.md` | Quando serve produrre un gate report per futura smoke live | Non fa chiamate live, non stampa secret, non usa SDK |
 | Eseguire ASF OpenAI API Adapter First Controlled Live Smoke Test | `docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md` | `scripts/asf_openai_api_adapter.py`, `templates/codex_tasks/asf_openai_api_live_smoke_test_template.md` | Quando uno step autorizza esplicitamente una singola smoke live OpenAI API | Richiede tutti i gate, `store: false`, artifact sotto `tmp/` e nessun leak di secret |
 | Verificare ASF OpenAI API Adapter Live Smoke Result Hardening | `docs/68_ASF_OPENAI_API_ADAPTER_LIVE_SMOKE_RESULT_HARDENING.md` | `scripts/asf_openai_api_adapter.py`, `templates/codex_tasks/asf_openai_api_live_smoke_test_template.md` | Quando serve classificare risultati live smoke con test mockati | No live call; schema stabile, artifact sicuri e classificazioni fail-closed |
+| Preparare ASF OpenAI API Adapter Controlled Live Execution Pack | `docs/69_ASF_OPENAI_API_ADAPTER_CONTROLLED_LIVE_EXECUTION_PACK.md` | `scripts/asf_openai_controlled_live_execution_pack.py`, `templates/pwsh_command_pack/step_540_openai_controlled_live_execution_pack_template.ps1` | Quando serve preparare artifact e preflight per una futura esecuzione live autorizzata | Dry-run default; richiede `ASF_OPENAI_LIVE_ENABLED=1` e `--confirm-live-openai` per live futuro |
 | Controllare Documentation Sync | `docs/21_DOCUMENTATION_SYNC.md` | Nessuno | Ogni step documentale o operativo | Valuta changelog, roadmap, decisions e documenti specifici |
 | Controllare Soft Protection Guardrails | `docs/24_SOFT_PROTECTION_GUARDRAILS.md` | `scripts/git/check_soft_guardrails.ps1` | Prima del commit o come controllo locale | Read-only; non installa hook |
 | Eseguire Workflow Health Check | `docs/35_WORKFLOW_HEALTH_CHECK.md` | `scripts/check_workflow_health.py` | Quando workflow docs, script o riferimenti centrali cambiano | Read-only; non sostituisce Verification Gate |
@@ -138,6 +139,7 @@ Regole operative:
 - `docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md`: live boundary e credential gate no-network per futura smoke controllata.
 - `docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md`: prima smoke live controllata OpenAI API con gate espliciti, `store: false` e output redatto sotto `tmp/`.
 - `docs/68_ASF_OPENAI_API_ADAPTER_LIVE_SMOKE_RESULT_HARDENING.md`: schema risultato live smoke, classificazioni fail-closed, artifact sicuri e test mockati.
+- `docs/69_ASF_OPENAI_API_ADAPTER_CONTROLLED_LIVE_EXECUTION_PACK.md`: pack dry-run-default per futura esecuzione live controllata con doppio consenso e artifact safe.
 
 ---
 
@@ -162,6 +164,7 @@ Regole operative:
 - `scripts/asf_codex_readonly_safety_gate.py`: safety gate read-only su result capture.
 - `scripts/asf_codex_readonly_trial_compare.py`: confronto Markdown di due o piu' report repeatable trial.
 - `scripts/asf_openai_api_adapter.py`: adapter dry-run/mock, live boundary gate, smoke live controllata e hardening risultati per payload OpenAI Responses-style.
+- `scripts/asf_openai_controlled_live_execution_pack.py`: pack operativo dry-run-default per preflight, mock provider e futura live OpenAI con doppio consenso.
 
 Questi script non devono essere usati per automatizzare commit, push, PR o merge.
 
@@ -193,6 +196,7 @@ Config centrale:
 - `templates/codex_tasks/asf_openai_api_adapter_template.md`: struttura task packet per step futuri sull'adapter OpenAI.
 - `templates/codex_tasks/asf_openai_api_live_boundary_gate_template.md`: struttura task packet per live boundary, credential gate e futura smoke controllata.
 - `templates/codex_tasks/asf_openai_api_live_smoke_test_template.md`: struttura task packet per smoke live controllata e hardening risultati.
+- `templates/pwsh_command_pack/step_540_openai_controlled_live_execution_pack_template.ps1`: safe bootstrap operatore per generare il pack controllato con output numerati e `LAST`.
 
 ---
 
@@ -301,6 +305,14 @@ python scripts/asf_openai_api_adapter.py --mode live --allow-live --live-confirm
 ```
 
 Per lo STEP 530 usare solo test mockati: Codex non deve eseguire una chiamata live reale.
+
+Per preparare lo STEP 540 controlled live execution pack in dry-run default:
+
+```powershell
+python scripts/asf_openai_controlled_live_execution_pack.py
+```
+
+Per mock provider no-network con gate espliciti, usare `--execution-mode mock` solo con credenziale fake/test o ambiente locale autorizzato. Per live reale futuro servono `ASF_OPENAI_LIVE_ENABLED=1`, `--confirm-live-openai`, artifact sotto `tmp/` e uno step separato autorizzato.
 
 I comandi di commit, push, PR e merge restano azioni manuali di Alberto e non sono raccolti qui in una sequenza automatica.
 

@@ -246,3 +246,5 @@ The next recommended step is:
 ```
 
 STEP 530 is documented in `docs/68_ASF_OPENAI_API_ADAPTER_LIVE_SMOKE_RESULT_HARDENING.md`.
+
+STEP 540 is documented in `docs/69_ASF_OPENAI_API_ADAPTER_CONTROLLED_LIVE_EXECUTION_PACK.md` and should be used before any future authorized live run.

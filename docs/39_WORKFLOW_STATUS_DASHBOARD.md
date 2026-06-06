@@ -58,6 +58,7 @@ Lo script `scripts/show_workflow_status.py` mostra:
   - `docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md`;
   - `docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md`;
   - `docs/68_ASF_OPENAI_API_ADAPTER_LIVE_SMOKE_RESULT_HARDENING.md`;
+  - `docs/69_ASF_OPENAI_API_ADAPTER_CONTROLLED_LIVE_EXECUTION_PACK.md`;
 - presenza degli script principali:
   - `scripts/asf_next_step.py`;
   - `scripts/asf_codex_report_intake.py`;
@@ -70,6 +71,7 @@ Lo script `scripts/show_workflow_status.py` mostra:
   - `scripts/asf_codex_readonly_safety_gate.py`;
   - `scripts/asf_codex_readonly_trial_compare.py`;
   - `scripts/asf_openai_api_adapter.py`;
+  - `scripts/asf_openai_controlled_live_execution_pack.py`;
   - `scripts/check_workflow_health.py`;
   - `scripts/show_workflow_status.py`;
   - `scripts/generate_task_packet.py`;
@@ -137,7 +139,7 @@ La dashboard mostra se documenti, config e script del runner sono presenti, incl
 
 ### ASF OpenAI API Adapter
 
-La dashboard mostra se i documenti e lo script dell'OpenAI API Adapter sono presenti, inclusi adapter foundation, live boundary, first controlled live smoke test e result hardening.
+La dashboard mostra se i documenti e gli script dell'OpenAI API Adapter sono presenti, inclusi adapter foundation, live boundary, first controlled live smoke test, result hardening e controlled live execution pack.
 
 La dashboard non esegue dry-run, mock, controlli environment, gate report o chiamate live.
 
@@ -246,6 +248,7 @@ La dashboard non sostituisce test, Verification Gate, Workflow Health Check, PR 
 - `docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md`
 - `docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md`
 - `docs/68_ASF_OPENAI_API_ADAPTER_LIVE_SMOKE_RESULT_HARDENING.md`
+- `docs/69_ASF_OPENAI_API_ADAPTER_CONTROLLED_LIVE_EXECUTION_PACK.md`
 - `docs/40_RELEASE_READINESS.md`
 - `docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md`
 - `docs/42_ASF_NEXT_STEP_RUNNER.md`

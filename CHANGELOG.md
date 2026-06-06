@@ -4,6 +4,40 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.54.0] - 2026-06-06
+
+### Added
+
+- STEP 540 - OpenAI API Adapter Controlled Live Execution Pack.
+- Script `scripts/asf_openai_controlled_live_execution_pack.py`.
+- Documento `docs/69_ASF_OPENAI_API_ADAPTER_CONTROLLED_LIVE_EXECUTION_PACK.md`.
+- Template `templates/pwsh_command_pack/step_540_openai_controlled_live_execution_pack_template.ps1`.
+- Test `tests/unit/test_asf_openai_controlled_live_execution_pack.py`.
+
+### Changed
+
+- Aggiornati README, roadmap, decision log, Documentation Sync, Project Workflow Index, Workflow Health Check, Quick Reference e Command Cookbook con i riferimenti al pack controllato.
+- Rafforzata la separazione operativa tra dry-run/mock/preflight e futura live reale.
+- Aggiornato il prossimo step consigliato a `550) OpenAI API Adapter First Authorized Live Run`.
+
+### Guardrails
+
+- Dry-run e' il default e non usa rete.
+- Live reale futuro richiede `--execution-mode live`, `ASF_OPENAI_LIVE_ENABLED=1`, `--confirm-live-openai`, credenziale presente solo nell'ambiente locale e artifact sotto `tmp/`.
+- La sola presenza di `OPENAI_API_KEY` non autorizza chiamate OpenAI.
+- Gli artifact indicano la credenziale solo come boolean `credential_present`.
+- Il template PowerShell usa safe bootstrap, parse-check, script `.ps1`, output numerati/`LAST` e DOCX non bloccante.
+
+### Not included
+
+- Nessuna chiamata live OpenAI API.
+- Nessun uso di API key reale.
+- Nessun SDK OpenAI o nuova dipendenza.
+- Nessun commit, push, PR, merge, release o deploy.
+- Nessuna modifica agli stash.
+
+---
+
 ## [0.53.6] - 2026-06-06
 
 ### Added
