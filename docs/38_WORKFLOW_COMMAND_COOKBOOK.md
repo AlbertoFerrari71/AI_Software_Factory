@@ -202,6 +202,8 @@ NNNN-II-Comando_Eseguito_<nome>.ps1
 
 Dentro lo script `.ps1` possono stare native command wrapper, test, health check, verify gate, PR/merge, output completo/compatto e DOCX best-effort.
 
+Per copiare negli appunti il contenuto di un file, non usare `Set-Clipboard -Path`: usare `Get-Content -Path <file> -Raw | Set-Clipboard`.
+
 I wrapper nativi devono usare `ArgList`, non `$Args`. I parser Git di scope devono usare:
 
 ```powershell

@@ -132,7 +132,7 @@ $CompactLines += $Fence
 Set-Content -LiteralPath $CompactPath -Value $CompactLines -Encoding utf8
 Set-Content -LiteralPath $DocxFailedPath -Value "DOCX generation was not required for this dry-run template; non-blocking." -Encoding utf8
 
-Set-Clipboard -Value (Get-Content -LiteralPath $CompactPath -Raw)
+Get-Content -LiteralPath $CompactPath -Raw | Set-Clipboard
 
 Write-Host ("Generated script exit code: {0}" -f $ExitCode)
 if ($ExitCode -ne 0) {

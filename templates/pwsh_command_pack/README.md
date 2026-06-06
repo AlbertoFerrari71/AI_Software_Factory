@@ -62,7 +62,8 @@ Generated `.ps1`:
 - compact Markdown;
 - DOCX best-effort/non-blocking;
 - progressive `NNNN-II-Tipo_Nome.ext` files only;
-- `Set-Clipboard` best-effort;
+- `Set-Clipboard` best-effort for content only;
+- file-to-clipboard copies use `Get-Content -Path <file> -Raw | Set-Clipboard`;
 - native command wrapper with exit-code control;
 - `git --no-pager` for long Git output;
 - robust Git parser with `git status --porcelain=v1 --untracked-files=all`;
@@ -110,6 +111,15 @@ Avoid fragile parsing based on non-porcelain output. Do not rely on blind `Subst
 ## ArgList
 
 Do not use `$Args` as a function parameter name in wrappers. `$args` is a PowerShell automatic variable. Use `$ArgList` for native command arguments.
+
+## Clipboard
+
+Non usare `Set-Clipboard -Path`: il cmdlet non supporta il parametro `-Path`.
+Per copiare negli appunti il contenuto di un file usare:
+
+```powershell
+Get-Content -Path <file> -Raw | Set-Clipboard
+```
 
 ## Publication
 

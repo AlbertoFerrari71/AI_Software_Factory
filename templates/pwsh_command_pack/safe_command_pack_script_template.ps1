@@ -266,7 +266,7 @@ function Copy-CompactReportToClipboard {
     }
 
     try {
-        Set-Clipboard -Value (Get-Content -LiteralPath $CompactOutputPath -Raw)
+        Get-Content -LiteralPath $CompactOutputPath -Raw | Set-Clipboard
         Write-Log "Copied compact Markdown to clipboard."
     } catch {
         Write-Log ("Clipboard copy failed without blocking command pack: {0}" -f $_.Exception.Message)

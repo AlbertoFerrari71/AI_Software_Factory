@@ -120,7 +120,14 @@ The robust template includes:
 - UTF-8 without BOM writes;
 - compact Markdown output built from arrays of lines or a string builder;
 - DOCX output as a non-blocking best-effort step;
-- `Set-Clipboard` for the compact Markdown artifact.
+- `Set-Clipboard` best-effort for content only.
+
+Non usare `Set-Clipboard -Path`: il cmdlet non supporta il parametro `-Path`.
+Per copiare negli appunti il contenuto di un file usare:
+
+```powershell
+Get-Content -Path <file> -Raw | Set-Clipboard
+```
 
 The ASF output root is:
 

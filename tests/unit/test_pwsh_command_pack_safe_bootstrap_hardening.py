@@ -79,6 +79,8 @@ def test_step_536_output_artifacts_and_docx_fallback_are_documented() -> None:
         "NNNN-II-Output_Compatto_<name>.docx",
         "Do not generate `LAST-*`",
         "max(II)",
+        "Non usare `Set-Clipboard -Path`",
+        "Get-Content -Path <file> -Raw | Set-Clipboard",
         ".docx.failed.txt",
         "best-effort",
         "non-blocking",

@@ -108,6 +108,7 @@ Regole rapide:
 - per trovare l'ultimo artefatto di un tipo per uno step, usare `max(II)` per `(step, tipo)`;
 - il Bridge e' operativo, non autorevole: la fonte ufficiale e' Git + file versionato;
 - DOCX e' best-effort e non blocca se TXT/MD sono validi;
+- non usare `Set-Clipboard -Path`; per copiare file negli appunti usare `Get-Content -Path <file> -Raw | Set-Clipboard`;
 - usare `git --no-pager` per log, diff e output lunghi;
 - warning LF/CRLF non sono bloccanti se `diff --check`, test, health e verify passano; per diagnosi `.gitattributes` usare `docs/72_ASF_GIT_LINE_ENDINGS_WARNING_CLEANUP.md`.
 

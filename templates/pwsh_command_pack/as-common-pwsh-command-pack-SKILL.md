@@ -52,7 +52,8 @@ The `.ps1` script should contain, when pertinent:
 - compact Markdown artifact;
 - DOCX best-effort/non-blocking artifact;
 - progressive `NNNN-II-Tipo_Nome.ext` artifacts only;
-- `Set-Clipboard` best-effort;
+- `Set-Clipboard` best-effort for content only;
+- file-to-clipboard copies must use `Get-Content -Path <file> -Raw | Set-Clipboard`;
 - native command wrapper with allowed exit codes;
 - `git --no-pager` for long Git output;
 - robust Git status parser;
@@ -74,6 +75,15 @@ function Invoke-NativeCommand {
 ```
 
 Do not use `$Args` as a parameter name. `$args` is a PowerShell automatic variable and can cause ambiguity and fragile diagnostics.
+
+## Clipboard Rule
+
+Non usare `Set-Clipboard -Path`: il cmdlet non supporta il parametro `-Path`.
+Per copiare negli appunti il contenuto di un file usare:
+
+```powershell
+Get-Content -Path <file> -Raw | Set-Clipboard
+```
 
 ## Robust Git Parser
 
