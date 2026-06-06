@@ -29,7 +29,7 @@ L'indice orienta il lavoro. Non sostituisce i documenti specifici, il Verificati
 | Fare Developer Onboarding | `docs/33_PROMPT_PACKET_GENERATOR_DEVELOPER_ONBOARDING.md` | Comandi PowerShell documentati | Quando una persona interna deve iniziare a usare il workflow | Entry point pratico per generator e checklist |
 | Consultare Workflow Quick Reference | `docs/36_WORKFLOW_QUICK_REFERENCE.md` | Comandi PowerShell documentati | Quando serve una scheda breve per uso quotidiano | Non sostituisce la lifecycle checklist |
 | Consultare Workflow Command Cookbook | `docs/38_WORKFLOW_COMMAND_COOKBOOK.md` | Ricette PowerShell/Git/Python documentate | Quando serve gestire scenari specifici o troubleshooting | Non automatizza commit, push, PR o merge |
-| Usare ASF PowerShell Command Pack Skill Hardening | `docs/64_ASF_PWSH_COMMAND_PACK_SKILL_HARDENING.md` | `%USERPROFILE%\.agents\skills\as-common-pwsh-command-pack` | Quando serve Bridge, file numerati/`LAST`, audit trail o pubblicazione presidiata | Skill esterna; non e' il wrapper default dei prompt Codex |
+| Usare ASF PowerShell Command Pack Skill Hardening | `docs/64_ASF_PWSH_COMMAND_PACK_SKILL_HARDENING.md` | `%USERPROFILE%\.agents\skills\as-common-pwsh-command-pack`, `templates/pwsh_command_pack/` | Quando serve Bridge, file numerati/`LAST`, audit trail o pubblicazione presidiata | non e' il wrapper default dei prompt Codex; safe bootstrap, parse-check, script `.ps1` completo, PR-first |
 | Usare Workflow Status Dashboard | `docs/39_WORKFLOW_STATUS_DASHBOARD.md` | `scripts/show_workflow_status.py` | Quando serve vedere branch, working tree, commit recenti e file workflow presenti | Read-only; non usa GitHub API |
 | Valutare Release Readiness | `docs/40_RELEASE_READINESS.md` | `templates/codex_tasks/release_readiness_checklist.md` | Prima di applicare il metodo a un progetto pilota reale | Readiness per pilot interno, non release pubblica o SaaS |
 | Preparare Existing Project Pilot Onboarding | `docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md` | `templates/codex_tasks/existing_project_intake_template.md`, `templates/codex_tasks/first_pilot_step_packet_template.md` | Dopo readiness e prima del primo pilot reale | Intake, fotografia repo, rischi e primo task packet pilot |
@@ -77,6 +77,8 @@ Regole operative:
 - Il prompt Codex pulito e direttamente copiabile e' il default.
 - Il Codex command pack PowerShell si usa solo per salvataggio Bridge, file numerati/`LAST` o audit trail formale.
 - Il pwsh/publication command pack si usa dopo report Codex e intake gate, non prima.
+- Il PowerShell command pack usa safe bootstrap: blocco incollato corto, `[scriptblock]::Create(...)`, esecuzione via `pwsh -File` e logica nel `.ps1`.
+- La pubblicazione verso `main` e' branch + PR di default; il push diretto a `main` e' solo bypass esplicito.
 - Non mischiare prompt Codex, script PowerShell, comandi Git, pubblicazione e verifiche finali nello stesso blocco salvo richiesta esplicita.
 - Codex lavora localmente sul branch dedicato.
 - Codex non deve fare commit, push, aprire PR o fare merge.
@@ -130,6 +132,8 @@ Regole operative:
 - `docs/59_ASF_CODEX_READONLY_REPEATABLE_TRIAL_PACK.md`: runbook del Repeatable Trial Pack read-only.
 - `docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md`: risultati STEP 450, inclusa gestione `CODEX_NOT_AVAILABLE`.
 - `docs/64_ASF_PWSH_COMMAND_PACK_SKILL_HARDENING.md`: riferimento ASF per la skill esterna `as-common-pwsh-command-pack`.
+- `templates/pwsh_command_pack/safe_bootstrap_template.ps1`: template del bootstrap corto con parse-check.
+- `templates/pwsh_command_pack/safe_command_pack_script_template.ps1`: template dello script completo per output, native command wrapper e DOCX best-effort.
 - `docs/65_ASF_OPENAI_API_ADAPTER.md`: adapter OpenAI API dry-run/mock con payload Responses-style e redazione API key.
 - `docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md`: live boundary e credential gate no-network per futura smoke controllata.
 - `docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md`: prima smoke live controllata OpenAI API con gate espliciti, `store: false` e output redatto sotto `tmp/`.

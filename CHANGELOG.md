@@ -4,6 +4,39 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.53.6] - 2026-06-06
+
+### Added
+
+- STEP 536 - PowerShell Command Pack Safe Bootstrap Hardening.
+- Template `templates/pwsh_command_pack/safe_bootstrap_template.ps1`.
+- Template `templates/pwsh_command_pack/safe_command_pack_script_template.ps1`.
+- Test documentale `tests/unit/test_pwsh_command_pack_safe_bootstrap_hardening.py`.
+
+### Changed
+
+- Aggiornato `docs/64_ASF_PWSH_COMMAND_PACK_SKILL_HARDENING.md` con il nuovo standard Safe Bootstrap PowerShell Command Pack.
+- Aggiornati AGENTS, README, Codex Workflow, Project Workflow Index, Quick Reference e Command Cookbook con richiami a bootstrap corto, parse-check, script `.ps1` completo e PR-first publishing.
+- Aggiornati roadmap e decision log con lo STEP 536.
+- Confermato il prossimo step consigliato: `540) OpenAI API Adapter Controlled Live Execution Pack`.
+
+### Guardrails
+
+- Il blocco PowerShell incollato deve restare corto e validare lo script generato con `[scriptblock]::Create(...)`.
+- Vietate here-string annidate, logica Git complessa, DOCX XML, `else` esterni e `finally` fragile nel bootstrap.
+- La pubblicazione verso `main` e' branch + PR di default; `git push origin main` non e' default.
+- DOCX e' best-effort e non blocca se output TXT/MD sono validi.
+- Warning LF/CRLF restano non bloccanti quando `git --no-pager diff --check`, test, health check e verify gate passano.
+
+### Not included
+
+- Nessuna modifica alla skill esterna fuori repository.
+- Nessuna modifica di logica applicativa.
+- Nessun commit, push, PR, merge, release o deploy.
+- Nessuna modifica agli stash.
+
+---
+
 ## [0.53.5] - 2026-06-06
 
 ### Added

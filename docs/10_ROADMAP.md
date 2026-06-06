@@ -79,6 +79,7 @@ Esempio:
 | 520 | OpenAI API Adapter First Controlled Live Smoke Test | Eseguire una prima prova live controllata solo dopo gate umano esplicito | Live smoke test controllato, evidenza redatta, stop conditions | SaaS-ready | Completato |
 | 530 | OpenAI API Adapter Live Smoke Result Hardening | Rafforzare parsing, classificazioni e report della smoke live dopo il primo test controllato | Schema risultato live, classificazioni, artifact sicuri, test mockati | SaaS-ready | Completato |
 | 535 | Codex Prompt Clean-First Workflow Update | Chiarire il default ChatGPT -> Codex con prompt pulito separato da Bridge, intake gate e pubblicazione | Regola operativa, richiami workflow, test documentale | MVP personale | Completato |
+| 536 | PowerShell Command Pack Safe Bootstrap Hardening | Rafforzare command pack e publication pack contro incolla fragile, here-string annidate, DOCX rumoroso e push diretto a main | Safe bootstrap, template, PR-first, test documentale | MVP personale | Completato |
 | 540 | OpenAI API Adapter Controlled Live Execution Pack | Preparare un pack separato per eventuale futura esecuzione live controllata | Gate finale, procedura live separata, stop conditions, artifact sotto `tmp/` | SaaS-ready | Da fare |
 | 550 | SaaS Evolution Plan | Preparare SaaS futuro | Multiutente, ruoli, billing, audit, vault | SaaS futuro | Da fare |
 
@@ -1149,7 +1150,25 @@ Chiarire il flusso ChatGPT -> Codex stabilendo che il default e' un prompt Codex
 
 ---
 
-## 57. STEP 540 - OpenAI API Adapter Controlled Live Execution Pack
+## 57. STEP 536 - PowerShell Command Pack Safe Bootstrap Hardening
+
+### Obiettivo
+
+Rafforzare il PowerShell Command Pack / publication pack ASF per evitare blocchi interattivi, esecuzioni parziali, here-string annidate, DOCX fragile, output compatti vuoti e push diretto a `main`.
+
+### Output realizzati
+
+- standard Safe Bootstrap: bootstrap corto, script `.ps1` completo, parse-check con `[scriptblock]::Create(...)`, esecuzione via `pwsh -File`;
+- divieto di here-string annidate, logica Git complessa, DOCX XML, `else` esterni e `finally` fragile nel bootstrap incollato;
+- template ASF per bootstrap e script command pack;
+- regola PR-first per pubblicare verso `main`, incluso il caso `main...origin/main [ahead N]`;
+- DOCX best-effort non bloccante quando TXT/MD sono prodotti correttamente;
+- output compatto costruito con array di righe o builder sicuro e fallback non vuoto;
+- test documentale a protezione dello standard.
+
+---
+
+## 58. STEP 540 - OpenAI API Adapter Controlled Live Execution Pack
 
 ### Obiettivo
 
@@ -1165,7 +1184,7 @@ Preparare un pack separato per eventuale futura esecuzione live controllata, sol
 
 ---
 
-## 58. STEP 550 - SaaS Evolution Plan
+## 59. STEP 550 - SaaS Evolution Plan
 
 ### Obiettivo
 

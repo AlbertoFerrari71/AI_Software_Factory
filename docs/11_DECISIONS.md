@@ -1947,3 +1947,51 @@ Il prossimo step consigliato resta:
 ```text
 540) OpenAI API Adapter Controlled Live Execution Pack
 ```
+
+---
+
+## DEC-064 - PowerShell command pack safe bootstrap
+
+**Data:** 2026-06-06
+**Stato:** Accettata
+
+### Contesto
+
+Durante la pubblicazione degli step 530 e 535 sono emersi problemi strutturali nei command pack PowerShell lunghi incollati direttamente nel terminale.
+
+I sintomi includevano funzioni non disponibili, blocchi `else` interpretati fuori contesto, parser error su graffe isolate, here-string annidate che chiudevano il testo esterno, DOCX rumoroso e tentativi di push diretto a `main` bloccati dai soft guardrails.
+
+### Decisione
+
+Adottare lo standard Safe Bootstrap PowerShell Command Pack:
+
+1. ChatGPT genera un bootstrap PowerShell corto.
+2. Il bootstrap scrive uno script `.ps1` completo sotto `pwsh_command`.
+3. Il bootstrap valida il parsing con `[scriptblock]::Create(...)`.
+4. Solo se il parsing passa, esegue il file con `pwsh -NoProfile -ExecutionPolicy Bypass -File`.
+5. Tutta la logica complessa vive nello script `.ps1`, non nel blocco incollato.
+6. Il bootstrap non contiene logica Git complessa, here-string annidate, DOCX XML, `else` esterni o `finally` fragile.
+
+Per pubblicare verso `main`, il default diventa branch + PR. `git push origin main` non e' un default accettabile; resta solo un bypass eccezionale, manuale ed esplicito.
+
+Se `main` locale e' avanti rispetto a `origin/main`, creare un branch publish dal `main` locale, pushare quel branch, aprire PR, mergiare, riallineare `main` locale e verificare.
+
+### Motivazione
+
+Il bootstrap corto riduce il rischio che PowerShell esegua pezzi interni come comandi separati.
+
+Il parse-check fail-closed impedisce pubblicazioni parziali quando lo script generato non e' valido.
+
+PR-first e' coerente con soft guardrails ASF, branch protection futura e regola clean-first dello STEP 535.
+
+DOCX best-effort evita che un artifact accessorio blocchi una pubblicazione gia' verificata con TXT/MD validi.
+
+### Conseguenze
+
+I futuri command pack devono mantenere output numerati e `LAST`, generare compact Markdown non vuoto, usare `git --no-pager`, trattare warning LF/CRLF come non bloccanti solo se diff-check/test/health/verify passano e fermarsi su errori reali.
+
+Il prossimo step consigliato resta:
+
+```text
+540) OpenAI API Adapter Controlled Live Execution Pack
+```
