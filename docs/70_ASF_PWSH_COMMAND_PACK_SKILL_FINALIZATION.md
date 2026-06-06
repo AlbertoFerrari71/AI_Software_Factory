@@ -16,6 +16,18 @@ The repository-local export draft is:
 templates/pwsh_command_pack/as-common-pwsh-command-pack-SKILL.md
 ```
 
+STEP 546 adds the installable export form:
+
+```text
+templates/pwsh_command_pack/export/as-common-pwsh-command-pack/SKILL.md
+```
+
+Installation and update flow are documented in:
+
+```text
+docs/71_ASF_PWSH_COMMAND_PACK_SKILL_EXPORT_INSTALL.md
+```
+
 The canonical templates are:
 
 ```text

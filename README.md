@@ -1,7 +1,7 @@
 # AI Software Factory
 
 **Metodo interno:** Codex Alchemy Method  
-**Stato:** STEP 545 - PowerShell Command Pack Skill Finalization
+**Stato:** STEP 546 - Export/Install as-common-pwsh-command-pack Skill
 **Data bootstrap:** 2026-05-25  
 **Strategia:** local-first personale, progettato per evoluzione SaaS
 
@@ -28,7 +28,7 @@ Il metodo interno si chiama **Codex Alchemy Method**: l'idea grezza viene trasfo
 
 ## 2. Stato repository
 
-Questo repository è nello stato **STEP 545 - PowerShell Command Pack Skill Finalization**.
+Questo repository è nello stato **STEP 546 - Export/Install as-common-pwsh-command-pack Skill**.
 
 Sono presenti:
 
@@ -52,6 +52,7 @@ Sono presenti:
 - regola clean-first per prompt Codex, con separazione tra prompt pulito, Bridge, intake gate e publication command pack.
 - standard Safe Bootstrap PowerShell Command Pack con bootstrap corto, parse-check, script `.ps1` completo, output numerati/`LAST`, DOCX non bloccante e pubblicazione PR-first.
 - pacchetto canonico PowerShell Command Pack con README template, skill draft esportabile, parser Git robusto e `ArgList`.
+- export installabile della skill `as-common-pwsh-command-pack` dentro ASF, con installer dry-run/apply e guardrail anti-scrittura esterna non autorizzata.
 - controlled live execution pack OpenAI dry-run-default con doppio consenso futuro, artifact safe sotto `tmp/` e template operatore PowerShell.
 
 Non sono ancora presenti:
@@ -273,10 +274,13 @@ Hardening della skill comune per PowerShell Command Pack robusti:
 ```text
 docs/64_ASF_PWSH_COMMAND_PACK_SKILL_HARDENING.md
 docs/70_ASF_PWSH_COMMAND_PACK_SKILL_FINALIZATION.md
+docs/71_ASF_PWSH_COMMAND_PACK_SKILL_EXPORT_INSTALL.md
 templates/pwsh_command_pack/README.md
 templates/pwsh_command_pack/as-common-pwsh-command-pack-SKILL.md
+templates/pwsh_command_pack/export/as-common-pwsh-command-pack/SKILL.md
 templates/pwsh_command_pack/safe_bootstrap_template.ps1
 templates/pwsh_command_pack/safe_command_pack_script_template.ps1
+scripts/install_pwsh_command_pack_skill.py
 ```
 
 Regola prompt Codex clean-first e separazione da Bridge, intake gate e publication command pack:

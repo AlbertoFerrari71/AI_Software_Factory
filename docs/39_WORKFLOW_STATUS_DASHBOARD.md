@@ -55,6 +55,7 @@ Lo script `scripts/show_workflow_status.py` mostra:
   - `docs/59_ASF_CODEX_READONLY_REPEATABLE_TRIAL_PACK.md`;
   - `docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md`;
   - `docs/70_ASF_PWSH_COMMAND_PACK_SKILL_FINALIZATION.md`;
+  - `docs/71_ASF_PWSH_COMMAND_PACK_SKILL_EXPORT_INSTALL.md`;
   - `docs/65_ASF_OPENAI_API_ADAPTER.md`;
   - `docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md`;
   - `docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md`;
@@ -73,6 +74,7 @@ Lo script `scripts/show_workflow_status.py` mostra:
   - `scripts/asf_codex_readonly_trial_compare.py`;
   - `scripts/asf_openai_api_adapter.py`;
   - `scripts/asf_openai_controlled_live_execution_pack.py`;
+  - `scripts/install_pwsh_command_pack_skill.py`;
   - `scripts/check_workflow_health.py`;
   - `scripts/show_workflow_status.py`;
   - `scripts/generate_task_packet.py`;
@@ -141,6 +143,8 @@ La dashboard mostra se documenti, config e script del runner sono presenti, incl
 ### ASF OpenAI API Adapter
 
 La dashboard mostra se i documenti e gli script dell'OpenAI API Adapter sono presenti, inclusi adapter foundation, live boundary, first controlled live smoke test, result hardening e controlled live execution pack.
+
+Mostra anche il runbook e l'installer della skill `as-common-pwsh-command-pack`, senza eseguire installazioni.
 
 La dashboard non esegue dry-run, mock, controlli environment, gate report o chiamate live.
 
@@ -246,6 +250,7 @@ La dashboard non sostituisce test, Verification Gate, Workflow Health Check, PR 
 - `docs/59_ASF_CODEX_READONLY_REPEATABLE_TRIAL_PACK.md`
 - `docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md`
 - `docs/70_ASF_PWSH_COMMAND_PACK_SKILL_FINALIZATION.md`
+- `docs/71_ASF_PWSH_COMMAND_PACK_SKILL_EXPORT_INSTALL.md`
 - `docs/65_ASF_OPENAI_API_ADAPTER.md`
 - `docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md`
 - `docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md`

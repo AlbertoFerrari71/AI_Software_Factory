@@ -31,6 +31,7 @@ L'indice orienta il lavoro. Non sostituisce i documenti specifici, il Verificati
 | Consultare Workflow Command Cookbook | `docs/38_WORKFLOW_COMMAND_COOKBOOK.md` | Ricette PowerShell/Git/Python documentate | Quando serve gestire scenari specifici o troubleshooting | Non automatizza commit, push, PR o merge |
 | Usare ASF PowerShell Command Pack Skill Hardening | `docs/64_ASF_PWSH_COMMAND_PACK_SKILL_HARDENING.md` | `%USERPROFILE%\.agents\skills\as-common-pwsh-command-pack`, `templates/pwsh_command_pack/` | Quando serve Bridge, file numerati/`LAST`, audit trail o pubblicazione presidiata | non e' il wrapper default dei prompt Codex; safe bootstrap, parse-check, script `.ps1` completo, PR-first |
 | Usare ASF PowerShell Command Pack Skill Finalization | `docs/70_ASF_PWSH_COMMAND_PACK_SKILL_FINALIZATION.md` | `templates/pwsh_command_pack/README.md`, `templates/pwsh_command_pack/as-common-pwsh-command-pack-SKILL.md` | Quando serve creare o verificare command pack futuri con lo standard canonico | `ArgList`, parser porcelain, output 4 cifre/`LAST`, DOCX best-effort, LF/CRLF warning non bloccanti |
+| Usare ASF PowerShell Command Pack Skill Export Install | `docs/71_ASF_PWSH_COMMAND_PACK_SKILL_EXPORT_INSTALL.md` | `templates/pwsh_command_pack/export/as-common-pwsh-command-pack/SKILL.md`, `scripts/install_pwsh_command_pack_skill.py` | Quando serve preparare dry-run/apply della skill comune dopo intake manuale | Codex non installa direttamente fuori repo; target esplicito, backup prima di overwrite |
 | Usare Workflow Status Dashboard | `docs/39_WORKFLOW_STATUS_DASHBOARD.md` | `scripts/show_workflow_status.py` | Quando serve vedere branch, working tree, commit recenti e file workflow presenti | Read-only; non usa GitHub API |
 | Valutare Release Readiness | `docs/40_RELEASE_READINESS.md` | `templates/codex_tasks/release_readiness_checklist.md` | Prima di applicare il metodo a un progetto pilota reale | Readiness per pilot interno, non release pubblica o SaaS |
 | Preparare Existing Project Pilot Onboarding | `docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md` | `templates/codex_tasks/existing_project_intake_template.md`, `templates/codex_tasks/first_pilot_step_packet_template.md` | Dopo readiness e prima del primo pilot reale | Intake, fotografia repo, rischi e primo task packet pilot |
@@ -135,10 +136,13 @@ Regole operative:
 - `docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md`: risultati STEP 450, inclusa gestione `CODEX_NOT_AVAILABLE`.
 - `docs/64_ASF_PWSH_COMMAND_PACK_SKILL_HARDENING.md`: riferimento ASF per la skill esterna `as-common-pwsh-command-pack`.
 - `docs/70_ASF_PWSH_COMMAND_PACK_SKILL_FINALIZATION.md`: standard canonico finalizzato per command pack PowerShell e skill draft esportabile.
+- `docs/71_ASF_PWSH_COMMAND_PACK_SKILL_EXPORT_INSTALL.md`: export installabile e procedura dry-run/apply della skill comune.
 - `templates/pwsh_command_pack/safe_bootstrap_template.ps1`: template del bootstrap corto con parse-check.
 - `templates/pwsh_command_pack/safe_command_pack_script_template.ps1`: template dello script completo per output, native command wrapper e DOCX best-effort.
 - `templates/pwsh_command_pack/README.md`: indice locale dei template command pack e checklist canonica.
 - `templates/pwsh_command_pack/as-common-pwsh-command-pack-SKILL.md`: draft esportabile della skill comune.
+- `templates/pwsh_command_pack/export/as-common-pwsh-command-pack/SKILL.md`: forma installabile della skill comune.
+- `scripts/install_pwsh_command_pack_skill.py`: installer dry-run/apply con target esplicito e backup prima di overwrite.
 - `docs/65_ASF_OPENAI_API_ADAPTER.md`: adapter OpenAI API dry-run/mock con payload Responses-style e redazione API key.
 - `docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md`: live boundary e credential gate no-network per futura smoke controllata.
 - `docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md`: prima smoke live controllata OpenAI API con gate espliciti, `store: false` e output redatto sotto `tmp/`.
@@ -288,6 +292,8 @@ Per confrontare due o piu' run, usare `scripts/asf_codex_readonly_trial_compare.
 Per generare command pack PowerShell robusti, usare la skill esterna `as-common-pwsh-command-pack` e il riferimento `docs/64_ASF_PWSH_COMMAND_PACK_SKILL_HARDENING.md`.
 
 Per creare o verificare un nuovo template command pack dopo STEP 545, usare anche `docs/70_ASF_PWSH_COMMAND_PACK_SKILL_FINALIZATION.md` e `templates/pwsh_command_pack/README.md`.
+
+Per esportare o installare la skill comune dopo intake manuale, usare `docs/71_ASF_PWSH_COMMAND_PACK_SKILL_EXPORT_INSTALL.md` e partire sempre dal dry-run di `scripts/install_pwsh_command_pack_skill.py`.
 
 Per costruire evidenza dry-run/mock dell'OpenAI API Adapter senza rete e senza credenziali:
 

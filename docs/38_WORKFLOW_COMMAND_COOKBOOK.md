@@ -255,8 +255,45 @@ templates/pwsh_command_pack/safe_bootstrap_template.ps1
 templates/pwsh_command_pack/safe_command_pack_script_template.ps1
 templates/pwsh_command_pack/README.md
 templates/pwsh_command_pack/as-common-pwsh-command-pack-SKILL.md
+templates/pwsh_command_pack/export/as-common-pwsh-command-pack/SKILL.md
+scripts/install_pwsh_command_pack_skill.py
 docs/70_ASF_PWSH_COMMAND_PACK_SKILL_FINALIZATION.md
+docs/71_ASF_PWSH_COMMAND_PACK_SKILL_EXPORT_INSTALL.md
 ```
+
+---
+
+## 6.3 Ricetta - Export/install della skill PowerShell command pack
+
+### Quando usarla
+
+Dopo intake manuale, quando serve installare o aggiornare la skill comune `as-common-pwsh-command-pack` partendo dall'export ASF.
+
+### Comandi
+
+Prima fare sempre dry-run:
+
+```powershell
+python scripts/install_pwsh_command_pack_skill.py --target-user-skills
+```
+
+Installazione futura, solo se autorizzata fuori dallo step ASF:
+
+```powershell
+python scripts/install_pwsh_command_pack_skill.py --target-user-skills --apply
+```
+
+Se il file esiste ed e' diverso, l'overwrite richiede conferma esplicita:
+
+```powershell
+python scripts/install_pwsh_command_pack_skill.py --target-user-skills --apply --confirm-overwrite
+```
+
+### Cosa non fare
+
+Non far installare direttamente a Codex la skill in `%USERPROFILE%\.agents\skills` durante uno step ASF.
+
+Non scrivere nel repository `Codex_Skills` dentro lo stesso step ASF.
 
 ---
 

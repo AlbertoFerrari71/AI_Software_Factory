@@ -13,9 +13,13 @@ safe_bootstrap_template.ps1
 safe_command_pack_script_template.ps1
 step_540_openai_controlled_live_execution_pack_template.ps1
 as-common-pwsh-command-pack-SKILL.md
+export/as-common-pwsh-command-pack/SKILL.md
+../../scripts/install_pwsh_command_pack_skill.py
 ```
 
 `as-common-pwsh-command-pack-SKILL.md` is a repository-local draft for future export to the shared `as-common-pwsh-command-pack` skill. Do not edit `%USERPROFILE%\.agents\skills` from this repository step.
+
+`export/as-common-pwsh-command-pack/SKILL.md` is the installable form prepared by STEP 546. Use `scripts/install_pwsh_command_pack_skill.py` for dry-run/apply installation after manual intake; Codex does not install it directly into external skill folders during ASF implementation steps.
 
 ## Canonical Flow
 
@@ -153,3 +157,5 @@ Git LF/CRLF warnings on Windows are non-blocking when all of these pass:
 ## Validation Source
 
 STEP 536 introduced the hardening standard. STEP 540 validated it in a real branch/PR publication flow using safe bootstrap.
+
+STEP 545 finalized the repository-local skill draft. STEP 546 added the installable export folder and dry-run/apply installer.

@@ -75,6 +75,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md",
         "docs/64_ASF_PWSH_COMMAND_PACK_SKILL_HARDENING.md",
         "docs/70_ASF_PWSH_COMMAND_PACK_SKILL_FINALIZATION.md",
+        "docs/71_ASF_PWSH_COMMAND_PACK_SKILL_EXPORT_INSTALL.md",
         "docs/65_ASF_OPENAI_API_ADAPTER.md",
         "docs/66_ASF_OPENAI_API_ADAPTER_LIVE_BOUNDARY_CREDENTIAL_GATE.md",
         "docs/67_ASF_OPENAI_API_ADAPTER_FIRST_CONTROLLED_LIVE_SMOKE_TEST.md",
@@ -83,6 +84,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "config/asf_project_profiles.json",
         "scripts/asf_openai_api_adapter.py",
         "scripts/asf_openai_controlled_live_execution_pack.py",
+        "scripts/install_pwsh_command_pack_skill.py",
         "scripts/asf_codex_invocation_dry_run.py",
         "scripts/asf_codex_readonly_invoke.py",
         "scripts/asf_codex_readonly_repeatable_trial.py",
@@ -122,6 +124,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "templates/codex_tasks/asf_openai_api_live_smoke_test_template.md",
         "templates/pwsh_command_pack/README.md",
         "templates/pwsh_command_pack/as-common-pwsh-command-pack-SKILL.md",
+        "templates/pwsh_command_pack/export/as-common-pwsh-command-pack/SKILL.md",
         "templates/pwsh_command_pack/step_540_openai_controlled_live_execution_pack_template.ps1",
     ]
 
@@ -212,6 +215,7 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             ("ASF Codex Read-Only Trial Compare", ["ASF Codex Read-Only Trial Compare"]),
             ("ASF PowerShell Command Pack Skill Hardening", ["ASF PowerShell Command Pack Skill Hardening"]),
             ("ASF PowerShell Command Pack Skill Finalization", ["ASF PowerShell Command Pack Skill Finalization"]),
+            ("ASF PowerShell Command Pack Skill Export Install", ["ASF PowerShell Command Pack Skill Export Install"]),
             ("ASF OpenAI API Adapter", ["ASF OpenAI API Adapter"]),
             (
                 "ASF OpenAI API Adapter Live Boundary Credential Gate",
@@ -316,6 +320,10 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                 ["docs/70_ASF_PWSH_COMMAND_PACK_SKILL_FINALIZATION.md"],
             ),
             (
+                "ASF PowerShell Command Pack Skill Export Install document",
+                ["docs/71_ASF_PWSH_COMMAND_PACK_SKILL_EXPORT_INSTALL.md"],
+            ),
+            (
                 "ASF OpenAI API Adapter document",
                 ["docs/65_ASF_OPENAI_API_ADAPTER.md"],
             ),
@@ -403,6 +411,14 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             (
                 "PowerShell command pack skill draft",
                 ["templates/pwsh_command_pack/as-common-pwsh-command-pack-SKILL.md"],
+            ),
+            (
+                "PowerShell command pack installable skill export",
+                ["templates/pwsh_command_pack/export/as-common-pwsh-command-pack/SKILL.md"],
+            ),
+            (
+                "PowerShell command pack skill installer",
+                ["scripts/install_pwsh_command_pack_skill.py"],
             ),
         ],
     )

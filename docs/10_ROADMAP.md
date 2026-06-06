@@ -82,6 +82,7 @@ Esempio:
 | 536 | PowerShell Command Pack Safe Bootstrap Hardening | Rafforzare command pack e publication pack contro incolla fragile, here-string annidate, DOCX rumoroso e push diretto a main | Safe bootstrap, template, PR-first, test documentale | MVP personale | Completato |
 | 540 | OpenAI API Adapter Controlled Live Execution Pack | Preparare un pack separato per eventuale futura esecuzione live controllata | Dry-run default, doppio consenso, artifact safe, runbook, template operatore | SaaS-ready | Completato |
 | 545 | PowerShell Command Pack Skill Finalization | Finalizzare lo standard command pack come skill/istruzione canonica riusabile | README template, skill draft, parser Git robusto, ArgList, test guardrail | MVP personale | Completato |
+| 546 | Export/Install as-common-pwsh-command-pack Skill | Trasformare il draft in export installabile con installer dry-run/apply e guardrail | Export folder, installer, runbook, test guardrail | MVP personale | Completato |
 | 550 | OpenAI API Adapter First Authorized Live Run | Eseguire una prima live reale futura solo con autorizzazione esplicita di Alberto | Preflight finale, una sola chiamata live, artifact redatti, stop conditions | SaaS-ready | Da fare |
 
 ---
@@ -1205,7 +1206,23 @@ Finalizzare lo standard PowerShell Command Pack come skill/istruzione canonica r
 
 ---
 
-## 60. STEP 550 - OpenAI API Adapter First Authorized Live Run
+## 60. STEP 546 - Export/Install as-common-pwsh-command-pack Skill
+
+### Obiettivo
+
+Trasformare la skill draft dello STEP 545 in una struttura realmente installabile, verificabile e riusabile senza scrivere in cartelle esterne durante lo step ASF.
+
+### Output realizzati
+
+- export installabile `templates/pwsh_command_pack/export/as-common-pwsh-command-pack/SKILL.md`;
+- installer dry-run/apply `scripts/install_pwsh_command_pack_skill.py`;
+- documento `docs/71_ASF_PWSH_COMMAND_PACK_SKILL_EXPORT_INSTALL.md`;
+- guardrail su target esplicito, no write in dry-run, backup prima di overwrite, no cancellazioni e no cross-repo write;
+- test automatici su export, contenuti standard, installer e documentazione.
+
+---
+
+## 61. STEP 550 - OpenAI API Adapter First Authorized Live Run
 
 ### Obiettivo
 
