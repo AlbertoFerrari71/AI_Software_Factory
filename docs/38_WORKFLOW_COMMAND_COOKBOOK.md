@@ -170,6 +170,85 @@ Non mettere comandi Git, commit, push, PR, merge o verifiche finali dentro il pr
 
 ---
 
+## 6.2 Ricetta - Safe bootstrap PowerShell command pack
+
+### Quando usarla
+
+Quando Alberto chiede un command pack PowerShell per Bridge Dropbox / ChatGPT Bridge, audit trail, file numerati/`LAST` o pubblicazione controllata.
+
+### Comandi / standard
+
+Il blocco incollato nel terminale deve essere un bootstrap corto:
+
+```text
+bootstrap corto -> scrive .ps1 completo -> parse-check -> pwsh -File
+```
+
+Il bootstrap deve validare il parsing prima dell'esecuzione:
+
+```powershell
+[scriptblock]::Create($ScriptText) | Out-Null
+```
+
+Se il parse-check fallisce, il bootstrap non esegue Git, produce output completo/compatto di blocco, copia il compatto negli appunti e termina non-zero.
+
+### Script `.ps1`
+
+Tutta la logica complessa vive nel file generato:
+
+```text
+NNNN-Comando_Eseguito_<nome>.ps1
+LAST-Comando_Eseguito.ps1
+```
+
+Dentro lo script `.ps1` possono stare native command wrapper, test, health check, verify gate, PR/merge, output completo/compatto e DOCX best-effort.
+
+### Pubblicazione PR-first
+
+Per `main`, il default e':
+
+```text
+branch step/publish -> push branch -> gh pr create -> gh pr merge -> riallinea main -> verifica finale
+```
+
+Non usare `git push origin main` come default.
+
+Se `main...origin/main [ahead N]` contiene merge locali gia' verificati, creare un branch publish dal `main` locale, pushare quel branch, aprire PR verso `main`, mergiare, riallineare `main` locale e verificare.
+
+### Output
+
+Mantenere sempre:
+
+```text
+NNNN-Richiesta_Generazione_<nome>.txt
+NNNN-Comando_Eseguito_<nome>.ps1
+NNNN-Output_Completo_<nome>.txt
+NNNN-Output_Compatto_<nome>.md
+NNNN-Output_Compatto_<nome>.docx
+LAST-Richiesta_Generazione.txt
+LAST-Comando_Eseguito.ps1
+LAST-Output_Completo.txt
+LAST-Output_Compatto.md
+LAST-Output_Compatto.docx
+```
+
+DOCX e' non bloccante: se fallisce, mantenere TXT/MD, scrivere warning nel compatto e creare opzionalmente `.docx.failed.txt`.
+
+### Cosa non fare
+
+Non mettere nel bootstrap merge complessi, test suite, DOCX XML, funzioni lunghe, blocchi Git estesi, here-string annidate, `else` esterni o `finally` fragile.
+
+Non trattare warning LF/CRLF come failure se `git --no-pager diff --check`, test, health check e verify gate passano.
+
+Template:
+
+```text
+templates/pwsh_command_pack/safe_bootstrap_template.ps1
+templates/pwsh_command_pack/safe_command_pack_script_template.ps1
+```
+
+---
+
 ## 7. Ricetta - Dopo il report Codex
 
 ### Quando usarla

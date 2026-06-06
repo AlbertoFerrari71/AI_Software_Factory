@@ -43,6 +43,10 @@ For Alberto's operational vision of AI as a verifiable collaborator, see docs/pr
 - Prefer explicit checks of native command exit codes.
 - Avoid fragile here-strings in long copy-paste command blocks.
 - Avoid fragile try/finally structures in long pasted command blocks when a simpler explicit flow is possible.
+- For command packs, prefer a short safe bootstrap that writes a full `.ps1`, validates it with `[scriptblock]::Create(...)`, then executes it with `pwsh -NoProfile -ExecutionPolicy Bypass -File`.
+- Do not put complex Git logic, DOCX XML, long functions, nested here-strings, or fragile outer `finally` blocks in the pasted bootstrap.
+- Publication command packs must use branch + PR by default for `main`; direct push to `main` is forbidden unless Alberto explicitly requests an emergency bypass.
+- Treat LF/CRLF warnings as non-blocking when `git --no-pager diff --check`, tests, health check, and verify gate pass.
 
 ## Codex prompt and command-pack separation
 

@@ -223,6 +223,8 @@ Usare il Codex command pack PowerShell solo quando Alberto chiede esplicitamente
 
 Dopo il report Codex, usare prima l'intake gate. Solo dopo review, test e gate locali positivi si puo' preparare un pwsh/publication command pack per commit, push, PR/merge e verifica finale presidiata. La pubblicazione resta bloccata se test, health check, Verification Gate o guardrail falliscono.
 
+Da STEP 536, quando serve davvero un PowerShell command pack, usare il Safe Bootstrap standard: bootstrap corto, script `.ps1` completo sotto `pwsh_command`, parse-check con `[scriptblock]::Create(...)`, esecuzione via `pwsh -NoProfile -ExecutionPolicy Bypass -File`, output numerati/`LAST` e pubblicazione `main` PR-first. Il bootstrap non deve contenere here-string annidate, logica Git complessa o `finally` fragile.
+
 | Livello | Uso corretto |
 |---|---|
 | Prompt Codex pulito | Default per dare istruzioni direttamente a Codex |

@@ -88,6 +88,42 @@ Non mischiare prompt Codex e script PowerShell nello stesso blocco, salvo richie
 
 ---
 
+## 5.2 Safe bootstrap PowerShell command pack
+
+Quando serve un PowerShell command pack per Bridge, audit trail o pubblicazione controllata, usare il nuovo standard:
+
+```text
+bootstrap corto -> scrive .ps1 completo -> [scriptblock]::Create(...) -> pwsh -NoProfile -ExecutionPolicy Bypass -File
+```
+
+Regole rapide:
+
+- il blocco incollato resta corto e termina con una riga eseguibile come `Write-Host ";"`;
+- niente logica Git complessa nel bootstrap;
+- niente here-string annidate;
+- niente `finally` fragile nel wrapper esterno;
+- output numerati e `LAST` restano obbligatori;
+- DOCX e' best-effort e non blocca se TXT/MD sono validi;
+- usare `git --no-pager` per log, diff e output lunghi;
+- warning LF/CRLF non sono bloccanti se `diff --check`, test, health e verify passano.
+
+Per pubblicare verso `main`, default PR-first:
+
+```text
+branch step/publish -> push branch -> gh pr create -> gh pr merge -> riallinea main -> verifica finale
+```
+
+Se `main...origin/main [ahead N]` contiene merge locali gia' verificati, non fare push diretto a `main`: creare un publish branch da `main`, pushare quel branch, aprire PR, mergiare, riallineare `main` e verificare.
+
+Template:
+
+```text
+templates/pwsh_command_pack/safe_bootstrap_template.ps1
+templates/pwsh_command_pack/safe_command_pack_script_template.ps1
+```
+
+---
+
 ## 6. Eseguire release smoke workflow
 
 ```powershell
