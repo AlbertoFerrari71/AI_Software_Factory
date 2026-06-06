@@ -208,6 +208,38 @@ Se uno di questi elementi manca e l'assenza puo' causare danni, Codex deve ferma
 
 ---
 
+## 6.1 Prompt Codex clean-first
+
+Per i prompt destinati a Codex, la regola default e':
+
+```text
+Clean Codex prompt first by default.
+PowerShell only when archiving, auditing, or publishing.
+```
+
+Il primo output deve essere un prompt Codex pulito, autosufficiente e direttamente copiabile in Codex, senza wrapper PowerShell, senza script di salvataggio Bridge, senza comandi Git di pubblicazione e senza blocchi di verifica finale mescolati al prompt.
+
+Usare il Codex command pack PowerShell solo quando Alberto chiede esplicitamente di salvare il prompt nel Bridge Dropbox / ChatGPT Bridge con file numerati, file `LAST` o audit trail formale.
+
+Dopo il report Codex, usare prima l'intake gate. Solo dopo review, test e gate locali positivi si puo' preparare un pwsh/publication command pack per commit, push, PR/merge e verifica finale presidiata. La pubblicazione resta bloccata se test, health check, Verification Gate o guardrail falliscono.
+
+| Livello | Uso corretto |
+|---|---|
+| Prompt Codex pulito | Default per dare istruzioni direttamente a Codex |
+| Codex command pack PowerShell | Solo per salvataggio Bridge, file numerati, `LAST` e audit trail |
+| Intake gate | Dopo report Codex, prima della pubblicazione |
+| Pwsh/publication command pack | Commit, push, PR/merge e verifica finale dopo gate positivi |
+| Codex | Lascia il working tree modificato; niente commit, push, PR, merge o deploy salvo richiesta esplicita |
+
+Non mischiare prompt Codex e script PowerShell nello stesso blocco, salvo richiesta esplicita. Separare sempre:
+
+1. prompt Codex pulito;
+2. eventuale salvataggio Bridge;
+3. intake gate;
+4. pubblicazione Git controllata.
+
+---
+
 ## 7. Output finale obbligatorio di Codex
 
 Ogni esecuzione controllata deve terminare con questa struttura:

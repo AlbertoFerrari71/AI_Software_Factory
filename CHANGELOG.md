@@ -4,6 +4,36 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.53.5] - 2026-06-06
+
+### Added
+
+- STEP 535 - Codex Prompt Clean-First Workflow Update.
+- Test documentale `tests/unit/test_codex_prompt_clean_first_workflow.py`.
+
+### Changed
+
+- Aggiornati `AGENTS.md` e `docs/08_CODEX_WORKFLOW.md` con la regola clean-first per i prompt Codex.
+- Chiarita la separazione tra prompt Codex pulito, eventuale salvataggio Bridge, intake gate e publication command pack in Project Workflow Index, Quick Reference, Command Cookbook e documento PowerShell Command Pack.
+- Aggiornati README, roadmap e decision log con il riferimento allo STEP 535.
+- Confermato il prossimo step consigliato: `540) OpenAI API Adapter Controlled Live Execution Pack`.
+
+### Guardrails
+
+- Il prompt Codex pulito e direttamente copiabile e' il default.
+- Il Codex command pack PowerShell resta valido per Bridge Dropbox / ChatGPT Bridge, file numerati, file `LAST` e audit trail formale.
+- Il pwsh/publication command pack resta successivo al report Codex e all'intake gate, per pubblicazione Git controllata.
+- Codex non deve fare commit, push, PR, merge o deploy salvo richiesta esplicita.
+
+### Not included
+
+- Nessuna modifica di logica applicativa.
+- Nessun nuovo script di automazione.
+- Nessuna modifica agli stash.
+- Nessun commit, push, PR, merge, release o deploy.
+
+---
+
 ## [0.53.0] - 2026-06-06
 
 ### Added

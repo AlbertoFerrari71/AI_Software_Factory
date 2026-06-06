@@ -16,6 +16,7 @@ L'indice orienta il lavoro. Non sostituisce i documenti specifici, il Verificati
 |---|---|---|---|---|
 | Capire il metodo generale | `README.md`, `docs/10_ROADMAP.md` | Nessuno | Primo orientamento sul progetto | Roadmap e decision log restano fonti di evoluzione e scelte |
 | Capire la visione operativa sull'AI | `docs/project_context/VISIONE_OPERATIVA_AI.md` | Nessuno | Quando serve allineare ChatGPT, Claude, Codex o altri strumenti AI | AI come collaboratrice verificabile, con responsabilita' umana e verifiche |
+| Preparare un prompt Codex pulito | `docs/08_CODEX_WORKFLOW.md` | `templates/codex_tasks/codex_task_packet_template.md` | Default per istruzioni direttamente copiabili in Codex | Clean Codex prompt first; niente wrapper PowerShell di default |
 | Creare un Codex Task Packet | `docs/19_PROMPT_PACKET_GENERATOR.md` | `templates/codex_tasks/codex_task_packet_template.md` | Quando serve un task packet controllato | Il packet deve includere scope, forbidden actions e report finale |
 | Generare un Task Packet via CLI | `docs/29_PROMPT_PACKET_GENERATOR_CLI_HARDENING.md` | `scripts/generate_task_packet.py` | Quando step, titolo, branch e obiettivo sono gia' chiari | Produce una bozza Markdown da rivedere |
 | Usare il wrapper PowerShell | `docs/30_PROMPT_PACKET_GENERATOR_PACKAGING.md` | `scripts/generate_task_packet.ps1` | Quando si lavora in PowerShell su Windows | Il wrapper delega alla CLI Python |
@@ -28,7 +29,7 @@ L'indice orienta il lavoro. Non sostituisce i documenti specifici, il Verificati
 | Fare Developer Onboarding | `docs/33_PROMPT_PACKET_GENERATOR_DEVELOPER_ONBOARDING.md` | Comandi PowerShell documentati | Quando una persona interna deve iniziare a usare il workflow | Entry point pratico per generator e checklist |
 | Consultare Workflow Quick Reference | `docs/36_WORKFLOW_QUICK_REFERENCE.md` | Comandi PowerShell documentati | Quando serve una scheda breve per uso quotidiano | Non sostituisce la lifecycle checklist |
 | Consultare Workflow Command Cookbook | `docs/38_WORKFLOW_COMMAND_COOKBOOK.md` | Ricette PowerShell/Git/Python documentate | Quando serve gestire scenari specifici o troubleshooting | Non automatizza commit, push, PR o merge |
-| Usare ASF PowerShell Command Pack Skill Hardening | `docs/64_ASF_PWSH_COMMAND_PACK_SKILL_HARDENING.md` | `%USERPROFILE%\.agents\skills\as-common-pwsh-command-pack` | Quando serve un command pack `.ps1` loggato, verificabile e copiabile | Skill esterna; pubblicazione sempre human-gated |
+| Usare ASF PowerShell Command Pack Skill Hardening | `docs/64_ASF_PWSH_COMMAND_PACK_SKILL_HARDENING.md` | `%USERPROFILE%\.agents\skills\as-common-pwsh-command-pack` | Quando serve Bridge, file numerati/`LAST`, audit trail o pubblicazione presidiata | Skill esterna; non e' il wrapper default dei prompt Codex |
 | Usare Workflow Status Dashboard | `docs/39_WORKFLOW_STATUS_DASHBOARD.md` | `scripts/show_workflow_status.py` | Quando serve vedere branch, working tree, commit recenti e file workflow presenti | Read-only; non usa GitHub API |
 | Valutare Release Readiness | `docs/40_RELEASE_READINESS.md` | `templates/codex_tasks/release_readiness_checklist.md` | Prima di applicare il metodo a un progetto pilota reale | Readiness per pilot interno, non release pubblica o SaaS |
 | Preparare Existing Project Pilot Onboarding | `docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md` | `templates/codex_tasks/existing_project_intake_template.md`, `templates/codex_tasks/first_pilot_step_packet_template.md` | Dopo readiness e prima del primo pilot reale | Intake, fotografia repo, rischi e primo task packet pilot |
@@ -65,7 +66,7 @@ L'indice orienta il lavoro. Non sostituisce i documenti specifici, il Verificati
 Sequenza operativa:
 
 ```text
-preparazione step -> task packet -> validazione -> Codex -> report -> verifica -> commit -> push -> PR -> checks -> merge -> pull main -> test finale -> prossimo step
+preparazione step -> prompt Codex pulito -> eventuale salvataggio Bridge -> Codex -> report -> intake gate -> verifica -> publication command pack -> commit -> push -> PR -> checks -> merge -> pull main -> test finale -> prossimo step
 ```
 
 Il riferimento completo e' `docs/32_PROMPT_PACKET_LIFECYCLE_CHECKLIST.md`.
@@ -73,6 +74,10 @@ Il riferimento completo e' `docs/32_PROMPT_PACKET_LIFECYCLE_CHECKLIST.md`.
 Regole operative:
 
 - ChatGPT prepara il task packet e coordina il metodo.
+- Il prompt Codex pulito e direttamente copiabile e' il default.
+- Il Codex command pack PowerShell si usa solo per salvataggio Bridge, file numerati/`LAST` o audit trail formale.
+- Il pwsh/publication command pack si usa dopo report Codex e intake gate, non prima.
+- Non mischiare prompt Codex, script PowerShell, comandi Git, pubblicazione e verifiche finali nello stesso blocco salvo richiesta esplicita.
 - Codex lavora localmente sul branch dedicato.
 - Codex non deve fare commit, push, aprire PR o fare merge.
 - Codex non modifica GitHub, hook Git o `core.hooksPath`.
@@ -84,6 +89,7 @@ Regole operative:
 ## 4. Documenti principali
 
 - `docs/project_context/VISIONE_OPERATIVA_AI.md`: bussola culturale e operativa sull'AI come sistema statistico nel substrato, rappresentazionale nel funzionamento interno e collaboratrice verificabile.
+- `docs/08_CODEX_WORKFLOW.md`: regole Codex, inclusa la separazione clean-first tra prompt Codex, Bridge, intake gate e pubblicazione.
 - `docs/19_PROMPT_PACKET_GENERATOR.md`: contratto generale per Prompt Packet, Codex Task Packet e prompt operativi.
 - `docs/20_VERIFICATION_GATE.md`: definisce cosa significa che una modifica e' verificata.
 - `docs/21_DOCUMENTATION_SYNC.md`: regola per mantenere changelog, roadmap, decision log e documenti specifici allineati.
