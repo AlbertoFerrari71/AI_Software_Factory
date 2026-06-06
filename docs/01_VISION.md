@@ -28,6 +28,8 @@ Traduzione operativa:
 
 > Dall'idea al codice testato, senza perdere il controllo umano.
 
+La bussola culturale sull'AI moderna, sulla comprensione funzionale e sull'AI come collaboratrice verificabile e' in `docs/project_context/VISIONE_OPERATIVA_AI.md`.
+
 ---
 
 ## 3. Posizionamento

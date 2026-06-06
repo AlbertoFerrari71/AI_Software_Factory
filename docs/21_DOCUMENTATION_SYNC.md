@@ -65,6 +65,7 @@ Examples:
 - update `docs/32_PROMPT_PACKET_LIFECYCLE_CHECKLIST.md` when the prompt packet lifecycle, handoff checklist, or step completion sequence changes;
 - update `docs/33_PROMPT_PACKET_GENERATOR_DEVELOPER_ONBOARDING.md` when generator onboarding, operator Quickstart, roles, or troubleshooting guidance changes;
 - update `docs/34_PROJECT_WORKFLOW_INDEX.md` when workflow navigation, document map, script map, or operational entry points change;
+- update `docs/project_context/VISIONE_OPERATIVA_AI.md` when Alberto's operational AI vision, AI-as-verifiable-collaborator framing, or model-comparison guidance changes;
 - update `docs/35_WORKFLOW_HEALTH_CHECK.md` when the local workflow health check behavior, coverage, or interpretation changes;
 - update `docs/36_WORKFLOW_QUICK_REFERENCE.md` when daily workflow commands, supervised handoff commands, or final `main` verification commands change;
 - update `docs/37_STEP_CLOSURE_REPORT.md` when step closure states, final report fields, PR check interpretation, or post-merge evidence requirements change;

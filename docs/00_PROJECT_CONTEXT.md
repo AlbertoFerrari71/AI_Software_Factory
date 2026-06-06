@@ -39,6 +39,8 @@ Idea → Requisiti → Architettura → Task → Codice → Test → Documentazi
 
 Il metodo interno, Codex Alchemy Method, serve a trasformare materiale grezzo in output tecnico affidabile.
 
+La visione operativa di Alberto sull'AI come collaboratrice verificabile e' documentata in `docs/project_context/VISIONE_OPERATIVA_AI.md`.
+
 ---
 
 ## 3. Utente principale

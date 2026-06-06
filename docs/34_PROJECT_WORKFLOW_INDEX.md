@@ -15,6 +15,7 @@ L'indice orienta il lavoro. Non sostituisce i documenti specifici, il Verificati
 | Attivita' | Documento principale | Script/template collegati | Quando usarlo | Note |
 |---|---|---|---|---|
 | Capire il metodo generale | `README.md`, `docs/10_ROADMAP.md` | Nessuno | Primo orientamento sul progetto | Roadmap e decision log restano fonti di evoluzione e scelte |
+| Capire la visione operativa sull'AI | `docs/project_context/VISIONE_OPERATIVA_AI.md` | Nessuno | Quando serve allineare ChatGPT, Claude, Codex o altri strumenti AI | AI come collaboratrice verificabile, con responsabilita' umana e verifiche |
 | Creare un Codex Task Packet | `docs/19_PROMPT_PACKET_GENERATOR.md` | `templates/codex_tasks/codex_task_packet_template.md` | Quando serve un task packet controllato | Il packet deve includere scope, forbidden actions e report finale |
 | Generare un Task Packet via CLI | `docs/29_PROMPT_PACKET_GENERATOR_CLI_HARDENING.md` | `scripts/generate_task_packet.py` | Quando step, titolo, branch e obiettivo sono gia' chiari | Produce una bozza Markdown da rivedere |
 | Usare il wrapper PowerShell | `docs/30_PROMPT_PACKET_GENERATOR_PACKAGING.md` | `scripts/generate_task_packet.ps1` | Quando si lavora in PowerShell su Windows | Il wrapper delega alla CLI Python |
@@ -81,6 +82,7 @@ Regole operative:
 
 ## 4. Documenti principali
 
+- `docs/project_context/VISIONE_OPERATIVA_AI.md`: bussola culturale e operativa sull'AI come sistema statistico nel substrato, rappresentazionale nel funzionamento interno e collaboratrice verificabile.
 - `docs/19_PROMPT_PACKET_GENERATOR.md`: contratto generale per Prompt Packet, Codex Task Packet e prompt operativi.
 - `docs/20_VERIFICATION_GATE.md`: definisce cosa significa che una modifica e' verificata.
 - `docs/21_DOCUMENTATION_SYNC.md`: regola per mantenere changelog, roadmap, decision log e documenti specifici allineati.
