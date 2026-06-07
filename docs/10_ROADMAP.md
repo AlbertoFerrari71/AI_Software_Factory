@@ -91,10 +91,11 @@ Esempio:
 | 590 | Stable PowerShell Publish Runner | Stabilizzare pubblicazione step con runner PowerShell versionato e gate espliciti | Runner publish FASE A/B/C, config JSON, output Bridge | MVP Motore | Completato |
 | 600 | Risk Classifier + Gate Policy | Rendere deterministica la classificazione L0-L4 e la decisione fail-closed | Risk classifier, gate policy, test L0-L4, esempi JSON | MVP Motore | Completato |
 | 610 | Risk Classifier Integration with Dry-run Loop Runner | Collegare il classifier al checkpoint RISK_CLASSIFY del runner 0580 | Integrazione leggera, risk report stabile, test regressione runner | MVP Motore | Completato |
-| 620 | Gate Decision Report and Human Approval Packet | Rendere esplicito il pacchetto di decisione umana usando risk report e review dry-run | Report gate, schema human approval, fixture PASS/FAIL/NEEDS_HUMAN | MVP Motore | Da fare |
-| 630 | Controlled Codex Executor | Preparare executor Codex preview/dry-run/read-only-first con gate espliciti | Executor controllato, output capture, no default write | MVP Motore | Da fare |
-| 640 | First End-to-End Dry Run | Eseguire un giro completo dry-run con evidence, tests, review e gate decision | Report end-to-end dry-run e target clean | MVP Motore | Da fare |
-| 650 | First Controlled Write Pilot | Provare una modifica minima e reversibile lasciata in working tree per review umana | Pilot write controllato, diff scoped, no commit/push/PR/merge | MVP Motore | Da fare |
+| 620 | Gate Decision Report and Human Approval Packet | Rendere esplicito il pacchetto di decisione umana usando risk report e review dry-run | Report gate, schema human approval, fixture PASS/FAIL/NEEDS_HUMAN | MVP Motore | Completato |
+| 630 | Verification Profile Selector + Test Cost Policy | Definire profili di verifica per ridurre ridondanze senza ridurre sicurezza | Matrice profili, policy costi test, proposta CLI read-only | MVP Motore | Da fare |
+| 640 | Controlled Codex Executor | Preparare executor Codex preview/dry-run/read-only-first con gate espliciti | Executor controllato, output capture, no default write | MVP Motore | Da fare |
+| 650 | First End-to-End Dry Run | Eseguire un giro completo dry-run con evidence, tests, review e gate decision | Report end-to-end dry-run e target clean | MVP Motore | Da fare |
+| 660 | First Controlled Write Pilot | Provare una modifica minima e reversibile lasciata in working tree per review umana | Pilot write controllato, diff scoped, no commit/push/PR/merge | MVP Motore | Da fare |
 
 ---
 
@@ -1323,9 +1324,10 @@ Correggere la rotta strategica di ASF da autonomia fire-and-forget ad autonomia 
 - 0600 - Risk Classifier + Gate Policy;
 - 0610 - Risk Classifier Integration with Dry-run Loop Runner;
 - 0620 - Gate Decision Report and Human Approval Packet;
-- 0630 - Controlled Codex Executor;
-- 0640 - First End-to-End Dry Run;
-- 0650 - First Controlled Write Pilot.
+- 0630 - Verification Profile Selector + Test Cost Policy;
+- 0640 - Controlled Codex Executor;
+- 0650 - First End-to-End Dry Run;
+- 0660 - First Controlled Write Pilot.
 
 ### Prossimo step consigliato
 
@@ -1448,3 +1450,33 @@ Collegare il Risk Classifier + Gate Policy dello STEP 0600 al checkpoint `RISK_C
 ### Prossimo step consigliato
 
 0620) Gate Decision Report and Human Approval Packet
+
+---
+
+## 69. STEP 620 - Gate Decision Report and Human Approval Packet
+
+### Obiettivo
+
+Trasformare l'output tecnico del Dry-run Loop Runner e del Risk Classifier in un Approval Packet leggibile, fail-closed e adatto a una decisione umana supervisionata.
+
+### Output realizzati
+
+- script `scripts/asf_gate_decision_report.py`;
+- documento `docs/motor/0620_GATE_DECISION_REPORT_HUMAN_APPROVAL_PACKET.md`;
+- nota `docs/motor/0620_VERIFICATION_BALANCE_NOTES.md`;
+- esempi JSON in `examples/gate_decision/`;
+- test automatici `tests/unit/test_asf_gate_decision_report.py`;
+- integrazione leggera in workflow health e Project Workflow Index.
+
+### Guardrail
+
+- nessuna duplicazione delle regole L0-L4 del classifier;
+- input ambiguo o non valido gestito in `FAIL_CLOSED`;
+- L3 richiede `explicit_publish_approval` per produrre `APPROVE_PUBLISH`;
+- L4 resta bloccato o fail-closed;
+- nessuna chiamata live, nessun secret, nessun write target, nessuna pubblicazione Git;
+- nessuna modifica al publish runner 0590.
+
+### Prossimo step consigliato
+
+0630) Verification Profile Selector + Test Cost Policy

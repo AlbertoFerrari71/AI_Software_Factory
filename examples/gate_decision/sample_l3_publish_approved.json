@@ -1,0 +1,56 @@
+{
+  "step": "0620",
+  "title": "Publish-ready step with explicit approval",
+  "summary": "Publication intent is detected and explicit approval is declared for reporting only.",
+  "files_in_scope": [
+    "docs/motor/0620_GATE_DECISION_REPORT_HUMAN_APPROVAL_PACKET.md"
+  ],
+  "checks_required": [
+    "python -m pytest -q",
+    "git --no-pager diff --check"
+  ],
+  "checks_reported": [
+    {
+      "name": "python -m pytest -q",
+      "status": "PASS"
+    },
+    {
+      "name": "git --no-pager diff --check",
+      "status": "PASS"
+    }
+  ],
+  "approvals": {
+    "explicit_publish_approval": true
+  },
+  "risk_report": {
+    "checkpoint": "RISK_CLASSIFY",
+    "status": "PASS",
+    "risk": {
+      "risk_level": "L3",
+      "allowed": true,
+      "required_gate": "explicit_publish_approval",
+      "reasons": [
+        "repository publication action signal"
+      ],
+      "matched_rules": [],
+      "fail_closed": false,
+      "recommended_next_action": "Stop until explicit publish approval is present."
+    },
+    "gate": {
+      "required_gate": "explicit_publish_approval",
+      "provided_gates": [
+        "explicit_publish_approval"
+      ],
+      "declared_satisfied": true,
+      "dry_run_enforced": true,
+      "runner_executes_gate": false
+    },
+    "dry_run": {
+      "fail_closed": false,
+      "no_live_provider_calls": true,
+      "no_target_repo_writes": true,
+      "no_git_publication": true
+    },
+    "plan_blockers": []
+  }
+}

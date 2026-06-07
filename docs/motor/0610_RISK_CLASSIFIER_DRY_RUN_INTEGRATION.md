@@ -164,10 +164,16 @@ git status --short
 
 ---
 
-## 8. Prossimo step
+## 8. Evoluzione dopo STEP 0620
 
 ```text
 0620) Gate Decision Report and Human Approval Packet
 ```
 
-Il prossimo step dovrebbe rendere piu' esplicito il pacchetto di decisione umana usando il risk report 0610 come input stabile.
+Lo STEP 0620 consuma il risk report 0610 come input stabile e produce un Approval Packet umano con decisione, risk level, gate richiesto, check evidence, blocker, warning e prossima azione consigliata.
+
+Il prossimo step consigliato dopo 0620 e':
+
+```text
+0630) Verification Profile Selector + Test Cost Policy
+```

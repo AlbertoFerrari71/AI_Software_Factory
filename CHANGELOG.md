@@ -4,6 +4,39 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.62.0] - 2026-06-07
+
+### Added
+
+- STEP 0620 - Gate Decision Report and Human Approval Packet.
+- Script `scripts/asf_gate_decision_report.py`.
+- Runbook `docs/motor/0620_GATE_DECISION_REPORT_HUMAN_APPROVAL_PACKET.md`.
+- Note `docs/motor/0620_VERIFICATION_BALANCE_NOTES.md` con matrice iniziale dei verification profile.
+- Esempi JSON in `examples/gate_decision/`.
+- Test `tests/unit/test_asf_gate_decision_report.py`.
+
+### Changed
+
+- Aggiornati README, roadmap, decision log, Project Workflow Index e Workflow Health Check con il nuovo Approval Packet.
+- Il prossimo step consigliato diventa `0630) Verification Profile Selector + Test Cost Policy`.
+
+### Guardrails
+
+- Nessuna duplicazione delle regole L0-L4 del Risk Classifier.
+- Input ambiguo o non valido gestito in modalita' `FAIL_CLOSED`.
+- Nessuna chiamata provider live.
+- Nessun secret/API key letto o stampato.
+- Nessun write su repository target.
+- Nessun commit, push, PR, merge o deploy eseguito da Codex durante lo STEP 0620.
+
+### Not included
+
+- Nessun selettore automatico dei verification profile.
+- Nessun Controlled Codex Executor.
+- Nessuna automazione di pubblicazione o merge.
+
+---
+
 ## [0.61.0] - 2026-06-07
 
 ### Added

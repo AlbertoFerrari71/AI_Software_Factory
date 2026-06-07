@@ -2282,6 +2282,50 @@ Il prossimo step consigliato resta:
 
 ---
 
+## DEC-076 - Gate Decision Report and Human Approval Packet
+
+**Data:** 2026-06-07
+**Stato:** Accettata
+
+### Contesto
+
+Lo STEP 0610 produce un `risk_report.json` strutturato con livello L0-L4, gate richiesto, `allowed`, stato dry-run e blocker del piano.
+
+Questa evidence e' utile tecnicamente, ma non basta come pacchetto decisionale per Alberto: serve un report che spieghi cosa si sta approvando, quali file e check sono coinvolti, quali blocker restano e quale azione successiva e' consigliata.
+
+### Decisione
+
+Introdurre `scripts/asf_gate_decision_report.py` come generatore locale di Approval Packet umano.
+
+Il report:
+
+- legge JSON prodotto o compatibile con il dry-run/risk output 0610;
+- non duplica le regole L0-L4 del Risk Classifier;
+- produce output JSON, Markdown e testo compatto;
+- gestisce `APPROVE_LOCAL_ONLY`, `NEEDS_HUMAN`, `APPROVE_PUBLISH`, `BLOCKED` e `FAIL_CLOSED`;
+- richiede check locali coerenti per L2;
+- richiede `explicit_publish_approval` per L3;
+- blocca L4 di default o fallisce chiuso;
+- non esegue publish, write target, provider live, commit, push, PR, merge o deploy.
+
+### Motivazione
+
+Il motore ASF deve rendere le decisioni supervisionate comprensibili prima di aumentare l'autonomia operativa.
+
+Separare il Gate Decision Report dal Dry-run Loop Runner mantiene semplice il runner 0580/0610 e permette di evolvere la decisione umana come componente testabile.
+
+### Conseguenze
+
+Il publish runner 0590 resta lo strumento standard per pubblicare dopo review umana.
+
+Lo STEP 0620 introduce anche una prima matrice dei verification profile. Il prossimo step consigliato diventa:
+
+```text
+0630) Verification Profile Selector + Test Cost Policy
+```
+
+---
+
 ## DEC-073 - Stable PowerShell Publish Runner
 
 **Data:** 2026-06-07
@@ -2510,9 +2554,10 @@ La roadmap prioritaria diventa:
 0600 Risk Classifier + Gate Policy
 0610 Risk Classifier Integration with Dry-run Loop Runner
 0620 Gate Decision Report and Human Approval Packet
-0630 Controlled Codex Executor
-0640 First End-to-End Dry Run
-0650 First Controlled Write Pilot
+0630 Verification Profile Selector + Test Cost Policy
+0640 Controlled Codex Executor
+0650 First End-to-End Dry Run
+0660 First Controlled Write Pilot
 ```
 
 Nuovi step di meta-processo, naming, packaging, validazioni strict o guardrail isolati restano congelati finche' il motore non completa almeno un giro end-to-end dry-run.

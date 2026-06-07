@@ -88,6 +88,8 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/motor/0590_STABLE_POWERSHELL_PUBLISH_RUNNER.md",
         "docs/motor/0600_RISK_CLASSIFIER_GATE_POLICY.md",
         "docs/motor/0610_RISK_CLASSIFIER_DRY_RUN_INTEGRATION.md",
+        "docs/motor/0620_GATE_DECISION_REPORT_HUMAN_APPROVAL_PACKET.md",
+        "docs/motor/0620_VERIFICATION_BALANCE_NOTES.md",
         "config/asf_project_profiles.json",
         "scripts/asf_openai_api_adapter.py",
         "scripts/asf_openai_controlled_live_execution_pack.py",
@@ -95,6 +97,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "scripts/asf_dry_run_loop_runner.py",
         "scripts/asf_publish_step.ps1",
         "scripts/asf_risk_classifier.py",
+        "scripts/asf_gate_decision_report.py",
         "scripts/install_pwsh_command_pack_skill.py",
         "scripts/migrate_artifact_names_4digit.py",
         "scripts/asf_codex_invocation_dry_run.py",
@@ -149,6 +152,12 @@ def check_files(root: Path) -> list[HealthIssue]:
         "examples/risk_classifier/sample_l2_code_change.json",
         "examples/risk_classifier/sample_l3_publish.json",
         "examples/risk_classifier/sample_l4_deploy_or_destructive.json",
+        "examples/gate_decision/sample_l1_local_docs.json",
+        "examples/gate_decision/sample_l2_code_change_checked.json",
+        "examples/gate_decision/sample_l3_publish_needs_approval.json",
+        "examples/gate_decision/sample_l3_publish_approved.json",
+        "examples/gate_decision/sample_l4_blocked.json",
+        "examples/gate_decision/sample_invalid_fail_closed.json",
     ]
 
     issues: list[HealthIssue] = []
@@ -272,6 +281,8 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             ("ASF Stable PowerShell Publish Runner", ["ASF Stable PowerShell Publish Runner"]),
             ("ASF Risk Classifier Gate Policy", ["ASF Risk Classifier + Gate Policy"]),
             ("ASF Risk Classifier Dry-run Integration", ["ASF Risk Classifier Dry-run Integration"]),
+            ("ASF Gate Decision Report", ["ASF Gate Decision Report"]),
+            ("ASF Verification Balance Notes", ["Verification Balance Notes"]),
             ("generate task packet script", ["scripts/generate_task_packet.py"]),
             ("task packet validator script", ["scripts/validate_task_packet.py"]),
             ("ASF Next Step Runner script", ["scripts/asf_next_step.py"]),
@@ -306,8 +317,20 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                 ["scripts/asf_risk_classifier.py"],
             ),
             (
+                "ASF Gate Decision Report script",
+                ["scripts/asf_gate_decision_report.py"],
+            ),
+            (
                 "ASF Risk Classifier Dry-run Integration document",
                 ["docs/motor/0610_RISK_CLASSIFIER_DRY_RUN_INTEGRATION.md"],
+            ),
+            (
+                "ASF Gate Decision Report document",
+                ["docs/motor/0620_GATE_DECISION_REPORT_HUMAN_APPROVAL_PACKET.md"],
+            ),
+            (
+                "ASF Verification Balance Notes document",
+                ["docs/motor/0620_VERIFICATION_BALANCE_NOTES.md"],
             ),
             (
                 "artifact naming migration script",
@@ -519,6 +542,10 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                 "ASF Risk Classifier examples",
                 ["examples/risk_classifier/"],
             ),
+            (
+                "ASF Gate Decision Report examples",
+                ["examples/gate_decision/"],
+            ),
         ],
     )
 
@@ -610,6 +637,7 @@ def check_script_safety(root: Path) -> list[HealthIssue]:
         "scripts/asf_dry_run_loop_runner.py",
         "scripts/asf_publish_step.ps1",
         "scripts/asf_risk_classifier.py",
+        "scripts/asf_gate_decision_report.py",
         "scripts/migrate_artifact_names_4digit.py",
     ]
     patterns = forbidden_script_patterns()

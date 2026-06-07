@@ -1,0 +1,48 @@
+{
+  "step": "0620",
+  "title": "Local documentation packet",
+  "summary": "Documentation-only local evidence for a supervised decision.",
+  "files_in_scope": [
+    "docs/motor/0620_GATE_DECISION_REPORT_HUMAN_APPROVAL_PACKET.md"
+  ],
+  "checks_required": [
+    "git --no-pager diff --check"
+  ],
+  "checks_reported": [
+    {
+      "name": "git --no-pager diff --check",
+      "status": "PASS"
+    }
+  ],
+  "risk_report": {
+    "checkpoint": "RISK_CLASSIFY",
+    "status": "PASS",
+    "risk": {
+      "risk_level": "L1",
+      "allowed": true,
+      "required_gate": "implicit_or_local_approval",
+      "reasons": [
+        "local generated artifact, sample or dry-run signal"
+      ],
+      "matched_rules": [],
+      "fail_closed": false,
+      "recommended_next_action": "Proceed locally and keep generated artifacts scoped."
+    },
+    "gate": {
+      "required_gate": "implicit_or_local_approval",
+      "provided_gates": [
+        "implicit_or_local_approval"
+      ],
+      "declared_satisfied": true,
+      "dry_run_enforced": true,
+      "runner_executes_gate": false
+    },
+    "dry_run": {
+      "fail_closed": false,
+      "no_live_provider_calls": true,
+      "no_target_repo_writes": true,
+      "no_git_publication": true
+    },
+    "plan_blockers": []
+  }
+}
