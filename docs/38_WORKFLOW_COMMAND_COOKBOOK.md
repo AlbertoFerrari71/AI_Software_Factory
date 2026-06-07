@@ -1343,7 +1343,49 @@ Non scrivere "chiuso" se mancano merge, pull `main` o verifiche finali.
 
 ---
 
-## 21. Anti-pattern finali
+## 21. Ricetta - Stable PowerShell Publish Runner
+
+### Quando usarla
+
+Quando uno step ASF e' pronto per verifica locale o pubblicazione presidiata e si vuole evitare un mega-blocco PowerShell copiato in chat.
+
+### Comandi
+
+FASE A, verifica locale:
+
+```powershell
+pwsh -NoProfile -ExecutionPolicy Bypass -File scripts\asf_publish_step.ps1 -Config examples\publish_step\0590_publish_config.example.json -Phase A
+```
+
+FASE B, publish branch/PR solo con consenso esplicito:
+
+```powershell
+pwsh -NoProfile -ExecutionPolicy Bypass -File scripts\asf_publish_step.ps1 -Config path\to\publish.config.json -Phase B -ApprovePublish
+```
+
+FASE C, merge e verifica finale solo con consenso esplicito:
+
+```powershell
+pwsh -NoProfile -ExecutionPolicy Bypass -File scripts\asf_publish_step.ps1 -Config path\to\publish.config.json -Phase C -PrNumber 52 -ApproveMerge
+```
+
+### Esito atteso
+
+Il runner usa config JSON, comandi `argv`, scope check su `expected_files`, output Bridge e gate espliciti per publish e merge.
+
+### Se qualcosa va storto
+
+Leggere `NNNN-Output_Completo_<nome>.txt` nel Bridge e correggere config, scope o check falliti. Non aggirare `-ApprovePublish` o `-ApproveMerge`.
+
+### Cosa non fare
+
+Non tornare ai mega-blocchi PowerShell lunghi salvo emergenza motivata. Non usare config con scope largo o comandi shell non necessari.
+
+Documento: `docs/motor/0590_STABLE_POWERSHELL_PUBLISH_RUNNER.md`.
+
+---
+
+## 22. Anti-pattern finali
 
 - Usare `reset --hard` per "pulire" senza diagnosi.
 - Iniziare lo step successivo senza merge su `main`.
@@ -1358,7 +1400,7 @@ Codex non deve fare commit, Codex non deve fare push, Codex non deve aprire PR e
 
 ---
 
-## 22. Collegamenti utili
+## 23. Collegamenti utili
 
 - `docs/32_PROMPT_PACKET_LIFECYCLE_CHECKLIST.md`
 - `docs/34_PROJECT_WORKFLOW_INDEX.md`
@@ -1381,5 +1423,6 @@ Codex non deve fare commit, Codex non deve fare push, Codex non deve aprire PR e
 - `docs/58_ASF_CODEX_READONLY_CLEAN_TARGET_TRIAL_RESULTS.md`
 - `docs/59_ASF_CODEX_READONLY_REPEATABLE_TRIAL_PACK.md`
 - `docs/60_ASF_CODEX_READONLY_REPEATABLE_TRIAL_RESULTS.md`
+- `docs/motor/0590_STABLE_POWERSHELL_PUBLISH_RUNNER.md`
 - `docs/65_ASF_OPENAI_API_ADAPTER.md`
 - `templates/codex_tasks/step_closure_report_template.md`

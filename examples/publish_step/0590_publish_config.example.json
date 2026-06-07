@@ -1,0 +1,84 @@
+{
+  "allow_no_github_checks_reported": true,
+  "branch": "step-0590-stable-powershell-publish-runner",
+  "bridge_root": "D:\\FG-SAB Dropbox\\Alberto Ferrari\\ChatGPT_Bridge\\AI_Software_Factory\\pwsh_command",
+  "commit_message": "0590 add stable PowerShell publish runner",
+  "expected_files": [
+    "scripts/asf_publish_step.ps1",
+    "examples/publish_step/0590_publish_config.example.json",
+    "tests/unit/test_asf_publish_step_runner.py",
+    "docs/motor/0570_MVP_MOTOR_ROADMAP.md",
+    "docs/motor/0590_STABLE_POWERSHELL_PUBLISH_RUNNER.md",
+    "README.md",
+    "CHANGELOG.md",
+    "docs/10_ROADMAP.md",
+    "docs/11_DECISIONS.md",
+    "docs/34_PROJECT_WORKFLOW_INDEX.md",
+    "docs/38_WORKFLOW_COMMAND_COOKBOOK.md",
+    "scripts/check_workflow_health.py"
+  ],
+  "log_max_count": 12,
+  "name": "Stable_PowerShell_Publish_Runner",
+  "next_step": "0600) Risk Classifier + Gate Policy",
+  "phase_a_checks": [
+    {
+      "argv": [
+        "python",
+        "-m",
+        "pytest",
+        "tests\\unit\\test_asf_publish_step_runner.py"
+      ],
+      "name": "Targeted publish runner tests"
+    },
+    {
+      "argv": [
+        "python",
+        "scripts\\check_workflow_health.py"
+      ],
+      "name": "Workflow Health Check"
+    },
+    {
+      "argv": [
+        "pwsh",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "scripts\\verify.ps1"
+      ],
+      "name": "Verification Gate"
+    }
+  ],
+  "phase_c_checks": [
+    {
+      "argv": [
+        "python",
+        "-m",
+        "pytest"
+      ],
+      "name": "Full pytest"
+    },
+    {
+      "argv": [
+        "python",
+        "scripts\\check_workflow_health.py"
+      ],
+      "name": "Workflow Health Check"
+    },
+    {
+      "argv": [
+        "pwsh",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "scripts\\verify.ps1"
+      ],
+      "name": "Verification Gate"
+    }
+  ],
+  "pr_body": "Implements STEP 0590 Stable PowerShell Publish Runner. Adds a versioned publish runner, config example, Bridge outputs, DOCX writer, docs, and tests. No commit, push, PR, merge or deploy is performed by Codex during implementation.",
+  "pr_title": "0590 add stable PowerShell publish runner",
+  "repo_path": ".",
+  "step": "0590"
+}
