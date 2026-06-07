@@ -159,10 +159,10 @@ Il test verifica scenario positivo, scenario negativo, output JSON/Markdown, Bri
 
 Dopo STEP 0700 il Motore ASF dimostra un percorso locale end-to-end fino a `READY_TO_PUBLISH`.
 
-Non basta ancora per dichiarare completo il MVP Motore perche' manca un manifest run/evidence stabile che colleghi ogni artifact del percorso a un singolo record operativo riusabile dal runner e dal report finale.
+Lo STEP 0710 aggiunge il manifest run/evidence stabile che collega gli artifact del percorso a un singolo record operativo riusabile dal runner e dal report finale.
 
 ## 10. Prossimo step consigliato
 
-0710) Motor Run Manifest and Evidence Pack
+0720) MVP Usage Runbook
 
-Motivo: lo smoke 0700 produce gia' evidence locali, ma il prossimo avanzamento utile e' normalizzare un manifest unico del run e dell'evidence pack prima di aggiungere hook automatici al publish runner.
+Motivo: dopo smoke e manifest, il prossimo avanzamento utile e' un runbook d'uso MVP che renda ripetibile il percorso manuale human-gated prima di aggiungere hook automatici al publish runner.

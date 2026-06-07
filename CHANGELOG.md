@@ -4,6 +4,35 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.71.0] - 2026-06-07
+
+### Added
+
+- STEP 0710 - Motor Run Manifest and Evidence Pack.
+- Script `scripts/asf_motor_run_manifest.py` per normalizzare evidence dir o input JSON in `motor_run_manifest.json` e `motor_run_summary.md`.
+- Schema manifest con run id, stato, decisione, rischio, gate, verification profile, state machine, publish config, artifact, checksum, check, warning, blocker e prossima azione.
+- Output Bridge opzionale in `motor_run` con `0710-Run_Manifest_*`, `0710-Run_Summary_*`, `0710-Output_Completo_*` e file `LAST-*`.
+- Runbook `docs/motor/0710_MOTOR_RUN_MANIFEST_AND_EVIDENCE_PACK.md`.
+- Esempi `examples/motor_run_manifest/sample_manifest_input_*.json`.
+- Test `tests/unit/test_asf_motor_run_manifest.py`.
+
+### Changed
+
+- Workflow Health Check, README, roadmap, decision log e Project Workflow Index riconoscono lo STEP 0710.
+- Lo stato MVP Motore passa da smoke end-to-end con evidence distribuite a manifest unico auditabile.
+
+### Guardrails
+
+- Il manifest non esegue Phase B, Phase C, commit, push, PR, merge, deploy, GitHub operativo o API esterne.
+- `READY_TO_PUBLISH` non viene prodotto se artifact richiesti o check richiesti mancano.
+- I test usano Bridge temporanei e non richiedono Dropbox reale.
+
+### Next
+
+- Prossimo step consigliato: `0720) MVP Usage Runbook`.
+
+---
+
 ## [0.70.0] - 2026-06-07
 
 ### Added

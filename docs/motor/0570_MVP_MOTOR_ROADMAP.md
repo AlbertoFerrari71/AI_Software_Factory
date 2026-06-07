@@ -40,20 +40,21 @@ Le eccezioni ammesse sono solo correzioni bloccanti emerse dai test o dalla revi
 | 0680 | State Machine Bridge Integration | L2 output/audit trail locale | state machine, Bridge, docs, tests | Stato corrente e report state machine salvabili nel Bridge senza avviare publish | pytest mirati, workflow health, verify gate | Bridge reale richiesto dai test, stato implicito, recovery non dichiarata |
 | 0690 | State Machine Integration with Publish Config Generator | L2/L3 integration locale | generator, state machine, docs, tests | Config draft e stato iniziale coerenti senza avviare publish | pytest mirati, workflow health, verify gate | Generator che esegue runner, stato implicito, recovery non dichiarata |
 | 0700 | End-to-End MVP Smoke Scenario | L2/L3 smoke locale | generator, state machine, Bridge temporaneo, docs, tests | Un percorso locale end-to-end produce evidence senza pubblicare | pytest mirati, workflow health, verify gate | Smoke che maschera publish reale, Bridge reale richiesto |
+| 0710 | Motor Run Manifest and Evidence Pack | L2 evidence locale | manifest, evidence pack, docs, tests | Una run Motore produce manifest JSON e summary Markdown auditabili | pytest mirati, workflow health, verify gate | READY_TO_PUBLISH senza artifact richiesti, Bridge reale richiesto |
 
 ---
 
 ## 4. Sequenza operativa prevista
 
 ```text
-0570 docs -> 0580 dry-run loop -> 0590 stable publish runner -> 0600 risk gate -> 0610 risk integration -> 0620 gate decision packet -> 0630 verification profiles -> 0640 selector integration with publish runner -> 0650 publish config generator -> 0660 bridge output integration -> 0670 state machine -> 0680 state bridge -> 0690 generator integration -> 0700 end-to-end smoke -> 0710 run manifest
+0570 docs -> 0580 dry-run loop -> 0590 stable publish runner -> 0600 risk gate -> 0610 risk integration -> 0620 gate decision packet -> 0630 verification profiles -> 0640 selector integration with publish runner -> 0650 publish config generator -> 0660 bridge output integration -> 0670 state machine -> 0680 state bridge -> 0690 generator integration -> 0700 end-to-end smoke -> 0710 run manifest -> 0720 usage runbook
 ```
 
 Il criterio di maturita' minima non e' "il runner esiste". Il criterio e': un loop completo produce evidence leggibile, classifica rischio, esegue test disponibili, passa review indipendente e ferma correttamente il flusso quando un gate non passa.
 
 ---
 
-## 5. Ambiti ancora congelati dopo 0700
+## 5. Ambiti ancora congelati dopo 0710
 
 - Retry live OpenAI, salvo step separato e autorizzato da Alberto.
 - Nuove integrazioni MCP operative.
@@ -257,4 +258,32 @@ Prossimo step consigliato:
 
 ```text
 0710) Motor Run Manifest and Evidence Pack
+```
+
+## 14. Stato dopo STEP 0710
+
+Lo STEP 0710 aggiunge un manifest unico per le run del Motore:
+
+```text
+docs/motor/0710_MOTOR_RUN_MANIFEST_AND_EVIDENCE_PACK.md
+scripts/asf_motor_run_manifest.py
+tests/unit/test_asf_motor_run_manifest.py
+examples/motor_run_manifest/
+```
+
+Il manifest legge evidence 0700 o input JSON, calcola checksum sugli artifact fisici, normalizza check, warning, blocker e decisione, e produce `motor_run_manifest.json` e `motor_run_summary.md`.
+
+Il Bridge `motor_run` resta opzionale con `--write-bridge`; i test usano solo directory temporanee.
+
+Restano manuali e human-gated:
+
+- review del manifest;
+- Phase B;
+- Phase C;
+- commit, push, PR, merge e verifica finale su `main`.
+
+Prossimo step consigliato:
+
+```text
+0720) MVP Usage Runbook
 ```

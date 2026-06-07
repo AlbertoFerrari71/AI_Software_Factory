@@ -1,0 +1,39 @@
+{
+  "artifacts": [
+    {
+      "description": "Fail-closed evidence artifact.",
+      "exists": true,
+      "kind": "fail_closed",
+      "name": "negative_fail_closed",
+      "path": "embedded/negative_fail_closed.json",
+      "required": true,
+      "sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "size_bytes": 12
+    }
+  ],
+  "blockers": [
+    "State current_state IMPLEMENTED is not eligible for ready publish config generation."
+  ],
+  "checks": [],
+  "created_at": "2026-06-07T12:05:00Z",
+  "decision": "FAIL_CLOSED",
+  "fail_closed": true,
+  "gate": {
+    "decision": "FAIL_CLOSED"
+  },
+  "publish_config": {},
+  "risk": {
+    "risk_level": "L2"
+  },
+  "run_id": "sample-fail-closed-run",
+  "scenario": "invalid-state-to-publish-config",
+  "state": {
+    "after": {
+      "current_state": "IMPLEMENTED"
+    }
+  },
+  "status": "fail_closed",
+  "step": "0710-sample",
+  "verification_profile": {},
+  "warnings": []
+}

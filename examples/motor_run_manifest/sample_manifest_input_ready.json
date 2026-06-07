@@ -1,0 +1,50 @@
+{
+  "artifacts": [
+    {
+      "description": "Embedded sample input artifact for a ready manifest.",
+      "exists": true,
+      "kind": "input",
+      "name": "input_step",
+      "path": "embedded/input_step.json",
+      "required": true,
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "size_bytes": 10
+    }
+  ],
+  "blockers": [],
+  "checks": [
+    {
+      "command": "python -m pytest tests/unit/test_example_component.py",
+      "description": "Sample passing check.",
+      "exit_code": 0,
+      "name": "unit tests",
+      "required": true,
+      "status": "PASSED"
+    }
+  ],
+  "created_at": "2026-06-07T12:00:00Z",
+  "decision": "READY_TO_PUBLISH",
+  "fail_closed": false,
+  "gate": {
+    "decision": "APPROVE_LOCAL_ONLY"
+  },
+  "publish_config": {
+    "verification_profile": "code-unit"
+  },
+  "risk": {
+    "risk_level": "L2"
+  },
+  "run_id": "sample-ready-run",
+  "scenario": "ready-input",
+  "state": {
+    "after": {
+      "current_state": "READY_TO_PUBLISH"
+    }
+  },
+  "status": "ready_to_publish",
+  "step": "0710-sample",
+  "verification_profile": {
+    "profile": "code-unit"
+  },
+  "warnings": []
+}

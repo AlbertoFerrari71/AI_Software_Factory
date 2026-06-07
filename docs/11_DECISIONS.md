@@ -2282,6 +2282,44 @@ Il prossimo step consigliato resta:
 
 ---
 
+## DEC-084 - Motor Run Manifest and Evidence Pack
+
+**Data:** 2026-06-07
+**Stato:** Accettata
+
+### Contesto
+
+Lo STEP 0700 produce evidence locali dello smoke MVP, ma gli artifact restavano distribuiti tra JSON e Markdown senza un record unico della run.
+
+### Decisione
+
+Lo STEP 0710 introduce `scripts/asf_motor_run_manifest.py`.
+
+Il manifest:
+
+- legge directory evidence 0700 o input manifest JSON;
+- calcola checksum sugli artifact fisici;
+- normalizza risk, gate, verification profile, state, publish config, artifact, check, warning e blocker;
+- produce `motor_run_manifest.json` e `motor_run_summary.md`;
+- scrive Bridge output solo con `--write-bridge`;
+- decide in modo prudente tra `READY_TO_PUBLISH`, `BLOCKED`, `FAIL_CLOSED`, `INCOMPLETE` e `REVIEW_REQUIRED`.
+
+### Motivazione
+
+Prima di aggiungere hook automatici al runner serve una evidence unit stabile, leggibile e auditabile.
+
+### Conseguenze
+
+- Workflow Health Check riconosce script, test, runbook ed esempi 0710 senza eseguire il manifest.
+- I test Bridge usano directory temporanee e non Dropbox reale.
+- Il prossimo step consigliato e':
+
+```text
+0720) MVP Usage Runbook
+```
+
+---
+
 ## DEC-083 - End-to-End MVP Smoke Scenario locale e non operativo
 
 **Data:** 2026-06-07

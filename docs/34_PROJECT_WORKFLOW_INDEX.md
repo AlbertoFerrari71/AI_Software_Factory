@@ -75,6 +75,7 @@ L'indice orienta il lavoro. Non sostituisce i documenti specifici, il Verificati
 | Salvare stato state machine nel Bridge | `docs/motor/0680_STATE_MACHINE_BRIDGE_INTEGRATION.md` | `scripts/asf_step_state_machine.py --write-bridge` | Quando serve recuperare lo stato tra ChatGPT, Codex e PowerShell | Bridge `state_machine`; `LAST-State.json`, `LAST-Event.json`, `LAST-Output_Compatto.md`; test solo su root temporanee |
 | Generare config publish coerenti con state machine | `docs/motor/0690_STATE_MACHINE_INTEGRATION_WITH_PUBLISH_CONFIG_GENERATOR.md` | `scripts/asf_publish_config_generator.py --require-state --update-state`, `examples/publish_config_generator/sample_state_machine_integration_input.json`, `examples/state_machine/sample_local_verified_state.json` | Quando serve produrre `LAST-Publish_Config.json` solo se lo step e' in stato coerente | Applica `publish_config_generated`; collega `LAST-Publish_Config.json` e `LAST-State.json`; nessuna Phase B/C |
 | Eseguire ASF End-to-End MVP Smoke Scenario | `docs/motor/0700_END_TO_END_MVP_SMOKE_SCENARIO.md` | `scripts/asf_e2e_mvp_smoke.py --scenario code-unit-to-ready-to-publish`, `scripts/asf_e2e_mvp_smoke.py --scenario invalid-state-to-publish-config` | Quando serve validare localmente il percorso Motore fino a `READY_TO_PUBLISH` | Scrive evidence sotto `tmp/e2e_mvp_smoke`, produce `negative_fail_closed.json`; nessuna Phase B/C o pubblicazione |
+| Generare ASF Motor Run Manifest | `docs/motor/0710_MOTOR_RUN_MANIFEST_AND_EVIDENCE_PACK.md` | `scripts/asf_motor_run_manifest.py`, `examples/motor_run_manifest/` | Quando serve normalizzare una run Motore in manifest JSON e summary Markdown | Produce `motor_run_manifest.json`, `motor_run_summary.md` e Bridge opzionale `LAST-Run_Manifest.json`; nessuna Phase B/C |
 | Controllare Documentation Sync | `docs/21_DOCUMENTATION_SYNC.md` | Nessuno | Ogni step documentale o operativo | Valuta changelog, roadmap, decisions e documenti specifici |
 | Controllare Soft Protection Guardrails | `docs/24_SOFT_PROTECTION_GUARDRAILS.md` | `scripts/git/check_soft_guardrails.ps1` | Prima del commit o come controllo locale | Read-only; non installa hook |
 | Eseguire Workflow Health Check | `docs/35_WORKFLOW_HEALTH_CHECK.md` | `scripts/check_workflow_health.py` | Quando workflow docs, script o riferimenti centrali cambiano | Read-only; non sostituisce Verification Gate |
@@ -192,6 +193,7 @@ Regole operative:
 - `docs/motor/0680_STATE_MACHINE_BRIDGE_INTEGRATION.md`: output Bridge della state machine con `LAST-State.json`, `LAST-Event.json`, output compatto e output completo.
 - `docs/motor/0690_STATE_MACHINE_INTEGRATION_WITH_PUBLISH_CONFIG_GENERATOR.md`: integrazione fail-closed tra generator e state machine, con riferimenti incrociati `LAST-Publish_Config.json` e `LAST-State.json`.
 - `docs/motor/0700_END_TO_END_MVP_SMOKE_SCENARIO.md`: smoke end-to-end locale del Motore ASF, con scenario positivo fino a `READY_TO_PUBLISH` e negativo fail-closed.
+- `docs/motor/0710_MOTOR_RUN_MANIFEST_AND_EVIDENCE_PACK.md`: manifest unico di run Motore con artifact, checksum, check, decisione e Bridge opzionale.
 
 ---
 
@@ -226,6 +228,7 @@ Regole operative:
 - `scripts/asf_verification_profile_selector.py`: selector STEP 0630 che raccomanda profili di verifica e costo test senza eseguire check.
 - `scripts/asf_step_state_machine.py`: state machine STEP 0670/0680/0690 che valida eventi, persiste stato JSON, produce JSON/Markdown/testo e puo' scrivere output Bridge con `--write-bridge` senza eseguire publish.
 - `scripts/asf_e2e_mvp_smoke.py`: smoke STEP 0700 che attraversa classifier, dry-run, gate report, selector, generator e state machine producendo evidence locali e un caso negativo fail-closed.
+- `scripts/asf_motor_run_manifest.py`: manifest STEP 0710 che normalizza evidence Motore in JSON/Markdown, calcola checksum e puo' scrivere Bridge output senza eseguire publish.
 
 Questi script non devono essere usati per automatizzare commit, push, PR o merge salvo `scripts/asf_publish_step.ps1`, che lo consente solo nelle fasi esplicite `-ApprovePublish` e `-ApproveMerge`.
 
@@ -263,6 +266,7 @@ Config centrale:
 - `examples/publish_step/0640_publish_config_*.example.json`: esempi config con profilo motor-core, docs-only e mismatch fail-closed.
 - `examples/publish_config_generator/`: input esempio per generare bozze config publish guidate dal selector.
 - `examples/state_machine/`: sequenze evento per flusso normale, recovery Phase C, recovery combinata e transizione invalida fail-closed.
+- `examples/motor_run_manifest/`: input esempio ready, fail-closed e missing-artifacts per il manifest di run Motore.
 - `examples/risk_classifier/`: esempi JSON L0, L2, L3 e L4 per Risk Classifier + Gate Policy.
 - `examples/gate_decision/`: esempi JSON L1, L2, L3 approvato/non approvato, L4 e input ambiguo per il Gate Decision Report.
 - `examples/verification_profiles/`: esempi JSON per profili docs-only, code-unit, motor-core, publish, final-main, high-risk e ambiguous fail-closed.
