@@ -1,0 +1,36 @@
+{
+  "allow_no_github_checks_reported": true,
+  "allow_profile_check_reduction": false,
+  "branch": "step-0650-verification-profile-driven-publish-config-generator",
+  "bridge_root": "D:\\FG-SAB Dropbox\\Alberto Ferrari\\ChatGPT_Bridge\\AI_Software_Factory\\pwsh_command",
+  "changed_files": [
+    "scripts/asf_publish_config_generator.py",
+    "tests/unit/test_asf_publish_config_generator.py"
+  ],
+  "checks_already_run": [],
+  "commit_message": "0650 add verification profile driven publish config generator",
+  "expected_files": [
+    "scripts/asf_publish_config_generator.py",
+    "tests/unit/test_asf_publish_config_generator.py",
+    "docs/motor/0650_VERIFICATION_PROFILE_DRIVEN_PUBLISH_CONFIG_GENERATOR.md",
+    "examples/publish_config_generator/sample_docs_only_input.json",
+    "examples/publish_config_generator/sample_code_unit_input.json",
+    "examples/publish_config_generator/sample_motor_core_input.json",
+    "examples/publish_config_generator/sample_publish_runner_input.json",
+    "examples/publish_config_generator/sample_high_risk_fail_closed_input.json",
+    "examples/publish_config_generator/sample_missing_required_fields_fail_closed_input.json"
+  ],
+  "intent": [
+    "generate publish config draft"
+  ],
+  "log_max_count": 12,
+  "name": "Verification_Profile_Driven_Publish_Config_Generator",
+  "next_step": "0660) Publish Config Generator Bridge Output Integration",
+  "pr_body": "Implements STEP 0650. The generator creates a reviewed publish config draft and keeps publish runner approvals separate.",
+  "pr_title": "0650 add verification profile driven publish config generator",
+  "provided_gates": [],
+  "repo_path": ".",
+  "risk_level": "L2",
+  "step": "0650",
+  "verification_phase": "local"
+}

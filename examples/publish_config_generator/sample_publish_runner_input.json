@@ -1,0 +1,29 @@
+{
+  "allow_no_github_checks_reported": true,
+  "allow_profile_check_reduction": false,
+  "branch": "step-0650-publish-runner-config-example",
+  "bridge_root": "D:\\FG-SAB Dropbox\\Alberto Ferrari\\ChatGPT_Bridge\\AI_Software_Factory\\pwsh_command",
+  "changed_files": [
+    "scripts/asf_publish_step.ps1",
+    "tests/unit/test_asf_publish_step_runner.py"
+  ],
+  "checks_already_run": [],
+  "commit_message": "0650 demonstrate publish runner config input",
+  "expected_files": [
+    "scripts/asf_publish_step.ps1",
+    "tests/unit/test_asf_publish_step_runner.py"
+  ],
+  "intent": [
+    "publish runner profile validation update"
+  ],
+  "log_max_count": 12,
+  "name": "Publish_Runner_Config_Profile_Input",
+  "next_step": "0660) Publish Config Generator Bridge Output Integration",
+  "pr_body": "Example input for a publish-runner-adjacent config draft.",
+  "pr_title": "0650 publish runner config profile example",
+  "provided_gates": [],
+  "repo_path": ".",
+  "risk_level": "L2",
+  "step": "0650",
+  "verification_phase": "local"
+}

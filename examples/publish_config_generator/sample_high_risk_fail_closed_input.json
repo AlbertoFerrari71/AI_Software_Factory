@@ -1,0 +1,27 @@
+{
+  "allow_no_github_checks_reported": true,
+  "allow_profile_check_reduction": false,
+  "branch": "step-0650-high-risk-example",
+  "bridge_root": "D:\\FG-SAB Dropbox\\Alberto Ferrari\\ChatGPT_Bridge\\AI_Software_Factory\\pwsh_command",
+  "changed_files": [
+    "README.md"
+  ],
+  "checks_already_run": [],
+  "commit_message": "0650 high risk example",
+  "expected_files": [
+    "README.md"
+  ],
+  "intent": [
+    "deploy to production"
+  ],
+  "log_max_count": 12,
+  "name": "Publish_Config_Generator_High_Risk_Fail_Closed",
+  "next_step": "0660) Publish Config Generator Bridge Output Integration",
+  "pr_body": "High-risk example that must not produce an ordinary publish config.",
+  "pr_title": "0650 high-risk fail-closed example",
+  "provided_gates": [],
+  "repo_path": ".",
+  "risk_level": "L4",
+  "step": "0650",
+  "verification_phase": "local"
+}

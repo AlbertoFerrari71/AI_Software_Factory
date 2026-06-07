@@ -229,10 +229,16 @@ Lo STEP 0640 ha collegato il selector 0630 al publish runner 0590 come validazio
 
 Il Gate Decision Report resta separato: non importa ancora direttamente il selector e non esegue publish.
 
-## 12. Prossimo step
+## 12. Aggiornamento dopo STEP 0650
+
+Lo STEP 0650 ha aggiunto il Publish Config Generator come componente separato dal Gate Decision Report.
+
+Il Gate Decision Report continua a produrre un Approval Packet umano. Il generator consuma invece rischio, scope e profilo per preparare una bozza config del publish runner, senza eseguire pubblicazione.
+
+## 13. Prossimo step
 
 ```text
-0650) Verification Profile Driven Publish Config Generator
+0660) Publish Config Generator Bridge Output Integration
 ```
 
-Motivo: dopo avere validazione profilo nel runner, ASF puo' ridurre errore manuale generando bozze config coerenti con selector, rischio e scope, senza pubblicare automaticamente.
+Motivo: dopo avere generato bozze config, serve archiviare input/output e riepilogo in modo tracciabile senza confonderli con approval o pubblicazione.

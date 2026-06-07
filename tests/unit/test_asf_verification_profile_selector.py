@@ -64,6 +64,7 @@ def test_code_unit_profile_is_recognized_for_non_core_python_and_test() -> None:
 def test_motor_core_profile_is_recognized_for_runner_gate_risk_and_workflow_files() -> None:
     for path in [
         "scripts/asf_publish_step.ps1",
+        "scripts/asf_publish_config_generator.py",
         "scripts/asf_dry_run_loop_runner.py",
         "scripts/asf_risk_classifier.py",
         "scripts/asf_gate_decision_report.py",

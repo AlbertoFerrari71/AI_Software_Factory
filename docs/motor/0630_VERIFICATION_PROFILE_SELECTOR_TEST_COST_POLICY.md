@@ -217,10 +217,28 @@ examples/publish_step/0640_publish_config_*.example.json
 
 La logica profili resta in questo selector. Il runner la usa per validare config esplicite e bloccare profili dichiarati piu' leggeri della raccomandazione.
 
-## 14. Prossimo step
+## 14. Stato dopo STEP 0650
+
+Lo STEP 0650 ha introdotto il Publish Config Generator:
 
 ```text
-0650) Verification Profile Driven Publish Config Generator
+scripts/asf_publish_config_generator.py
+docs/motor/0650_VERIFICATION_PROFILE_DRIVEN_PUBLISH_CONFIG_GENERATOR.md
+examples/publish_config_generator/
 ```
 
-Motivo: il runner ora puo' validare profili dichiarati, ma le config publish restano manuali. Il passo piu' utile e' produrre bozze config coerenti con rischio, file modificati e profilo raccomandato.
+Il generator consuma il selector senza copiarne la logica completa. Per prudenza, `scripts/asf_publish_config_generator.py` e' classificato come `motor-core`, perche' influenza le config usate dal Publish Runner.
+
+## 15. Prossimo step
+
+## 15. Stato dopo STEP 0660
+
+Il selector resta la fonte deterministica della raccomandazione profilo.
+
+Lo STEP 0660 ha aggiunto al Publish Config Generator un Bridge audit dedicato con `LAST-Publish_Config.json` e validazione `-Phase Plan` opt-in.
+
+Il prossimo step consigliato e':
+
+```text
+0670) Step Execution State Machine
+```

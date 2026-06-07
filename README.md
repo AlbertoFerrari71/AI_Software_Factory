@@ -1,7 +1,7 @@
 # AI Software Factory
 
 **Metodo interno:** Codex Alchemy Method
-**Stato:** STEP 0640 - Verification Profile Integration with Publish Runner
+**Stato:** STEP 0660 - Publish Config Generator Bridge Output Integration
 **Data bootstrap:** 2026-05-25
 **Strategia:** local-first personale, progettato per evoluzione SaaS
 
@@ -28,7 +28,7 @@ Il metodo interno si chiama **Codex Alchemy Method**: l'idea grezza viene trasfo
 
 ## 2. Stato repository
 
-Questo repository e' nello stato **STEP 0640 - Verification Profile Integration with Publish Runner**.
+Questo repository e' nello stato **STEP 0660 - Publish Config Generator Bridge Output Integration**.
 
 Sono presenti:
 
@@ -65,6 +65,8 @@ Sono presenti:
 - Gate Decision Report che trasforma risk report e check evidence in un Approval Packet umano JSON/Markdown/testo, fail-closed e senza azioni operative.
 - Verification Profile Selector che suggerisce profili `docs-only`, `code-unit`, `motor-core`, `publish`, `final-main` e `high-risk` per bilanciare risultato, velocita', costo e rischio.
 - integrazione del Verification Profile Selector nel Publish Runner, con validazione opzionale delle config profilo, fail-closed su mismatch e Phase B/Phase C ancora human-gated.
+- Publish Config Generator guidato dal Verification Profile Selector, che produce bozze JSON/Markdown per il runner senza eseguire publish, merge o altre azioni operative.
+- output Bridge dedicato del Publish Config Generator in `publish_config`, con artifact progressivi, `LAST-Publish_Config.json`, riepilogo compatto, output completo e validazione `-Phase Plan` opt-in.
 
 Non sono ancora presenti:
 
@@ -352,6 +354,8 @@ docs/motor/0620_GATE_DECISION_REPORT_HUMAN_APPROVAL_PACKET.md
 docs/motor/0620_VERIFICATION_BALANCE_NOTES.md
 docs/motor/0630_VERIFICATION_PROFILE_SELECTOR_TEST_COST_POLICY.md
 docs/motor/0640_VERIFICATION_PROFILE_INTEGRATION_PUBLISH_RUNNER.md
+docs/motor/0650_VERIFICATION_PROFILE_DRIVEN_PUBLISH_CONFIG_GENERATOR.md
+docs/motor/0660_PUBLISH_CONFIG_GENERATOR_BRIDGE_OUTPUT_INTEGRATION.md
 ```
 
 ---
@@ -410,7 +414,7 @@ policies/path_policy.v0.json
 ## 11. Prossimo step
 
 ```text
-0650) Verification Profile Driven Publish Config Generator
+0670) Step Execution State Machine
 ```
 
-Obiettivo: generare una bozza config publish coerente con profilo, rischio e file modificati, mantenendo review umana e pubblicazione tramite runner separata.
+Obiettivo: modellare stati, transizioni, stop condition e ripresa controllata del ciclo step, usando anche `LAST-Publish_Config.json` senza rendere automatica la pubblicazione.

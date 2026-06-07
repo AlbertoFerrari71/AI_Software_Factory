@@ -2282,6 +2282,57 @@ Il prossimo step consigliato resta:
 
 ---
 
+## DEC-079 - Publish Config Generator Bridge Output separato dal Publish Runner
+
+**Data:** 2026-06-07
+**Stato:** Accettata
+
+### Contesto
+
+Lo STEP 0650 ha introdotto un generator locale di config publish, ma l'output era limitato a `tmp/` o a una directory `--out-dir`.
+
+Per l'uso operativo di Alberto/ChatGPT serve un pacchetto recuperabile dal Bridge senza confonderlo con gli output del runner di pubblicazione.
+
+### Decisione
+
+Estendere `scripts/asf_publish_config_generator.py` con output Bridge opt-in tramite `--write-bridge`.
+
+Il Bridge dedicato del generator e':
+
+```text
+D:\FG-SAB Dropbox\Alberto Ferrari\ChatGPT_Bridge\AI_Software_Factory\publish_config
+```
+
+Il Bridge operativo del publish runner resta:
+
+```text
+D:\FG-SAB Dropbox\Alberto Ferrari\ChatGPT_Bridge\AI_Software_Factory\pwsh_command
+```
+
+Il generator produce file progressivi `step-II` e `LAST-*`, inclusi `LAST-Publish_Config.json`, riepilogo compatto e output completo.
+
+### Motivazione
+
+La separazione mantiene chiara la differenza tra config draft, audit della generazione e pubblicazione effettiva.
+
+`LAST-Publish_Config.json` riduce il copia/incolla manuale, ma non autorizza Phase B o Phase C.
+
+### Conseguenze
+
+Phase B resta manuale e richiede `-ApprovePublish`.
+
+Phase C resta manuale e richiede `-ApproveMerge` e numero PR.
+
+La validazione `--validate-plan` puo' invocare solo `-Phase Plan`; fallimenti Plan bloccano il generator con errore non-zero.
+
+Il prossimo step consigliato e':
+
+```text
+0670) Step Execution State Machine
+```
+
+---
+
 ## DEC-078 - Verification Profile Integration with Publish Runner
 
 **Data:** 2026-06-07
@@ -2560,6 +2611,49 @@ Il prossimo step consigliato e':
 
 ---
 
+## DEC-075 - Publish config generator come configuratore non operativo
+
+**Data:** 2026-06-07
+**Stato:** Accettata
+
+### Contesto
+
+Lo STEP 0640 ha permesso al Publish Runner di validare profili di verifica dichiarati usando il selector 0630.
+
+Rimaneva pero' una superficie manuale fragile: la scrittura delle config JSON per `scripts/asf_publish_step.ps1`, inclusi check Phase A/Phase C, scope file, profilo dichiarato e campi selector.
+
+### Decisione
+
+Introdurre `scripts/asf_publish_config_generator.py` come generatore locale di bozze config publish.
+
+Il generatore:
+
+- usa il selector 0630 come fonte della raccomandazione;
+- produce config JSON e riepilogo Markdown;
+- tratta il nuovo generator come superficie `motor-core`;
+- blocca input mancanti, L4, `high-risk`, `final-main` e selector fail-closed;
+- mantiene Phase C robusta;
+- non esegue il publish runner;
+- non autorizza azioni GitHub o deploy.
+
+### Motivazione
+
+La config publish deve essere ripetibile e validabile, ma la pubblicazione resta un atto operativo separato e human-gated.
+
+Separare generator, review e runner evita di trasformare una bozza config in una autorizzazione implicita.
+
+### Conseguenze
+
+Lo STEP 0650 riduce errori manuali e ridondanze nella preparazione della config, ma non chiude il tema dell'audit trail Bridge dedicato al generator.
+
+Il prossimo step consigliato e':
+
+```text
+0660) Publish Config Generator Bridge Output Integration
+```
+
+---
+
 ## DEC-072 - Dry-run Loop Runner locale
 
 **Data:** 2026-06-07
@@ -2644,9 +2738,9 @@ La roadmap prioritaria diventa:
 0610 Risk Classifier Integration with Dry-run Loop Runner
 0620 Gate Decision Report and Human Approval Packet
 0630 Verification Profile Selector + Test Cost Policy
-0640 Controlled Codex Executor
-0650 First End-to-End Dry Run
-0660 First Controlled Write Pilot
+0640 Verification Profile Integration with Publish Runner
+0650 Verification Profile Driven Publish Config Generator
+0660 Publish Config Generator Bridge Output Integration
 ```
 
 Nuovi step di meta-processo, naming, packaging, validazioni strict o guardrail isolati restano congelati finche' il motore non completa almeno un giro end-to-end dry-run.
