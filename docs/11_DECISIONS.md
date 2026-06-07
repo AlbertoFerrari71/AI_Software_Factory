@@ -2282,6 +2282,54 @@ Il prossimo step consigliato resta:
 
 ---
 
+## DEC-086 - End-to-End MVP Closure Pack con GO WITH WARNINGS
+
+**Data:** 2026-06-07
+**Stato:** Accettata
+
+### Contesto
+
+Dopo STEP 0720 il Motore ASF MVP ha componenti, smoke, manifest, state
+machine, generator, publish runner e runbook operativo. Mancava una chiusura
+formale che distinguesse baseline completata, warning noti, aree simulate e
+lavoro post-MVP.
+
+### Decisione
+
+Lo STEP 0730 introduce `docs/motor/0730_END_TO_END_MVP_CLOSURE_PACK.md`.
+
+Il closure pack:
+
+- dichiara il perimetro MVP;
+- elenca componenti inclusi ed esclusi;
+- riepiloga evidenze principali e storia PR #51-#64 verificata da log locale;
+- definisce criteri GO, WARNING e NO-GO;
+- descrive stato gate, test, Bridge, state machine e manifest;
+- chiude il MVP con decisione prudente `MVP STATUS: GO WITH WARNINGS`;
+- raccomanda `0740) MVP Real Step Pilot` come passo post-MVP.
+
+### Motivazione
+
+Prima di aggiungere hook automatici o nuove integrazioni, il Motore deve avere
+una baseline auditabile e condivisa. La chiusura con warning evita di
+confondere uno smoke sintetico con un pilot reale e mantiene espliciti i gate
+umani.
+
+### Conseguenze
+
+- Il MVP Motore e' usabile come baseline locale, human-gated e verificabile.
+- Smoke sintetico, recovery manuale, `LAST-*` da controllare, GitHub non
+  automatico e hook runner/state machine incompleti restano warning noti.
+- Nessuna Phase B, Phase C, commit, push, PR, merge o deploy viene introdotto
+  dal closure pack.
+- Il prossimo step consigliato e':
+
+```text
+0740) MVP Real Step Pilot
+```
+
+---
+
 ## DEC-085 - MVP Usage Runbook come procedura operativa human-gated
 
 **Data:** 2026-06-07

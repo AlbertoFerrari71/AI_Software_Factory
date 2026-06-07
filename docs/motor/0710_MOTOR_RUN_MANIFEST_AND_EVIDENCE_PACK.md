@@ -178,3 +178,14 @@ Lo STEP 0720 aggiunge il runbook d'uso operativo che collega smoke, manifest, st
 0730) End-to-End MVP Closure Pack
 
 Motivo: dopo il runbook 0720, conviene chiudere formalmente il MVP Motore con un closure pack end-to-end prima di aggiungere hook automatici al runner.
+
+## 11. Riferimento closure pack
+
+Lo STEP 0730 chiude formalmente il MVP Motore in:
+
+```text
+docs/motor/0730_END_TO_END_MVP_CLOSURE_PACK.md
+```
+
+Il manifest 0710 resta una delle evidenze principali del closure pack. La sua
+decisione non sostituisce approval umana, Phase B o Phase C.

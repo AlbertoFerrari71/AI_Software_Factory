@@ -4,6 +4,31 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.73.0] - 2026-06-07
+
+### Added
+
+- STEP 0730 - End-to-End MVP Closure Pack.
+- Documento `docs/motor/0730_END_TO_END_MVP_CLOSURE_PACK.md` con perimetro MVP, componenti inclusi/esclusi, evidenze, criteri GO/WARNING/NO-GO, stato gate/test/Bridge/state machine/manifest e rischi residui.
+- Decisione prudente `MVP STATUS: GO WITH WARNINGS` per chiudere il Motore ASF MVP come baseline usabile, locale, human-gated e verificabile.
+
+### Changed
+
+- README, roadmap, decision log, Project Workflow Index, Workflow Health Check e roadmap motore riconoscono lo STEP 0730.
+- Lo stato MVP Motore passa da procedura operativa documentata a baseline formalmente chiusa con warning espliciti.
+
+### Guardrails
+
+- Nessuna nuova automazione operativa introdotta.
+- Phase B e Phase C restano human-gated tramite `-ApprovePublish` e `-ApproveMerge`.
+- Smoke sintetico, hook manuali e pilot reale non ancora eseguito restano warning, non successo pieno.
+
+### Next
+
+- Prossimo step consigliato: `0740) MVP Real Step Pilot`.
+
+---
+
 ## [0.72.0] - 2026-06-07
 
 ### Added
