@@ -4,6 +4,39 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.58.0] - 2026-06-07
+
+### Added
+
+- STEP 0580 - Dry-run Loop Runner.
+- Script `scripts/asf_dry_run_loop_runner.py`.
+- Runbook `docs/motor/0580_DRY_RUN_LOOP_RUNNER.md`.
+- Esempi JSON `examples/dry_run_loop/step_0580_simulated_request.json` e `examples/dry_run_loop/step_0580_execution_plan.json`.
+- Test `tests/unit/test_asf_dry_run_loop_runner.py`.
+
+### Changed
+
+- Il MVP Motore passa da roadmap documentale a primo ciclo dry-run locale.
+- Aggiornati README, roadmap, decision log, Project Workflow Index e Workflow Health Check con il runner 0580.
+- Il prossimo step consigliato diventa `0590) Risk Classifier + Gate Policy`.
+
+### Guardrails
+
+- Nessuna chiamata live a provider esterni.
+- Nessun secret o API key richiesto o letto.
+- Output runtime sotto `tmp/asf_dry_run_loop/`.
+- Nessun write sul repository target da parte del runner.
+- Nessun commit, push, PR, merge, deploy o release.
+
+### Not included
+
+- Nessun Risk Classifier completo: rimandato allo STEP 0590.
+- Nessun Independent Review Node separato: rimandato allo STEP 0600.
+- Nessun Controlled Codex Executor: rimandato allo STEP 0610.
+- Nessun first controlled write pilot: rimandato allo STEP 0630.
+
+---
+
 ## [0.57.0] - 2026-06-07
 
 ### Added

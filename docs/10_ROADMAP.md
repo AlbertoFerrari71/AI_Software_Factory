@@ -1326,3 +1326,33 @@ Correggere la rotta strategica di ASF da autonomia fire-and-forget ad autonomia 
 ### Prossimo step consigliato
 
 0580) Dry-run Loop Runner
+
+---
+
+## 65. STEP 580 - Dry-run Loop Runner
+
+### Obiettivo
+
+Creare il primo runner locale del MVP Motore che attraversa il loop supervisionato a gate in modalita' dry-run, senza chiamate live, senza secret, senza write sul repository target e senza pubblicazione Git.
+
+### Output realizzati
+
+- script `scripts/asf_dry_run_loop_runner.py`;
+- runbook `docs/motor/0580_DRY_RUN_LOOP_RUNNER.md`;
+- esempi JSON `examples/dry_run_loop/step_0580_simulated_request.json` e `examples/dry_run_loop/step_0580_execution_plan.json`;
+- artifact runtime strutturati sotto `tmp/asf_dry_run_loop/<project>/step_<step>/`;
+- attraversamento degli stati `PLAN_NEXT_STEP`, `BUILD_TASK_PACKET`, `RISK_CLASSIFY`, `EXECUTE_DRY_OR_WRITE`, `RUN_TESTS`, `INDEPENDENT_REVIEW`, `GATE_DECISION`, `COMMIT_OR_HOLD`;
+- decisione finale `NEEDS_HUMAN` oppure `FAIL`;
+- test automatici `tests/unit/test_asf_dry_run_loop_runner.py`.
+
+### Guardrail
+
+- nessuna chiamata live OpenAI o provider esterni;
+- nessun secret/API key;
+- nessun write sul repository target;
+- nessun commit, push, PR, merge, deploy o release;
+- risk classifier e review restano minimi, locali e fail-closed.
+
+### Prossimo step consigliato
+
+0590) Risk Classifier + Gate Policy

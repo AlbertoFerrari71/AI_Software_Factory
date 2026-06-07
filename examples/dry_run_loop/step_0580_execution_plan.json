@@ -1,0 +1,78 @@
+{
+  "external_provider_calls": false,
+  "git_publication_actions": false,
+  "mode": "dry-run",
+  "plan_id": "step-0580-dry-run-loop-plan",
+  "states": [
+    {
+      "actions": [
+        "load_request",
+        "read_target_git_snapshot"
+      ],
+      "checkpoint": "request_loaded",
+      "state": "PLAN_NEXT_STEP"
+    },
+    {
+      "actions": [
+        "generate_dry_run_task_packet",
+        "write_manifest"
+      ],
+      "checkpoint": "task_packet_generated",
+      "state": "BUILD_TASK_PACKET"
+    },
+    {
+      "actions": [
+        "classify_local_dry_run_risk",
+        "block_live_or_publication_actions"
+      ],
+      "checkpoint": "risk_report_generated",
+      "state": "RISK_CLASSIFY"
+    },
+    {
+      "actions": [
+        "write_inert_execution_preview",
+        "do_not_modify_target_repo"
+      ],
+      "checkpoint": "dry_run_preview_generated",
+      "state": "EXECUTE_DRY_OR_WRITE"
+    },
+    {
+      "actions": [
+        "record_required_checks_without_running_target_mutations"
+      ],
+      "checkpoint": "test_plan_report_generated",
+      "checks": [
+        "python -m pytest",
+        "python scripts/check_workflow_health.py",
+        "pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1",
+        "git --no-pager diff --check",
+        "git --no-pager status --short"
+      ],
+      "state": "RUN_TESTS"
+    },
+    {
+      "actions": [
+        "verify_artifacts",
+        "verify_target_status_unchanged"
+      ],
+      "checkpoint": "review_generated",
+      "state": "INDEPENDENT_REVIEW"
+    },
+    {
+      "actions": [
+        "decide_needs_human_or_fail"
+      ],
+      "checkpoint": "gate_decision_generated",
+      "state": "GATE_DECISION"
+    },
+    {
+      "actions": [
+        "hold_for_human_review",
+        "do_not_publish"
+      ],
+      "checkpoint": "final_hold_report_generated",
+      "state": "COMMIT_OR_HOLD"
+    }
+  ],
+  "writes_target_repo": false
+}
