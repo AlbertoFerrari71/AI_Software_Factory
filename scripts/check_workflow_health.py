@@ -96,6 +96,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/motor/0660_PUBLISH_CONFIG_GENERATOR_BRIDGE_OUTPUT_INTEGRATION.md",
         "docs/motor/0670_STEP_EXECUTION_STATE_MACHINE.md",
         "docs/motor/0680_STATE_MACHINE_BRIDGE_INTEGRATION.md",
+        "docs/motor/0690_STATE_MACHINE_INTEGRATION_WITH_PUBLISH_CONFIG_GENERATOR.md",
         "config/asf_project_profiles.json",
         "scripts/asf_openai_api_adapter.py",
         "scripts/asf_openai_controlled_live_execution_pack.py",
@@ -182,12 +183,14 @@ def check_files(root: Path) -> list[HealthIssue]:
         "examples/publish_config_generator/sample_motor_core_input.json",
         "examples/publish_config_generator/sample_publish_runner_input.json",
         "examples/publish_config_generator/sample_bridge_output_input.json",
+        "examples/publish_config_generator/sample_state_machine_integration_input.json",
         "examples/publish_config_generator/sample_high_risk_fail_closed_input.json",
         "examples/publish_config_generator/sample_missing_required_fields_fail_closed_input.json",
         "examples/state_machine/sample_normal_flow_events.json",
         "examples/state_machine/sample_phase_c_failed_recovery.json",
         "examples/state_machine/sample_combined_recovery_step.json",
         "examples/state_machine/sample_invalid_transition_fail_closed.json",
+        "examples/state_machine/sample_local_verified_state.json",
         "tests/unit/test_asf_verification_profile_selector.py",
         "tests/unit/test_asf_publish_step_runner.py",
         "tests/unit/test_asf_publish_config_generator.py",
@@ -395,8 +398,16 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                 ["docs/motor/0680_STATE_MACHINE_BRIDGE_INTEGRATION.md"],
             ),
             (
+                "ASF State Machine Publish Config Generator Integration document",
+                ["docs/motor/0690_STATE_MACHINE_INTEGRATION_WITH_PUBLISH_CONFIG_GENERATOR.md"],
+            ),
+            (
                 "ASF State Machine Bridge Integration pointers",
                 ["LAST-State.json", "LAST-Output_Compatto.md", "state_machine"],
+            ),
+            (
+                "ASF State Machine Publish Config Generator Integration pointers",
+                ["LAST-Publish_Config.json", "LAST-State.json", "--update-state"],
             ),
             (
                 "ASF Publish Config Generator script",
@@ -411,8 +422,16 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                 ["examples/publish_config_generator/"],
             ),
             (
+                "ASF Publish Config Generator State Machine integration example",
+                ["sample_state_machine_integration_input.json"],
+            ),
+            (
                 "ASF Step Execution State Machine examples",
                 ["examples/state_machine/"],
+            ),
+            (
+                "ASF State Machine local verified example",
+                ["sample_local_verified_state.json"],
             ),
             (
                 "artifact naming migration script",

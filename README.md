@@ -1,7 +1,7 @@
 # AI Software Factory
 
 **Metodo interno:** Codex Alchemy Method
-**Stato:** STEP 0680 - State Machine Bridge Integration
+**Stato:** STEP 0690 - State Machine Integration with Publish Config Generator
 **Data bootstrap:** 2026-05-25
 **Strategia:** local-first personale, progettato per evoluzione SaaS
 
@@ -28,7 +28,7 @@ Il metodo interno si chiama **Codex Alchemy Method**: l'idea grezza viene trasfo
 
 ## 2. Stato repository
 
-Questo repository e' nello stato **STEP 0680 - State Machine Bridge Integration**.
+Questo repository e' nello stato **STEP 0690 - State Machine Integration with Publish Config Generator**.
 
 Sono presenti:
 
@@ -69,6 +69,7 @@ Sono presenti:
 - output Bridge dedicato del Publish Config Generator in `publish_config`, con artifact progressivi, `LAST-Publish_Config.json`, riepilogo compatto, output completo e validazione `-Phase Plan` opt-in.
 - Step Execution State Machine locale, con stati/eventi ASF, transizioni fail-closed, persistenza JSON sotto `tmp/` e output JSON/Markdown/testo senza eseguire Phase B/C o Git/GitHub.
 - State Machine Bridge Integration in `state_machine`, con `LAST-State.json`, `LAST-Event.json`, output compatto/completo e file progressivi senza usare Dropbox reale nei test.
+- integrazione opzionale tra Publish Config Generator e State Machine: il generator puo' leggere uno stato esistente, applicare `publish_config_generated`, aggiornare `LAST-State.json` e collegare `LAST-Publish_Config.json` senza pubblicare.
 
 Non sono ancora presenti:
 
@@ -360,6 +361,7 @@ docs/motor/0650_VERIFICATION_PROFILE_DRIVEN_PUBLISH_CONFIG_GENERATOR.md
 docs/motor/0660_PUBLISH_CONFIG_GENERATOR_BRIDGE_OUTPUT_INTEGRATION.md
 docs/motor/0670_STEP_EXECUTION_STATE_MACHINE.md
 docs/motor/0680_STATE_MACHINE_BRIDGE_INTEGRATION.md
+docs/motor/0690_STATE_MACHINE_INTEGRATION_WITH_PUBLISH_CONFIG_GENERATOR.md
 ```
 
 ---
@@ -418,7 +420,7 @@ policies/path_policy.v0.json
 ## 11. Prossimo step
 
 ```text
-0690) State Machine Integration with Publish Config Generator
+0700) End-to-End MVP Smoke Scenario
 ```
 
-Obiettivo: collegare la state machine persistente nel Bridge alle bozze del Publish Config Generator, mantenendo review umana, Phase B/C esplicite e nessuna pubblicazione automatica.
+Obiettivo: validare un percorso MVP locale end-to-end con generator, state machine, Bridge temporaneo e smoke controllato, mantenendo review umana, Phase B/C esplicite e nessuna pubblicazione automatica.

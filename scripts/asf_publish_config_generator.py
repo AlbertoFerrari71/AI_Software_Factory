@@ -73,6 +73,7 @@ INDEXED_DOCS = {
     "docs/motor/0660_PUBLISH_CONFIG_GENERATOR_BRIDGE_OUTPUT_INTEGRATION.md",
     "docs/motor/0670_STEP_EXECUTION_STATE_MACHINE.md",
     "docs/motor/0680_STATE_MACHINE_BRIDGE_INTEGRATION.md",
+    "docs/motor/0690_STATE_MACHINE_INTEGRATION_WITH_PUBLISH_CONFIG_GENERATOR.md",
 }
 
 CONFIG_DRAFT_INTENT_PATTERNS = (
@@ -115,6 +116,31 @@ class GenerationResult:
     errors: tuple[str, ...]
     config_path: Path | None = None
     summary_path: Path | None = None
+
+
+@dataclass(frozen=True)
+class PreparedGeneration:
+    data: GeneratorInput | None
+    selector_packet: dict[str, Any] | None
+    config: dict[str, Any] | None
+    warnings: tuple[str, ...]
+    errors: tuple[str, ...]
+
+
+@dataclass(frozen=True)
+class StateIntegrationResult:
+    enabled: bool = False
+    state_file: Path | None = None
+    state_bridge_root: Path | None = None
+    state_before: str = ""
+    state_after: str = ""
+    event: str = ""
+    allowed: bool | None = None
+    fail_closed: bool = False
+    packet: dict[str, Any] | None = None
+    bridge_files: tuple[Path, ...] = ()
+    warnings: tuple[str, ...] = ()
+    errors: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -219,6 +245,17 @@ def load_selector_module() -> Any:
     spec = importlib.util.spec_from_file_location("asf_verification_profile_selector", selector_path)
     if spec is None or spec.loader is None:
         raise ValueError(f"Unable to load selector module: {selector_path}")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def load_state_machine_module() -> Any:
+    state_machine_path = Path(__file__).with_name("asf_step_state_machine.py")
+    spec = importlib.util.spec_from_file_location("asf_step_state_machine", state_machine_path)
+    if spec is None or spec.loader is None:
+        raise ValueError(f"Unable to load state machine module: {state_machine_path}")
     module = importlib.util.module_from_spec(spec)
     sys.modules[spec.name] = module
     spec.loader.exec_module(module)
@@ -532,6 +569,308 @@ def validate_generation(data: GeneratorInput, selector_packet: dict[str, Any]) -
     return errors
 
 
+def state_options_active(args: argparse.Namespace) -> bool:
+    return any(
+        [
+            bool(args.state_file),
+            bool(args.state_bridge_root),
+            bool(args.state_event),
+            bool(args.update_state),
+            bool(args.require_state),
+            bool(args.state_expected_current),
+            bool(args.state_target_after),
+            bool(args.write_state_bridge),
+            bool(args.state_allow_recovery),
+        ]
+    )
+
+
+def split_state_values(values: list[str] | None) -> list[str]:
+    items: list[str] = []
+    for value in values or []:
+        for part in str(value).split(","):
+            text = compact_string(part)
+            if text:
+                items.append(text.upper())
+    return dedupe(items)
+
+
+def state_file_from_generator_args(args: argparse.Namespace, state_machine: Any) -> Path | None:
+    if args.state_file:
+        return Path(args.state_file)
+    if args.state_bridge_root:
+        return Path(args.state_bridge_root) / "LAST-State.json"
+    if args.write_state_bridge:
+        return Path(state_machine.DEFAULT_STATE_MACHINE_BRIDGE_ROOT) / "LAST-State.json"
+    return None
+
+
+def target_state_for_event(args: argparse.Namespace, event: str) -> str:
+    target = compact_string(args.state_target_after).upper()
+    if event in {"recovery_completed", "manual_unblock"}:
+        return target
+    return ""
+
+
+def expected_state_after(args: argparse.Namespace, event: str) -> str:
+    declared = compact_string(args.state_target_after).upper()
+    if declared:
+        return declared
+    if args.update_state:
+        return "READY_TO_PUBLISH"
+    return ""
+
+
+def default_allowed_current_states(args: argparse.Namespace) -> set[str]:
+    allowed = {"LOCAL_VERIFIED", "READY_TO_PUBLISH"}
+    if args.state_allow_recovery:
+        allowed.add("RECOVERY_REQUIRED")
+    return allowed
+
+
+def validate_loaded_state_for_generation(
+    *,
+    data: GeneratorInput,
+    state: dict[str, Any],
+    args: argparse.Namespace,
+    state_machine: Any,
+) -> tuple[list[str], list[str]]:
+    warnings: list[str] = []
+    errors: list[str] = []
+    state_step = compact_string(state.get("step"))
+    current_state = state_machine.normalize_state(state.get("current_state"))
+
+    if state_step != data.step:
+        if state_machine.is_combined_step(state_step) and data.step in state_machine.step_parts(state_step):
+            if args.state_allow_recovery:
+                warnings.append(
+                    "State file step is combined and input step is one part; recovery/publication evidence must stay explicit."
+                )
+            else:
+                errors.append("State file uses a combined step but --state-allow-recovery was not provided.")
+        else:
+            errors.append(f"State file step {state_step or 'UNKNOWN'} does not match generator step {data.step}.")
+
+    if state_machine.is_combined_step(state_step or data.step) and not args.state_allow_recovery:
+        errors.append("Combined/recovery step detected but --state-allow-recovery was not provided.")
+
+    expected_current = split_state_values(args.state_expected_current)
+    if expected_current and current_state not in expected_current:
+        errors.append(
+            "State current_state "
+            f"{current_state or 'UNKNOWN'} does not match --state-expected-current {', '.join(expected_current)}."
+        )
+
+    allowed_current = default_allowed_current_states(args)
+    if current_state not in allowed_current:
+        errors.append(
+            "State current_state "
+            f"{current_state or 'UNKNOWN'} is not eligible for ready publish config generation."
+        )
+
+    if current_state == "RECOVERY_REQUIRED":
+        if args.state_allow_recovery:
+            warnings.append("Recovery state accepted only because --state-allow-recovery was declared.")
+        else:
+            errors.append("RECOVERY_REQUIRED state requires explicit --state-allow-recovery.")
+
+    return warnings, errors
+
+
+def state_bridge_args(
+    *,
+    args: argparse.Namespace,
+    data: GeneratorInput,
+    event: str,
+    target_state: str,
+) -> argparse.Namespace:
+    return argparse.Namespace(
+        step=data.step,
+        event=event,
+        state_file=str(args.state_file) if args.state_file else "",
+        initial_state="PLANNED",
+        target_state=target_state,
+        config_step=data.step,
+        branch=data.branch,
+        expected_branch=data.branch,
+        step_title=data.name,
+        next_step=data.next_step,
+        write_bridge=bool(args.write_state_bridge),
+        bridge_root=compact_string(args.state_bridge_root),
+        dry_run=False,
+        json=False,
+        markdown=False,
+    )
+
+
+def state_context_payload(context: StateIntegrationResult | None) -> dict[str, Any] | None:
+    if context is None or not context.enabled:
+        return None
+    return {
+        "enabled": context.enabled,
+        "state_file": str(context.state_file) if context.state_file else None,
+        "state_bridge_root": str(context.state_bridge_root) if context.state_bridge_root else None,
+        "state_before": context.state_before,
+        "event": context.event,
+        "state_after": context.state_after,
+        "allowed": context.allowed,
+        "fail_closed": context.fail_closed,
+        "warnings": list(context.warnings),
+        "errors": list(context.errors),
+        "bridge_files": [str(path) for path in context.bridge_files],
+        "packet": context.packet,
+    }
+
+
+def state_last_path(context: StateIntegrationResult | None) -> Path | None:
+    if context is None:
+        return None
+    for path in context.bridge_files:
+        if path.name == "LAST-State.json":
+            return path
+    if context.state_bridge_root:
+        return context.state_bridge_root / "LAST-State.json"
+    return None
+
+
+def apply_state_integration(
+    *,
+    data: GeneratorInput,
+    args: argparse.Namespace,
+    perform_update: bool,
+) -> StateIntegrationResult:
+    if not state_options_active(args):
+        return StateIntegrationResult()
+
+    warnings: list[str] = []
+    errors: list[str] = []
+    bridge_files: tuple[Path, ...] = ()
+    packet: dict[str, Any] | None = None
+    state_after = ""
+    event = compact_string(args.state_event) or ("publish_config_generated" if args.update_state else "")
+    try:
+        state_machine = load_state_machine_module()
+    except ValueError as exc:
+        return StateIntegrationResult(enabled=True, event=event, errors=(str(exc),), fail_closed=True)
+
+    state_bridge_root = Path(args.state_bridge_root or state_machine.DEFAULT_STATE_MACHINE_BRIDGE_ROOT)
+    state_file = state_file_from_generator_args(args, state_machine)
+    if state_file is None:
+        errors.append("--state-file or --state-bridge-root is required when state integration is enabled.")
+        return StateIntegrationResult(
+            enabled=True,
+            state_bridge_root=state_bridge_root,
+            event=event,
+            errors=tuple(errors),
+            fail_closed=True,
+        )
+
+    if not state_file.exists():
+        errors.append(f"State file required but missing: {state_file}")
+        return StateIntegrationResult(
+            enabled=True,
+            state_file=state_file,
+            state_bridge_root=state_bridge_root,
+            event=event,
+            errors=tuple(errors),
+            fail_closed=True,
+        )
+
+    try:
+        state_payload = json.loads(state_file.read_text(encoding="utf-8"))
+        state = state_machine.validate_state_payload(state_payload)
+    except json.JSONDecodeError as exc:
+        errors.append(f"State file is not valid JSON: {state_file}: {exc.msg}")
+        return StateIntegrationResult(
+            enabled=True,
+            state_file=state_file,
+            state_bridge_root=state_bridge_root,
+            event=event,
+            errors=tuple(errors),
+            fail_closed=True,
+        )
+    except (OSError, state_machine.StateFileError) as exc:
+        errors.append(f"State file could not be loaded: {state_file}: {exc}")
+        return StateIntegrationResult(
+            enabled=True,
+            state_file=state_file,
+            state_bridge_root=state_bridge_root,
+            event=event,
+            errors=tuple(errors),
+            fail_closed=True,
+        )
+
+    state_before = state_machine.normalize_state(state.get("current_state"))
+    validation_warnings, validation_errors = validate_loaded_state_for_generation(
+        data=data,
+        state=state,
+        args=args,
+        state_machine=state_machine,
+    )
+    warnings.extend(validation_warnings)
+    errors.extend(validation_errors)
+
+    if args.update_state:
+        normalized_event = state_machine.normalize_event(event or "publish_config_generated")
+        target_state = target_state_for_event(args, normalized_event)
+        packet, updated = state_machine.apply_event(
+            state,
+            event=normalized_event,
+            target_state=target_state,
+            config_step=data.step,
+            branch=data.branch,
+            expected_branch=data.branch,
+            state_file=state_file,
+        )
+        state_after = compact_string(packet.get("next_state"))
+        warnings.extend([str(item) for item in packet.get("warnings", [])])
+        if packet.get("fail_closed") or updated is None:
+            errors.extend([str(item) for item in packet.get("reasons", [])])
+        expected_after = expected_state_after(args, normalized_event)
+        if expected_after and state_after != expected_after:
+            errors.append(f"State after event is {state_after}; expected {expected_after}.")
+        if perform_update and not errors and updated is not None:
+            try:
+                state_machine.save_state(state_file, updated)
+                if args.write_state_bridge:
+                    bridge_args = state_bridge_args(
+                        args=args,
+                        data=data,
+                        event=normalized_event,
+                        target_state=target_state,
+                    )
+                    bridge_files = tuple(
+                        state_machine.write_bridge_outputs(
+                            packet=packet,
+                            state_for_bridge=updated,
+                            state_file=state_file,
+                            args=bridge_args,
+                        )
+                    )
+            except OSError as exc:
+                errors.append(f"State machine write failed: {exc}")
+    else:
+        normalized_event = state_machine.normalize_event(event) if event else ""
+        state_after = state_before
+        if args.write_state_bridge:
+            errors.append("--write-state-bridge requires --update-state so an event packet can be written.")
+
+    return StateIntegrationResult(
+        enabled=True,
+        state_file=state_file,
+        state_bridge_root=state_bridge_root,
+        state_before=state_before,
+        state_after=state_after,
+        event=normalized_event,
+        allowed=bool(packet.get("allowed")) if packet else None,
+        fail_closed=bool(errors) or bool(packet.get("fail_closed")) if packet else bool(errors),
+        packet=packet,
+        bridge_files=bridge_files,
+        warnings=tuple(dedupe(warnings)),
+        errors=tuple(dedupe(errors)),
+    )
+
+
 def render_summary(
     *,
     data: GeneratorInput | None,
@@ -539,6 +878,7 @@ def render_summary(
     config: dict[str, Any] | None,
     warnings: list[str],
     errors: list[str],
+    state_integration: StateIntegrationResult | None = None,
 ) -> str:
     step = data.step if data else "unknown"
     name = data.name if data else "unknown"
@@ -556,6 +896,18 @@ def render_summary(
     error_lines = "\n".join(f"- {item}" for item in errors) if errors else "- none"
     reasons = selector_packet.get("reasons", []) if selector_packet else []
     reason_lines = "\n".join(f"- {item}" for item in reasons) if reasons else "- none"
+    if state_integration and state_integration.enabled:
+        state_lines = "\n".join(
+            [
+                f"- state_file: `{state_integration.state_file}`",
+                f"- state_before: `{state_integration.state_before or 'unknown'}`",
+                f"- state_event: `{state_integration.event or 'none'}`",
+                f"- state_after: `{state_integration.state_after or 'unknown'}`",
+                f"- state_fail_closed: `{str(state_integration.fail_closed).lower()}`",
+            ]
+        )
+    else:
+        state_lines = "- not enabled"
 
     return f"""# Publish Config Generator Summary
 
@@ -585,6 +937,10 @@ def render_summary(
 
 {reason_lines}
 
+## State machine integration
+
+{state_lines}
+
 ## Warnings
 
 {warning_lines}
@@ -603,6 +959,7 @@ def write_outputs(
     selector_packet: dict[str, Any] | None,
     warnings: list[str],
     errors: list[str],
+    state_integration: StateIntegrationResult | None = None,
 ) -> tuple[Path | None, Path]:
     out_dir.mkdir(parents=True, exist_ok=True)
     step = data.step if data else "unknown"
@@ -618,6 +975,7 @@ def write_outputs(
         config=config,
         warnings=warnings,
         errors=errors,
+        state_integration=state_integration,
     )
     summary_path.write_text(summary, encoding="utf-8")
     return config_path, summary_path
@@ -804,13 +1162,30 @@ def render_bridge_compact(
     data: GeneratorInput | None,
     selector_packet: dict[str, Any] | None,
     config_path: Path | None,
+    last_publish_config_path: Path | None,
     warnings: list[str],
     errors: list[str],
     plan_validation: PlanValidationResult,
+    state_integration: StateIntegrationResult | None = None,
 ) -> str:
     profile = selector_packet.get("profile", "unknown") if selector_packet else "unknown"
     warning_lines = "\n".join(f"- {item}" for item in warnings) if warnings else "- none"
     error_lines = "\n".join(f"- {item}" for item in errors) if errors else "- none"
+    state_last = state_last_path(state_integration)
+    if state_integration and state_integration.enabled:
+        state_lines = "\n".join(
+            [
+                f"- State file used: `{state_integration.state_file}`",
+                f"- State before: `{state_integration.state_before or 'unknown'}`",
+                f"- Event applied: `{state_integration.event or 'none'}`",
+                f"- State after: `{state_integration.state_after or 'unknown'}`",
+                f"- LAST-State.json: `{state_last if state_last else 'not written'}`",
+                f"- LAST-Publish_Config.json: `{last_publish_config_path if last_publish_config_path else 'not generated'}`",
+                f"- Next action: `{state_integration.packet.get('recommended_next_action') if state_integration.packet else 'review state manually'}`",
+            ]
+        )
+    else:
+        state_lines = "- State machine integration not enabled."
     return f"""# ASF Publish Config Generator
 
 ## Summary
@@ -820,8 +1195,13 @@ def render_bridge_compact(
 - Verification profile: `{profile}`
 - Risk level: `{data.risk_level if data else "unknown"}`
 - Config path: `{str(config_path) if config_path else "not generated"}`
+- LAST-Publish_Config.json: `{str(last_publish_config_path) if last_publish_config_path else "not generated"}`
 - Next step: `{data.next_step if data else "unknown"}`
 - Plan validation: `{plan_validation.status}`
+
+## State Machine
+
+{state_lines}
 
 ## Phase B
 
@@ -868,6 +1248,7 @@ def render_bridge_full(
     generated_config_path: Path | None,
     generated_summary_path: Path | None,
     written_paths: dict[str, Path],
+    state_integration: StateIntegrationResult | None = None,
 ) -> str:
     phase_a = config.get("phase_a_checks", []) if config else []
     phase_c = config.get("phase_c_checks", []) if config else []
@@ -893,6 +1274,9 @@ def render_bridge_full(
             "",
             "Generated config:",
             json.dumps(config, indent=2, sort_keys=True),
+            "",
+            "State machine transition result:",
+            json.dumps(state_context_payload(state_integration), indent=2, sort_keys=True),
             "",
             "Warnings:",
             warning_lines,
@@ -922,6 +1306,7 @@ def write_bridge_outputs(
     generated_config_path: Path | None,
     generated_summary_path: Path | None,
     generator_command: str,
+    state_integration: StateIntegrationResult | None = None,
 ) -> dict[str, Path]:
     bridge_root.mkdir(parents=True, exist_ok=True)
     step = data.step if data else "unknown"
@@ -955,9 +1340,11 @@ def write_bridge_outputs(
         data=data,
         selector_packet=selector_packet,
         config_path=config_output_path,
+        last_publish_config_path=last_paths["last_config"] if config is not None else None,
         warnings=warnings,
         errors=errors,
         plan_validation=plan_validation,
+        state_integration=state_integration,
     )
     full_text = render_bridge_full(
         data=data,
@@ -969,6 +1356,7 @@ def write_bridge_outputs(
         generated_config_path=generated_config_path,
         generated_summary_path=generated_summary_path,
         written_paths=all_paths,
+        state_integration=state_integration,
     )
 
     numbered_paths["request"].write_text(request_text, encoding="utf-8")
@@ -1001,35 +1389,54 @@ def copy_compact_to_clipboard(path: Path) -> str | None:
     return None
 
 
-def generate(raw: dict[str, Any], *, out_dir: Path, strict_required: bool) -> GenerationResult:
-    warnings: list[str] = []
+def prepare_generation(
+    raw: dict[str, Any],
+    *,
+    strict_required: bool,
+    extra_warnings: tuple[str, ...] = (),
+    extra_errors: tuple[str, ...] = (),
+) -> PreparedGeneration:
+    warnings: list[str] = list(extra_warnings)
     try:
         data = build_input(raw, strict_required=strict_required)
         selector_packet = select_profile(data)
-        errors = validate_generation(data, selector_packet)
+        errors = list(extra_errors) + validate_generation(data, selector_packet)
         config = None if errors else build_publish_config(data, selector_packet, warnings)
     except ValueError as exc:
-        errors = [str(exc)]
-        config_path, summary_path = write_outputs(
-            out_dir=out_dir,
-            data=None,
-            config=None,
-            selector_packet=None,
-            warnings=warnings,
-            errors=errors,
-        )
-        return GenerationResult("blocked", None, None, tuple(warnings), tuple(errors), config_path, summary_path)
+        errors = list(extra_errors) + [str(exc)]
+        return PreparedGeneration(None, None, None, tuple(warnings), tuple(errors))
+    return PreparedGeneration(data, selector_packet, config, tuple(warnings), tuple(errors))
 
+
+def generate(
+    raw: dict[str, Any],
+    *,
+    out_dir: Path,
+    strict_required: bool,
+    state_integration: StateIntegrationResult | None = None,
+) -> GenerationResult:
+    prepared = prepare_generation(raw, strict_required=strict_required)
+    warnings = list(prepared.warnings)
+    errors = list(prepared.errors)
     config_path, summary_path = write_outputs(
         out_dir=out_dir,
-        data=data,
-        config=config,
-        selector_packet=selector_packet,
+        data=prepared.data,
+        config=prepared.config,
+        selector_packet=prepared.selector_packet,
         warnings=warnings,
         errors=errors,
+        state_integration=state_integration,
     )
     status = "blocked" if errors else "ok"
-    return GenerationResult(status, config, selector_packet, tuple(warnings), tuple(errors), config_path, summary_path)
+    return GenerationResult(
+        status,
+        prepared.config,
+        prepared.selector_packet,
+        tuple(warnings),
+        tuple(errors),
+        config_path,
+        summary_path,
+    )
 
 
 def result_payload(result: GenerationResult) -> dict[str, Any]:
@@ -1044,6 +1451,7 @@ def result_payload_with_context(
     errors: list[str] | None = None,
     bridge_paths: dict[str, Path] | None = None,
     plan_validation: PlanValidationResult | None = None,
+    state_integration: StateIntegrationResult | None = None,
 ) -> dict[str, Any]:
     return {
         "status": status or result.status,
@@ -1055,6 +1463,7 @@ def result_payload_with_context(
         "errors": errors if errors is not None else list(result.errors),
         "bridge_paths": {key: str(path) for key, path in bridge_paths.items()} if bridge_paths else {},
         "plan_validation": plan_validation_payload(plan_validation or plan_validation_not_executed()),
+        "state_machine": state_context_payload(state_integration),
     }
 
 
@@ -1097,6 +1506,30 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--allow-no-github-checks-reported", action=argparse.BooleanOptionalAction, default=None)
     parser.add_argument("--write-bridge", action="store_true", help="Write generator audit outputs to the Bridge.")
     parser.add_argument("--validate-plan", action="store_true", help="Validate the generated config with runner -Phase Plan only.")
+    parser.add_argument("--state-file", help="Existing state machine JSON file to read or update.")
+    parser.add_argument("--state-event", help="State machine event to apply when --update-state is used.")
+    parser.add_argument(
+        "--state-bridge-root",
+        help="Bridge root for state machine LAST-State/LAST-Event files; used for reading LAST-State when --state-file is omitted.",
+    )
+    parser.add_argument("--update-state", action="store_true", help="Apply the state event after a valid config is prepared.")
+    parser.add_argument("--require-state", action="store_true", help="Fail closed if the state file is missing or incoherent.")
+    parser.add_argument(
+        "--state-expected-current",
+        nargs="+",
+        help="Allowed current state values expected before generation; comma-separated values are accepted.",
+    )
+    parser.add_argument("--state-target-after", help="Expected state after the event; default is READY_TO_PUBLISH for --update-state.")
+    parser.add_argument(
+        "--write-state-bridge",
+        action="store_true",
+        help="Write state machine Bridge outputs after a successful --update-state transition.",
+    )
+    parser.add_argument(
+        "--state-allow-recovery",
+        action="store_true",
+        help="Allow explicit recovery or combined-step state contexts; otherwise recovery is fail-closed.",
+    )
     parser.add_argument(
         "--copy-compact-to-clipboard",
         action="store_true",
@@ -1122,9 +1555,36 @@ def run(argv: list[str]) -> int:
             return EXIT_INPUT_ERROR
     raw = merge_cli_values(raw, args)
     out_dir = Path(args.out_dir)
-    result = generate(raw, out_dir=out_dir, strict_required=strict_required)
-    warnings = list(result.warnings)
-    errors = list(result.errors)
+    prepared = prepare_generation(raw, strict_required=strict_required)
+    state_integration = StateIntegrationResult()
+    if prepared.data is not None and state_options_active(args) and not prepared.errors:
+        state_integration = apply_state_integration(
+            data=prepared.data,
+            args=args,
+            perform_update=bool(args.update_state),
+        )
+
+    warnings = list(prepared.warnings) + list(state_integration.warnings)
+    errors = list(prepared.errors) + list(state_integration.errors)
+    config = prepared.config if not errors else None
+    config_path, summary_path = write_outputs(
+        out_dir=out_dir,
+        data=prepared.data,
+        config=config,
+        selector_packet=prepared.selector_packet,
+        warnings=warnings,
+        errors=errors,
+        state_integration=state_integration,
+    )
+    result = GenerationResult(
+        "blocked" if errors else "ok",
+        config,
+        prepared.selector_packet,
+        tuple(warnings),
+        tuple(errors),
+        config_path,
+        summary_path,
+    )
     plan_validation = plan_validation_not_executed()
     bridge_paths: dict[str, Path] | None = None
 
@@ -1161,6 +1621,7 @@ def run(argv: list[str]) -> int:
                 generated_config_path=result.config_path,
                 generated_summary_path=result.summary_path,
                 generator_command=argv_to_display(["python", "scripts/asf_publish_config_generator.py", *argv]),
+                state_integration=state_integration,
             )
         except OSError as exc:
             warnings.append(f"Bridge output failed: {exc}")
@@ -1179,6 +1640,7 @@ def run(argv: list[str]) -> int:
                     errors=errors,
                     bridge_paths=bridge_paths,
                     plan_validation=plan_validation,
+                    state_integration=state_integration,
                 ),
                 indent=2,
                 sort_keys=True,

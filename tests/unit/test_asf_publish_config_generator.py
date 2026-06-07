@@ -14,10 +14,21 @@ ROOT = Path(__file__).resolve().parents[2]
 SCRIPT = ROOT / "scripts" / "asf_publish_config_generator.py"
 RUNNER = ROOT / "scripts" / "asf_publish_step.ps1"
 SELECTOR = ROOT / "scripts" / "asf_verification_profile_selector.py"
+STATE_MACHINE = ROOT / "scripts" / "asf_step_state_machine.py"
 
 
 def load_module():
     spec = importlib.util.spec_from_file_location("asf_publish_config_generator", SCRIPT)
+    assert spec is not None
+    assert spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def load_state_module():
+    spec = importlib.util.spec_from_file_location("asf_step_state_machine", STATE_MACHINE)
     assert spec is not None
     assert spec.loader is not None
     module = importlib.util.module_from_spec(spec)
@@ -71,8 +82,40 @@ def read_json(path: Path) -> dict[str, object]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def write_state_file(tmp_path: Path, *, step: str = "0650", current_state: str = "LOCAL_VERIFIED") -> Path:
+    state_module = load_state_module()
+    state = state_module.initial_state(step, current_state=current_state)
+    path = tmp_path / "state" / f"{step.replace('-', '_')}_state.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(state, indent=2), encoding="utf-8")
+    return path
+
+
 def command_texts(commands: list[dict[str, object]]) -> list[str]:
     return [" ".join(str(item) for item in command["argv"]) for command in commands]
+
+
+def run_generator_json(
+    capsys: pytest.CaptureFixture[str],
+    tmp_path: Path,
+    *extra_args: object,
+    input_data: dict[str, object] | None = None,
+) -> tuple[object, dict[str, object]]:
+    module = load_module()
+    input_file = tmp_path / "input.json"
+    input_file.write_text(json.dumps(input_data or base_input(tmp_path), indent=2), encoding="utf-8")
+    code = module.run(
+        [
+            "--input-file",
+            str(input_file),
+            "--out-dir",
+            str(tmp_path / "out"),
+            "--json",
+            *(str(item) for item in extra_args),
+        ]
+    )
+    captured = capsys.readouterr()
+    return code, json.loads(captured.out)
 
 
 def test_generates_valid_docs_only_config(tmp_path: Path) -> None:
@@ -207,6 +250,247 @@ def test_json_stdout_is_valid(tmp_path: Path) -> None:
     assert payload["verification_profile"] == "motor-core"
     assert Path(payload["config_path"]).exists()
     assert Path(payload["summary_path"]).exists()
+
+
+def test_state_integration_reads_valid_required_state(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    state_file = write_state_file(tmp_path, current_state="LOCAL_VERIFIED")
+
+    code, payload = run_generator_json(
+        capsys,
+        tmp_path,
+        "--require-state",
+        "--state-file",
+        state_file,
+    )
+
+    assert code == 0
+    assert payload["status"] == "ok"
+    assert payload["state_machine"]["state_before"] == "LOCAL_VERIFIED"
+    assert payload["state_machine"]["state_after"] == "LOCAL_VERIFIED"
+    assert Path(payload["config_path"]).exists()
+
+
+def test_state_integration_required_missing_state_fails_closed(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    missing_state = tmp_path / "missing_state.json"
+
+    code, payload = run_generator_json(
+        capsys,
+        tmp_path,
+        "--require-state",
+        "--state-file",
+        missing_state,
+    )
+
+    assert code == 2
+    assert payload["status"] == "blocked"
+    assert payload["config_path"] is None
+    assert "State file required but missing" in "\n".join(payload["errors"])
+
+
+def test_state_integration_corrupt_state_fails_closed(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    state_file = tmp_path / "corrupt_state.json"
+    state_file.write_text("{not valid json", encoding="utf-8")
+
+    code, payload = run_generator_json(
+        capsys,
+        tmp_path,
+        "--require-state",
+        "--state-file",
+        state_file,
+    )
+
+    assert code == 2
+    assert payload["status"] == "blocked"
+    assert payload["config_path"] is None
+    assert "not valid JSON" in "\n".join(payload["errors"])
+
+
+def test_state_integration_blocks_ineligible_current_state(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    state_file = write_state_file(tmp_path, current_state="IMPLEMENTED")
+
+    code, payload = run_generator_json(
+        capsys,
+        tmp_path,
+        "--require-state",
+        "--state-file",
+        state_file,
+    )
+
+    assert code == 2
+    assert payload["status"] == "blocked"
+    assert payload["config_path"] is None
+    assert "not eligible" in "\n".join(payload["errors"])
+
+
+def test_state_integration_applies_publish_config_generated_event(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    state_file = write_state_file(tmp_path, current_state="LOCAL_VERIFIED")
+
+    code, payload = run_generator_json(
+        capsys,
+        tmp_path,
+        "--require-state",
+        "--state-file",
+        state_file,
+        "--state-event",
+        "publish_config_generated",
+        "--update-state",
+        "--state-target-after",
+        "READY_TO_PUBLISH",
+    )
+
+    saved = read_json(state_file)
+    assert code == 0
+    assert payload["status"] == "ok"
+    assert payload["state_machine"]["event"] == "publish_config_generated"
+    assert payload["state_machine"]["state_before"] == "LOCAL_VERIFIED"
+    assert payload["state_machine"]["state_after"] == "READY_TO_PUBLISH"
+    assert saved["current_state"] == "READY_TO_PUBLISH"
+    assert saved["last_event"] == "publish_config_generated"
+
+
+def test_state_integration_step_mismatch_fails_closed(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    state_file = write_state_file(tmp_path, step="0670", current_state="LOCAL_VERIFIED")
+
+    code, payload = run_generator_json(
+        capsys,
+        tmp_path,
+        "--require-state",
+        "--state-file",
+        state_file,
+    )
+
+    assert code == 2
+    assert payload["status"] == "blocked"
+    assert payload["config_path"] is None
+    assert "does not match generator step" in "\n".join(payload["errors"])
+
+
+def test_state_integration_generator_bridge_contains_state_references(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    state_file = write_state_file(tmp_path, current_state="LOCAL_VERIFIED")
+    bridge_root = tmp_path / "publish_config_bridge"
+    state_bridge_root = tmp_path / "state_machine_bridge"
+
+    code, payload = run_generator_json(
+        capsys,
+        tmp_path,
+        "--write-bridge",
+        "--bridge-root",
+        bridge_root,
+        "--require-state",
+        "--state-file",
+        state_file,
+        "--state-event",
+        "publish_config_generated",
+        "--update-state",
+        "--write-state-bridge",
+        "--state-bridge-root",
+        state_bridge_root,
+    )
+
+    assert code == 0
+    compact = (bridge_root / "LAST-Output_Compatto.md").read_text(encoding="utf-8")
+    assert "State Machine" in compact
+    assert str(state_file) in compact
+    assert "LOCAL_VERIFIED" in compact
+    assert "READY_TO_PUBLISH" in compact
+    assert "LAST-State.json" in compact
+    assert "LAST-Publish_Config.json" in compact
+    assert (state_bridge_root / "LAST-State.json").is_file()
+    assert (state_bridge_root / "LAST-Event.json").is_file()
+    assert payload["state_machine"]["bridge_files"]
+
+
+def test_state_integration_combined_recovery_requires_explicit_flag(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    state_file = write_state_file(tmp_path, step="0650-0660", current_state="LOCAL_VERIFIED")
+
+    code, payload = run_generator_json(
+        capsys,
+        tmp_path,
+        "--require-state",
+        "--state-file",
+        state_file,
+    )
+
+    assert code == 2
+    assert payload["status"] == "blocked"
+    assert "combined step" in "\n".join(payload["errors"]).casefold()
+
+
+def test_state_integration_combined_recovery_flag_generates_warning(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    state_file = write_state_file(tmp_path, step="0650-0660", current_state="LOCAL_VERIFIED")
+
+    code, payload = run_generator_json(
+        capsys,
+        tmp_path,
+        "--require-state",
+        "--state-file",
+        state_file,
+        "--state-allow-recovery",
+    )
+
+    assert code == 0
+    assert payload["status"] == "ok"
+    assert "combined" in "\n".join(payload["warnings"]).casefold()
+
+
+def test_state_integration_does_not_run_publish_runner_or_git(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    module = load_module()
+    state_file = write_state_file(tmp_path, current_state="LOCAL_VERIFIED")
+    input_file = tmp_path / "input.json"
+    input_file.write_text(json.dumps(base_input(tmp_path), indent=2), encoding="utf-8")
+
+    def fail_if_called(*_: object, **__: object) -> object:
+        raise AssertionError("No subprocess should run without --validate-plan or clipboard copy.")
+
+    monkeypatch.setattr(module.subprocess, "run", fail_if_called)
+    code = module.run(
+        [
+            "--input-file",
+            str(input_file),
+            "--out-dir",
+            str(tmp_path / "out"),
+            "--state-file",
+            str(state_file),
+            "--update-state",
+            "--json",
+        ]
+    )
+    payload = json.loads(capsys.readouterr().out)
+
+    assert code == 0
+    assert payload["status"] == "ok"
+    assert read_json(state_file)["current_state"] == "READY_TO_PUBLISH"
 
 
 def test_write_bridge_creates_progressive_last_and_valid_config(tmp_path: Path) -> None:

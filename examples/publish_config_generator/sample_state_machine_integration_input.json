@@ -1,0 +1,35 @@
+{
+  "allow_no_github_checks_reported": true,
+  "allow_profile_check_reduction": false,
+  "branch": "step-0690-state-machine-integration-with-publish-config-generator",
+  "bridge_root": "D:\\FG-SAB Dropbox\\Alberto Ferrari\\ChatGPT_Bridge\\AI_Software_Factory\\pwsh_command",
+  "changed_files": [
+    "scripts/asf_publish_config_generator.py",
+    "tests/unit/test_asf_publish_config_generator.py",
+    "docs/motor/0690_STATE_MACHINE_INTEGRATION_WITH_PUBLISH_CONFIG_GENERATOR.md",
+    "examples/publish_config_generator/sample_state_machine_integration_input.json",
+    "examples/state_machine/sample_local_verified_state.json"
+  ],
+  "checks_already_run": [],
+  "commit_message": "0690 integrate state machine with publish config generator",
+  "expected_files": [
+    "scripts/asf_publish_config_generator.py",
+    "tests/unit/test_asf_publish_config_generator.py",
+    "docs/motor/0690_STATE_MACHINE_INTEGRATION_WITH_PUBLISH_CONFIG_GENERATOR.md",
+    "examples/publish_config_generator/sample_state_machine_integration_input.json",
+    "examples/state_machine/sample_local_verified_state.json"
+  ],
+  "intent": [
+    "integrate publish config generator with state machine"
+  ],
+  "log_max_count": 12,
+  "name": "State_Machine_Integration_With_Publish_Config_Generator",
+  "next_step": "0700) End-to-End MVP Smoke Scenario",
+  "pr_body": "Implements STEP 0690. The generator consults and updates the state machine before writing a ready publish config, while publication remains manual and human-gated.",
+  "pr_title": "0690 integrate state machine with publish config generator",
+  "provided_gates": [],
+  "repo_path": ".",
+  "risk_level": "L2",
+  "step": "0690",
+  "verification_phase": "local"
+}

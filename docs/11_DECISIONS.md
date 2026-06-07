@@ -2282,6 +2282,44 @@ Il prossimo step consigliato resta:
 
 ---
 
+## DEC-082 - State Machine Integration with Publish Config Generator fail-closed
+
+**Data:** 2026-06-07
+**Stato:** Accettata
+
+### Contesto
+
+Lo STEP 0650/0660 ha introdotto il Publish Config Generator e lo STEP 0670/0680 ha introdotto la state machine con Bridge.
+
+Senza collegamento tra i due componenti, `LAST-Publish_Config.json` poteva nascere senza evidenza diretta dello stato corrente dello step.
+
+### Decisione
+
+Il generator resta legacy-compatible, ma quando l'integrazione state machine e' attivata deve:
+
+- leggere uno state file esistente o `LAST-State.json`;
+- accettare solo stati coerenti per config pronte (`LOCAL_VERIFIED`, `READY_TO_PUBLISH`, recovery solo esplicita);
+- applicare `publish_config_generated` solo tramite `scripts/asf_step_state_machine.py`;
+- fallire chiuso se stato, step, evento o target dopo evento sono incoerenti;
+- scrivere riferimenti incrociati tra `LAST-Publish_Config.json` e `LAST-State.json` quando Bridge e' attivo.
+
+### Motivazione
+
+La config publish e' un artefatto operativo ad alto impatto: non deve sembrare pronta se lo step non ha superato i gate locali o se si trova in recovery non dichiarata.
+
+### Conseguenze
+
+- Il comportamento senza opzioni state machine resta invariato.
+- `--update-state` porta lo stato standard da `LOCAL_VERIFIED` a `READY_TO_PUBLISH`.
+- `--write-state-bridge` mantiene il formato Bridge 0680.
+- La pubblicazione resta manuale e richiede il runner `scripts/asf_publish_step.ps1`.
+
+### Prossimo step consigliato
+
+0700) End-to-End MVP Smoke Scenario
+
+---
+
 ## DEC-081 - State Machine Bridge Integration non operativa
 
 **Data:** 2026-06-07

@@ -50,6 +50,7 @@ The script `scripts/check_workflow_health.py` checks:
 - `docs/motor/0660_PUBLISH_CONFIG_GENERATOR_BRIDGE_OUTPUT_INTEGRATION.md` and `examples/publish_config_generator/sample_bridge_output_input.json` are present and linked from the Project Workflow Index;
 - `docs/motor/0670_STEP_EXECUTION_STATE_MACHINE.md`, `scripts/asf_step_state_machine.py`, `tests/unit/test_asf_step_state_machine.py` and `examples/state_machine/` are present and linked from the Project Workflow Index;
 - `docs/motor/0680_STATE_MACHINE_BRIDGE_INTEGRATION.md`, `LAST-State.json`, `LAST-Event.json` and `LAST-Output_Compatto.md` are referenced from the Project Workflow Index without requiring Dropbox real paths;
+- `docs/motor/0690_STATE_MACHINE_INTEGRATION_WITH_PUBLISH_CONFIG_GENERATOR.md`, `sample_state_machine_integration_input.json`, `sample_local_verified_state.json`, `LAST-Publish_Config.json`, `LAST-State.json` and `--update-state` are referenced from the Project Workflow Index without requiring Dropbox real paths;
 - operational scripts do not contain dangerous Git/GitHub command patterns.
 
 The covered areas include:
@@ -272,3 +273,5 @@ After STEP 0560, it also treats `scripts/asf_openai_first_authorized_live_run.py
 After STEP 0670, it also treats `docs/motor/0670_STEP_EXECUTION_STATE_MACHINE.md`, `scripts/asf_step_state_machine.py`, `tests/unit/test_asf_step_state_machine.py` and `examples/state_machine/` as core workflow references because step execution state, recovery and fail-closed transition checks are now part of the MVP Motore operating map.
 
 After STEP 0680, it also treats `docs/motor/0680_STATE_MACHINE_BRIDGE_INTEGRATION.md` and the Project Workflow Index pointers to `LAST-State.json`, `LAST-Event.json`, `LAST-Output_Compatto.md` and `state_machine` as core workflow references. The check only verifies repository docs and script references; it does not require or access the real Dropbox Bridge.
+
+After STEP 0690, it also treats `docs/motor/0690_STATE_MACHINE_INTEGRATION_WITH_PUBLISH_CONFIG_GENERATOR.md`, `examples/publish_config_generator/sample_state_machine_integration_input.json`, `examples/state_machine/sample_local_verified_state.json` and the Project Workflow Index pointers to `LAST-Publish_Config.json`, `LAST-State.json` and `--update-state` as core workflow references. The check remains read-only and does not execute Phase B, Phase C, publish, merge or Bridge writes.
