@@ -34,7 +34,7 @@ Le eccezioni ammesse sono solo correzioni bloccanti emerse dai test o dalla revi
 | 0620 | Aggiungere Gate Decision Report and Human Approval Packet | L2 codice/test ordinario | `scripts/`, `examples/`, `docs/motor/`, `tests/` | Pacchetto gate produce decision, risk, scope/test checks, blocker e azione umana esplicita | pytest schema/criteri, fixture PASS/FAIL/NEEDS_HUMAN | Report che promuove scope fail, test fail, L3/L4 senza approval o diff non spiegato |
 | 0630 | Definire Verification Profile Selector + Test Cost Policy | L2 documentazione/codice locale | `scripts/`, `docs/motor/`, `tests/`, `examples/` | Profili docs-only, code-unit, motor-core, publish, final-main e high-risk documentati e suggeribili senza publish | pytest mirati, workflow health, verify gate | Shortcut che riduce sicurezza su motor-core, publish, final-main o high-risk |
 | 0640 | Integrare Verification Profile Selector nel Publish Runner | L3 runner/Git automation human-gated | `scripts/asf_publish_step.ps1`, selector 0630, docs, tests | Runner usa profili per dedup prudente di check e mantiene Phase B/C human-gated | pytest runner/selector, workflow health, verify gate | Publish senza flag, Phase C saltata, riduzione check su motor-core/high-risk |
-| 0650 | Eseguire First End-to-End Dry Run su target controllato | L3 runner/Git automation controllata | `tmp/`, docs results, runner/executor/review | Loop completo produce evidence, tests, review e gate decision senza write | pytest, workflow health, verify gate, controllo target clean | Stato mancante, evidence incompleta, target dirty, review FAIL o NEEDS_HUMAN non gestito |
+| 0650 | Verification Profile Driven Publish Config Generator | L2/L3 config generation human-reviewed | `scripts/`, `examples/publish_step/`, docs, tests | Generatore produce bozze config publish coerenti con selector e scope, senza pubblicare | pytest mirati, workflow health, verify gate | Config che autorizza publish/merge, profilo ambiguo, Phase C indebolita |
 | 0660 | First Controlled Write Pilot su modifica minima e reversibile | L3 write controllato; L4 se deploy/costi/live/merge automatici | target pilota esplicito, runner, review, tests, docs result | Una modifica minima resta in working tree per review umana, senza commit/push/PR/merge automatico | test target, diff review, gate decision, status scoped | L4 richiesto, target non clean, scope ambiguo, rollback non chiaro, gate non PASS |
 
 ---
@@ -42,7 +42,7 @@ Le eccezioni ammesse sono solo correzioni bloccanti emerse dai test o dalla revi
 ## 4. Sequenza operativa prevista
 
 ```text
-0570 docs -> 0580 dry-run loop -> 0590 stable publish runner -> 0600 risk gate -> 0610 risk integration -> 0620 gate decision packet -> 0630 verification profiles -> 0640 selector integration with publish runner -> 0650 e2e dry run -> 0660 controlled write pilot
+0570 docs -> 0580 dry-run loop -> 0590 stable publish runner -> 0600 risk gate -> 0610 risk integration -> 0620 gate decision packet -> 0630 verification profiles -> 0640 selector integration with publish runner -> 0650 publish config generator -> 0660 controlled write pilot
 ```
 
 Il criterio di maturita' minima non e' "il runner esiste". Il criterio e': un loop completo produce evidence leggibile, classifica rischio, esegue test disponibili, passa review indipendente e ferma correttamente il flusso quando un gate non passa.
@@ -109,4 +109,22 @@ Il prossimo step consigliato e':
 
 ```text
 0640) Verification Profile Integration with Publish Runner
+```
+
+## 7. Stato dopo STEP 0640
+
+Lo STEP 0640 collega il selector 0630 al publish runner 0590:
+
+```text
+scripts/asf_publish_step.ps1
+docs/motor/0640_VERIFICATION_PROFILE_INTEGRATION_PUBLISH_RUNNER.md
+examples/publish_step/0640_publish_config_*.example.json
+```
+
+Il runner valida profili dichiarati, blocca mismatch piu' leggeri, fallisce chiuso se il selector fallisce chiuso e mantiene Phase B/Phase C con approval espliciti.
+
+Il prossimo step consigliato e':
+
+```text
+0650) Verification Profile Driven Publish Config Generator
 ```

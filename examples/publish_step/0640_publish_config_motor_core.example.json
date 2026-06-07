@@ -1,0 +1,88 @@
+{
+  "allow_no_github_checks_reported": true,
+  "allow_profile_check_reduction": false,
+  "branch": "step-0640-verification-profile-integration-publish-runner",
+  "bridge_root": "D:\\FG-SAB Dropbox\\Alberto Ferrari\\ChatGPT_Bridge\\AI_Software_Factory\\pwsh_command",
+  "changed_files": [
+    "scripts/asf_publish_step.ps1",
+    "tests/unit/test_asf_publish_step_runner.py"
+  ],
+  "commit_message": "0640 integrate verification profile with publish runner",
+  "expected_files": [
+    "scripts/asf_publish_step.ps1",
+    "tests/unit/test_asf_publish_step_runner.py",
+    "docs/motor/0640_VERIFICATION_PROFILE_INTEGRATION_PUBLISH_RUNNER.md",
+    "examples/publish_step/0640_publish_config_motor_core.example.json",
+    "examples/publish_step/0640_publish_config_docs_only.example.json",
+    "examples/publish_step/0640_publish_config_profile_mismatch_fail_closed.example.json"
+  ],
+  "log_max_count": 12,
+  "name": "Verification_Profile_Integration_Publish_Runner",
+  "next_step": "0650) Verification Profile Driven Publish Config Generator",
+  "phase_a_checks": [
+    {
+      "argv": [
+        "python",
+        "-m",
+        "pytest",
+        "tests\\unit\\test_asf_publish_step_runner.py",
+        "-q"
+      ],
+      "name": "Publish runner profile integration tests"
+    },
+    {
+      "argv": [
+        "python",
+        "scripts\\check_workflow_health.py"
+      ],
+      "name": "Workflow Health Check"
+    },
+    {
+      "argv": [
+        "pwsh",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "scripts\\verify.ps1"
+      ],
+      "name": "Verification Gate"
+    }
+  ],
+  "phase_c_checks": [
+    {
+      "argv": [
+        "python",
+        "-m",
+        "pytest",
+        "-q"
+      ],
+      "name": "Full pytest"
+    },
+    {
+      "argv": [
+        "python",
+        "scripts\\check_workflow_health.py"
+      ],
+      "name": "Workflow Health Check"
+    },
+    {
+      "argv": [
+        "pwsh",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "scripts\\verify.ps1"
+      ],
+      "name": "Verification Gate"
+    }
+  ],
+  "pr_body": "Implements STEP 0640. The publish runner validates an optional verification profile through the local selector without removing Phase B or Phase C human gates.",
+  "pr_title": "0640 integrate verification profile with publish runner",
+  "repo_path": ".",
+  "risk_level": "L2",
+  "step": "0640",
+  "verification_phase": "local",
+  "verification_profile": "motor-core"
+}

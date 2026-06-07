@@ -1,7 +1,7 @@
 # AI Software Factory
 
 **Metodo interno:** Codex Alchemy Method
-**Stato:** STEP 0630 - Verification Profile Selector + Test Cost Policy
+**Stato:** STEP 0640 - Verification Profile Integration with Publish Runner
 **Data bootstrap:** 2026-05-25
 **Strategia:** local-first personale, progettato per evoluzione SaaS
 
@@ -28,7 +28,7 @@ Il metodo interno si chiama **Codex Alchemy Method**: l'idea grezza viene trasfo
 
 ## 2. Stato repository
 
-Questo repository e' nello stato **STEP 0630 - Verification Profile Selector + Test Cost Policy**.
+Questo repository e' nello stato **STEP 0640 - Verification Profile Integration with Publish Runner**.
 
 Sono presenti:
 
@@ -64,6 +64,7 @@ Sono presenti:
 - integrazione del Risk Classifier nel checkpoint `RISK_CLASSIFY` del Dry-run Loop Runner, con risk report strutturato e nessuna autorizzazione write/publish/live.
 - Gate Decision Report che trasforma risk report e check evidence in un Approval Packet umano JSON/Markdown/testo, fail-closed e senza azioni operative.
 - Verification Profile Selector che suggerisce profili `docs-only`, `code-unit`, `motor-core`, `publish`, `final-main` e `high-risk` per bilanciare risultato, velocita', costo e rischio.
+- integrazione del Verification Profile Selector nel Publish Runner, con validazione opzionale delle config profilo, fail-closed su mismatch e Phase B/Phase C ancora human-gated.
 
 Non sono ancora presenti:
 
@@ -350,6 +351,7 @@ docs/motor/0610_RISK_CLASSIFIER_DRY_RUN_INTEGRATION.md
 docs/motor/0620_GATE_DECISION_REPORT_HUMAN_APPROVAL_PACKET.md
 docs/motor/0620_VERIFICATION_BALANCE_NOTES.md
 docs/motor/0630_VERIFICATION_PROFILE_SELECTOR_TEST_COST_POLICY.md
+docs/motor/0640_VERIFICATION_PROFILE_INTEGRATION_PUBLISH_RUNNER.md
 ```
 
 ---
@@ -408,7 +410,7 @@ policies/path_policy.v0.json
 ## 11. Prossimo step
 
 ```text
-0640) Verification Profile Integration with Publish Runner
+0650) Verification Profile Driven Publish Config Generator
 ```
 
-Obiettivo: integrare il selector nel runner 0590 in modo prudente, evitando duplicazioni tra Phase A, Phase B e verifiche manuali senza indebolire i gate `motor-core`, `publish`, `final-main` e `high-risk`.
+Obiettivo: generare una bozza config publish coerente con profilo, rischio e file modificati, mantenendo review umana e pubblicazione tramite runner separata.

@@ -67,6 +67,18 @@ def run_pwsh(*args: str | Path) -> subprocess.CompletedProcess[str]:
     )
 
 
+def write_config(tmp_path: Path, **updates: object) -> Path:
+    config = load_config()
+    config["step"] = "0640"
+    config["name"] = updates.pop("name", "Verification_Profile_Integration_Test")
+    config["branch"] = "step-0640-verification-profile-integration-test"
+    config["next_step"] = "0650) Verification Profile Driven Publish Config Generator"
+    config.update(updates)
+    path = tmp_path / "publish_config.json"
+    path.write_text(json.dumps(config, indent=2), encoding="utf-8")
+    return path
+
+
 def assert_docx_valid(path: Path) -> None:
     assert path.exists(), path
     assert zipfile.is_zipfile(path)
@@ -185,4 +197,167 @@ def test_publish_runner_plan_phase_generates_short_command_without_github(tmp_pa
     assert "scripts\\asf_publish_step.ps1" in command_text
     assert "-Phase Plan" in command_text
     assert "gh pr" not in command_text
+    assert "Verification profile validation: not configured" in read(compact)
     assert_docx_valid(bridge_root / "0590-Output_Compatto_Stable_PowerShell_Publish_Runner.docx")
+
+
+@pytest.mark.skipif(not pwsh_available(), reason="pwsh executable not available")
+def test_publish_runner_profile_consistent_passes_plan_and_reports_bridge(tmp_path: Path) -> None:
+    bridge_root = tmp_path / "bridge"
+    config = write_config(
+        tmp_path,
+        verification_profile="motor-core",
+        risk_level="L2",
+        changed_files=["scripts/asf_publish_step.ps1", "tests/unit/test_asf_publish_step_runner.py"],
+        verification_phase="local",
+    )
+
+    result = run_pwsh("-Config", config, "-Phase", "Plan", "-BridgeRoot", bridge_root)
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    compact = bridge_root / "0640-Output_Compatto_Verification_Profile_Integration_Test.md"
+    text = read(compact)
+    assert "Verification profile validation: pass" in text
+    assert "Declared verification profile: motor-core" in text
+    assert "Recommended verification profile: motor-core" in text
+    assert "Profile check reduction allowed: False" in text
+
+
+@pytest.mark.skipif(not pwsh_available(), reason="pwsh executable not available")
+def test_publish_runner_profile_mismatch_fails_closed(tmp_path: Path) -> None:
+    config = write_config(
+        tmp_path,
+        verification_profile="docs-only",
+        risk_level="L2",
+        changed_files=["scripts/asf_publish_step.ps1"],
+        verification_phase="local",
+    )
+
+    result = run_pwsh("-Config", config, "-Phase", "Plan", "-BridgeRoot", tmp_path / "bridge")
+
+    assert result.returncode == 1
+    assert "lighter than selector recommendation" in (result.stdout + result.stderr)
+
+
+@pytest.mark.skipif(not pwsh_available(), reason="pwsh executable not available")
+def test_publish_runner_l4_cannot_use_light_profile(tmp_path: Path) -> None:
+    config = write_config(
+        tmp_path,
+        verification_profile="docs-only",
+        risk_level="L4",
+        changed_files=["docs/motor/0640_VERIFICATION_PROFILE_INTEGRATION_PUBLISH_RUNNER.md"],
+    )
+
+    result = run_pwsh("-Config", config, "-Phase", "Plan", "-BridgeRoot", tmp_path / "bridge")
+
+    assert result.returncode == 1
+    assert "Risk level L4 requires verification_profile high-risk" in (result.stdout + result.stderr)
+
+
+@pytest.mark.skipif(not pwsh_available(), reason="pwsh executable not available")
+def test_publish_runner_selector_fail_closed_blocks(tmp_path: Path) -> None:
+    config = write_config(
+        tmp_path,
+        verification_profile="high-risk",
+        risk_level="L9",
+        changed_files=["README.md"],
+    )
+
+    result = run_pwsh("-Config", config, "-Phase", "Plan", "-BridgeRoot", tmp_path / "bridge")
+
+    assert result.returncode == 1
+    assert "selector failed closed" in (result.stdout + result.stderr)
+
+
+@pytest.mark.skipif(not pwsh_available(), reason="pwsh executable not available")
+def test_publish_runner_unknown_profile_blocks(tmp_path: Path) -> None:
+    config = write_config(
+        tmp_path,
+        verification_profile="tiny",
+        risk_level="L1",
+        changed_files=["README.md"],
+    )
+
+    result = run_pwsh("-Config", config, "-Phase", "Plan", "-BridgeRoot", tmp_path / "bridge")
+
+    assert result.returncode == 1
+    assert "Unknown verification profile" in (result.stdout + result.stderr)
+
+
+@pytest.mark.skipif(not pwsh_available(), reason="pwsh executable not available")
+def test_publish_runner_reduction_not_authorized_for_motor_core(tmp_path: Path) -> None:
+    config = write_config(
+        tmp_path,
+        verification_profile="motor-core",
+        risk_level="L2",
+        changed_files=["scripts/asf_publish_step.ps1"],
+        allow_profile_check_reduction=True,
+    )
+
+    result = run_pwsh("-Config", config, "-Phase", "Plan", "-BridgeRoot", tmp_path / "bridge")
+
+    assert result.returncode == 1
+    assert "allow_profile_check_reduction is allowed only" in (result.stdout + result.stderr)
+
+
+@pytest.mark.skipif(not pwsh_available(), reason="pwsh executable not available")
+def test_publish_runner_authorized_reduction_keeps_phase_c_disabled(tmp_path: Path) -> None:
+    bridge_root = tmp_path / "bridge"
+    config = write_config(
+        tmp_path,
+        verification_profile="docs-only",
+        risk_level="L0",
+        changed_files=["docs/motor/0640_VERIFICATION_PROFILE_INTEGRATION_PUBLISH_RUNNER.md"],
+        allow_profile_check_reduction=True,
+    )
+
+    result = run_pwsh("-Config", config, "-Phase", "Plan", "-BridgeRoot", bridge_root)
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    text = read(bridge_root / "0640-Output_Compatto_Verification_Profile_Integration_Test.md")
+    assert "Profile check reduction allowed: True" in text
+    assert "Phase C reduction: disabled" in text
+    assert "Recommended verification profile: docs-only" in text
+
+
+@pytest.mark.skipif(not pwsh_available(), reason="pwsh executable not available")
+def test_publish_runner_phase_b_still_requires_approve_publish(tmp_path: Path) -> None:
+    config = write_config(
+        tmp_path,
+        verification_profile="docs-only",
+        risk_level="L0",
+        changed_files=["docs/motor/0640_VERIFICATION_PROFILE_INTEGRATION_PUBLISH_RUNNER.md"],
+    )
+
+    result = run_pwsh("-Config", config, "-Phase", "B", "-BridgeRoot", tmp_path / "bridge")
+
+    assert result.returncode == 1
+    assert "Phase B requires -ApprovePublish" in (result.stdout + result.stderr)
+
+
+@pytest.mark.skipif(not pwsh_available(), reason="pwsh executable not available")
+def test_publish_runner_phase_c_still_requires_approve_merge(tmp_path: Path) -> None:
+    config = write_config(
+        tmp_path,
+        verification_profile="docs-only",
+        risk_level="L0",
+        changed_files=["docs/motor/0640_VERIFICATION_PROFILE_INTEGRATION_PUBLISH_RUNNER.md"],
+    )
+
+    result = run_pwsh("-Config", config, "-Phase", "C", "-BridgeRoot", tmp_path / "bridge")
+
+    assert result.returncode == 1
+    assert "Phase C requires -ApproveMerge" in (result.stdout + result.stderr)
+
+
+@pytest.mark.skipif(not pwsh_available(), reason="pwsh executable not available")
+def test_publish_runner_shell_execution_still_rejected(tmp_path: Path) -> None:
+    config_data = load_config()
+    config_data["phase_a_checks"][0]["shell"] = True
+    config = tmp_path / "publish_config_shell.json"
+    config.write_text(json.dumps(config_data, indent=2), encoding="utf-8")
+
+    result = run_pwsh("-Config", config, "-Phase", "Plan", "-BridgeRoot", tmp_path / "bridge")
+
+    assert result.returncode == 1
+    assert "requests shell execution" in (result.stdout + result.stderr)

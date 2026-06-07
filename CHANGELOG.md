@@ -4,6 +4,39 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.64.0] - 2026-06-07
+
+### Added
+
+- STEP 0640 - Verification Profile Integration with Publish Runner.
+- Validazione opzionale del verification profile in `scripts/asf_publish_step.ps1`.
+- Runbook `docs/motor/0640_VERIFICATION_PROFILE_INTEGRATION_PUBLISH_RUNNER.md`.
+- Esempi config in `examples/publish_step/0640_publish_config_*.example.json`.
+- Copertura test per mismatch profilo, fail-closed selector, riduzione check e gate Phase B/C.
+
+### Changed
+
+- Aggiornati README, roadmap, decision log, Project Workflow Index, Workflow Health Check e note 0630/0620 con l'integrazione 0640.
+- Gli output Bridge del publish runner includono un riepilogo compatto della validazione profilo quando disponibile.
+- Il prossimo step consigliato diventa `0650) Verification Profile Driven Publish Config Generator`.
+
+### Guardrails
+
+- Config legacy senza profilo ancora compatibili.
+- Nessuna duplicazione della logica profili nel runner PowerShell.
+- `allow_profile_check_reduction` ha default `false` e non riduce Phase C.
+- Phase B richiede ancora `-ApprovePublish`.
+- Phase C richiede ancora `-ApproveMerge`.
+- Nessun commit, push, PR, merge o deploy eseguito da Codex durante lo STEP 0640.
+
+### Not included
+
+- Nessuna generazione automatica della config publish.
+- Nessuna riduzione automatica di Phase C.
+- Nessun Controlled Codex Executor.
+
+---
+
 ## [0.63.0] - 2026-06-07
 
 ### Added

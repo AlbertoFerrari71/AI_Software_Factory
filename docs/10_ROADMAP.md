@@ -93,8 +93,8 @@ Esempio:
 | 610 | Risk Classifier Integration with Dry-run Loop Runner | Collegare il classifier al checkpoint RISK_CLASSIFY del runner 0580 | Integrazione leggera, risk report stabile, test regressione runner | MVP Motore | Completato |
 | 620 | Gate Decision Report and Human Approval Packet | Rendere esplicito il pacchetto di decisione umana usando risk report e review dry-run | Report gate, schema human approval, fixture PASS/FAIL/NEEDS_HUMAN | MVP Motore | Completato |
 | 630 | Verification Profile Selector + Test Cost Policy | Definire profili di verifica per ridurre ridondanze senza ridurre sicurezza | Selector CLI, matrice profili, policy costi test, esempi JSON e test | MVP Motore | Completato |
-| 640 | Verification Profile Integration with Publish Runner | Integrare il selector nel runner 0590 senza ridurre gate o safety | Uso profili in Phase B/C, dedup check prudente, fail-closed | MVP Motore | Da fare |
-| 650 | First End-to-End Dry Run | Eseguire un giro completo dry-run con evidence, tests, review e gate decision | Report end-to-end dry-run e target clean | MVP Motore | Da fare |
+| 640 | Verification Profile Integration with Publish Runner | Integrare il selector nel runner 0590 senza ridurre gate o safety | Uso profili in Phase B/C, dedup check prudente, fail-closed | MVP Motore | Completato |
+| 650 | Verification Profile Driven Publish Config Generator | Generare bozze config publish coerenti con profilo, rischio e file modificati | Config generator dry-run, esempi e test | MVP Motore | Da fare |
 | 660 | First Controlled Write Pilot | Provare una modifica minima e reversibile lasciata in working tree per review umana | Pilot write controllato, diff scoped, no commit/push/PR/merge | MVP Motore | Da fare |
 
 ---
@@ -1508,3 +1508,33 @@ Introdurre un selettore locale dei profili di verifica per bilanciare risultato,
 ### Prossimo step consigliato
 
 0640) Verification Profile Integration with Publish Runner
+
+---
+
+## 71. STEP 640 - Verification Profile Integration with Publish Runner
+
+### Obiettivo
+
+Integrare il Verification Profile Selector dello STEP 0630 nel Publish Runner dello STEP 0590, mantenendo retrocompatibilita' config, fail-closed e gate umani.
+
+### Output realizzati
+
+- validazione opzionale in `scripts/asf_publish_step.ps1`;
+- esempi config 0640 in `examples/publish_step/`;
+- documento `docs/motor/0640_VERIFICATION_PROFILE_INTEGRATION_PUBLISH_RUNNER.md`;
+- test automatici su profilo coerente, mismatch, L4, selector fail-closed, riduzione check, Phase B/C e divieto shell;
+- integrazione in workflow health e Project Workflow Index.
+
+### Guardrail
+
+- config legacy senza profilo ancora compatibili;
+- selector 0630 resta fonte della logica profili;
+- profilo dichiarato piu' leggero della raccomandazione blocca;
+- `allow_profile_check_reduction` default `false`;
+- Phase B richiede ancora `-ApprovePublish`;
+- Phase C richiede ancora `-ApproveMerge` e non viene ridotta nello STEP 0640;
+- nessuna chiamata live, nessun secret, nessuna pubblicazione Git eseguita da Codex.
+
+### Prossimo step consigliato
+
+0650) Verification Profile Driven Publish Config Generator
