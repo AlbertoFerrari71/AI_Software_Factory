@@ -1,0 +1,25 @@
+{
+  "project_name": "AI_Software_Factory",
+  "repo_path": ".",
+  "step": "0610",
+  "title": "Publish intent dry-run",
+  "branch": "main",
+  "objective": "Prepare commit, push branch and open PR after human approval.",
+  "allowed_scope": [
+    "docs/motor/0610_RISK_CLASSIFIER_DRY_RUN_INTEGRATION.md"
+  ],
+  "forbidden_actions": [
+    "live provider calls",
+    "secret or API key usage",
+    "target repository writes",
+    "commit",
+    "push",
+    "PR",
+    "merge",
+    "deploy"
+  ],
+  "checks": [
+    "git --no-pager diff --check",
+    "git status --short"
+  ]
+}

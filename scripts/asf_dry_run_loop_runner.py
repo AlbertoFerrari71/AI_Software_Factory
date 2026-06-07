@@ -74,6 +74,7 @@ class LoopRequest:
     allowed_scope: tuple[str, ...]
     forbidden_actions: tuple[str, ...]
     checks: tuple[str, ...]
+    provided_gates: tuple[str, ...]
 
 
 @dataclass(frozen=True)
@@ -145,6 +146,13 @@ def optional_string_list(data: dict[str, Any], key: str) -> tuple[str, ...]:
     return tuple(item.strip() for item in value if item.strip())
 
 
+def optional_string_list_any(data: dict[str, Any], keys: tuple[str, ...]) -> tuple[str, ...]:
+    collected: list[str] = []
+    for key in keys:
+        collected.extend(optional_string_list(data, key))
+    return tuple(dict.fromkeys(collected))
+
+
 def validate_step(step: str) -> None:
     if not step.isdigit() or int(step) <= 0:
         raise InputError("request field 'step' must be a positive numeric string.")
@@ -170,6 +178,7 @@ def load_request(path: Path) -> LoopRequest:
         allowed_scope=optional_string_list(raw, "allowed_scope"),
         forbidden_actions=optional_string_list(raw, "forbidden_actions"),
         checks=optional_string_list(raw, "checks"),
+        provided_gates=optional_string_list_any(raw, ("provided_gates", "declared_gates", "satisfied_gates")),
     )
     validate_step(request.step)
     validate_branch(request.branch)
@@ -239,6 +248,7 @@ def normalize_request(request: LoopRequest, target_repo: Path) -> dict[str, Any]
         "allowed_scope": list(request.allowed_scope),
         "forbidden_actions": list(request.forbidden_actions),
         "checks": list(request.checks),
+        "provided_gates": list(request.provided_gates),
     }
 
 
@@ -261,7 +271,7 @@ def default_plan(request: LoopRequest) -> dict[str, Any]:
             {
                 "state": "RISK_CLASSIFY",
                 "checkpoint": "risk_report_generated",
-                "actions": ["classify_local_dry_run_risk", "block_live_or_publication_actions"],
+                "actions": ["classify_with_asf_risk_classifier", "record_gate_policy"],
             },
             {
                 "state": "EXECUTE_DRY_OR_WRITE",
@@ -320,6 +330,43 @@ def collect_string_values(value: Any) -> list[str]:
             collected.extend(collect_string_values(item))
         return collected
     return []
+
+
+def plan_risk_items(value: Any) -> tuple[str, ...]:
+    risk_keys = {
+        "actions",
+        "checks",
+        "commands",
+        "phase_a_checks",
+        "phase_b_commands",
+        "phase_c_checks",
+        "phase_commands",
+        "proposed_commands",
+    }
+    collected: list[str] = []
+
+    if isinstance(value, dict):
+        for key, item in value.items():
+            if key in risk_keys:
+                collected.extend(collect_string_values(item))
+            else:
+                collected.extend(plan_risk_items(item))
+    elif isinstance(value, list):
+        for item in value:
+            collected.extend(plan_risk_items(item))
+
+    return tuple(item.strip() for item in collected if item.strip())
+
+
+def plan_provided_gates(plan: dict[str, Any]) -> tuple[str, ...]:
+    collected: list[str] = []
+    for key in ("provided_gates", "declared_gates", "satisfied_gates"):
+        value = plan.get(key, [])
+        if isinstance(value, str):
+            collected.append(value)
+        elif isinstance(value, list):
+            collected.extend(str(item) for item in value if str(item).strip())
+    return tuple(dict.fromkeys(item.strip() for item in collected if item.strip()))
 
 
 def plan_value_text(plan: dict[str, Any]) -> str:
@@ -418,6 +465,10 @@ def build_task_packet(request: LoopRequest, snapshot: GitSnapshot, plan: dict[st
 
 {bullets(request.forbidden_actions, fallback="No extra forbidden actions declared by the simulated request.")}
 
+## Provided gates declared by input
+
+{bullets(request.provided_gates, fallback="No gate token declared by the simulated request.")}
+
 Always forbidden for this runner:
 
 - no live provider calls;
@@ -456,46 +507,134 @@ This task packet is generated as evidence for the loop runner. It is not an auth
 """
 
 
-def classify_risk(plan: dict[str, Any], plan_blockers: list[str]) -> dict[str, Any]:
-    factors = [
-        "local dry-run runner",
-        "standard-library-only execution",
-        "structured evidence under output directory",
-    ]
-    level = "L2"
-    status = "PASS"
-    if plan_blockers:
-        level = "L4"
-        status = "FAIL"
-        factors.extend(plan_blockers)
-
+def fail_closed_classifier_result(reason: str) -> dict[str, Any]:
     return {
-        "status": status,
-        "max_level": level,
-        "factors": factors,
-        "policy": {
-            "live_provider_calls_allowed": False,
-            "target_writes_allowed": False,
-            "git_publication_allowed": False,
-            "requires_human_gate": True,
-        },
+        "risk_level": "L4",
+        "allowed": False,
+        "required_gate": "elevated_manual_approval",
+        "reasons": [reason],
+        "matched_rules": [
+            {
+                "rule_id": "dry_run_runner_fail_closed",
+                "risk_level": "L4",
+                "source": "runner",
+                "matched_value": reason,
+                "reason": "risk classification could not be completed safely",
+            }
+        ],
+        "fail_closed": True,
+        "recommended_next_action": "Stop for human review because risk classification could not be completed.",
     }
 
 
-def build_risk_markdown(request: LoopRequest, risk: dict[str, Any]) -> str:
+def validate_classifier_result(result: Any) -> str | None:
+    if not isinstance(result, dict):
+        return "classifier result is not a JSON object."
+
+    required = {
+        "risk_level": str,
+        "allowed": bool,
+        "required_gate": str,
+        "reasons": list,
+        "matched_rules": list,
+        "fail_closed": bool,
+        "recommended_next_action": str,
+    }
+    for key, expected_type in required.items():
+        if key not in result:
+            return f"classifier result is missing '{key}'."
+        if not isinstance(result[key], expected_type):
+            return f"classifier result field '{key}' has invalid type."
+
+    if result["risk_level"] not in {"L0", "L1", "L2", "L3", "L4"}:
+        return "classifier result contains an unknown risk level."
+    return None
+
+
+def build_classifier_result(request: LoopRequest, plan: dict[str, Any]) -> dict[str, Any]:
+    try:
+        from asf_risk_classifier import ClassifierInput, classify
+    except Exception as exc:  # pragma: no cover - defensive fail-closed path
+        return fail_closed_classifier_result(f"Unable to import asf_risk_classifier: {exc}")
+
+    provided_gates = set(request.provided_gates + plan_provided_gates(plan))
+    request_input = ClassifierInput(
+        text_items=(request.title, request.objective),
+        file_items=request.allowed_scope,
+        command_items=request.checks,
+        keyword_items=(),
+    )
+    request_result = classify(request_input, provided_gates=provided_gates)
+    invalid = validate_classifier_result(request_result)
+    if invalid:
+        return fail_closed_classifier_result(invalid)
+    if request_result["fail_closed"]:
+        return request_result
+
+    combined_input = ClassifierInput(
+        text_items=request_input.text_items,
+        file_items=request_input.file_items,
+        command_items=request_input.command_items + plan_risk_items(plan),
+        keyword_items=request_input.keyword_items,
+    )
+    combined_result = classify(combined_input, provided_gates=provided_gates)
+    invalid = validate_classifier_result(combined_result)
+    if invalid:
+        return fail_closed_classifier_result(invalid)
+    return combined_result
+
+
+def build_risk_checkpoint(request: LoopRequest, plan: dict[str, Any], plan_blockers: list[str]) -> dict[str, Any]:
+    risk = build_classifier_result(request, plan)
+    provided_gates = tuple(dict.fromkeys(request.provided_gates + plan_provided_gates(plan)))
+    l4_blocked = risk["risk_level"] == "L4" and not risk["allowed"]
+    runner_fail_closed = bool(plan_blockers or risk["fail_closed"] or l4_blocked)
+    status = "FAIL" if runner_fail_closed else "PASS"
+
+    return {
+        "checkpoint": "RISK_CLASSIFY",
+        "status": status,
+        "risk": risk,
+        "gate": {
+            "required_gate": risk["required_gate"],
+            "provided_gates": list(provided_gates),
+            "declared_satisfied": risk["allowed"],
+            "dry_run_enforced": True,
+            "runner_executes_gate": False,
+        },
+        "dry_run": {
+            "fail_closed": runner_fail_closed,
+            "blocked_in_dry_run": status == "FAIL",
+            "no_live_provider_calls": True,
+            "no_target_repo_writes": True,
+            "no_git_publication": True,
+        },
+        "plan_blockers": plan_blockers,
+    }
+
+
+def build_risk_markdown(request: LoopRequest, risk_report: dict[str, Any]) -> str:
+    risk = risk_report["risk"]
     return f"""# ASF Dry-run Loop Risk Report
 
 ## Summary
 
 - step: `{request.step}`
 - title: `{request.title}`
-- status: `{risk["status"]}`
-- max-level: `{risk["max_level"]}`
-- human-gate-required: `true`
+- checkpoint: `{risk_report["checkpoint"]}`
+- status: `{risk_report["status"]}`
+- risk-level: `{risk["risk_level"]}`
+- required-gate: `{risk["required_gate"]}`
+- gate-declared-satisfied: `{risk_report["gate"]["declared_satisfied"]}`
+- runner-fail-closed: `{risk_report["dry_run"]["fail_closed"]}`
 
-## Factors
+## Reasons
 
-{bullets(list(risk["factors"]))}
+{bullets(list(risk["reasons"]))}
+
+## Matched rules
+
+{bullets([f"{match['rule_id']} ({match['risk_level']}): {match['reason']}" for match in risk["matched_rules"]])}
 
 ## Policy
 
@@ -503,6 +642,11 @@ def build_risk_markdown(request: LoopRequest, risk: dict[str, Any]) -> str:
 - target writes allowed: `false`
 - Git publication allowed: `false`
 - external costs allowed: `false`
+- runner executes gates: `false`
+
+## Next action
+
+{risk["recommended_next_action"]}
 """
 
 
@@ -571,7 +715,7 @@ The loop runner records the test checkpoint and required checks. It does not exe
 def review_artifacts(
     *,
     request: LoopRequest,
-    risk: dict[str, Any],
+    risk_report: dict[str, Any],
     plan_blockers: list[str],
     before: GitSnapshot,
     after: GitSnapshot,
@@ -581,8 +725,8 @@ def review_artifacts(
     blocking: list[str] = []
     warnings: list[str] = []
 
-    if risk["status"] != "PASS":
-        blocking.append("risk report is not PASS.")
+    if risk_report["status"] != "PASS":
+        blocking.append("risk checkpoint is not PASS.")
     blocking.extend(plan_blockers)
 
     if before.status != after.status:
@@ -606,7 +750,7 @@ def review_artifacts(
         "blocking_findings": blocking,
         "warnings": warnings,
         "checks": {
-            "risk_pass": risk["status"] == "PASS",
+            "risk_pass": risk_report["status"] == "PASS",
             "target_status_unchanged": before.status == after.status,
             "artifacts_present": not missing,
             "live_provider_absent": not any("provider" in item.casefold() for item in plan_blockers),
@@ -676,12 +820,13 @@ def build_final_report(
     target_repo: Path,
     before: GitSnapshot,
     after: GitSnapshot,
-    risk: dict[str, Any],
+    risk_report: dict[str, Any],
     review: dict[str, Any],
     gate: dict[str, Any],
     artifact_paths: dict[str, Path],
 ) -> str:
     artifacts = [f"- `{label}`: `{path}`" for label, path in artifact_paths.items()]
+    risk = risk_report["risk"]
     return f"""# ASF Dry-run Loop Runner Final Report
 
 ## Summary
@@ -691,7 +836,9 @@ def build_final_report(
 - project-name: `{request.project_name}`
 - target-repo: `{target_repo}`
 - decision: `{gate["decision"]}`
-- risk: `{risk["max_level"]}` / `{risk["status"]}`
+- risk: `{risk["risk_level"]}` / `{risk_report["status"]}`
+- required-gate: `{risk["required_gate"]}`
+- gate-declared-satisfied: `{risk_report["gate"]["declared_satisfied"]}`
 - review: `{review["verdict"]}`
 
 ## Target state
@@ -719,10 +866,11 @@ def build_final_report(
 - The test checkpoint records required commands; it does not execute target tests.
 - The independent review is deterministic and local; it is not a substitute for Alberto review.
 - The gate decision is a hold point, not an approval to proceed.
+- `allowed` in the risk report means only that the declared gate token matched the policy; it is not an operational authorization.
 
 ## Next recommended step
 
-0590) Risk Classifier + Gate Policy
+0620) Gate Decision Report and Human Approval Packet
 """
 
 
@@ -762,18 +910,21 @@ def run(argv: list[str]) -> int:
     write_json(artifact_paths["execution_plan_json"], plan)
     write_text(artifact_paths["task_packet_md"], build_task_packet(request, before, plan))
 
-    risk = classify_risk(plan, plan_blockers)
+    risk_report = build_risk_checkpoint(request, plan, plan_blockers)
     events.append(
         StateEvent(
             3,
             "RISK_CLASSIFY",
-            risk["status"],
+            risk_report["status"],
             "risk_report_generated",
-            f"Risk classified as {risk['max_level']}.",
+            (
+                f"Risk classified as {risk_report['risk']['risk_level']} "
+                f"with gate {risk_report['risk']['required_gate']}."
+            ),
         )
     )
-    write_json(artifact_paths["risk_report_json"], risk)
-    write_text(artifact_paths["risk_report_md"], build_risk_markdown(request, risk))
+    write_json(artifact_paths["risk_report_json"], risk_report)
+    write_text(artifact_paths["risk_report_md"], build_risk_markdown(request, risk_report))
 
     events.append(
         StateEvent(
@@ -812,7 +963,7 @@ def run(argv: list[str]) -> int:
     }
     review = review_artifacts(
         request=request,
-        risk=risk,
+        risk_report=risk_report,
         plan_blockers=plan_blockers,
         before=before,
         after=after,
@@ -860,7 +1011,7 @@ def run(argv: list[str]) -> int:
             target_repo=target_repo,
             before=before,
             after=after,
-            risk=risk,
+            risk_report=risk_report,
             review=review,
             gate=gate,
             artifact_paths=artifact_paths,

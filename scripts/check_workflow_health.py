@@ -87,6 +87,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/motor/0580_DRY_RUN_LOOP_RUNNER.md",
         "docs/motor/0590_STABLE_POWERSHELL_PUBLISH_RUNNER.md",
         "docs/motor/0600_RISK_CLASSIFIER_GATE_POLICY.md",
+        "docs/motor/0610_RISK_CLASSIFIER_DRY_RUN_INTEGRATION.md",
         "config/asf_project_profiles.json",
         "scripts/asf_openai_api_adapter.py",
         "scripts/asf_openai_controlled_live_execution_pack.py",
@@ -139,6 +140,10 @@ def check_files(root: Path) -> list[HealthIssue]:
         "templates/pwsh_command_pack/step_540_openai_controlled_live_execution_pack_template.ps1",
         "examples/dry_run_loop/step_0580_simulated_request.json",
         "examples/dry_run_loop/step_0580_execution_plan.json",
+        "examples/dry_run_loop/step_0610_docs_only_request.json",
+        "examples/dry_run_loop/step_0610_code_change_request.json",
+        "examples/dry_run_loop/step_0610_publish_intent_request.json",
+        "examples/dry_run_loop/step_0610_l4_blocked_request.json",
         "examples/publish_step/0590_publish_config.example.json",
         "examples/risk_classifier/sample_l0_docs_only.json",
         "examples/risk_classifier/sample_l2_code_change.json",
@@ -266,6 +271,7 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             ("ASF Dry-run Loop Runner", ["ASF Dry-run Loop Runner"]),
             ("ASF Stable PowerShell Publish Runner", ["ASF Stable PowerShell Publish Runner"]),
             ("ASF Risk Classifier Gate Policy", ["ASF Risk Classifier + Gate Policy"]),
+            ("ASF Risk Classifier Dry-run Integration", ["ASF Risk Classifier Dry-run Integration"]),
             ("generate task packet script", ["scripts/generate_task_packet.py"]),
             ("task packet validator script", ["scripts/validate_task_packet.py"]),
             ("ASF Next Step Runner script", ["scripts/asf_next_step.py"]),
@@ -298,6 +304,10 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             (
                 "ASF Risk Classifier script",
                 ["scripts/asf_risk_classifier.py"],
+            ),
+            (
+                "ASF Risk Classifier Dry-run Integration document",
+                ["docs/motor/0610_RISK_CLASSIFIER_DRY_RUN_INTEGRATION.md"],
             ),
             (
                 "artifact naming migration script",
@@ -496,6 +506,10 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             (
                 "ASF Dry-run Loop Runner examples",
                 ["examples/dry_run_loop/step_0580_simulated_request.json"],
+            ),
+            (
+                "ASF Risk Classifier Dry-run Integration examples",
+                ["examples/dry_run_loop/step_0610_code_change_request.json"],
             ),
             (
                 "ASF Stable PowerShell Publish Runner config",

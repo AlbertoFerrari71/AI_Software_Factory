@@ -104,10 +104,12 @@ La priorita' passa da ulteriori raffinamenti meta-operativi e retry live separat
 
 - 0570 - ADR + MVP Motor Roadmap;
 - 0580 - Dry-run Loop Runner;
-- 0590 - Risk Classifier + Gate Policy;
-- 0600 - Independent Review Node;
-- 0610 - Controlled Codex Executor;
-- 0620 - First End-to-End Dry Run;
-- 0630 - First Controlled Write Pilot.
+- 0590 - Stable PowerShell Publish Runner;
+- 0600 - Risk Classifier + Gate Policy;
+- 0610 - Risk Classifier Integration with Dry-run Loop Runner;
+- 0620 - Gate Decision Report and Human Approval Packet;
+- 0630 - Controlled Codex Executor;
+- 0640 - First End-to-End Dry Run;
+- 0650 - First Controlled Write Pilot.
 
 Fino al completamento di almeno un giro end-to-end dry-run, i nuovi step di meta-processo non essenziali restano congelati.

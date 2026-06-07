@@ -65,6 +65,7 @@ L'indice orienta il lavoro. Non sostituisce i documenti specifici, il Verificati
 | Eseguire ASF Dry-run Loop Runner | `docs/motor/0580_DRY_RUN_LOOP_RUNNER.md` | `scripts/asf_dry_run_loop_runner.py`, `examples/dry_run_loop/` | Quando serve dimostrare il primo loop locale supervisionato senza provider live o pubblicazione Git | Produce request normalizzata, piano, state log, risk report, review, gate decision e final report sotto `tmp/` |
 | Usare ASF Stable PowerShell Publish Runner | `docs/motor/0590_STABLE_POWERSHELL_PUBLISH_RUNNER.md` | `scripts/asf_publish_step.ps1`, `examples/publish_step/0590_publish_config.example.json` | Dopo report Codex e review umana, quando serve pubblicare uno step con comando corto e config | FASE A verifica locale; FASE B richiede `-ApprovePublish`; FASE C richiede `-ApproveMerge` |
 | Usare ASF Risk Classifier + Gate Policy | `docs/motor/0600_RISK_CLASSIFIER_GATE_POLICY.md` | `scripts/asf_risk_classifier.py`, `examples/risk_classifier/` | Quando serve classificare testo, file o comandi proposti in L0-L4 prima del gate | Rule-based, fail-closed, output JSON strutturato con `required_gate` e `allowed` |
+| Verificare ASF Risk Classifier Dry-run Integration | `docs/motor/0610_RISK_CLASSIFIER_DRY_RUN_INTEGRATION.md` | `scripts/asf_dry_run_loop_runner.py`, `scripts/asf_risk_classifier.py`, `examples/dry_run_loop/step_0610_*_request.json` | Quando serve verificare il checkpoint `RISK_CLASSIFY` con la policy 0600 dentro il runner 0580 | Dry-run only; risk report strutturato; non esegue gate reali, publish, merge, deploy o write target |
 | Controllare Documentation Sync | `docs/21_DOCUMENTATION_SYNC.md` | Nessuno | Ogni step documentale o operativo | Valuta changelog, roadmap, decisions e documenti specifici |
 | Controllare Soft Protection Guardrails | `docs/24_SOFT_PROTECTION_GUARDRAILS.md` | `scripts/git/check_soft_guardrails.ps1` | Prima del commit o come controllo locale | Read-only; non installa hook |
 | Eseguire Workflow Health Check | `docs/35_WORKFLOW_HEALTH_CHECK.md` | `scripts/check_workflow_health.py` | Quando workflow docs, script o riferimenti centrali cambiano | Read-only; non sostituisce Verification Gate |
@@ -171,6 +172,7 @@ Regole operative:
 - `docs/motor/0580_DRY_RUN_LOOP_RUNNER.md`: primo runner locale dry-run del loop supervisionato a gate.
 - `docs/motor/0590_STABLE_POWERSHELL_PUBLISH_RUNNER.md`: runner PowerShell stabile per pubblicare step ASF con config JSON e gate espliciti.
 - `docs/motor/0600_RISK_CLASSIFIER_GATE_POLICY.md`: classificatore L0-L4 e gate policy fail-closed per il MVP Motore.
+- `docs/motor/0610_RISK_CLASSIFIER_DRY_RUN_INTEGRATION.md`: integrazione del classifier nel checkpoint `RISK_CLASSIFY` del dry-run runner.
 
 ---
 
@@ -197,7 +199,7 @@ Regole operative:
 - `scripts/asf_openai_api_adapter.py`: adapter dry-run/mock, live boundary gate, smoke live controllata e hardening risultati per payload OpenAI Responses-style.
 - `scripts/asf_openai_controlled_live_execution_pack.py`: pack operativo dry-run-default per preflight, mock provider e futura live OpenAI con doppio consenso.
 - `scripts/asf_openai_first_authorized_live_run.py`: wrapper STEP 0560 per un solo tentativo live autorizzato, sempre tramite adapter e con report/evidence sanitizzati.
-- `scripts/asf_dry_run_loop_runner.py`: runner locale STEP 0580 che attraversa richiesta, piano, risk report, review e gate decision in dry-run.
+- `scripts/asf_dry_run_loop_runner.py`: runner locale STEP 0580/0610 che attraversa richiesta, piano, classifier reale, risk report, review e gate decision in dry-run.
 - `scripts/asf_publish_step.ps1`: runner STEP 0590 per FASE A/B/C di pubblicazione step con comando corto, config JSON, Bridge output e flag espliciti.
 - `scripts/asf_risk_classifier.py`: classifier STEP 0600 per testo/JSON, livelli L0-L4 e gate policy strutturata.
 
@@ -232,7 +234,7 @@ Config centrale:
 - `templates/codex_tasks/asf_openai_api_live_boundary_gate_template.md`: struttura task packet per live boundary, credential gate e futura smoke controllata.
 - `templates/codex_tasks/asf_openai_api_live_smoke_test_template.md`: struttura task packet per smoke live controllata e hardening risultati.
 - `templates/pwsh_command_pack/step_540_openai_controlled_live_execution_pack_template.ps1`: safe bootstrap operatore per generare il pack controllato con artefatti progressivi e senza `LAST-*`.
-- `examples/dry_run_loop/`: richiesta e piano JSON di esempio per il Dry-run Loop Runner.
+- `examples/dry_run_loop/`: richiesta e piano JSON di esempio per il Dry-run Loop Runner, inclusi request 0610 L0/L1, L2, L3 e L4.
 - `examples/publish_step/0590_publish_config.example.json`: config esempio per Stable PowerShell Publish Runner.
 - `examples/risk_classifier/`: esempi JSON L0, L2, L3 e L4 per Risk Classifier + Gate Policy.
 
@@ -360,6 +362,12 @@ Per eseguire il primo loop locale dry-run supervisionato:
 
 ```powershell
 python scripts/asf_dry_run_loop_runner.py --request-json examples/dry_run_loop/step_0580_simulated_request.json --plan-json examples/dry_run_loop/step_0580_execution_plan.json
+```
+
+Per verificare l'integrazione Risk Classifier -> Dry-run Loop Runner:
+
+```powershell
+python scripts/asf_dry_run_loop_runner.py --request-json examples/dry_run_loop/step_0610_code_change_request.json
 ```
 
 Per verificare una pubblicazione futura con comando corto:
