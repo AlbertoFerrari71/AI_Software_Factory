@@ -307,7 +307,7 @@ Restano simulati o sintetici nel MVP:
 - contenuto applicativo dello smoke 0700;
 - alcuni check dello scenario smoke;
 - review indipendente completa;
-- integrazione diretta tra runner e state machine durante Phase B/C;
+- integrazione diretta tra runner hook e manifest/evidence durante Phase B/C;
 - pilota reale su step applicativo non sintetico.
 
 ## 10. Limiti MVP
@@ -318,7 +318,8 @@ come prodotto autonomo.
 Limiti principali:
 
 - non esiste ancora orchestratore unico;
-- Phase B/C non scrivono eventi state machine in automatico;
+- Phase B/C scrivono eventi state machine solo se la config abilita esplicitamente
+  `state_machine_enabled`;
 - il manifest osserva evidence ma non produce approvazione;
 - lo smoke non sostituisce uno step reale;
 - `LAST-*` aiuta l'operativita' ma richiede controllo umano su step e branch;
@@ -353,4 +354,29 @@ Prossimo step post-MVP consigliato:
 
 ```text
 0740) MVP Real Step Pilot
+```
+
+## 13. Aggiornamento STEP 0750
+
+Lo STEP 0750 aggiunge hook opzionali al publish runner:
+
+```text
+docs/motor/0750_STATE_MACHINE_PUBLISH_RUNNER_EVENT_HOOKS.md
+```
+
+Quando `state_machine_enabled=true`, Phase B e Phase C possono registrare eventi
+state machine come `phase_b_started`, `phase_b_passed`, `pr_created`,
+`phase_c_started`, `phase_c_passed`, `main_verified` e gli eventi di failure.
+
+Questo non cambia i gate:
+
+- Phase B richiede ancora `-ApprovePublish`;
+- Phase C richiede ancora `-ApproveMerge`;
+- config legacy senza hook restano invariate;
+- i test devono usare directory temporanee, non Dropbox reale.
+
+Prossimo step consigliato:
+
+```text
+0760) MVP Real Step Pilot 2 with State Hooks
 ```

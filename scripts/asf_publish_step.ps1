@@ -27,6 +27,28 @@ $script:ProfileValidation = [pscustomobject]@{
     Reasons = @()
     Warnings = @()
 }
+$script:StateHookConfig = [pscustomobject]@{
+    Enabled = $false
+    Step = ""
+    StateFile = ""
+    WriteBridge = $false
+    BridgeRoot = ""
+    FailOnHookError = $false
+    ExpectedBeforePhaseB = ""
+    ExpectedBeforePhaseC = ""
+    CloseOnPhaseCSuccess = $false
+    EmitMainVerified = $true
+}
+$script:StateHookWarnings = [System.Collections.Generic.List[string]]::new()
+$script:StateHookErrors = [System.Collections.Generic.List[string]]::new()
+$script:StateHookSummary = [pscustomobject]@{
+    Enabled = $false
+    StateFile = "not configured"
+    BridgeRoot = "not configured"
+    LastEvent = "none"
+    FinalState = "not available"
+    CloseStepEmitted = $false
+}
 $script:VerificationProfileRank = @{
     "docs-only" = 10
     "code-unit" = 20
@@ -102,6 +124,40 @@ function Get-OptionalBoolProperty {
         return $false
     }
     throw "Config field must be boolean: $Name"
+}
+
+function Resolve-RepoRelativePath {
+    param(
+        [string]$PathText,
+        [string]$RepoPath
+    )
+    if ([string]::IsNullOrWhiteSpace($PathText)) {
+        return ""
+    }
+    if ([System.IO.Path]::IsPathRooted($PathText)) {
+        return [System.IO.Path]::GetFullPath($PathText)
+    }
+    return [System.IO.Path]::GetFullPath((Join-Path $RepoPath $PathText))
+}
+
+function Get-StateStepPathName {
+    param([string]$Step)
+    $safe = ($Step -replace "[^A-Za-z0-9]+", "_").Trim("_")
+    if ([string]::IsNullOrWhiteSpace($safe)) {
+        return "step"
+    }
+    return $safe
+}
+
+function Add-StateHookWarning {
+    param([string]$Message)
+    $script:StateHookWarnings.Add($Message)
+    Add-WarningLine ("State hook: {0}" -f $Message)
+}
+
+function Add-StateHookError {
+    param([string]$Message)
+    $script:StateHookErrors.Add($Message)
 }
 
 function ConvertTo-StringList {
@@ -690,6 +746,203 @@ function Invoke-ConfiguredChecks {
     }
 }
 
+function Initialize-StateHookConfig {
+    param(
+        [object]$PublishConfig,
+        [string]$RepoPath
+    )
+    $enabled = Get-OptionalBoolProperty -Object $PublishConfig -Name "state_machine_enabled" -Default $false
+    $script:StateHookConfig.Enabled = $enabled
+    $script:StateHookSummary.Enabled = $enabled
+    if (-not $enabled) {
+        return
+    }
+
+    $stateStep = Get-OptionalStringProperty -Object $PublishConfig -Name "state_step"
+    if ([string]::IsNullOrWhiteSpace($stateStep)) {
+        $stateStep = [string]$PublishConfig.step
+    }
+    if ([string]::IsNullOrWhiteSpace($stateStep)) {
+        throw "state_step could not be resolved from config."
+    }
+
+    $writeBridge = Get-OptionalBoolProperty -Object $PublishConfig -Name "state_write_bridge" -Default $false
+    $bridgeRoot = Get-OptionalStringProperty -Object $PublishConfig -Name "state_bridge_root"
+    if ($writeBridge -and [string]::IsNullOrWhiteSpace($bridgeRoot)) {
+        throw "state_bridge_root is required when state_write_bridge is true."
+    }
+    $resolvedBridgeRoot = ""
+    if (-not [string]::IsNullOrWhiteSpace($bridgeRoot)) {
+        $resolvedBridgeRoot = Resolve-RepoRelativePath -PathText $bridgeRoot -RepoPath $RepoPath
+    }
+
+    $stateFile = Get-OptionalStringProperty -Object $PublishConfig -Name "state_file"
+    if (-not [string]::IsNullOrWhiteSpace($stateFile)) {
+        $stateFile = Resolve-RepoRelativePath -PathText $stateFile -RepoPath $RepoPath
+    } elseif ($writeBridge) {
+        $stateFile = Join-Path $resolvedBridgeRoot "LAST-State.json"
+    } else {
+        $stateFile = Join-Path (Join-Path $RepoPath "tmp\state_machine") ("{0}_state.json" -f (Get-StateStepPathName -Step $stateStep))
+    }
+
+    $script:StateHookConfig = [pscustomobject]@{
+        Enabled = $true
+        Step = $stateStep
+        StateFile = $stateFile
+        WriteBridge = $writeBridge
+        BridgeRoot = $resolvedBridgeRoot
+        FailOnHookError = (Get-OptionalBoolProperty -Object $PublishConfig -Name "state_fail_on_hook_error" -Default $true)
+        ExpectedBeforePhaseB = (Get-OptionalStringProperty -Object $PublishConfig -Name "state_expected_before_phase_b")
+        ExpectedBeforePhaseC = (Get-OptionalStringProperty -Object $PublishConfig -Name "state_expected_before_phase_c")
+        CloseOnPhaseCSuccess = (Get-OptionalBoolProperty -Object $PublishConfig -Name "state_close_on_phase_c_success" -Default $false)
+        EmitMainVerified = (Get-OptionalBoolProperty -Object $PublishConfig -Name "state_emit_main_verified" -Default $true)
+    }
+    if ([string]::IsNullOrWhiteSpace($script:StateHookConfig.ExpectedBeforePhaseB)) {
+        $script:StateHookConfig.ExpectedBeforePhaseB = "READY_TO_PUBLISH"
+    }
+    if ([string]::IsNullOrWhiteSpace($script:StateHookConfig.ExpectedBeforePhaseC)) {
+        $script:StateHookConfig.ExpectedBeforePhaseC = "PR_CREATED"
+    }
+    $script:StateHookSummary.StateFile = $stateFile
+    $script:StateHookSummary.BridgeRoot = if ($writeBridge) { $resolvedBridgeRoot } else { "not enabled" }
+}
+
+function Get-StateFileCurrentState {
+    param([string]$StateFile)
+    if ([string]::IsNullOrWhiteSpace($StateFile) -or -not (Test-Path -LiteralPath $StateFile -PathType Leaf)) {
+        return ""
+    }
+    try {
+        $payload = Get-Content -Path $StateFile -Raw | ConvertFrom-Json
+    } catch {
+        throw "Unable to read state_file before hook: ${StateFile}: $($_.Exception.Message)"
+    }
+    if (-not (Test-HasProperty -Object $payload -Name "current_state") -or [string]::IsNullOrWhiteSpace([string]$payload.current_state)) {
+        throw "state_file is missing current_state before hook: $StateFile"
+    }
+    return ([string]$payload.current_state).Trim().ToUpperInvariant()
+}
+
+function Assert-StateHookExpectedState {
+    param(
+        [string]$PhaseName,
+        [string]$ExpectedState
+    )
+    if (-not $script:StateHookConfig.Enabled -or [string]::IsNullOrWhiteSpace($ExpectedState)) {
+        return
+    }
+    $actual = Get-StateFileCurrentState -StateFile $script:StateHookConfig.StateFile
+    if ([string]::IsNullOrWhiteSpace($actual)) {
+        throw "State hook expected $ExpectedState before $PhaseName but state file does not exist: $($script:StateHookConfig.StateFile)"
+    }
+    if (-not [string]::Equals($actual, $ExpectedState.Trim().ToUpperInvariant(), [System.StringComparison]::OrdinalIgnoreCase)) {
+        throw "State hook expected $ExpectedState before $PhaseName but found $actual."
+    }
+}
+
+function Invoke-StateMachineEvent {
+    param(
+        [string]$Event,
+        [string]$RepoPath
+    )
+    if (-not $script:StateHookConfig.Enabled) {
+        return [pscustomobject]@{ Invoked = $false; Succeeded = $true; Event = $Event; NextState = "" }
+    }
+
+    $stateScript = Join-Path $PSScriptRoot "asf_step_state_machine.py"
+    if (-not (Test-Path -LiteralPath $stateScript -PathType Leaf)) {
+        throw "State machine script not found: $stateScript"
+    }
+
+    $argv = @(
+        "python",
+        $stateScript,
+        "--step",
+        $script:StateHookConfig.Step,
+        "--event",
+        $Event,
+        "--state-file",
+        $script:StateHookConfig.StateFile,
+        "--config-step",
+        ([string]$publishConfig.step),
+        "--step-title",
+        ([string]$publishConfig.name),
+        "--next-step",
+        ([string]$publishConfig.next_step),
+        "--json"
+    )
+    if ($script:StateHookConfig.WriteBridge) {
+        $argv += "--write-bridge"
+        $argv += "--bridge-root"
+        $argv += $script:StateHookConfig.BridgeRoot
+    }
+
+    $result = Invoke-ArgvCommand -Name ("State machine event {0}" -f $Event) -Argv $argv -WorkingDirectory $RepoPath -AllowFailure
+    $text = (($result.Output) -join [Environment]::NewLine).Trim()
+    $packet = $null
+    if (-not [string]::IsNullOrWhiteSpace($text)) {
+        try {
+            $packet = $text | ConvertFrom-Json
+        } catch {
+            Add-StateHookError "State machine event $Event returned non-JSON output."
+        }
+    } else {
+        Add-StateHookError "State machine event $Event returned empty output."
+    }
+
+    $nextState = ""
+    if ($null -ne $packet) {
+        $script:StateHookSummary.LastEvent = [string]$packet.event
+        $nextState = [string]$packet.next_state
+        if (-not [string]::IsNullOrWhiteSpace($nextState)) {
+            $script:StateHookSummary.FinalState = $nextState
+        }
+        foreach ($warning in @($packet.warnings)) {
+            if (-not [string]::IsNullOrWhiteSpace([string]$warning)) {
+                $script:StateHookWarnings.Add([string]$warning)
+            }
+        }
+    } else {
+        $script:StateHookSummary.LastEvent = $Event
+    }
+
+    $failed = $result.ExitCode -ne 0
+    if ($null -ne $packet -and [bool]$packet.fail_closed) {
+        $failed = $true
+    }
+    if ($failed) {
+        $reasonText = if ($null -ne $packet -and @($packet.reasons).Count -gt 0) { (@($packet.reasons) -join "; ") } else { "exit $($result.ExitCode)" }
+        $message = "State machine event $Event failed: $reasonText"
+        Add-StateHookError $message
+        if ($script:StateHookConfig.FailOnHookError) {
+            throw $message
+        }
+        Add-StateHookWarning $message
+        return [pscustomobject]@{ Invoked = $true; Succeeded = $false; Event = $Event; NextState = $nextState }
+    }
+
+    Write-Log ("State machine event emitted: {0} -> {1}" -f $Event, $nextState)
+    return [pscustomobject]@{ Invoked = $true; Succeeded = $true; Event = $Event; NextState = $nextState }
+}
+
+function Try-StateMachineFailureEvent {
+    param(
+        [string]$Event,
+        [string]$RepoPath,
+        [string]$OriginalError
+    )
+    if (-not $script:StateHookConfig.Enabled) {
+        return
+    }
+    try {
+        [void](Invoke-StateMachineEvent -Event $Event -RepoPath $RepoPath)
+    } catch {
+        $hookMessage = "Failure hook $Event failed after operational error '$OriginalError': $($_.Exception.Message)"
+        Add-StateHookError $hookMessage
+        throw "$OriginalError State recovery hook also failed: $($_.Exception.Message)"
+    }
+}
+
 function Get-CurrentBranch {
     param([string]$RepoPath)
     $result = Invoke-Git -RepoPath $RepoPath -ArgList @("branch", "--show-current") -Name "Current branch"
@@ -739,27 +992,42 @@ function Invoke-PhaseB {
         throw "Phase B requires -ApprovePublish."
     }
     Write-Log "PHASE B - branch publish"
-    Invoke-PhaseA -PublishConfig $PublishConfig -RepoPath $RepoPath
-    Ensure-StepBranch -RepoPath $RepoPath -Branch ([string]$PublishConfig.branch)
-    Assert-ExpectedScope -RepoPath $RepoPath -ExpectedFiles @($PublishConfig.expected_files)
-    [void](Invoke-Git -RepoPath $RepoPath -ArgList (@("add", "--") + @($PublishConfig.expected_files)) -Name "Stage expected files")
-    [void](Invoke-Git -RepoPath $RepoPath -ArgList @("--no-pager", "diff", "--cached", "--check") -Name "Cached diff check")
-    [void](Invoke-Git -RepoPath $RepoPath -ArgList @("commit", "-m", ([string]$PublishConfig.commit_message)) -Name "Create commit")
-    [void](Invoke-Git -RepoPath $RepoPath -ArgList @("push", "-u", "origin", ([string]$PublishConfig.branch)) -Name "Push branch")
+    Assert-StateHookExpectedState -PhaseName "Phase B" -ExpectedState $script:StateHookConfig.ExpectedBeforePhaseB
+    [void](Invoke-StateMachineEvent -Event "phase_b_started" -RepoPath $RepoPath)
+    try {
+        Invoke-PhaseA -PublishConfig $PublishConfig -RepoPath $RepoPath
+        Ensure-StepBranch -RepoPath $RepoPath -Branch ([string]$PublishConfig.branch)
+        Assert-ExpectedScope -RepoPath $RepoPath -ExpectedFiles @($PublishConfig.expected_files)
+        [void](Invoke-Git -RepoPath $RepoPath -ArgList (@("add", "--") + @($PublishConfig.expected_files)) -Name "Stage expected files")
+        [void](Invoke-Git -RepoPath $RepoPath -ArgList @("--no-pager", "diff", "--cached", "--check") -Name "Cached diff check")
+        [void](Invoke-Git -RepoPath $RepoPath -ArgList @("commit", "-m", ([string]$PublishConfig.commit_message)) -Name "Create commit")
+        [void](Invoke-Git -RepoPath $RepoPath -ArgList @("push", "-u", "origin", ([string]$PublishConfig.branch)) -Name "Push branch")
 
-    $existing = Invoke-ArgvCommand -Name "Find existing PR" -Argv @("gh", "pr", "list", "--head", ([string]$PublishConfig.branch), "--json", "number", "--jq", ".[0].number") -WorkingDirectory $RepoPath -AllowFailure
-    $existingNumber = (($existing.Output) -join "").Trim()
-    if ($existing.ExitCode -eq 0 -and -not [string]::IsNullOrWhiteSpace($existingNumber)) {
-        $script:PrNumber = $existingNumber
-        Write-Log ("Reusing PR #{0}" -f $script:PrNumber)
-    } else {
-        $created = Invoke-Gh -RepoPath $RepoPath -ArgList @("pr", "create", "--base", "main", "--head", ([string]$PublishConfig.branch), "--title", ([string]$PublishConfig.pr_title), "--body", ([string]$PublishConfig.pr_body)) -Name "Create PR"
-        $createdText = ($created.Output -join [Environment]::NewLine)
-        $numberMatch = [regex]::Match($createdText, "/pull/(\d+)")
-        if ($numberMatch.Success) {
-            $script:PrNumber = $numberMatch.Groups[1].Value
+        $existing = Invoke-ArgvCommand -Name "Find existing PR" -Argv @("gh", "pr", "list", "--head", ([string]$PublishConfig.branch), "--json", "number", "--jq", ".[0].number") -WorkingDirectory $RepoPath -AllowFailure
+        $existingNumber = (($existing.Output) -join "").Trim()
+        if ($existing.ExitCode -eq 0 -and -not [string]::IsNullOrWhiteSpace($existingNumber)) {
+            $script:PrNumber = $existingNumber
+            Write-Log ("Reusing PR #{0}" -f $script:PrNumber)
+        } else {
+            $created = Invoke-Gh -RepoPath $RepoPath -ArgList @("pr", "create", "--base", "main", "--head", ([string]$PublishConfig.branch), "--title", ([string]$PublishConfig.pr_title), "--body", ([string]$PublishConfig.pr_body)) -Name "Create PR"
+            $createdText = ($created.Output -join [Environment]::NewLine)
+            $numberMatch = [regex]::Match($createdText, "/pull/(\d+)")
+            if ($numberMatch.Success) {
+                $script:PrNumber = $numberMatch.Groups[1].Value
+            }
+            Write-Log ("Created PR reference: {0}" -f $createdText)
         }
-        Write-Log ("Created PR reference: {0}" -f $createdText)
+    } catch {
+        $phaseError = $_.Exception.Message
+        Try-StateMachineFailureEvent -Event "phase_b_failed" -RepoPath $RepoPath -OriginalError $phaseError
+        throw $phaseError
+    }
+    try {
+        [void](Invoke-StateMachineEvent -Event "phase_b_passed" -RepoPath $RepoPath)
+        [void](Invoke-StateMachineEvent -Event "pr_created" -RepoPath $RepoPath)
+    } catch {
+        Add-StateHookWarning "Phase B operational actions finished, but success hook failed; manual state recovery/check is required."
+        throw
     }
     Write-Log "PHASE B completed. Merge was not performed."
 }
@@ -824,20 +1092,41 @@ function Invoke-PhaseC {
         throw "Phase C requires -ApproveMerge."
     }
     Write-Log "PHASE C - merge and final verification"
-    $number = Get-PrNumber -PublishConfig $PublishConfig -RepoPath $RepoPath
-    $script:PrNumber = $number
-    [void](Invoke-Gh -RepoPath $RepoPath -ArgList @("pr", "view", $number) -Name "View PR")
-    Invoke-GhPrChecks -PublishConfig $PublishConfig -RepoPath $RepoPath -Number $number
-    [void](Invoke-Gh -RepoPath $RepoPath -ArgList @("pr", "merge", $number, "--squash") -Name "Merge PR")
-    [void](Invoke-Git -RepoPath $RepoPath -ArgList @("switch", "main") -Name "Switch main")
-    [void](Invoke-Git -RepoPath $RepoPath -ArgList @("pull", "--ff-only", "origin", "main") -Name "Pull main")
-    Invoke-ConfiguredChecks -Checks @($PublishConfig.phase_c_checks) -RepoPath $RepoPath
-    [void](Invoke-Git -RepoPath $RepoPath -ArgList @("--no-pager", "diff", "--check") -Name "Final diff check")
-    $status = @(Get-GitStatusPaths -RepoPath $RepoPath)
-    if ($status.Count -gt 0) {
-        throw "Working tree is not clean after merge: $($status -join ', ')"
+    Assert-StateHookExpectedState -PhaseName "Phase C" -ExpectedState $script:StateHookConfig.ExpectedBeforePhaseC
+    [void](Invoke-StateMachineEvent -Event "phase_c_started" -RepoPath $RepoPath)
+    try {
+        $number = Get-PrNumber -PublishConfig $PublishConfig -RepoPath $RepoPath
+        $script:PrNumber = $number
+        [void](Invoke-Gh -RepoPath $RepoPath -ArgList @("pr", "view", $number) -Name "View PR")
+        Invoke-GhPrChecks -PublishConfig $PublishConfig -RepoPath $RepoPath -Number $number
+        [void](Invoke-Gh -RepoPath $RepoPath -ArgList @("pr", "merge", $number, "--squash") -Name "Merge PR")
+        [void](Invoke-Git -RepoPath $RepoPath -ArgList @("switch", "main") -Name "Switch main")
+        [void](Invoke-Git -RepoPath $RepoPath -ArgList @("pull", "--ff-only", "origin", "main") -Name "Pull main")
+        Invoke-ConfiguredChecks -Checks @($PublishConfig.phase_c_checks) -RepoPath $RepoPath
+        [void](Invoke-Git -RepoPath $RepoPath -ArgList @("--no-pager", "diff", "--check") -Name "Final diff check")
+        $status = @(Get-GitStatusPaths -RepoPath $RepoPath)
+        if ($status.Count -gt 0) {
+            throw "Working tree is not clean after merge: $($status -join ', ')"
+        }
+        [void](Invoke-Git -RepoPath $RepoPath -ArgList @("--no-pager", "log", "--oneline", "--max-count=$([int]$PublishConfig.log_max_count)") -Name "Final log")
+    } catch {
+        $phaseError = $_.Exception.Message
+        Try-StateMachineFailureEvent -Event "phase_c_failed" -RepoPath $RepoPath -OriginalError $phaseError
+        throw $phaseError
     }
-    [void](Invoke-Git -RepoPath $RepoPath -ArgList @("--no-pager", "log", "--oneline", "--max-count=$([int]$PublishConfig.log_max_count)") -Name "Final log")
+    try {
+        [void](Invoke-StateMachineEvent -Event "phase_c_passed" -RepoPath $RepoPath)
+        if ($script:StateHookConfig.EmitMainVerified) {
+            [void](Invoke-StateMachineEvent -Event "main_verified" -RepoPath $RepoPath)
+        }
+        if ($script:StateHookConfig.CloseOnPhaseCSuccess) {
+            [void](Invoke-StateMachineEvent -Event "close_step" -RepoPath $RepoPath)
+            $script:StateHookSummary.CloseStepEmitted = $true
+        }
+    } catch {
+        Add-StateHookWarning "Phase C operational actions finished, but success hook failed; manual state recovery/check is required."
+        throw
+    }
     Write-Log "PHASE C completed."
 }
 
@@ -971,6 +1260,21 @@ function Get-ProfileValidationSummaryLines {
     )
 }
 
+function Get-StateHookSummaryLines {
+    $hookWarnings = if ($script:StateHookWarnings.Count -gt 0) { (@($script:StateHookWarnings) | Select-Object -Unique) -join "; " } else { "none" }
+    $hookErrors = if ($script:StateHookErrors.Count -gt 0) { (@($script:StateHookErrors) | Select-Object -Unique) -join "; " } else { "none" }
+    return @(
+        ("State machine enabled: {0}" -f $script:StateHookSummary.Enabled),
+        ("State file: {0}" -f $script:StateHookSummary.StateFile),
+        ("State bridge root: {0}" -f $script:StateHookSummary.BridgeRoot),
+        ("Last state event emitted: {0}" -f $script:StateHookSummary.LastEvent),
+        ("Final state: {0}" -f $script:StateHookSummary.FinalState),
+        ("Close step emitted: {0}" -f $script:StateHookSummary.CloseStepEmitted),
+        ("Hook warnings: {0}" -f $hookWarnings),
+        ("Hook errors: {0}" -f $hookErrors)
+    )
+}
+
 function Write-BridgeOutputs {
     param(
         [object]$PublishConfig,
@@ -985,6 +1289,7 @@ function Write-BridgeOutputs {
     $warnings = if ($script:WarningLines.Count -gt 0) { $script:WarningLines -join [Environment]::NewLine } else { "none" }
     $prText = if ($null -ne $script:PrNumber) { [string]$script:PrNumber } else { "not available" }
     $profileSummary = Get-ProfileValidationSummaryLines
+    $stateHookSummary = Get-StateHookSummaryLines
 
     $requestText = @(
         "ASF Publish Step Runner",
@@ -995,7 +1300,10 @@ function Write-BridgeOutputs {
         "Next step: $($PublishConfig.next_step)",
         "",
         "Verification profile:",
-        ($profileSummary -join [Environment]::NewLine)
+        ($profileSummary -join [Environment]::NewLine),
+        "",
+        "State machine hooks:",
+        ($stateHookSummary -join [Environment]::NewLine)
     ) -join [Environment]::NewLine
     $commandText = $shortCommand + [Environment]::NewLine
     $fullText = @(
@@ -1007,6 +1315,9 @@ function Write-BridgeOutputs {
         "",
         "Verification profile:",
         ($profileSummary -join [Environment]::NewLine),
+        "",
+        "State machine hooks:",
+        ($stateHookSummary -join [Environment]::NewLine),
         "",
         "Log:",
         ($script:LogLines -join [Environment]::NewLine)
@@ -1024,6 +1335,10 @@ function Write-BridgeOutputs {
         "## Verification profile",
         "",
         ($profileSummary -join [Environment]::NewLine),
+        "",
+        "## State machine hooks",
+        "",
+        ($stateHookSummary -join [Environment]::NewLine),
         "",
         "## Short command",
         "",
@@ -1087,6 +1402,7 @@ try {
     $publishConfig = Read-PublishConfig -Path $Config
     Assert-PublishConfig -PublishConfig $publishConfig
     $repoPath = Get-RepoPath -PublishConfig $publishConfig
+    Initialize-StateHookConfig -PublishConfig $publishConfig -RepoPath $repoPath
     Invoke-VerificationProfileValidation -PublishConfig $publishConfig -RepoPath $repoPath
 
     switch ($Phase) {

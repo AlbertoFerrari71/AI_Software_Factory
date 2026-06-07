@@ -1,7 +1,7 @@
 # AI Software Factory
 
 **Metodo interno:** Codex Alchemy Method
-**Stato:** STEP 0740 - MVP Real Step Pilot
+**Stato:** STEP 0750 - State Machine Publish Runner Event Hooks
 **Data bootstrap:** 2026-05-25
 **Strategia:** local-first personale, progettato per evoluzione SaaS
 
@@ -28,7 +28,7 @@ Il metodo interno si chiama **Codex Alchemy Method**: l'idea grezza viene trasfo
 
 ## 2. Stato repository
 
-Questo repository e' nello stato **STEP 0740 - MVP Real Step Pilot**.
+Questo repository e' nello stato **STEP 0750 - State Machine Publish Runner Event Hooks**.
 
 Sono presenti:
 
@@ -75,6 +75,7 @@ Sono presenti:
 - MVP Usage Runbook, con procedura operativa smoke -> manifest -> review -> publish config -> Phase B -> Phase C, directory Bridge, checklist Alberto, recovery e limiti MVP.
 - End-to-End MVP Closure Pack, con perimetro MVP, evidenze, criteri GO/WARNING/NO-GO, stato gate/test/Bridge/state machine/manifest e decisione prudente `MVP STATUS: GO WITH WARNINGS`.
 - MVP Real Step Pilot, con modifica reale piccola, state machine locale, evidence temporanee, manifest documentale e decisione `PILOT STATUS: GO WITH WARNINGS`.
+- State Machine Publish Runner Event Hooks, con hook opzionali del publish runner verso la state machine per Phase B/Phase C, fail-closed su mismatch e gate `-ApprovePublish`/`-ApproveMerge` invariati.
 
 Non sono ancora presenti:
 
@@ -372,6 +373,7 @@ docs/motor/0710_MOTOR_RUN_MANIFEST_AND_EVIDENCE_PACK.md
 docs/motor/0720_MVP_USAGE_RUNBOOK.md
 docs/motor/0730_END_TO_END_MVP_CLOSURE_PACK.md
 docs/motor/0740_MVP_REAL_STEP_PILOT.md
+docs/motor/0750_STATE_MACHINE_PUBLISH_RUNNER_EVENT_HOOKS.md
 ```
 
 ---
@@ -430,7 +432,7 @@ policies/path_policy.v0.json
 ## 11. Prossimo step
 
 ```text
-0750) State Machine Publish Runner Event Hooks
+0760) MVP Real Step Pilot 2 with State Hooks
 ```
 
-Obiettivo: ridurre la frizione manuale emersa dal primo pilot reale collegando in modo prudente publish runner e state machine, senza ridurre i gate Phase B/Phase C.
+Obiettivo: validare i nuovi hook state machine del publish runner su un altro step reale piccolo, mantenendo Phase B/Phase C human-gated.

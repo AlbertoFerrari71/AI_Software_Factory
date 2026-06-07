@@ -2327,6 +2327,58 @@ e' capire frizioni operative, non dimostrare produzione o autonomia completa.
 
 ---
 
+## DEC-088 - State Machine Publish Runner Event Hooks human-gated
+
+**Data:** 2026-06-07
+**Stato:** Accettata
+
+### Contesto
+
+Dopo STEP 0740 state machine, publish config generator, manifest e publish
+runner sono risultati utili, ma il passaggio da Phase B/Phase C agli eventi
+state machine restava manuale.
+
+### Decisione
+
+Lo STEP 0750 introduce hook opzionali nel publish runner.
+
+Quando `state_machine_enabled=true`, `scripts/asf_publish_step.ps1` puo'
+emettere eventi come:
+
+- `phase_b_started`;
+- `phase_b_passed`;
+- `pr_created`;
+- `phase_b_failed`;
+- `phase_c_started`;
+- `phase_c_passed`;
+- `phase_c_failed`;
+- `main_verified`;
+- `close_step` solo se configurato.
+
+Gli hook invocano `scripts/asf_step_state_machine.py` via argv e non duplicano
+le transizioni nel PowerShell.
+
+### Motivazione
+
+Il valore operativo e' ridurre la gestione manuale dello stato senza ridurre i
+gate umani. La state machine resta il componente autorevole per coerenza,
+transizioni e recovery.
+
+### Conseguenze
+
+- Le config legacy senza hook restano compatibili.
+- Phase B richiede ancora `-ApprovePublish`.
+- Phase C richiede ancora `-ApproveMerge`.
+- Stato incoerente o hook falliti con hook abilitati bloccano il runner.
+- I test usano fake `git`/`gh` e directory temporanee, senza GitHub o Dropbox reali.
+- Il prossimo step consigliato e':
+
+```text
+0760) MVP Real Step Pilot 2 with State Hooks
+```
+
+---
+
 ## DEC-086 - End-to-End MVP Closure Pack con GO WITH WARNINGS
 
 **Data:** 2026-06-07

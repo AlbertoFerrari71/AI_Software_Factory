@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import subprocess
 import zipfile
@@ -57,13 +58,17 @@ def pwsh_available() -> bool:
     return shutil.which("pwsh") is not None
 
 
-def run_pwsh(*args: str | Path) -> subprocess.CompletedProcess[str]:
+def run_pwsh(*args: str | Path, env: dict[str, str] | None = None) -> subprocess.CompletedProcess[str]:
+    run_env = os.environ.copy()
+    if env:
+        run_env.update(env)
     return subprocess.run(
         ["pwsh", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", str(SCRIPT), *(str(arg) for arg in args)],
         cwd=ROOT,
         text=True,
         capture_output=True,
         check=False,
+        env=run_env,
     )
 
 
@@ -75,6 +80,175 @@ def write_config(tmp_path: Path, **updates: object) -> Path:
     config["next_step"] = "0650) Verification Profile Driven Publish Config Generator"
     config.update(updates)
     path = tmp_path / "publish_config.json"
+    path.write_text(json.dumps(config, indent=2), encoding="utf-8")
+    return path
+
+
+def write_state_file(tmp_path: Path, *, step: str = "0750", current_state: str = "READY_TO_PUBLISH") -> Path:
+    path = tmp_path / f"{step}_state.json"
+    path.write_text(
+        json.dumps(
+            {
+                "schema": "asf_step_state_machine.v1",
+                "step": step,
+                "current_state": current_state,
+                "history": [],
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    return path
+
+
+def read_state_events(path: Path) -> list[str]:
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    return [entry["event"] for entry in payload["history"]]
+
+
+def make_fake_repo(tmp_path: Path) -> Path:
+    repo = tmp_path / "fake_repo"
+    repo.mkdir()
+    (repo / ".git").mkdir()
+    (repo / "README.md").write_text("fake repo\n", encoding="utf-8")
+    return repo
+
+
+def write_fake_tooling(tmp_path: Path) -> tuple[Path, Path]:
+    tools = tmp_path / "fake_tools"
+    tools.mkdir()
+    log = tmp_path / "fake_tool_calls.log"
+
+    git_cmd = tools / "git.cmd"
+    git_cmd.write_text(
+        "\n".join(
+            [
+                "@echo off",
+                "echo GIT %*>>\"%ASF_FAKE_TOOL_LOG%\"",
+                "if \"%1\"==\"branch\" if \"%2\"==\"--show-current\" (echo main& exit /b 0)",
+                "if \"%1\"==\"status\" (exit /b 0)",
+                "if \"%1\"==\"rev-parse\" (exit /b 1)",
+                "if \"%ASF_FAKE_GIT_FAIL%\"==\"commit\" if \"%1\"==\"commit\" (exit /b 7)",
+                "if \"%1\"==\"--no-pager\" if \"%2\"==\"log\" (echo 9894a5c fake log& exit /b 0)",
+                "exit /b 0",
+            ]
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    gh_cmd = tools / "gh.cmd"
+    gh_cmd.write_text(
+        "\n".join(
+            [
+                "@echo off",
+                "echo GH %*>>\"%ASF_FAKE_TOOL_LOG%\"",
+                "if \"%ASF_FAKE_GH_FAIL%\"==\"merge\" if \"%1\"==\"pr\" if \"%2\"==\"merge\" (exit /b 9)",
+                "if \"%1\"==\"pr\" if \"%2\"==\"list\" (echo 123& exit /b 0)",
+                "if \"%1\"==\"pr\" if \"%2\"==\"create\" (echo https://github.com/example/repo/pull/123& exit /b 0)",
+                "if \"%1\"==\"pr\" if \"%2\"==\"checks\" (echo checks ok& exit /b 0)",
+                "if \"%1\"==\"pr\" if \"%2\"==\"view\" (echo PR 123& exit /b 0)",
+                "if \"%1\"==\"pr\" if \"%2\"==\"merge\" (echo merged& exit /b 0)",
+                "exit /b 0",
+            ]
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    git_sh = tools / "git"
+    git_sh.write_text(
+        """#!/usr/bin/env sh
+printf 'GIT %s\n' "$*" >> "$ASF_FAKE_TOOL_LOG"
+if [ "$1" = "branch" ] && [ "$2" = "--show-current" ]; then echo main; exit 0; fi
+if [ "$1" = "status" ]; then exit 0; fi
+if [ "$1" = "rev-parse" ]; then exit 1; fi
+if [ "$ASF_FAKE_GIT_FAIL" = "commit" ] && [ "$1" = "commit" ]; then exit 7; fi
+if [ "$1" = "--no-pager" ] && [ "$2" = "log" ]; then echo 9894a5c fake log; exit 0; fi
+exit 0
+""",
+        encoding="utf-8",
+    )
+    gh_sh = tools / "gh"
+    gh_sh.write_text(
+        """#!/usr/bin/env sh
+printf 'GH %s\n' "$*" >> "$ASF_FAKE_TOOL_LOG"
+if [ "$ASF_FAKE_GH_FAIL" = "merge" ] && [ "$1" = "pr" ] && [ "$2" = "merge" ]; then exit 9; fi
+if [ "$1" = "pr" ] && [ "$2" = "list" ]; then echo 123; exit 0; fi
+if [ "$1" = "pr" ] && [ "$2" = "create" ]; then echo https://github.com/example/repo/pull/123; exit 0; fi
+if [ "$1" = "pr" ] && [ "$2" = "checks" ]; then echo checks ok; exit 0; fi
+if [ "$1" = "pr" ] && [ "$2" = "view" ]; then echo PR 123; exit 0; fi
+if [ "$1" = "pr" ] && [ "$2" = "merge" ]; then echo merged; exit 0; fi
+exit 0
+""",
+        encoding="utf-8",
+    )
+    git_sh.chmod(0o755)
+    gh_sh.chmod(0o755)
+    return tools, log
+
+
+def fake_tool_env(tools: Path, log: Path, **updates: str) -> dict[str, str]:
+    env = {
+        "PATH": str(tools) + os.pathsep + os.environ.get("PATH", ""),
+        "ASF_FAKE_TOOL_LOG": str(log),
+    }
+    env.update(updates)
+    return env
+
+
+def write_state_hook_config(
+    tmp_path: Path,
+    *,
+    repo_path: Path,
+    state_file: Path,
+    state_bridge_root: Path | None = None,
+    **updates: object,
+) -> Path:
+    config = load_config()
+    config.update(
+        {
+            "step": "0750",
+            "name": "State_Machine_Publish_Runner_Event_Hooks_Test",
+            "repo_path": str(repo_path),
+            "bridge_root": str(tmp_path / "runner_bridge"),
+            "branch": "step-0750-state-machine-publish-runner-event-hooks-test",
+            "commit_message": "0750 test state hooks",
+            "pr_title": "0750 test state hooks",
+            "pr_body": "Test-only config for local fake publish runner hooks.",
+            "next_step": "0760) MVP Real Step Pilot 2 with State Hooks",
+            "expected_files": ["README.md"],
+            "phase_a_checks": [{"name": "Noop", "argv": ["pwsh", "-NoProfile", "-Command", "Write-Output noop"]}],
+            "phase_c_checks": [{"name": "Noop", "argv": ["pwsh", "-NoProfile", "-Command", "Write-Output noop"]}],
+            "allow_no_github_checks_reported": True,
+            "log_max_count": 3,
+            "state_machine_enabled": True,
+            "state_file": str(state_file),
+            "state_step": "0750",
+            "state_fail_on_hook_error": True,
+            "state_expected_before_phase_b": "READY_TO_PUBLISH",
+            "state_expected_before_phase_c": "PR_CREATED",
+            "state_emit_main_verified": True,
+            "state_close_on_phase_c_success": False,
+        }
+    )
+    if state_bridge_root is not None:
+        config["state_write_bridge"] = True
+        config["state_bridge_root"] = str(state_bridge_root)
+    else:
+        config["state_write_bridge"] = False
+    for profile_field in [
+        "verification_profile",
+        "profile_selector_expected_profile",
+        "risk_level",
+        "changed_files",
+        "verification_phase",
+        "allow_profile_check_reduction",
+        "profile_selector_input",
+    ]:
+        config.pop(profile_field, None)
+    config.update(updates)
+    path = tmp_path / "publish_config_state_hooks.json"
     path.write_text(json.dumps(config, indent=2), encoding="utf-8")
     return path
 
@@ -348,6 +522,182 @@ def test_publish_runner_phase_c_still_requires_approve_merge(tmp_path: Path) -> 
 
     assert result.returncode == 1
     assert "Phase C requires -ApproveMerge" in (result.stdout + result.stderr)
+
+
+@pytest.mark.skipif(not pwsh_available(), reason="pwsh executable not available")
+def test_publish_runner_state_hooks_phase_b_success_records_started_passed_and_pr_created(tmp_path: Path) -> None:
+    repo = make_fake_repo(tmp_path)
+    tools, log = write_fake_tooling(tmp_path)
+    state_file = write_state_file(tmp_path, current_state="READY_TO_PUBLISH")
+    config = write_state_hook_config(tmp_path, repo_path=repo, state_file=state_file)
+
+    result = run_pwsh(
+        "-Config",
+        config,
+        "-Phase",
+        "B",
+        "-ApprovePublish",
+        "-BridgeRoot",
+        tmp_path / "runner_bridge",
+        env=fake_tool_env(tools, log),
+    )
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    events = read_state_events(state_file)
+    assert events == ["phase_b_started", "phase_b_passed", "pr_created"]
+    compact = read(tmp_path / "runner_bridge" / "0750-Output_Compatto_State_Machine_Publish_Runner_Event_Hooks_Test.md")
+    assert "State machine enabled: True" in compact
+    assert "Last state event emitted: pr_created" in compact
+    assert "Final state: PR_CREATED" in compact
+    assert "GIT commit" in read(log)
+    assert "GH pr list" in read(log)
+
+
+@pytest.mark.skipif(not pwsh_available(), reason="pwsh executable not available")
+def test_publish_runner_state_hooks_phase_b_failure_records_failed(tmp_path: Path) -> None:
+    repo = make_fake_repo(tmp_path)
+    tools, log = write_fake_tooling(tmp_path)
+    state_file = write_state_file(tmp_path, current_state="READY_TO_PUBLISH")
+    config = write_state_hook_config(tmp_path, repo_path=repo, state_file=state_file)
+
+    result = run_pwsh(
+        "-Config",
+        config,
+        "-Phase",
+        "B",
+        "-ApprovePublish",
+        "-BridgeRoot",
+        tmp_path / "runner_bridge",
+        env=fake_tool_env(tools, log, ASF_FAKE_GIT_FAIL="commit"),
+    )
+
+    assert result.returncode == 1
+    events = read_state_events(state_file)
+    assert events == ["phase_b_started", "phase_b_failed"]
+    assert json.loads(state_file.read_text(encoding="utf-8"))["current_state"] == "RECOVERY_REQUIRED"
+    assert "phase_b_passed" not in (result.stdout + result.stderr)
+
+
+@pytest.mark.skipif(not pwsh_available(), reason="pwsh executable not available")
+def test_publish_runner_state_hooks_phase_c_success_records_started_passed_main_verified_and_bridge(tmp_path: Path) -> None:
+    repo = make_fake_repo(tmp_path)
+    tools, log = write_fake_tooling(tmp_path)
+    state_bridge_root = tmp_path / "state_bridge"
+    state_file = write_state_file(tmp_path, current_state="PR_CREATED")
+    config = write_state_hook_config(
+        tmp_path,
+        repo_path=repo,
+        state_file=state_file,
+        state_bridge_root=state_bridge_root,
+    )
+
+    result = run_pwsh(
+        "-Config",
+        config,
+        "-Phase",
+        "C",
+        "-ApproveMerge",
+        "-PrNumber",
+        "123",
+        "-BridgeRoot",
+        tmp_path / "runner_bridge",
+        env=fake_tool_env(tools, log),
+    )
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    events = read_state_events(state_file)
+    assert events == ["phase_c_started", "phase_c_passed", "main_verified"]
+    assert json.loads(state_file.read_text(encoding="utf-8"))["current_state"] == "CLOSED"
+    assert (state_bridge_root / "LAST-State.json").exists()
+    assert (state_bridge_root / "LAST-Event.json").exists()
+    compact = read(tmp_path / "runner_bridge" / "0750-Output_Compatto_State_Machine_Publish_Runner_Event_Hooks_Test.md")
+    assert f"State bridge root: {state_bridge_root}" in compact
+    assert "Last state event emitted: main_verified" in compact
+    assert "Final state: CLOSED" in compact
+    assert "GH pr merge" in read(log)
+
+
+@pytest.mark.skipif(not pwsh_available(), reason="pwsh executable not available")
+def test_publish_runner_state_hooks_phase_c_close_step_is_explicit(tmp_path: Path) -> None:
+    repo = make_fake_repo(tmp_path)
+    tools, log = write_fake_tooling(tmp_path)
+    state_file = write_state_file(tmp_path, current_state="PR_CREATED")
+    config = write_state_hook_config(
+        tmp_path,
+        repo_path=repo,
+        state_file=state_file,
+        state_close_on_phase_c_success=True,
+    )
+
+    result = run_pwsh(
+        "-Config",
+        config,
+        "-Phase",
+        "C",
+        "-ApproveMerge",
+        "-PrNumber",
+        "123",
+        "-BridgeRoot",
+        tmp_path / "runner_bridge",
+        env=fake_tool_env(tools, log),
+    )
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert read_state_events(state_file) == ["phase_c_started", "phase_c_passed", "main_verified", "close_step"]
+    compact = read(tmp_path / "runner_bridge" / "0750-Output_Compatto_State_Machine_Publish_Runner_Event_Hooks_Test.md")
+    assert "Close step emitted: True" in compact
+
+
+@pytest.mark.skipif(not pwsh_available(), reason="pwsh executable not available")
+def test_publish_runner_state_hooks_phase_c_failure_records_failed(tmp_path: Path) -> None:
+    repo = make_fake_repo(tmp_path)
+    tools, log = write_fake_tooling(tmp_path)
+    state_file = write_state_file(tmp_path, current_state="PR_CREATED")
+    config = write_state_hook_config(tmp_path, repo_path=repo, state_file=state_file)
+
+    result = run_pwsh(
+        "-Config",
+        config,
+        "-Phase",
+        "C",
+        "-ApproveMerge",
+        "-PrNumber",
+        "123",
+        "-BridgeRoot",
+        tmp_path / "runner_bridge",
+        env=fake_tool_env(tools, log, ASF_FAKE_GH_FAIL="merge"),
+    )
+
+    assert result.returncode == 1
+    assert read_state_events(state_file) == ["phase_c_started", "phase_c_failed"]
+    assert json.loads(state_file.read_text(encoding="utf-8"))["current_state"] == "RECOVERY_REQUIRED"
+    assert "PHASE C completed" not in (result.stdout + result.stderr)
+
+
+@pytest.mark.skipif(not pwsh_available(), reason="pwsh executable not available")
+def test_publish_runner_state_hooks_mismatch_fails_closed_before_phase_b_operations(tmp_path: Path) -> None:
+    repo = make_fake_repo(tmp_path)
+    tools, log = write_fake_tooling(tmp_path)
+    state_file = write_state_file(tmp_path, current_state="LOCAL_VERIFIED")
+    config = write_state_hook_config(tmp_path, repo_path=repo, state_file=state_file)
+
+    result = run_pwsh(
+        "-Config",
+        config,
+        "-Phase",
+        "B",
+        "-ApprovePublish",
+        "-BridgeRoot",
+        tmp_path / "runner_bridge",
+        env=fake_tool_env(tools, log),
+    )
+
+    assert result.returncode == 1
+    assert "State hook expected READY_TO_PUBLISH before Phase B but found LOCAL_VERIFIED" in (
+        result.stdout + result.stderr
+    )
+    assert read_state_events(state_file) == []
+    assert not log.exists() or "commit" not in read(log)
 
 
 @pytest.mark.skipif(not pwsh_available(), reason="pwsh executable not available")

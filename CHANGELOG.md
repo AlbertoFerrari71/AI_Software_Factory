@@ -4,6 +4,34 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.75.0] - 2026-06-07
+
+### Added
+
+- STEP 0750 - State Machine Publish Runner Event Hooks.
+- Documento `docs/motor/0750_STATE_MACHINE_PUBLISH_RUNNER_EVENT_HOOKS.md` con campi config, eventi Phase B/C, failure handling, Bridge output e limiti residui.
+- Esempi `examples/publish_step/0750_publish_config_state_hooks*.example.json` per hook standard, close step esplicito e mismatch fail-closed.
+- Test runner con fake `git`/`gh` locali per verificare hook Phase B/C senza GitHub reale, Dropbox reale, commit, push, PR, merge o deploy.
+
+### Changed
+
+- `scripts/asf_publish_step.ps1` puo' emettere eventi state machine opzionali durante Phase B e Phase C quando `state_machine_enabled=true`.
+- Output Bridge del publish runner include un riepilogo sintetico degli hook state machine.
+- README, roadmap, decision log, Project Workflow Index, Workflow Health Check, roadmap motore, runbook 0720, closure pack 0730 e pilot 0740 riconoscono lo STEP 0750.
+
+### Guardrails
+
+- Config legacy senza hook restano retrocompatibili.
+- `-ApprovePublish` e `-ApproveMerge` restano obbligatori.
+- Gli hook invocano `scripts/asf_step_state_machine.py` via argv, senza shell execution.
+- Hook abilitati falliscono in modo fail-closed su stato incoerente o transizione non valida.
+
+### Next
+
+- Prossimo step consigliato: `0760) MVP Real Step Pilot 2 with State Hooks`.
+
+---
+
 ## [0.74.0] - 2026-06-07
 
 ### Added
