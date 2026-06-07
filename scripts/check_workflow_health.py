@@ -91,6 +91,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/motor/0620_GATE_DECISION_REPORT_HUMAN_APPROVAL_PACKET.md",
         "docs/motor/0620_VERIFICATION_BALANCE_NOTES.md",
         "docs/motor/0630_VERIFICATION_PROFILE_SELECTOR_TEST_COST_POLICY.md",
+        "docs/motor/0640_VERIFICATION_PROFILE_INTEGRATION_PUBLISH_RUNNER.md",
         "config/asf_project_profiles.json",
         "scripts/asf_openai_api_adapter.py",
         "scripts/asf_openai_controlled_live_execution_pack.py",
@@ -150,6 +151,9 @@ def check_files(root: Path) -> list[HealthIssue]:
         "examples/dry_run_loop/step_0610_publish_intent_request.json",
         "examples/dry_run_loop/step_0610_l4_blocked_request.json",
         "examples/publish_step/0590_publish_config.example.json",
+        "examples/publish_step/0640_publish_config_motor_core.example.json",
+        "examples/publish_step/0640_publish_config_docs_only.example.json",
+        "examples/publish_step/0640_publish_config_profile_mismatch_fail_closed.example.json",
         "examples/risk_classifier/sample_l0_docs_only.json",
         "examples/risk_classifier/sample_l2_code_change.json",
         "examples/risk_classifier/sample_l3_publish.json",
@@ -168,6 +172,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "examples/verification_profiles/sample_high_risk.json",
         "examples/verification_profiles/sample_ambiguous_fail_closed.json",
         "tests/unit/test_asf_verification_profile_selector.py",
+        "tests/unit/test_asf_publish_step_runner.py",
     ]
 
     issues: list[HealthIssue] = []
@@ -349,6 +354,10 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             (
                 "ASF Verification Profile Selector document",
                 ["docs/motor/0630_VERIFICATION_PROFILE_SELECTOR_TEST_COST_POLICY.md"],
+            ),
+            (
+                "ASF Verification Profile Publish Runner Integration document",
+                ["docs/motor/0640_VERIFICATION_PROFILE_INTEGRATION_PUBLISH_RUNNER.md"],
             ),
             (
                 "artifact naming migration script",

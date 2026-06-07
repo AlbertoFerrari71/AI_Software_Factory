@@ -223,10 +223,16 @@ git status --short --untracked-files=all
 
 ---
 
-## 11. Prossimo step
+## 11. Aggiornamento dopo STEP 0640
+
+Lo STEP 0640 ha collegato il selector 0630 al publish runner 0590 come validazione opzionale e fail-closed.
+
+Il Gate Decision Report resta separato: non importa ancora direttamente il selector e non esegue publish.
+
+## 12. Prossimo step
 
 ```text
-0640) Verification Profile Integration with Publish Runner
+0650) Verification Profile Driven Publish Config Generator
 ```
 
-Motivo: dopo avere introdotto il selector 0630, ASF deve collegarlo al runner 0590 in modo prudente prima di aumentare l'autonomia operativa.
+Motivo: dopo avere validazione profilo nel runner, ASF puo' ridurre errore manuale generando bozze config coerenti con selector, rischio e scope, senza pubblicare automaticamente.

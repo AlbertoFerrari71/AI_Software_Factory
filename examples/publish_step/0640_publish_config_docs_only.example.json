@@ -1,0 +1,70 @@
+{
+  "allow_no_github_checks_reported": true,
+  "allow_profile_check_reduction": true,
+  "branch": "step-0640-docs-only-profile-example",
+  "bridge_root": "D:\\FG-SAB Dropbox\\Alberto Ferrari\\ChatGPT_Bridge\\AI_Software_Factory\\pwsh_command",
+  "changed_files": [
+    "docs/motor/0640_VERIFICATION_PROFILE_INTEGRATION_PUBLISH_RUNNER.md"
+  ],
+  "commit_message": "0640 document verification profile publish runner integration",
+  "expected_files": [
+    "docs/motor/0640_VERIFICATION_PROFILE_INTEGRATION_PUBLISH_RUNNER.md"
+  ],
+  "log_max_count": 12,
+  "name": "Verification_Profile_Docs_Only_Profile",
+  "next_step": "0650) Verification Profile Driven Publish Config Generator",
+  "phase_a_checks": [
+    {
+      "argv": [
+        "python",
+        "scripts\\check_workflow_health.py"
+      ],
+      "name": "Workflow Health Check"
+    },
+    {
+      "argv": [
+        "git",
+        "--no-pager",
+        "diff",
+        "--check"
+      ],
+      "name": "Diff check"
+    }
+  ],
+  "phase_c_checks": [
+    {
+      "argv": [
+        "python",
+        "-m",
+        "pytest",
+        "-q"
+      ],
+      "name": "Full pytest"
+    },
+    {
+      "argv": [
+        "python",
+        "scripts\\check_workflow_health.py"
+      ],
+      "name": "Workflow Health Check"
+    },
+    {
+      "argv": [
+        "pwsh",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "scripts\\verify.ps1"
+      ],
+      "name": "Verification Gate"
+    }
+  ],
+  "pr_body": "Docs-only example for STEP 0640. Reduction is explicitly allowed for local checks, while Phase C remains robust.",
+  "pr_title": "0640 docs-only verification profile example",
+  "repo_path": ".",
+  "risk_level": "L0",
+  "step": "0640",
+  "verification_phase": "local",
+  "verification_profile": "docs-only"
+}

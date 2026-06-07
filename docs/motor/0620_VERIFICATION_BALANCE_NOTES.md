@@ -76,15 +76,26 @@ Riduzioni non ammesse:
 
 ---
 
-## 6. Step successivo consigliato
+## 6. Aggiornamento dopo STEP 0640
+
+Il publish runner 0590 ora puo' validare un profilo dichiarato usando il selector 0630.
+
+La riduzione resta prudente:
+
+- config legacy senza profilo restano valide;
+- mismatch piu' leggero del profilo raccomandato blocca;
+- `allow_profile_check_reduction` default `false`;
+- Phase C resta robusta e non ridotta nello STEP 0640.
+
+## 7. Step successivo consigliato
 
 ```text
-0640) Verification Profile Integration with Publish Runner
+0650) Verification Profile Driven Publish Config Generator
 ```
 
 Deliverable proposto:
 
-- integrare la raccomandazione del selector nel runner 0590;
-- mantenere Phase B come flusso publish human-gated;
-- mantenere Phase C come verifica finale su `main`;
-- evitare duplicazioni manuali solo quando il profilo lo consente.
+- generare bozze config publish coerenti con selector, rischio e file modificati;
+- mantenere review umana prima di usare Phase B;
+- mantenere Phase C finale robusta;
+- evitare configurazioni ripetitive senza aggiungere publish automatico.

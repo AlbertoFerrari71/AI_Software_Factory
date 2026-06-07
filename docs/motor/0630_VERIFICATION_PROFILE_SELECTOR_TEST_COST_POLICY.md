@@ -205,10 +205,22 @@ git status --short --untracked-files=all
 
 ---
 
-## 13. Prossimo step
+## 13. Stato dopo STEP 0640
+
+Lo STEP 0640 ha integrato il selector nel Publish Runner:
 
 ```text
-0640) Verification Profile Integration with Publish Runner
+scripts/asf_publish_step.ps1
+docs/motor/0640_VERIFICATION_PROFILE_INTEGRATION_PUBLISH_RUNNER.md
+examples/publish_step/0640_publish_config_*.example.json
 ```
 
-Motivo: il selector e' ora un componente separato e testato. Il passo piu' utile e' integrarlo in modo prudente nel runner 0590 per evitare duplicazioni tra Phase A, Phase B, check manuali e verifica finale, senza ridurre i gate su `motor-core`, `publish`, `final-main` e `high-risk`.
+La logica profili resta in questo selector. Il runner la usa per validare config esplicite e bloccare profili dichiarati piu' leggeri della raccomandazione.
+
+## 14. Prossimo step
+
+```text
+0650) Verification Profile Driven Publish Config Generator
+```
+
+Motivo: il runner ora puo' validare profili dichiarati, ma le config publish restano manuali. Il passo piu' utile e' produrre bozze config coerenti con rischio, file modificati e profilo raccomandato.

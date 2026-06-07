@@ -2282,6 +2282,49 @@ Il prossimo step consigliato resta:
 
 ---
 
+## DEC-078 - Verification Profile Integration with Publish Runner
+
+**Data:** 2026-06-07
+**Stato:** Accettata
+
+### Contesto
+
+Lo STEP 0630 ha introdotto un selector locale dei verification profile, ma il Publish Runner 0590 non lo usava ancora.
+
+La pubblicazione degli step deve restare human-gated, ma le config publish devono poter dichiarare e validare un profilo di verifica senza duplicare regole nel PowerShell.
+
+### Decisione
+
+Integrare il selector nel publish runner come validazione opzionale di config.
+
+Il runner:
+
+- invoca `scripts/asf_verification_profile_selector.py` solo se la config contiene campi profilo;
+- mantiene compatibili le config legacy senza profilo;
+- richiede un profilo dichiarato quando sono presenti campi di integrazione profilo;
+- blocca se il selector fallisce chiuso;
+- blocca se il profilo dichiarato e' piu' leggero del profilo raccomandato;
+- mantiene `allow_profile_check_reduction` con default `false`;
+- non riduce Phase C nello STEP 0640.
+
+### Motivazione
+
+La logica dei profili deve restare in un componente Python testabile e deterministico. Il runner PowerShell deve solo validare il contratto operativo e fermarsi prima di azioni Git/GitHub se il profilo non e' coerente.
+
+### Conseguenze
+
+Phase B richiede ancora `-ApprovePublish` e Phase C richiede ancora `-ApproveMerge`.
+
+Gli output Bridge del runner includono profilo dichiarato, profilo raccomandato, stato validazione, warning e riduzione abilitata o no.
+
+Il prossimo step consigliato e':
+
+```text
+0650) Verification Profile Driven Publish Config Generator
+```
+
+---
+
 ## DEC-077 - Verification Profile Selector and Test Cost Policy
 
 **Data:** 2026-06-07

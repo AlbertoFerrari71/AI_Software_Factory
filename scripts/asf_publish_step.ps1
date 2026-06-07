@@ -16,6 +16,25 @@ $DefaultBridgeRoot = "D:\FG-SAB Dropbox\Alberto Ferrari\ChatGPT_Bridge\AI_Softwa
 $script:LogLines = [System.Collections.Generic.List[string]]::new()
 $script:WarningLines = [System.Collections.Generic.List[string]]::new()
 $script:PrNumber = $null
+$script:ProfileValidation = [pscustomobject]@{
+    Enabled = $false
+    Status = "not configured"
+    DeclaredProfile = "not configured"
+    RecommendedProfile = "not configured"
+    SelectorFailClosed = "not available"
+    AllowReduction = $false
+    PhaseCReduction = "disabled"
+    Reasons = @()
+    Warnings = @()
+}
+$script:VerificationProfileRank = @{
+    "docs-only" = 10
+    "code-unit" = 20
+    "publish" = 30
+    "motor-core" = 40
+    "final-main" = 50
+    "high-risk" = 60
+}
 $publishConfig = $null
 
 function Resolve-InputPath {
@@ -47,6 +66,79 @@ function Test-HasProperty {
     return ($Object.PSObject.Properties.Name -contains $Name)
 }
 
+function Get-OptionalStringProperty {
+    param(
+        [object]$Object,
+        [string]$Name
+    )
+    if ($null -eq $Object -or -not (Test-HasProperty -Object $Object -Name $Name)) {
+        return ""
+    }
+    $value = [string]$Object.$Name
+    if ([string]::IsNullOrWhiteSpace($value)) {
+        return ""
+    }
+    return $value.Trim()
+}
+
+function Get-OptionalBoolProperty {
+    param(
+        [object]$Object,
+        [string]$Name,
+        [bool]$Default = $false
+    )
+    if ($null -eq $Object -or -not (Test-HasProperty -Object $Object -Name $Name)) {
+        return $Default
+    }
+    $value = $Object.$Name
+    if ($value -is [bool]) {
+        return $value
+    }
+    $text = ([string]$value).Trim()
+    if ([string]::Equals($text, "true", [System.StringComparison]::OrdinalIgnoreCase)) {
+        return $true
+    }
+    if ([string]::Equals($text, "false", [System.StringComparison]::OrdinalIgnoreCase)) {
+        return $false
+    }
+    throw "Config field must be boolean: $Name"
+}
+
+function ConvertTo-StringList {
+    param([object]$Value)
+    $items = [System.Collections.Generic.List[string]]::new()
+    if ($null -eq $Value) {
+        return @()
+    }
+    if ($Value -is [string]) {
+        if (-not [string]::IsNullOrWhiteSpace($Value)) {
+            $items.Add($Value.Trim())
+        }
+        return @($items)
+    }
+    foreach ($item in @($Value)) {
+        if ($null -eq $item) {
+            continue
+        }
+        $text = ([string]$item).Trim()
+        if (-not [string]::IsNullOrWhiteSpace($text)) {
+            $items.Add($text)
+        }
+    }
+    return @($items | Select-Object -Unique)
+}
+
+function Get-OptionalStringArrayProperty {
+    param(
+        [object]$Object,
+        [string]$Name
+    )
+    if ($null -eq $Object -or -not (Test-HasProperty -Object $Object -Name $Name)) {
+        return @()
+    }
+    return @(ConvertTo-StringList -Value $Object.$Name)
+}
+
 function Assert-StringProperty {
     param(
         [object]$Object,
@@ -60,6 +152,277 @@ function Assert-StringProperty {
         throw "Config field must not be empty: $Name"
     }
     return $value
+}
+
+function Test-ProfileIntegrationRequested {
+    param([object]$PublishConfig)
+    foreach ($name in @(
+        "verification_profile",
+        "profile_selector_expected_profile",
+        "risk_level",
+        "changed_files",
+        "verification_phase",
+        "allow_profile_check_reduction",
+        "profile_selector_input"
+    )) {
+        if (Test-HasProperty -Object $PublishConfig -Name $name) {
+            return $true
+        }
+    }
+    return $false
+}
+
+function Get-ProfileSelectorInputObject {
+    param([object]$PublishConfig)
+    if (-not (Test-HasProperty -Object $PublishConfig -Name "profile_selector_input")) {
+        return $null
+    }
+    $value = $PublishConfig.profile_selector_input
+    if ($null -eq $value -or $value -is [string]) {
+        return $null
+    }
+    return $value
+}
+
+function Get-ProfileSelectorInputFile {
+    param(
+        [object]$PublishConfig,
+        [string]$RepoPath
+    )
+    if (-not (Test-HasProperty -Object $PublishConfig -Name "profile_selector_input")) {
+        return ""
+    }
+    $value = $PublishConfig.profile_selector_input
+    if ($null -eq $value -or -not ($value -is [string]) -or [string]::IsNullOrWhiteSpace($value)) {
+        return ""
+    }
+    $pathText = [string]$value
+    if ([System.IO.Path]::IsPathRooted($pathText)) {
+        return [System.IO.Path]::GetFullPath($pathText)
+    }
+    return [System.IO.Path]::GetFullPath((Join-Path $RepoPath $pathText))
+}
+
+function Get-DeclaredVerificationProfile {
+    param([object]$PublishConfig)
+    $declared = Get-OptionalStringProperty -Object $PublishConfig -Name "verification_profile"
+    $expected = Get-OptionalStringProperty -Object $PublishConfig -Name "profile_selector_expected_profile"
+    if (-not [string]::IsNullOrWhiteSpace($declared) -and -not [string]::IsNullOrWhiteSpace($expected)) {
+        if (-not [string]::Equals($declared, $expected, [System.StringComparison]::OrdinalIgnoreCase)) {
+            throw "verification_profile and profile_selector_expected_profile disagree."
+        }
+    }
+    if (-not [string]::IsNullOrWhiteSpace($declared)) {
+        return $declared.Trim().ToLowerInvariant()
+    }
+    if (-not [string]::IsNullOrWhiteSpace($expected)) {
+        return $expected.Trim().ToLowerInvariant()
+    }
+    return ""
+}
+
+function Get-ProfileRank {
+    param([string]$Profile)
+    $profileName = $Profile.Trim().ToLowerInvariant()
+    if (-not $script:VerificationProfileRank.ContainsKey($profileName)) {
+        throw "Unknown verification profile: $Profile"
+    }
+    return [int]$script:VerificationProfileRank[$profileName]
+}
+
+function Assert-DeclaredProfileAdequate {
+    param(
+        [string]$DeclaredProfile,
+        [string]$RecommendedProfile
+    )
+    $declaredRank = Get-ProfileRank -Profile $DeclaredProfile
+    $recommendedRank = Get-ProfileRank -Profile $RecommendedProfile
+    if ($declaredRank -lt $recommendedRank) {
+        throw "Verification profile '$DeclaredProfile' is lighter than selector recommendation '$RecommendedProfile'."
+    }
+    if ($RecommendedProfile -eq "publish" -and $DeclaredProfile -notin @("publish", "motor-core", "final-main", "high-risk")) {
+        throw "Publish intent requires verification_profile publish, motor-core, final-main, or high-risk."
+    }
+}
+
+function Test-PhaseCChecksRobust {
+    param([object]$PublishConfig)
+    foreach ($command in @($PublishConfig.phase_c_checks)) {
+        $text = ((@($command.argv) | ForEach-Object { [string]$_ }) -join " ").ToLowerInvariant()
+        if ($text.Contains("verify.ps1") -or $text.Contains("check_workflow_health.py") -or $text.Contains("pytest")) {
+            return $true
+        }
+    }
+    return $false
+}
+
+function Get-ProfileSelectorArgs {
+    param(
+        [object]$PublishConfig,
+        [string]$RepoPath
+    )
+    $selectorPath = Join-Path $RepoPath "scripts/asf_verification_profile_selector.py"
+    if (-not (Test-Path -LiteralPath $selectorPath -PathType Leaf)) {
+        throw "Verification profile selector not found: $selectorPath"
+    }
+
+    $inputObject = Get-ProfileSelectorInputObject -PublishConfig $PublishConfig
+    $inputFile = Get-ProfileSelectorInputFile -PublishConfig $PublishConfig -RepoPath $RepoPath
+    if (-not [string]::IsNullOrWhiteSpace($inputFile) -and -not (Test-Path -LiteralPath $inputFile -PathType Leaf)) {
+        throw "profile_selector_input file not found: $inputFile"
+    }
+
+    $argv = @("python", $selectorPath, "--json")
+    if (-not [string]::IsNullOrWhiteSpace($inputFile)) {
+        $argv += @("--input-file", $inputFile)
+    }
+
+    $riskLevel = Get-OptionalStringProperty -Object $PublishConfig -Name "risk_level"
+    if ([string]::IsNullOrWhiteSpace($riskLevel)) {
+        $riskLevel = Get-OptionalStringProperty -Object $inputObject -Name "risk_level"
+    }
+    if (-not [string]::IsNullOrWhiteSpace($riskLevel)) {
+        $argv += @("--risk-level", $riskLevel)
+    }
+
+    $changedFiles = @(Get-OptionalStringArrayProperty -Object $PublishConfig -Name "changed_files")
+    if ($changedFiles.Count -eq 0) {
+        $changedFiles = @(Get-OptionalStringArrayProperty -Object $inputObject -Name "changed_files")
+    }
+    if ($changedFiles.Count -eq 0) {
+        $changedFiles = @($PublishConfig.expected_files)
+    }
+    if ($changedFiles.Count -gt 0) {
+        $argv += "--changed-files"
+        $argv += $changedFiles
+    }
+
+    $stepType = Get-OptionalStringProperty -Object $PublishConfig -Name "step_type"
+    if ([string]::IsNullOrWhiteSpace($stepType)) {
+        $stepType = Get-OptionalStringProperty -Object $inputObject -Name "step_type"
+    }
+    if (-not [string]::IsNullOrWhiteSpace($stepType)) {
+        $argv += @("--step-type", $stepType)
+    }
+
+    $verificationPhase = Get-OptionalStringProperty -Object $PublishConfig -Name "verification_phase"
+    if ([string]::IsNullOrWhiteSpace($verificationPhase)) {
+        $verificationPhase = Get-OptionalStringProperty -Object $inputObject -Name "verification_phase"
+    }
+    if ([string]::IsNullOrWhiteSpace($verificationPhase)) {
+        $verificationPhase = Get-OptionalStringProperty -Object $inputObject -Name "phase"
+    }
+    if (-not [string]::IsNullOrWhiteSpace($verificationPhase)) {
+        $argv += @("--phase", $verificationPhase)
+    }
+
+    $intentItems = @(Get-OptionalStringArrayProperty -Object $PublishConfig -Name "intent")
+    $intentItems += @(Get-OptionalStringArrayProperty -Object $inputObject -Name "intent")
+    $intentItems += @(Get-OptionalStringArrayProperty -Object $inputObject -Name "intents")
+    foreach ($intent in @($intentItems | Select-Object -Unique)) {
+        $argv += @("--intent", $intent)
+    }
+
+    $checkItems = @(Get-OptionalStringArrayProperty -Object $PublishConfig -Name "checks_already_run")
+    $checkItems += @(Get-OptionalStringArrayProperty -Object $inputObject -Name "checks_already_run")
+    foreach ($check in @($checkItems | Select-Object -Unique)) {
+        $argv += @("--check-executed", $check)
+    }
+
+    $gateItems = @(Get-OptionalStringArrayProperty -Object $PublishConfig -Name "provided_gates")
+    $gateItems += @(Get-OptionalStringArrayProperty -Object $inputObject -Name "provided_gates")
+    if ($ApprovePublish) {
+        $gateItems += @("approve_publish", "explicit_publish_approval")
+    }
+    foreach ($gate in @($gateItems | Select-Object -Unique)) {
+        $argv += @("--provided-gate", $gate)
+    }
+
+    return @($argv)
+}
+
+function Invoke-VerificationProfileValidation {
+    param(
+        [object]$PublishConfig,
+        [string]$RepoPath
+    )
+    if (-not (Test-ProfileIntegrationRequested -PublishConfig $PublishConfig)) {
+        $script:ProfileValidation = [pscustomobject]@{
+            Enabled = $false
+            Status = "not configured"
+            DeclaredProfile = "not configured"
+            RecommendedProfile = "not configured"
+            SelectorFailClosed = "not available"
+            AllowReduction = $false
+            PhaseCReduction = "disabled"
+            Reasons = @()
+            Warnings = @()
+        }
+        return
+    }
+
+    $declaredProfile = Get-DeclaredVerificationProfile -PublishConfig $PublishConfig
+    if ([string]::IsNullOrWhiteSpace($declaredProfile)) {
+        throw "Profile integration fields are present, but verification_profile is missing."
+    }
+    [void](Get-ProfileRank -Profile $declaredProfile)
+
+    $allowReduction = Get-OptionalBoolProperty -Object $PublishConfig -Name "allow_profile_check_reduction" -Default $false
+    $script:ProfileValidation = [pscustomobject]@{
+        Enabled = $true
+        Status = "validating"
+        DeclaredProfile = $declaredProfile
+        RecommendedProfile = "not available"
+        SelectorFailClosed = "not available"
+        AllowReduction = $allowReduction
+        PhaseCReduction = "disabled"
+        Reasons = @()
+        Warnings = @()
+    }
+
+    $riskLevel = Get-OptionalStringProperty -Object $PublishConfig -Name "risk_level"
+    if ([string]::Equals($riskLevel, "L4", [System.StringComparison]::OrdinalIgnoreCase) -and $declaredProfile -ne "high-risk") {
+        throw "Risk level L4 requires verification_profile high-risk."
+    }
+
+    $argv = @(Get-ProfileSelectorArgs -PublishConfig $PublishConfig -RepoPath $RepoPath)
+    $selectorResult = Invoke-ArgvCommand -Name "Verification profile selector" -Argv $argv -WorkingDirectory $RepoPath
+    $selectorText = ($selectorResult.Output -join [Environment]::NewLine)
+    try {
+        $selectorPacket = $selectorText | ConvertFrom-Json
+    } catch {
+        throw "Verification profile selector returned invalid JSON."
+    }
+
+    $recommendedProfile = ([string]$selectorPacket.profile).Trim().ToLowerInvariant()
+    [void](Get-ProfileRank -Profile $recommendedProfile)
+    $failClosed = [bool]$selectorPacket.fail_closed
+
+    $script:ProfileValidation.RecommendedProfile = $recommendedProfile
+    $script:ProfileValidation.SelectorFailClosed = [string]$failClosed
+    $script:ProfileValidation.Reasons = @($selectorPacket.reasons)
+    $script:ProfileValidation.Warnings = @($selectorPacket.warnings)
+
+    if ($failClosed) {
+        $script:ProfileValidation.Status = "blocked"
+        throw "Verification profile selector failed closed for recommended profile '$recommendedProfile'."
+    }
+
+    Assert-DeclaredProfileAdequate -DeclaredProfile $declaredProfile -RecommendedProfile $recommendedProfile
+
+    if ($allowReduction) {
+        if ($recommendedProfile -notin @("docs-only", "code-unit")) {
+            $script:ProfileValidation.Status = "blocked"
+            throw "allow_profile_check_reduction is allowed only for docs-only or code-unit recommendations."
+        }
+        if (-not (Test-PhaseCChecksRobust -PublishConfig $PublishConfig)) {
+            $script:ProfileValidation.Status = "blocked"
+            throw "allow_profile_check_reduction requires robust phase_c_checks."
+        }
+    }
+
+    $script:ProfileValidation.Status = "pass"
+    Write-Log ("Verification profile validation: declared={0}; recommended={1}; reduction={2}; phase_c_reduction=disabled" -f $declaredProfile, $recommendedProfile, $allowReduction)
 }
 
 function Get-ConfigArray {
@@ -590,6 +953,24 @@ function Copy-FileToClipboard {
     }
 }
 
+function Get-ProfileValidationSummaryLines {
+    if (-not $script:ProfileValidation.Enabled) {
+        return @("Verification profile validation: not configured")
+    }
+    $reasons = if (@($script:ProfileValidation.Reasons).Count -gt 0) { (@($script:ProfileValidation.Reasons) -join "; ") } else { "none" }
+    $warnings = if (@($script:ProfileValidation.Warnings).Count -gt 0) { (@($script:ProfileValidation.Warnings) -join "; ") } else { "none" }
+    return @(
+        ("Verification profile validation: {0}" -f $script:ProfileValidation.Status),
+        ("Declared verification profile: {0}" -f $script:ProfileValidation.DeclaredProfile),
+        ("Recommended verification profile: {0}" -f $script:ProfileValidation.RecommendedProfile),
+        ("Selector fail_closed: {0}" -f $script:ProfileValidation.SelectorFailClosed),
+        ("Profile check reduction allowed: {0}" -f $script:ProfileValidation.AllowReduction),
+        ("Phase C reduction: {0}" -f $script:ProfileValidation.PhaseCReduction),
+        ("Profile reasons: {0}" -f $reasons),
+        ("Profile warnings: {0}" -f $warnings)
+    )
+}
+
 function Write-BridgeOutputs {
     param(
         [object]$PublishConfig,
@@ -603,6 +984,7 @@ function Write-BridgeOutputs {
     $shortCommand = Get-ShortCommand -PublishConfig $PublishConfig -EffectivePhase $EffectivePhase
     $warnings = if ($script:WarningLines.Count -gt 0) { $script:WarningLines -join [Environment]::NewLine } else { "none" }
     $prText = if ($null -ne $script:PrNumber) { [string]$script:PrNumber } else { "not available" }
+    $profileSummary = Get-ProfileValidationSummaryLines
 
     $requestText = @(
         "ASF Publish Step Runner",
@@ -610,7 +992,10 @@ function Write-BridgeOutputs {
         "Name: $($PublishConfig.name)",
         "Phase: $EffectivePhase",
         "Status: $Status",
-        "Next step: $($PublishConfig.next_step)"
+        "Next step: $($PublishConfig.next_step)",
+        "",
+        "Verification profile:",
+        ($profileSummary -join [Environment]::NewLine)
     ) -join [Environment]::NewLine
     $commandText = $shortCommand + [Environment]::NewLine
     $fullText = @(
@@ -619,6 +1004,9 @@ function Write-BridgeOutputs {
         "PR number: $prText",
         "Warnings:",
         $warnings,
+        "",
+        "Verification profile:",
+        ($profileSummary -join [Environment]::NewLine),
         "",
         "Log:",
         ($script:LogLines -join [Environment]::NewLine)
@@ -632,6 +1020,10 @@ function Write-BridgeOutputs {
         ("- Status: ``{0}``" -f $Status),
         ("- PR number: ``{0}``" -f $prText),
         ("- Next step: ``{0}``" -f $PublishConfig.next_step),
+        "",
+        "## Verification profile",
+        "",
+        ($profileSummary -join [Environment]::NewLine),
         "",
         "## Short command",
         "",
@@ -695,6 +1087,7 @@ try {
     $publishConfig = Read-PublishConfig -Path $Config
     Assert-PublishConfig -PublishConfig $publishConfig
     $repoPath = Get-RepoPath -PublishConfig $publishConfig
+    Invoke-VerificationProfileValidation -PublishConfig $publishConfig -RepoPath $repoPath
 
     switch ($Phase) {
         "Plan" {

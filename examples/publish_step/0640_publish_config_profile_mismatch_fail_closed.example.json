@@ -1,0 +1,57 @@
+{
+  "allow_no_github_checks_reported": true,
+  "allow_profile_check_reduction": false,
+  "branch": "step-0640-profile-mismatch-example",
+  "bridge_root": "D:\\FG-SAB Dropbox\\Alberto Ferrari\\ChatGPT_Bridge\\AI_Software_Factory\\pwsh_command",
+  "changed_files": [
+    "scripts/asf_publish_step.ps1"
+  ],
+  "commit_message": "0640 profile mismatch fail closed example",
+  "expected_files": [
+    "scripts/asf_publish_step.ps1"
+  ],
+  "log_max_count": 12,
+  "name": "Verification_Profile_Mismatch_Fail_Closed",
+  "next_step": "0650) Verification Profile Driven Publish Config Generator",
+  "phase_a_checks": [
+    {
+      "argv": [
+        "python",
+        "-m",
+        "pytest",
+        "tests\\unit\\test_asf_publish_step_runner.py",
+        "-q"
+      ],
+      "name": "Publish runner tests"
+    }
+  ],
+  "phase_c_checks": [
+    {
+      "argv": [
+        "python",
+        "-m",
+        "pytest",
+        "-q"
+      ],
+      "name": "Full pytest"
+    },
+    {
+      "argv": [
+        "pwsh",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "scripts\\verify.ps1"
+      ],
+      "name": "Verification Gate"
+    }
+  ],
+  "pr_body": "Intentional mismatch example for STEP 0640. The selector recommends motor-core, so declared docs-only must fail closed.",
+  "pr_title": "0640 profile mismatch fail closed example",
+  "repo_path": ".",
+  "risk_level": "L2",
+  "step": "0640",
+  "verification_phase": "local",
+  "verification_profile": "docs-only"
+}
