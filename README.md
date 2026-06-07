@@ -1,7 +1,7 @@
 # AI Software Factory
 
 **Metodo interno:** Codex Alchemy Method
-**Stato:** STEP 0700 - End-to-End MVP Smoke Scenario
+**Stato:** STEP 0710 - Motor Run Manifest and Evidence Pack
 **Data bootstrap:** 2026-05-25
 **Strategia:** local-first personale, progettato per evoluzione SaaS
 
@@ -28,7 +28,7 @@ Il metodo interno si chiama **Codex Alchemy Method**: l'idea grezza viene trasfo
 
 ## 2. Stato repository
 
-Questo repository e' nello stato **STEP 0700 - End-to-End MVP Smoke Scenario**.
+Questo repository e' nello stato **STEP 0710 - Motor Run Manifest and Evidence Pack**.
 
 Sono presenti:
 
@@ -71,6 +71,7 @@ Sono presenti:
 - State Machine Bridge Integration in `state_machine`, con `LAST-State.json`, `LAST-Event.json`, output compatto/completo e file progressivi senza usare Dropbox reale nei test.
 - integrazione opzionale tra Publish Config Generator e State Machine: il generator puo' leggere uno stato esistente, applicare `publish_config_generated`, aggiornare `LAST-State.json` e collegare `LAST-Publish_Config.json` senza pubblicare.
 - End-to-End MVP Smoke Scenario locale, con scenario positivo fino a `READY_TO_PUBLISH`, scenario negativo fail-closed, evidence pack sotto `tmp/e2e_mvp_smoke` e Bridge opzionale solo su richiesta.
+- Motor Run Manifest and Evidence Pack, con manifest unico `motor_run_manifest.json`, summary Markdown, checksum artifact, decisione prudente e Bridge opzionale sotto `motor_run`.
 
 Non sono ancora presenti:
 
@@ -364,6 +365,7 @@ docs/motor/0670_STEP_EXECUTION_STATE_MACHINE.md
 docs/motor/0680_STATE_MACHINE_BRIDGE_INTEGRATION.md
 docs/motor/0690_STATE_MACHINE_INTEGRATION_WITH_PUBLISH_CONFIG_GENERATOR.md
 docs/motor/0700_END_TO_END_MVP_SMOKE_SCENARIO.md
+docs/motor/0710_MOTOR_RUN_MANIFEST_AND_EVIDENCE_PACK.md
 ```
 
 ---
@@ -422,7 +424,7 @@ policies/path_policy.v0.json
 ## 11. Prossimo step
 
 ```text
-0700) End-to-End MVP Smoke Scenario
+0720) MVP Usage Runbook
 ```
 
-Obiettivo: validare un percorso MVP locale end-to-end con generator, state machine, Bridge temporaneo e smoke controllato, mantenendo review umana, Phase B/C esplicite e nessuna pubblicazione automatica.
+Obiettivo: rendere operativo il percorso manuale smoke -> manifest -> publish runner, mantenendo review umana, Phase B/C esplicite e nessuna pubblicazione automatica.

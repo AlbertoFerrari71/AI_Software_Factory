@@ -98,6 +98,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/motor/0680_STATE_MACHINE_BRIDGE_INTEGRATION.md",
         "docs/motor/0690_STATE_MACHINE_INTEGRATION_WITH_PUBLISH_CONFIG_GENERATOR.md",
         "docs/motor/0700_END_TO_END_MVP_SMOKE_SCENARIO.md",
+        "docs/motor/0710_MOTOR_RUN_MANIFEST_AND_EVIDENCE_PACK.md",
         "config/asf_project_profiles.json",
         "scripts/asf_openai_api_adapter.py",
         "scripts/asf_openai_controlled_live_execution_pack.py",
@@ -110,6 +111,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "scripts/asf_verification_profile_selector.py",
         "scripts/asf_step_state_machine.py",
         "scripts/asf_e2e_mvp_smoke.py",
+        "scripts/asf_motor_run_manifest.py",
         "scripts/install_pwsh_command_pack_skill.py",
         "scripts/migrate_artifact_names_4digit.py",
         "scripts/asf_codex_invocation_dry_run.py",
@@ -193,11 +195,15 @@ def check_files(root: Path) -> list[HealthIssue]:
         "examples/state_machine/sample_combined_recovery_step.json",
         "examples/state_machine/sample_invalid_transition_fail_closed.json",
         "examples/state_machine/sample_local_verified_state.json",
+        "examples/motor_run_manifest/sample_manifest_input_ready.json",
+        "examples/motor_run_manifest/sample_manifest_input_fail_closed.json",
+        "examples/motor_run_manifest/sample_manifest_input_missing_artifacts.json",
         "tests/unit/test_asf_verification_profile_selector.py",
         "tests/unit/test_asf_publish_step_runner.py",
         "tests/unit/test_asf_publish_config_generator.py",
         "tests/unit/test_asf_step_state_machine.py",
         "tests/unit/test_asf_e2e_mvp_smoke.py",
+        "tests/unit/test_asf_motor_run_manifest.py",
     ]
 
     issues: list[HealthIssue] = []
@@ -409,6 +415,10 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                 ["docs/motor/0700_END_TO_END_MVP_SMOKE_SCENARIO.md"],
             ),
             (
+                "ASF Motor Run Manifest document",
+                ["docs/motor/0710_MOTOR_RUN_MANIFEST_AND_EVIDENCE_PACK.md"],
+            ),
+            (
                 "ASF State Machine Bridge Integration pointers",
                 ["LAST-State.json", "LAST-Output_Compatto.md", "state_machine"],
             ),
@@ -419,6 +429,10 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             (
                 "ASF End-to-End MVP Smoke Scenario pointers",
                 ["tmp/e2e_mvp_smoke", "negative_fail_closed.json", "READY_TO_PUBLISH"],
+            ),
+            (
+                "ASF Motor Run Manifest pointers",
+                ["motor_run_manifest.json", "motor_run_summary.md", "LAST-Run_Manifest.json"],
             ),
             (
                 "ASF Publish Config Generator script",
@@ -433,6 +447,10 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                 ["scripts/asf_e2e_mvp_smoke.py"],
             ),
             (
+                "ASF Motor Run Manifest script",
+                ["scripts/asf_motor_run_manifest.py"],
+            ),
+            (
                 "ASF Publish Config Generator examples",
                 ["examples/publish_config_generator/"],
             ),
@@ -443,6 +461,10 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             (
                 "ASF Step Execution State Machine examples",
                 ["examples/state_machine/"],
+            ),
+            (
+                "ASF Motor Run Manifest examples",
+                ["examples/motor_run_manifest/"],
             ),
             (
                 "ASF State Machine local verified example",
@@ -766,6 +788,7 @@ def check_script_safety(root: Path) -> list[HealthIssue]:
         "scripts/asf_verification_profile_selector.py",
         "scripts/asf_step_state_machine.py",
         "scripts/asf_e2e_mvp_smoke.py",
+        "scripts/asf_motor_run_manifest.py",
         "scripts/migrate_artifact_names_4digit.py",
     ]
     patterns = forbidden_script_patterns()
