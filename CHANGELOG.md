@@ -4,6 +4,31 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.76.0] - 2026-06-07
+
+### Added
+
+- STEP 0760 - MVP Real Step Pilot 2 with State Hooks.
+- Documento `docs/motor/0760_MVP_REAL_STEP_PILOT_2_WITH_STATE_HOOKS.md` con scopo, stato iniziale, config hook-aware, flusso Phase B/C atteso, evidence summary, warning e decisione finale.
+- Evidence temporanee sotto `tmp/0760_mvp_real_step_pilot_2_state_hooks/` con state file `READY_TO_PUBLISH`, config generator, config hook-aware e output `Phase Plan`.
+
+### Changed
+
+- README, roadmap, decision log, Project Workflow Index, Workflow Health Check, roadmap motore, pilot 0740 e hook doc 0750 riconoscono lo STEP 0760.
+- Workflow Health Check e relativo test tracciano il nuovo documento senza eseguire hook, Phase B/C, publish, merge, GitHub reale o Dropbox reale.
+
+### Guardrails
+
+- Nessuna nuova automazione operativa introdotta.
+- Nessuna Phase B, Phase C, commit, push, PR, merge o deploy eseguiti da Codex.
+- Decisione prudente `PILOT STATUS: GO WITH WARNINGS` perche' la validazione completa degli hook richiede la pubblicazione reale tramite runner.
+
+### Next
+
+- Prossimo step consigliato: `0770) Runner Hook Evidence Manifest Integration`.
+
+---
+
 ## [0.75.0] - 2026-06-07
 
 ### Added

@@ -12,6 +12,7 @@ INDEX = ROOT / "docs" / "34_PROJECT_WORKFLOW_INDEX.md"
 CLOSURE_PACK = ROOT / "docs" / "motor" / "0730_END_TO_END_MVP_CLOSURE_PACK.md"
 PILOT_NOTES = ROOT / "docs" / "motor" / "0740_MVP_REAL_STEP_PILOT.md"
 HOOK_DOC = ROOT / "docs" / "motor" / "0750_STATE_MACHINE_PUBLISH_RUNNER_EVENT_HOOKS.md"
+HOOK_PILOT_DOC = ROOT / "docs" / "motor" / "0760_MVP_REAL_STEP_PILOT_2_WITH_STATE_HOOKS.md"
 
 
 def read(path: Path) -> str:
@@ -24,6 +25,7 @@ def test_workflow_health_check_files_exist() -> None:
     assert CLOSURE_PACK.exists()
     assert PILOT_NOTES.exists()
     assert HOOK_DOC.exists()
+    assert HOOK_PILOT_DOC.exists()
 
 
 def test_workflow_health_check_script_runs_successfully() -> None:
@@ -172,3 +174,42 @@ def test_workflow_health_tracks_state_machine_publish_runner_event_hooks() -> No
 
     for fragment in hook_fragments:
         assert fragment in hook_doc
+
+
+def test_workflow_health_tracks_mvp_real_step_pilot_2_with_state_hooks() -> None:
+    script = read(SCRIPT)
+    doc = read(DOC)
+    index = read(INDEX)
+    pilot_doc = read(HOOK_PILOT_DOC)
+
+    indexed_fragments = [
+        "docs/motor/0760_MVP_REAL_STEP_PILOT_2_WITH_STATE_HOOKS.md",
+        "PILOT STATUS: GO WITH WARNINGS",
+        "tmp/0760_mvp_real_step_pilot_2_state_hooks",
+        "READY_TO_PUBLISH",
+        "Phase Plan",
+        "LAST-State.json",
+        "0770) Runner Hook Evidence Manifest Integration",
+    ]
+
+    for fragment in indexed_fragments:
+        assert fragment in script
+        assert fragment in doc
+        assert fragment in index
+
+    pilot_fragments = [
+        "state_machine_enabled",
+        "state_expected_before_phase_b",
+        "state_expected_before_phase_c",
+        "phase_b_started",
+        "phase_b_passed",
+        "pr_created",
+        "phase_c_started",
+        "phase_c_passed",
+        "main_verified",
+        "READY_TO_PUBLISH",
+        "PILOT STATUS: GO WITH WARNINGS",
+    ]
+
+    for fragment in pilot_fragments:
+        assert fragment in pilot_doc
