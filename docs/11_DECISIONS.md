@@ -2423,6 +2423,62 @@ la pubblicazione resta human-gated e fuori da Codex.
 
 ---
 
+## DEC-090 - Runner Hook Evidence Manifest Integration
+
+**Data:** 2026-06-07
+**Stato:** Accettata
+
+### Contesto
+
+Dopo STEP 0760 gli hook del publish runner possono aggiornare la state machine,
+ma il manifest 0710 non espone ancora in modo standard eventi runner, final
+state e riferimenti Bridge dello state output.
+
+### Decisione
+
+Lo STEP 0770 estende `scripts/asf_motor_run_manifest.py` con `runner_hooks`.
+
+La nuova sezione legge uno state file gia' prodotto dalla state machine e
+normalizza:
+
+- `final_state`;
+- `last_event`;
+- eventi osservati;
+- eventi richiesti mancanti;
+- state file;
+- state Bridge root;
+- publish runner output;
+- publish config.
+
+La CLI resta read-only verso Git/GitHub e aggiunge `--include-runner-hooks`,
+`--state-file`, `--state-bridge-root`, `--publish-runner-output`,
+`--publish-config`, `--require-closed-state`, `--expected-step`,
+`--expected-final-state` e `--expected-events`.
+
+### Motivazione
+
+Il valore operativo e' rendere auditabile non solo lo smoke o il pilot, ma
+anche la traccia reale Phase B/Phase C raccolta dalla state machine durante una
+pubblicazione human-gated.
+
+### Conseguenze
+
+- State file mancante produce `INCOMPLETE`.
+- State file corrotto, step mismatch o final state mismatch producono
+  `FAIL_CLOSED`.
+- Eventi richiesti mancanti producono `INCOMPLETE`.
+- State file `CLOSED` con eventi richiesti presenti puo' produrre decisione
+  `CLOSED`.
+- Il manifest osserva gli eventi, ma non esegue Phase B, Phase C, publish,
+  merge o deploy.
+- Il prossimo step consigliato e':
+
+```text
+0780) MVP Real Step Pilot 3 with Manifest Hooks
+```
+
+---
+
 ## DEC-086 - End-to-End MVP Closure Pack con GO WITH WARNINGS
 
 **Data:** 2026-06-07

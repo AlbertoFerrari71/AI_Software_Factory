@@ -1,7 +1,7 @@
 # AI Software Factory
 
 **Metodo interno:** Codex Alchemy Method
-**Stato:** STEP 0760 - MVP Real Step Pilot 2 with State Hooks
+**Stato:** STEP 0770 - Runner Hook Evidence Manifest Integration
 **Data bootstrap:** 2026-05-25
 **Strategia:** local-first personale, progettato per evoluzione SaaS
 
@@ -28,7 +28,7 @@ Il metodo interno si chiama **Codex Alchemy Method**: l'idea grezza viene trasfo
 
 ## 2. Stato repository
 
-Questo repository e' nello stato **STEP 0760 - MVP Real Step Pilot 2 with State Hooks**.
+Questo repository e' nello stato **STEP 0770 - Runner Hook Evidence Manifest Integration**.
 
 Sono presenti:
 
@@ -77,6 +77,7 @@ Sono presenti:
 - MVP Real Step Pilot, con modifica reale piccola, state machine locale, evidence temporanee, manifest documentale e decisione `PILOT STATUS: GO WITH WARNINGS`.
 - State Machine Publish Runner Event Hooks, con hook opzionali del publish runner verso la state machine per Phase B/Phase C, fail-closed su mismatch e gate `-ApprovePublish`/`-ApproveMerge` invariati.
 - MVP Real Step Pilot 2 with State Hooks, con stato iniziale `READY_TO_PUBLISH`, config hook-aware validata in `Phase Plan`, evidence temporanee sotto `tmp/` e decisione `PILOT STATUS: GO WITH WARNINGS`.
+- Runner Hook Evidence Manifest Integration, con sezione `runner_hooks` nel manifest, lettura read-only dello state file prodotto dal runner, validazione eventi/final state e Bridge output temporaneo nei test.
 
 Non sono ancora presenti:
 
@@ -376,6 +377,7 @@ docs/motor/0730_END_TO_END_MVP_CLOSURE_PACK.md
 docs/motor/0740_MVP_REAL_STEP_PILOT.md
 docs/motor/0750_STATE_MACHINE_PUBLISH_RUNNER_EVENT_HOOKS.md
 docs/motor/0760_MVP_REAL_STEP_PILOT_2_WITH_STATE_HOOKS.md
+docs/motor/0770_RUNNER_HOOK_EVIDENCE_MANIFEST_INTEGRATION.md
 ```
 
 ---

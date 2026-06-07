@@ -4,6 +4,33 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.77.0] - 2026-06-07
+
+### Added
+
+- STEP 0770 - Runner Hook Evidence Manifest Integration.
+- Documento `docs/motor/0770_RUNNER_HOOK_EVIDENCE_MANIFEST_INTEGRATION.md` con CLI, schema `runner_hooks`, decision policy, Bridge output e guardrail.
+- Esempi `examples/motor_run_manifest/sample_manifest_input_runner_hooks_*.json` e `examples/state_machine/sample_closed_with_runner_hooks_state.json`.
+- Test manifest per state CLOSED completo, evento mancante, state file mancante/corrotto, step mismatch, final state mismatch, Markdown e Bridge temporaneo.
+
+### Changed
+
+- `scripts/asf_motor_run_manifest.py` puo' leggere output state machine prodotti dagli hook del publish runner tramite `--include-runner-hooks`.
+- Il manifest include final state, last event, eventi osservati, eventi mancanti, state file, state Bridge root, publish runner output e publish config.
+- Workflow Health Check, README, roadmap, decision log, Project Workflow Index e documenti motore riconoscono lo STEP 0770.
+
+### Guardrails
+
+- Nessuna modifica al publish runner.
+- Nessuna Phase B, Phase C, commit, push, PR, merge o deploy eseguiti da Codex.
+- Test solo con directory temporanee; nessun GitHub reale e nessun Dropbox reale.
+
+### Next
+
+- Prossimo step consigliato: `0780) MVP Real Step Pilot 3 with Manifest Hooks`.
+
+---
+
 ## [0.76.0] - 2026-06-07
 
 ### Added

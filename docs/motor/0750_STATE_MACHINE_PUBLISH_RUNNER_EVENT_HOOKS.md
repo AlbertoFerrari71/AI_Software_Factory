@@ -145,8 +145,9 @@ Gli esempi usano `tmp/` per stato e Bridge state machine.
 
 ## 8. Limiti residui
 
-Gli hook non integrano ancora direttamente il manifest 0710.
-Il mapping eventi -> evidence resta nel report runner e nei file state machine.
+Lo STEP 0770 integra gli hook nel manifest 0710 tramite la sezione
+`runner_hooks`, leggendo lo state file prodotto dalla state machine senza
+modificare il publish runner.
 
 Restano manuali:
 
@@ -179,3 +180,17 @@ Il pilot conferma che una config con `state_machine_enabled=true` puo' essere
 preparata e validata in `Phase Plan` su uno step reale piccolo. La validazione
 completa resta demandata alla pubblicazione reale con `-ApprovePublish` e
 `-ApproveMerge`.
+
+## 11. Aggiornamento STEP 0770
+
+Lo STEP 0770 introduce:
+
+```text
+0770) Runner Hook Evidence Manifest Integration
+docs/motor/0770_RUNNER_HOOK_EVIDENCE_MANIFEST_INTEGRATION.md
+```
+
+Il manifest puo' ora includere `runner_hooks` con final state, last event,
+eventi osservati, eventi mancanti, state file, state Bridge root, publish runner
+output e publish config. L'integrazione e' read-only rispetto al runner: no
+Phase B, no Phase C, no commit, no push, no PR, no merge e no deploy.

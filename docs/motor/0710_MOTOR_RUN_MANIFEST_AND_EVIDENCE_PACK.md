@@ -34,6 +34,7 @@ Campi principali:
 - `verification_profile`;
 - `state`;
 - `publish_config`;
+- `runner_hooks` quando `--include-runner-hooks` e' attivo;
 - `artifacts`;
 - `checks`;
 - `warnings`;
@@ -119,6 +120,32 @@ Output:
 - `LAST-Output_Completo.txt`.
 
 I test usano sempre directory temporanee e non richiedono Dropbox reale.
+
+## 6.1 Aggiornamento STEP 0770 - runner hooks
+
+Lo STEP 0770 aggiunge input opzionali per includere gli hook del publish
+runner:
+
+```text
+--include-runner-hooks
+--state-file
+--state-bridge-root
+--publish-runner-output
+--publish-config
+--require-closed-state
+--expected-step
+--expected-final-state
+--expected-events
+```
+
+Quando attivo, il manifest legge uno state file gia' prodotto dalla state
+machine e aggiunge `runner_hooks` con final state, last event, eventi osservati,
+eventi mancanti, state file, state Bridge root, publish runner output e publish
+config.
+
+Le decisioni restano prudenziali: state file mancante produce `INCOMPLETE`,
+state file corrotto o mismatch produce `FAIL_CLOSED`, ed eventi richiesti
+mancanti producono `INCOMPLETE`.
 
 ## 7. Guardrail
 

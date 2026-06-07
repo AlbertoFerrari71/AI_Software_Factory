@@ -288,3 +288,18 @@ Motivo: dopo avere preparato un pilot reale con hook, il prossimo valore e'
 collegare gli eventi Phase B/C al manifest/evidence pack, cosi' l'output del
 runner e la state machine diventano piu' facili da auditare dopo la
 pubblicazione reale.
+
+## 16. Aggiornamento STEP 0770
+
+Lo STEP 0770 aggiunge il collegamento mancante tra hook e manifest:
+
+```text
+docs/motor/0770_RUNNER_HOOK_EVIDENCE_MANIFEST_INTEGRATION.md
+```
+
+Il manifest ora puo' leggere lo state file prodotto dal runner e includere
+`runner_hooks` con final state, eventi Phase B/C osservati, eventi mancanti,
+state file, state Bridge root, publish runner output e publish config.
+
+Resta invariato che Codex non esegue Phase B, Phase C, commit, push, PR, merge
+o deploy.
