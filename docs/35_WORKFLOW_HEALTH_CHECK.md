@@ -55,6 +55,7 @@ The script `scripts/check_workflow_health.py` checks:
 - `docs/motor/0710_MOTOR_RUN_MANIFEST_AND_EVIDENCE_PACK.md`, `scripts/asf_motor_run_manifest.py`, `tests/unit/test_asf_motor_run_manifest.py`, `examples/motor_run_manifest/`, `motor_run_manifest.json`, `motor_run_summary.md` and `LAST-Run_Manifest.json` are referenced without executing publication phases or requiring Dropbox real paths;
 - `docs/motor/0720_MVP_USAGE_RUNBOOK.md`, `codex_command`, `publish_config`, `state_machine`, `motor_run`, `Phase B`, `Phase C`, `-ApprovePublish`, `-ApproveMerge` and `READY_TO_PUBLISH` are referenced without executing publication phases or requiring Dropbox real paths;
 - `docs/motor/0730_END_TO_END_MVP_CLOSURE_PACK.md`, `MVP STATUS: GO WITH WARNINGS`, `GO/WARNING/NO-GO`, `0740) MVP Real Step Pilot` and the Project Workflow Index closure pointer are referenced without changing publication behavior;
+- `docs/motor/0740_MVP_REAL_STEP_PILOT.md`, `PILOT STATUS: GO WITH WARNINGS`, `tmp/0740_mvp_real_step_pilot`, `State Machine Publish Runner Event Hooks` and the Project Workflow Index pilot pointer are referenced without executing smoke, manifest generation, Phase B/C, publish, merge or requiring Dropbox real paths;
 - operational scripts do not contain dangerous Git/GitHub command patterns.
 
 The covered areas include:
@@ -291,3 +292,5 @@ After STEP 0710, it also treats `docs/motor/0710_MOTOR_RUN_MANIFEST_AND_EVIDENCE
 After STEP 0720, it also treats `docs/motor/0720_MVP_USAGE_RUNBOOK.md` and the Project Workflow Index pointers to `codex_command`, `publish_config`, `state_machine`, `motor_run`, `Phase B`, `Phase C`, `-ApprovePublish`, `-ApproveMerge` and `READY_TO_PUBLISH` as core workflow references. The check remains read-only: it does not execute smoke, manifest generation, Bridge writes, Phase B, Phase C, publish, merge or deploy.
 
 After STEP 0730, it also treats `docs/motor/0730_END_TO_END_MVP_CLOSURE_PACK.md` and the Project Workflow Index pointers to `MVP STATUS: GO WITH WARNINGS`, `GO/WARNING/NO-GO` and `0740) MVP Real Step Pilot` as core workflow references. The check remains read-only: it does not change MVP status automatically, execute smoke, generate manifests, write Bridge output, run Phase B/C, publish, merge or deploy.
+
+After STEP 0740, it also treats `docs/motor/0740_MVP_REAL_STEP_PILOT.md` and the Project Workflow Index pointers to `PILOT STATUS: GO WITH WARNINGS`, `tmp/0740_mvp_real_step_pilot` and `0750) State Machine Publish Runner Event Hooks` as core workflow references. The check remains read-only: it does not run smoke, generate manifests, write Bridge output, run Phase B/C, publish, merge or deploy.

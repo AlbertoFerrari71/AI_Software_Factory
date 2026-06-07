@@ -103,7 +103,8 @@ Esempio:
 | 710 | Motor Run Manifest and Evidence Pack | Normalizzare manifest run ed evidence pack dello smoke MVP | Manifest unico, riferimenti artifact e criteri riuso | MVP Motore | Completato |
 | 720 | MVP Usage Runbook | Rendere operativo il percorso manuale smoke -> manifest -> publish runner | Runbook uso MVP, checklist human-gated, criteri closure | MVP Motore | Completato |
 | 730 | End-to-End MVP Closure Pack | Verificare e chiudere formalmente il MVP Motore senza aggiungere automazione publish | Closure pack MVP, criteri GO/WARNING/NO-GO, handoff prossimo ciclo | MVP Motore | Completato |
-| 740 | MVP Real Step Pilot | Applicare la baseline MVP a uno step reale piccolo e non sintetico | Pilot reale, friction log, decisione post-MVP | Post-MVP Motore | Da fare |
+| 740 | MVP Real Step Pilot | Applicare la baseline MVP a uno step reale piccolo e non sintetico | Pilot reale, friction log, decisione post-MVP | Post-MVP Motore | Completato con warning |
+| 750 | State Machine Publish Runner Event Hooks | Collegare in modo prudente runner e state machine senza ridurre i gate | Eventi runner/state machine human-gated, docs, test | Post-MVP Motore | Da fare |
 
 ---
 
