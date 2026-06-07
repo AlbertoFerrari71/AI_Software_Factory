@@ -94,6 +94,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/motor/0640_VERIFICATION_PROFILE_INTEGRATION_PUBLISH_RUNNER.md",
         "docs/motor/0650_VERIFICATION_PROFILE_DRIVEN_PUBLISH_CONFIG_GENERATOR.md",
         "docs/motor/0660_PUBLISH_CONFIG_GENERATOR_BRIDGE_OUTPUT_INTEGRATION.md",
+        "docs/motor/0670_STEP_EXECUTION_STATE_MACHINE.md",
         "config/asf_project_profiles.json",
         "scripts/asf_openai_api_adapter.py",
         "scripts/asf_openai_controlled_live_execution_pack.py",
@@ -104,6 +105,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "scripts/asf_risk_classifier.py",
         "scripts/asf_gate_decision_report.py",
         "scripts/asf_verification_profile_selector.py",
+        "scripts/asf_step_state_machine.py",
         "scripts/install_pwsh_command_pack_skill.py",
         "scripts/migrate_artifact_names_4digit.py",
         "scripts/asf_codex_invocation_dry_run.py",
@@ -181,9 +183,14 @@ def check_files(root: Path) -> list[HealthIssue]:
         "examples/publish_config_generator/sample_bridge_output_input.json",
         "examples/publish_config_generator/sample_high_risk_fail_closed_input.json",
         "examples/publish_config_generator/sample_missing_required_fields_fail_closed_input.json",
+        "examples/state_machine/sample_normal_flow_events.json",
+        "examples/state_machine/sample_phase_c_failed_recovery.json",
+        "examples/state_machine/sample_combined_recovery_step.json",
+        "examples/state_machine/sample_invalid_transition_fail_closed.json",
         "tests/unit/test_asf_verification_profile_selector.py",
         "tests/unit/test_asf_publish_step_runner.py",
         "tests/unit/test_asf_publish_config_generator.py",
+        "tests/unit/test_asf_step_state_machine.py",
     ]
 
     issues: list[HealthIssue] = []
@@ -379,12 +386,24 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                 ["docs/motor/0660_PUBLISH_CONFIG_GENERATOR_BRIDGE_OUTPUT_INTEGRATION.md"],
             ),
             (
+                "ASF Step Execution State Machine document",
+                ["docs/motor/0670_STEP_EXECUTION_STATE_MACHINE.md"],
+            ),
+            (
                 "ASF Publish Config Generator script",
                 ["scripts/asf_publish_config_generator.py"],
             ),
             (
+                "ASF Step Execution State Machine script",
+                ["scripts/asf_step_state_machine.py"],
+            ),
+            (
                 "ASF Publish Config Generator examples",
                 ["examples/publish_config_generator/"],
+            ),
+            (
+                "ASF Step Execution State Machine examples",
+                ["examples/state_machine/"],
             ),
             (
                 "artifact naming migration script",
@@ -702,6 +721,7 @@ def check_script_safety(root: Path) -> list[HealthIssue]:
         "scripts/asf_risk_classifier.py",
         "scripts/asf_gate_decision_report.py",
         "scripts/asf_verification_profile_selector.py",
+        "scripts/asf_step_state_machine.py",
         "scripts/migrate_artifact_names_4digit.py",
     ]
     patterns = forbidden_script_patterns()

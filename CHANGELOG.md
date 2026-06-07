@@ -4,6 +4,35 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.67.0] - 2026-06-07
+
+### Added
+
+- STEP 0670 - Step Execution State Machine.
+- Script `scripts/asf_step_state_machine.py` con stati/eventi ASF, transizioni fail-closed, recovery e persistenza JSON.
+- Test `tests/unit/test_asf_step_state_machine.py`.
+- Runbook `docs/motor/0670_STEP_EXECUTION_STATE_MACHINE.md`.
+- Esempi in `examples/state_machine/`.
+
+### Changed
+
+- Workflow Health Check riconosce state machine, test, runbook ed esempi 0670.
+- Verification Profile Selector e Publish Config Generator trattano `scripts/asf_step_state_machine.py` come componente `motor-core`.
+- Aggiornati README, roadmap, decision log, Project Workflow Index e runbook 0660.
+
+### Guardrails
+
+- La state machine non esegue Phase B, Phase C, commit, push, PR, merge o deploy.
+- State file corrotto, transizione incoerente o mismatch dichiarato falliscono chiusi.
+- Phase C fallita porta a `RECOVERY_REQUIRED`, non a chiusura positiva.
+- Nessuna dipendenza esterna aggiunta.
+
+### Next
+
+- Prossimo step consigliato: `0680) State Machine Integration with Publish Config Generator`.
+
+---
+
 ## [0.66.0] - 2026-06-07
 
 ### Added

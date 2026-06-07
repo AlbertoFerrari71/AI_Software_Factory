@@ -185,12 +185,14 @@ git status --short --untracked-files=all
 
 ---
 
-## 10. Prossimo step
+## 10. Stato successivo
 
-Prossimo step consigliato:
+Lo STEP 0670 ha aggiunto la Step Execution State Machine locale per modellare stati, transizioni e recovery del ciclo step.
+
+Prossimo step consigliato dopo 0670:
 
 ```text
-0670) Step Execution State Machine
+0680) State Machine Integration with Publish Config Generator
 ```
 
-Motivo: dopo STEP 0660 il generator lascia un pacchetto Bridge ordinato e riusabile. Il prossimo collo di bottiglia non e' produrre un altro comando, ma modellare stati, transizioni, stop condition e ripresa controllata del ciclo step.
+Motivo: dopo STEP 0660 il generator lascia un pacchetto Bridge ordinato e riusabile, e dopo STEP 0670 lo stato step e' modellato. Il prossimo collo di bottiglia e' collegare i due componenti senza rendere automatica la pubblicazione.

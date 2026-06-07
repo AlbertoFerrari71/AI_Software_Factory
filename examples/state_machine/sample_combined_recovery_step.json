@@ -1,0 +1,10 @@
+{
+  "step": "0650-0660",
+  "description": "Combined recovery publication is representable but remains explicitly marked.",
+  "events": [
+    {"event": "recovery_started"},
+    {"event": "recovery_completed", "target_state": "CLOSED"}
+  ],
+  "expected_final_state": "CLOSED",
+  "expected_warning": "combined step requires explicit recovery evidence"
+}

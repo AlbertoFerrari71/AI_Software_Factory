@@ -48,6 +48,7 @@ The script `scripts/check_workflow_health.py` checks:
 - `docs/motor/0640_VERIFICATION_PROFILE_INTEGRATION_PUBLISH_RUNNER.md`, `tests/unit/test_asf_publish_step_runner.py` and `examples/publish_step/0640_publish_config_*.example.json` are present and linked from the Project Workflow Index;
 - `docs/motor/0650_VERIFICATION_PROFILE_DRIVEN_PUBLISH_CONFIG_GENERATOR.md`, `scripts/asf_publish_config_generator.py`, `tests/unit/test_asf_publish_config_generator.py` and `examples/publish_config_generator/` are present and linked from the Project Workflow Index;
 - `docs/motor/0660_PUBLISH_CONFIG_GENERATOR_BRIDGE_OUTPUT_INTEGRATION.md` and `examples/publish_config_generator/sample_bridge_output_input.json` are present and linked from the Project Workflow Index;
+- `docs/motor/0670_STEP_EXECUTION_STATE_MACHINE.md`, `scripts/asf_step_state_machine.py`, `tests/unit/test_asf_step_state_machine.py` and `examples/state_machine/` are present and linked from the Project Workflow Index;
 - operational scripts do not contain dangerous Git/GitHub command patterns.
 
 The covered areas include:
@@ -97,6 +98,7 @@ The covered areas include:
 - ASF Verification Profile Integration with Publish Runner;
 - ASF Publish Config Generator;
 - ASF Publish Config Generator Bridge Output Integration;
+- ASF Step Execution State Machine;
 - Project Workflow Index.
 
 ---
@@ -264,3 +266,5 @@ After STEP 530, it also treats `docs/68_ASF_OPENAI_API_ADAPTER_LIVE_SMOKE_RESULT
 After STEP 540, it also treats `docs/69_ASF_OPENAI_API_ADAPTER_CONTROLLED_LIVE_EXECUTION_PACK.md`, `scripts/asf_openai_controlled_live_execution_pack.py` and `templates/pwsh_command_pack/step_540_openai_controlled_live_execution_pack_template.ps1` as core workflow references because future OpenAI live execution must use a separate dry-run-default, double-consent, artifact-safe pack.
 
 After STEP 0560, it also treats `scripts/asf_openai_first_authorized_live_run.py`, `docs/0560-01-Report_OpenAI_API_Adapter_First_Authorized_Live_Run.md` and `docs/0560-03-Diagnostic_OpenAI_Provider_HTTP_Error_And_Rate_Limit.md` as core workflow references because the first authorized live run must pass through the repository adapter, stay one-call, classify provider-side HTTP/rate/quota blocks, and record sanitized BLOCKED or success results without secrets.
+
+After STEP 0670, it also treats `docs/motor/0670_STEP_EXECUTION_STATE_MACHINE.md`, `scripts/asf_step_state_machine.py`, `tests/unit/test_asf_step_state_machine.py` and `examples/state_machine/` as core workflow references because step execution state, recovery and fail-closed transition checks are now part of the MVP Motore operating map.

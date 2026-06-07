@@ -46,6 +46,7 @@ TARGET_TESTS = {
     "scripts/asf_dry_run_loop_runner.py": "tests/unit/test_asf_dry_run_loop_runner.py",
     "scripts/asf_risk_classifier.py": "tests/unit/test_asf_risk_classifier.py",
     "scripts/asf_publish_step.ps1": "tests/unit/test_asf_publish_step_runner.py",
+    "scripts/asf_step_state_machine.py": "tests/unit/test_asf_step_state_machine.py",
     "scripts/check_workflow_health.py": "tests/unit/test_workflow_health_check.py",
     "scripts/show_workflow_status.py": "tests/unit/test_workflow_status_dashboard.py",
 }
@@ -54,6 +55,7 @@ LINKED_MOTOR_CORE_TESTS = (
     "tests/unit/test_asf_publish_config_generator.py",
     "tests/unit/test_asf_verification_profile_selector.py",
     "tests/unit/test_asf_publish_step_runner.py",
+    "tests/unit/test_asf_step_state_machine.py",
 )
 
 INDEXED_DOCS = {
@@ -69,6 +71,7 @@ INDEXED_DOCS = {
     "docs/motor/0640_VERIFICATION_PROFILE_INTEGRATION_PUBLISH_RUNNER.md",
     "docs/motor/0650_VERIFICATION_PROFILE_DRIVEN_PUBLISH_CONFIG_GENERATOR.md",
     "docs/motor/0660_PUBLISH_CONFIG_GENERATOR_BRIDGE_OUTPUT_INTEGRATION.md",
+    "docs/motor/0670_STEP_EXECUTION_STATE_MACHINE.md",
 }
 
 CONFIG_DRAFT_INTENT_PATTERNS = (

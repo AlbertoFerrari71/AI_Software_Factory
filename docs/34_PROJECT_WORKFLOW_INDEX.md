@@ -71,6 +71,7 @@ L'indice orienta il lavoro. Non sostituisce i documenti specifici, il Verificati
 | Validare profilo nel Publish Runner | `docs/motor/0640_VERIFICATION_PROFILE_INTEGRATION_PUBLISH_RUNNER.md` | `scripts/asf_publish_step.ps1`, `scripts/asf_verification_profile_selector.py`, `examples/publish_step/0640_publish_config_*.example.json` | Quando una config publish dichiara `verification_profile` o campi profilo | Config legacy compatibili; mismatch piu' leggero blocca; Phase C non ridotta |
 | Generare config publish dal profilo | `docs/motor/0650_VERIFICATION_PROFILE_DRIVEN_PUBLISH_CONFIG_GENERATOR.md` | `scripts/asf_publish_config_generator.py`, `examples/publish_config_generator/` | Quando serve una bozza config JSON per `scripts/asf_publish_step.ps1` coerente con selector e scope | Genera JSON/Markdown; non esegue il runner, non pubblica e blocca high-risk/final-main |
 | Salvare config publish nel Bridge dedicato | `docs/motor/0660_PUBLISH_CONFIG_GENERATOR_BRIDGE_OUTPUT_INTEGRATION.md` | `scripts/asf_publish_config_generator.py --write-bridge`, `examples/publish_config_generator/sample_bridge_output_input.json` | Quando serve un pacchetto audit generator con `LAST-Publish_Config.json` | Bridge `publish_config` separato da `pwsh_command`; `--validate-plan` usa solo Phase Plan |
+| Usare ASF Step Execution State Machine | `docs/motor/0670_STEP_EXECUTION_STATE_MACHINE.md` | `scripts/asf_step_state_machine.py`, `examples/state_machine/` | Quando serve sapere lo stato corrente di uno step, validare il prossimo evento o ripartire dopo recovery | Persistenza JSON sotto `tmp/`; fail-closed su transizioni incoerenti; non esegue Phase B/C o GitHub |
 | Controllare Documentation Sync | `docs/21_DOCUMENTATION_SYNC.md` | Nessuno | Ogni step documentale o operativo | Valuta changelog, roadmap, decisions e documenti specifici |
 | Controllare Soft Protection Guardrails | `docs/24_SOFT_PROTECTION_GUARDRAILS.md` | `scripts/git/check_soft_guardrails.ps1` | Prima del commit o come controllo locale | Read-only; non installa hook |
 | Eseguire Workflow Health Check | `docs/35_WORKFLOW_HEALTH_CHECK.md` | `scripts/check_workflow_health.py` | Quando workflow docs, script o riferimenti centrali cambiano | Read-only; non sostituisce Verification Gate |
@@ -171,7 +172,7 @@ Regole operative:
 - `docs/0560-01-Report_OpenAI_API_Adapter_First_Authorized_Live_Run.md`: report sanitizzato STEP 0560, attualmente `BLOCKED_BY_RATE_LIMIT_OR_QUOTA` per HTTP 429 `insufficient_quota`.
 - `docs/0560-03-Diagnostic_OpenAI_Provider_HTTP_Error_And_Rate_Limit.md`: diagnostic pack provider-side STEP 0560-E, senza live call e senza evidence positiva inventata.
 - `docs/adr/0570_SUPERVISED_GATE_AUTONOMY.md`: decisione strategica per autonomia supervisionata a gate.
-- `docs/motor/0570_MVP_MOTOR_ROADMAP.md`: roadmap 0570-0660 per MVP Motore.
+- `docs/motor/0570_MVP_MOTOR_ROADMAP.md`: roadmap 0570-0680 per MVP Motore.
 - `docs/motor/0570_GATE_LOOP_SPEC.md`: stati formali del loop a gate, STOP condition ed evidence.
 - `docs/motor/0570_INDEPENDENT_REVIEW_NODE.md`: contratto input/output JSON e criteri PASS/FAIL/NEEDS_HUMAN del nodo review.
 - `docs/motor/0580_DRY_RUN_LOOP_RUNNER.md`: primo runner locale dry-run del loop supervisionato a gate.
@@ -184,6 +185,7 @@ Regole operative:
 - `docs/motor/0630_VERIFICATION_PROFILE_SELECTOR_TEST_COST_POLICY.md`: selector dei profili di verifica e policy costo test.
 - `docs/motor/0640_VERIFICATION_PROFILE_INTEGRATION_PUBLISH_RUNNER.md`: integrazione prudente del selector nel publish runner con validazione fail-closed.
 - `docs/motor/0650_VERIFICATION_PROFILE_DRIVEN_PUBLISH_CONFIG_GENERATOR.md`: generatore prudente di bozze config publish guidate dal verification profile.
+- `docs/motor/0670_STEP_EXECUTION_STATE_MACHINE.md`: macchina a stati locale per modellare avanzamento step, recovery e transizioni fail-closed.
 
 ---
 
@@ -216,6 +218,7 @@ Regole operative:
 - `scripts/asf_risk_classifier.py`: classifier STEP 0600 per testo/JSON, livelli L0-L4 e gate policy strutturata.
 - `scripts/asf_gate_decision_report.py`: report STEP 0620 che produce Approval Packet JSON/Markdown/testo da evidence dry-run/risk.
 - `scripts/asf_verification_profile_selector.py`: selector STEP 0630 che raccomanda profili di verifica e costo test senza eseguire check.
+- `scripts/asf_step_state_machine.py`: state machine STEP 0670 che valida eventi, persiste stato JSON e produce JSON/Markdown/testo senza eseguire publish.
 
 Questi script non devono essere usati per automatizzare commit, push, PR o merge salvo `scripts/asf_publish_step.ps1`, che lo consente solo nelle fasi esplicite `-ApprovePublish` e `-ApproveMerge`.
 
@@ -252,6 +255,7 @@ Config centrale:
 - `examples/publish_step/0590_publish_config.example.json`: config esempio legacy per Stable PowerShell Publish Runner.
 - `examples/publish_step/0640_publish_config_*.example.json`: esempi config con profilo motor-core, docs-only e mismatch fail-closed.
 - `examples/publish_config_generator/`: input esempio per generare bozze config publish guidate dal selector.
+- `examples/state_machine/`: sequenze evento per flusso normale, recovery Phase C, recovery combinata e transizione invalida fail-closed.
 - `examples/risk_classifier/`: esempi JSON L0, L2, L3 e L4 per Risk Classifier + Gate Policy.
 - `examples/gate_decision/`: esempi JSON L1, L2, L3 approvato/non approvato, L4 e input ambiguo per il Gate Decision Report.
 - `examples/verification_profiles/`: esempi JSON per profili docs-only, code-unit, motor-core, publish, final-main, high-risk e ambiguous fail-closed.

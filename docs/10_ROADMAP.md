@@ -96,7 +96,8 @@ Esempio:
 | 640 | Verification Profile Integration with Publish Runner | Integrare il selector nel runner 0590 senza ridurre gate o safety | Uso profili in Phase B/C, dedup check prudente, fail-closed | MVP Motore | Completato |
 | 650 | Verification Profile Driven Publish Config Generator | Generare bozze config publish coerenti con profilo, rischio e file modificati | Config generator dry-run, esempi e test | MVP Motore | Completato |
 | 660 | Publish Config Generator Bridge Output Integration | Salvare output generator e riepiloghi in un flusso Bridge/audit dedicato senza pubblicare | Bridge output per config generator, audit trail, LAST config e test | MVP Motore | Completato |
-| 670 | Step Execution State Machine | Modellare stati, transizioni, stop condition e ripresa controllata del ciclo step | State machine locale, stati auditabili, nessuna pubblicazione automatica | MVP Motore | Da fare |
+| 670 | Step Execution State Machine | Modellare stati, transizioni, stop condition e ripresa controllata del ciclo step | State machine locale, stati auditabili, nessuna pubblicazione automatica | MVP Motore | Completato |
+| 680 | State Machine Integration with Publish Config Generator | Collegare stato step e bozze config senza eseguire pubblicazione | Integrazione generator/state machine, riferimenti Bridge, test | MVP Motore | Da fare |
 
 ---
 
@@ -1568,3 +1569,61 @@ Generare bozze config JSON per `scripts/asf_publish_step.ps1` usando il Verifica
 ### Prossimo step consigliato
 
 0660) Publish Config Generator Bridge Output Integration
+
+---
+
+## 73. STEP 660 - Publish Config Generator Bridge Output Integration
+
+### Obiettivo
+
+Salvare output e riepiloghi del Publish Config Generator in un Bridge audit dedicato, senza usare il Bridge operativo del publish runner.
+
+### Output realizzati
+
+- opzioni `--write-bridge`, `--validate-plan`, `--runner-bridge-root` e `--copy-compact-to-clipboard` nel generator;
+- documento `docs/motor/0660_PUBLISH_CONFIG_GENERATOR_BRIDGE_OUTPUT_INTEGRATION.md`;
+- esempio `examples/publish_config_generator/sample_bridge_output_input.json`;
+- artifact progressivi e `LAST-Publish_Config.json` sotto Bridge `publish_config`;
+- validazione `-Phase Plan` opt-in senza Phase B o Phase C;
+- aggiornamento workflow health, README, roadmap, decision log e Project Workflow Index.
+
+### Guardrail
+
+- Bridge generator separato da Bridge publish runner;
+- `--validate-plan` invoca solo Phase Plan;
+- Phase B richiede ancora approval esplicito nel runner;
+- Phase C richiede ancora approval esplicito nel runner;
+- nessun commit, push, PR, merge o deploy.
+
+### Prossimo step consigliato
+
+0670) Step Execution State Machine
+
+---
+
+## 74. STEP 670 - Step Execution State Machine
+
+### Obiettivo
+
+Modellare stati, eventi, transizioni, fail-closed e recovery del ciclo step ASF per evitare errori di sequenza e rendere riprendibile lo stato.
+
+### Output realizzati
+
+- script `scripts/asf_step_state_machine.py`;
+- documento `docs/motor/0670_STEP_EXECUTION_STATE_MACHINE.md`;
+- esempi in `examples/state_machine/`;
+- test automatici `tests/unit/test_asf_step_state_machine.py`;
+- integrazione in workflow health e Project Workflow Index;
+- classificazione `motor-core` nel Verification Profile Selector e test mirato deducibile dal Publish Config Generator.
+
+### Guardrail
+
+- state machine locale, deterministica e standard-library only;
+- state file corrotto o transizione incoerente fail-closed;
+- `phase_c_failed` porta a `RECOVERY_REQUIRED`;
+- recovery combinata rappresentabile ma segnalata;
+- nessuna Phase B, Phase C, commit, push, PR, merge o deploy eseguiti dallo script.
+
+### Prossimo step consigliato
+
+0680) State Machine Integration with Publish Config Generator

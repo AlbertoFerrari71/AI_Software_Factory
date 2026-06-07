@@ -1,0 +1,18 @@
+{
+  "step": "0670",
+  "description": "Phase C failure moves the workflow to recovery before any completion claim.",
+  "events": [
+    {"event": "prompt_saved"},
+    {"event": "codex_started"},
+    {"event": "codex_completed"},
+    {"event": "local_checks_passed"},
+    {"event": "publish_config_generated"},
+    {"event": "phase_b_started"},
+    {"event": "phase_b_passed"},
+    {"event": "phase_c_started"},
+    {"event": "phase_c_failed"},
+    {"event": "recovery_completed", "target_state": "READY_TO_PUBLISH"}
+  ],
+  "expected_intermediate_state": "RECOVERY_REQUIRED",
+  "expected_final_state": "READY_TO_PUBLISH"
+}
