@@ -4,6 +4,38 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.59.0] - 2026-06-07
+
+### Added
+
+- STEP 0590 - Stable PowerShell Publish Runner.
+- Runner versionato `scripts/asf_publish_step.ps1`.
+- Configurazione esempio `examples/publish_step/0590_publish_config.example.json`.
+- Runbook `docs/motor/0590_STABLE_POWERSHELL_PUBLISH_RUNNER.md`.
+- Test `tests/unit/test_asf_publish_step_runner.py`, inclusa verifica DOCX OpenXML minimale.
+
+### Changed
+
+- Sostituita la direzione dei mega-blocchi PowerShell copiati in chat con un comando corto configurabile.
+- Aggiornati README, roadmap, decision log, Project Workflow Index, Command Cookbook e Workflow Health Check.
+- Il prossimo step consigliato diventa `0600) Risk Classifier + Gate Policy`.
+
+### Guardrails
+
+- FASE B richiede `-ApprovePublish`.
+- FASE C richiede `-ApproveMerge`.
+- La modalita' shell e' disabilitata; i comandi in config usano `argv`.
+- Nessun commit, push, PR, merge o deploy eseguito da Codex durante lo STEP 0590.
+- Nessuna chiamata provider live e nessun secret/API key.
+
+### Not included
+
+- Nessuna pubblicazione reale.
+- Nessun merge reale.
+- Nessun Risk Classifier stabile L0-L4: rimandato allo STEP 0600.
+
+---
+
 ## [0.58.0] - 2026-06-07
 
 ### Added

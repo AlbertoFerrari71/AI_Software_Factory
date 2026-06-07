@@ -1355,4 +1355,36 @@ Creare il primo runner locale del MVP Motore che attraversa il loop supervisiona
 
 ### Prossimo step consigliato
 
-0590) Risk Classifier + Gate Policy
+0590) Stable PowerShell Publish Runner
+
+---
+
+## 66. STEP 590 - Stable PowerShell Publish Runner
+
+### Obiettivo
+
+Sostituire i mega-blocchi PowerShell copiati in chat con un runner stabile, versionato, testabile e configurabile per pubblicare gli step ASF tramite comando corto e config JSON.
+
+### Output realizzati
+
+- runner `scripts/asf_publish_step.ps1`;
+- config esempio `examples/publish_step/0590_publish_config.example.json`;
+- documento `docs/motor/0590_STABLE_POWERSHELL_PUBLISH_RUNNER.md`;
+- test `tests/unit/test_asf_publish_step_runner.py`;
+- supporto FASE A locale, FASE B publish con `-ApprovePublish`, FASE C merge con `-ApproveMerge`;
+- output Bridge con file numerati e alias `LAST-*` richiesti dallo step;
+- writer DOCX OpenXML minimale senza dipendenze esterne;
+- gestione `gh pr checks` con warning controllato per `no checks reported`.
+
+### Guardrail
+
+- default fail-closed;
+- nessuna publish action senza flag esplicito;
+- comandi config in forma `argv`;
+- nessun `Invoke-Expression`;
+- nessun provider live, secret/API key o deploy;
+- nessuna pubblicazione reale eseguita durante l'implementazione Codex dello step.
+
+### Prossimo step consigliato
+
+0600) Risk Classifier + Gate Policy

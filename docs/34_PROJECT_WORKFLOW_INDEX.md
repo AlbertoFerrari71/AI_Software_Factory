@@ -63,6 +63,7 @@ L'indice orienta il lavoro. Non sostituisce i documenti specifici, il Verificati
 | OpenAI Provider HTTP Error and Rate Limit Diagnostic | `docs/0560-03-Diagnostic_OpenAI_Provider_HTTP_Error_And_Rate_Limit.md` | `scripts/asf_openai_first_authorized_live_run.py`, `scripts/asf_openai_api_adapter.py` | Dopo una live run autorizzata provider-blocked | No live call; classifica quota/rate/model/project/auth e prepara retry separato |
 | Orientare MVP Motore e autonomia a gate | `docs/adr/0570_SUPERVISED_GATE_AUTONOMY.md`, `docs/motor/0570_MVP_MOTOR_ROADMAP.md` | `docs/motor/0570_GATE_LOOP_SPEC.md`, `docs/motor/0570_INDEPENDENT_REVIEW_NODE.md` | Quando serve decidere il prossimo step dopo 0570 | Congela nuovo meta-processo finche' il motore non completa un end-to-end dry-run |
 | Eseguire ASF Dry-run Loop Runner | `docs/motor/0580_DRY_RUN_LOOP_RUNNER.md` | `scripts/asf_dry_run_loop_runner.py`, `examples/dry_run_loop/` | Quando serve dimostrare il primo loop locale supervisionato senza provider live o pubblicazione Git | Produce request normalizzata, piano, state log, risk report, review, gate decision e final report sotto `tmp/` |
+| Usare ASF Stable PowerShell Publish Runner | `docs/motor/0590_STABLE_POWERSHELL_PUBLISH_RUNNER.md` | `scripts/asf_publish_step.ps1`, `examples/publish_step/0590_publish_config.example.json` | Dopo report Codex e review umana, quando serve pubblicare uno step con comando corto e config | FASE A verifica locale; FASE B richiede `-ApprovePublish`; FASE C richiede `-ApproveMerge` |
 | Controllare Documentation Sync | `docs/21_DOCUMENTATION_SYNC.md` | Nessuno | Ogni step documentale o operativo | Valuta changelog, roadmap, decisions e documenti specifici |
 | Controllare Soft Protection Guardrails | `docs/24_SOFT_PROTECTION_GUARDRAILS.md` | `scripts/git/check_soft_guardrails.ps1` | Prima del commit o come controllo locale | Read-only; non installa hook |
 | Eseguire Workflow Health Check | `docs/35_WORKFLOW_HEALTH_CHECK.md` | `scripts/check_workflow_health.py` | Quando workflow docs, script o riferimenti centrali cambiano | Read-only; non sostituisce Verification Gate |
@@ -88,6 +89,7 @@ Regole operative:
 - Non generare o leggere file `LAST-*`; per trovare l'ultimo artefatto usare `max(II)` per `(step, tipo)`.
 - Il Bridge e' operativo, non autorevole: la fonte ufficiale e' Git + file versionato.
 - Il pwsh/publication command pack si usa dopo report Codex e intake gate, non prima.
+- Per pubblicazioni ASF ripetibili usare preferibilmente `scripts/asf_publish_step.ps1` con config JSON, invece di generare mega-blocchi PowerShell in chat.
 - Il PowerShell command pack usa safe bootstrap: blocco incollato corto, `[scriptblock]::Create(...)`, esecuzione via `pwsh -File` e logica nel `.ps1`.
 - La pubblicazione verso `main` e' branch + PR di default; il push diretto a `main` e' solo bypass esplicito.
 - Non mischiare prompt Codex, script PowerShell, comandi Git, pubblicazione e verifiche finali nello stesso blocco salvo richiesta esplicita.
@@ -166,6 +168,7 @@ Regole operative:
 - `docs/motor/0570_GATE_LOOP_SPEC.md`: stati formali del loop a gate, STOP condition ed evidence.
 - `docs/motor/0570_INDEPENDENT_REVIEW_NODE.md`: contratto input/output JSON e criteri PASS/FAIL/NEEDS_HUMAN del nodo review.
 - `docs/motor/0580_DRY_RUN_LOOP_RUNNER.md`: primo runner locale dry-run del loop supervisionato a gate.
+- `docs/motor/0590_STABLE_POWERSHELL_PUBLISH_RUNNER.md`: runner PowerShell stabile per pubblicare step ASF con config JSON e gate espliciti.
 
 ---
 
@@ -193,8 +196,9 @@ Regole operative:
 - `scripts/asf_openai_controlled_live_execution_pack.py`: pack operativo dry-run-default per preflight, mock provider e futura live OpenAI con doppio consenso.
 - `scripts/asf_openai_first_authorized_live_run.py`: wrapper STEP 0560 per un solo tentativo live autorizzato, sempre tramite adapter e con report/evidence sanitizzati.
 - `scripts/asf_dry_run_loop_runner.py`: runner locale STEP 0580 che attraversa richiesta, piano, risk report, review e gate decision in dry-run.
+- `scripts/asf_publish_step.ps1`: runner STEP 0590 per FASE A/B/C di pubblicazione step con comando corto, config JSON, Bridge output e flag espliciti.
 
-Questi script non devono essere usati per automatizzare commit, push, PR o merge.
+Questi script non devono essere usati per automatizzare commit, push, PR o merge salvo `scripts/asf_publish_step.ps1`, che lo consente solo nelle fasi esplicite `-ApprovePublish` e `-ApproveMerge`.
 
 Config centrale:
 
@@ -226,6 +230,7 @@ Config centrale:
 - `templates/codex_tasks/asf_openai_api_live_smoke_test_template.md`: struttura task packet per smoke live controllata e hardening risultati.
 - `templates/pwsh_command_pack/step_540_openai_controlled_live_execution_pack_template.ps1`: safe bootstrap operatore per generare il pack controllato con artefatti progressivi e senza `LAST-*`.
 - `examples/dry_run_loop/`: richiesta e piano JSON di esempio per il Dry-run Loop Runner.
+- `examples/publish_step/0590_publish_config.example.json`: config esempio per Stable PowerShell Publish Runner.
 
 ---
 
@@ -353,7 +358,13 @@ Per eseguire il primo loop locale dry-run supervisionato:
 python scripts/asf_dry_run_loop_runner.py --request-json examples/dry_run_loop/step_0580_simulated_request.json --plan-json examples/dry_run_loop/step_0580_execution_plan.json
 ```
 
-I comandi di commit, push, PR e merge restano azioni manuali di Alberto e non sono raccolti qui in una sequenza automatica.
+Per verificare una pubblicazione futura con comando corto:
+
+```powershell
+pwsh -NoProfile -ExecutionPolicy Bypass -File scripts\asf_publish_step.ps1 -Config examples\publish_step\0590_publish_config.example.json -Phase A
+```
+
+I comandi di commit, push, PR e merge restano azioni manuali di Alberto oppure fasi esplicitamente approvate del publish runner stabile.
 
 ---
 

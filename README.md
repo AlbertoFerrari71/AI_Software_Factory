@@ -1,7 +1,7 @@
 # AI Software Factory
 
 **Metodo interno:** Codex Alchemy Method
-**Stato:** STEP 0580 - Dry-run Loop Runner
+**Stato:** STEP 0590 - Stable PowerShell Publish Runner
 **Data bootstrap:** 2026-05-25
 **Strategia:** local-first personale, progettato per evoluzione SaaS
 
@@ -28,7 +28,7 @@ Il metodo interno si chiama **Codex Alchemy Method**: l'idea grezza viene trasfo
 
 ## 2. Stato repository
 
-Questo repository e' nello stato **STEP 0580 - Dry-run Loop Runner**.
+Questo repository e' nello stato **STEP 0590 - Stable PowerShell Publish Runner**.
 
 Sono presenti:
 
@@ -59,6 +59,7 @@ Sono presenti:
 - diagnostic pack STEP 0560 provider-side, con `docs/0560-03-Diagnostic_OpenAI_Provider_HTTP_Error_And_Rate_Limit.md`, stato `BLOCKED_BY_RATE_LIMIT_OR_QUOTA` e nessuna evidence positiva inventata.
 - ADR e roadmap per autonomia supervisionata a gate, MVP Motore, loop a gate e nodo revisione indipendente.
 - Dry-run Loop Runner locale che legge richiesta simulata, genera o legge piano dry-run, produce artifact strutturati e ferma il ciclo su gate supervisionato.
+- Stable PowerShell Publish Runner versionato per sostituire i mega-blocchi PowerShell copiati in chat con comando corto, config JSON, gate espliciti e output Bridge.
 
 Non sono ancora presenti:
 
@@ -339,6 +340,7 @@ docs/motor/0570_MVP_MOTOR_ROADMAP.md
 docs/motor/0570_GATE_LOOP_SPEC.md
 docs/motor/0570_INDEPENDENT_REVIEW_NODE.md
 docs/motor/0580_DRY_RUN_LOOP_RUNNER.md
+docs/motor/0590_STABLE_POWERSHELL_PUBLISH_RUNNER.md
 ```
 
 ---
@@ -397,7 +399,7 @@ policies/path_policy.v0.json
 ## 11. Prossimo step
 
 ```text
-0590) Risk Classifier + Gate Policy
+0600) Risk Classifier + Gate Policy
 ```
 
 Obiettivo: estrarre e irrigidire la classificazione L0-L4 e la gate policy del runner, con casi golden minimi e comportamento fail-closed, senza introdurre live run, write automatico o pubblicazione Git.

@@ -2282,6 +2282,57 @@ Il prossimo step consigliato resta:
 
 ---
 
+## DEC-073 - Stable PowerShell Publish Runner
+
+**Data:** 2026-06-07
+**Stato:** Accettata
+
+### Contesto
+
+La pubblicazione degli step ASF tramite mega-blocchi PowerShell copiati da chat si e' dimostrata fragile: quoting, nesting, here-string aperte e incolla interrotto possono rompere un flusso critico.
+
+Serve un runner versionato e testabile che separi comando corto, configurazione dello step, gate locali, pubblicazione e report Bridge.
+
+### Decisione
+
+Introdurre `scripts/asf_publish_step.ps1` come runner stabile per la pubblicazione degli step ASF.
+
+Il runner usa:
+
+- config JSON per step, branch, messaggi, PR, scope e check;
+- comandi in forma `argv`;
+- FASE A per verifica locale;
+- FASE B con `-ApprovePublish` per branch, commit, push e PR;
+- FASE C con `-ApproveMerge` per checks, merge e verifica finale;
+- output Bridge con file numerati e alias `LAST-*`;
+- DOCX OpenXML minimale senza dipendenze esterne.
+
+La modalita' shell resta disabilitata. `Invoke-Expression` non viene usato.
+
+### Motivazione
+
+Il workflow deve essere ripetibile e correggibile. Un file `.ps1` versionato riduce la fragilita' dell'incolla, permette test automatici e rende il comando effettivamente eseguito breve e riproducibile.
+
+Gli alias `LAST-*` sono accettati in questo runner come compatibilita' operativa richiesta per il Bridge, ma non sostituiscono Git, report step e file versionati come fonte autorevole.
+
+### Conseguenze
+
+Le future pubblicazioni ASF possono usare:
+
+```powershell
+pwsh -NoProfile -ExecutionPolicy Bypass -File scripts\asf_publish_step.ps1 -Config path\to\publish.config.json -Phase A
+```
+
+La pubblicazione e il merge richiedono ancora consenso esplicito e gate superati.
+
+Il prossimo step consigliato e':
+
+```text
+0600) Risk Classifier + Gate Policy
+```
+
+---
+
 ## DEC-072 - Dry-run Loop Runner locale
 
 **Data:** 2026-06-07
@@ -2325,12 +2376,12 @@ Gli artifact runtime vivono sotto:
 tmp/asf_dry_run_loop/<project>/step_<step>/
 ```
 
-Lo STEP 0590 deve estrarre e irrigidire Risk Classifier + Gate Policy con casi golden minimi e comportamento fail-closed.
+Lo STEP 0590 ha inserito prima il runner PowerShell stabile per rendere meno fragile la pubblicazione degli step. Il Risk Classifier + Gate Policy viene quindi spostato allo STEP 0600.
 
 Il prossimo step consigliato e':
 
 ```text
-0590) Risk Classifier + Gate Policy
+0600) Risk Classifier + Gate Policy
 ```
 
 ---
@@ -2361,11 +2412,12 @@ La roadmap prioritaria diventa:
 ```text
 0570 ADR + MVP Motor Roadmap
 0580 Dry-run Loop Runner
-0590 Risk Classifier + Gate Policy
-0600 Independent Review Node
-0610 Controlled Codex Executor
-0620 First End-to-End Dry Run
-0630 First Controlled Write Pilot
+0590 Stable PowerShell Publish Runner
+0600 Risk Classifier + Gate Policy
+0610 Independent Review Node
+0620 Controlled Codex Executor
+0630 First End-to-End Dry Run
+0640 First Controlled Write Pilot
 ```
 
 Nuovi step di meta-processo, naming, packaging, validazioni strict o guardrail isolati restano congelati finche' il motore non completa almeno un giro end-to-end dry-run.
