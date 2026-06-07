@@ -1,0 +1,10 @@
+{
+  "changed_files": [
+    "docs/motor/0630_VERIFICATION_PROFILE_SELECTOR_TEST_COST_POLICY.md"
+  ],
+  "intent": [
+    "final verification on main"
+  ],
+  "phase": "final-main",
+  "risk_level": "L2"
+}

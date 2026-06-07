@@ -4,6 +4,38 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.63.0] - 2026-06-07
+
+### Added
+
+- STEP 0630 - Verification Profile Selector + Test Cost Policy.
+- Script `scripts/asf_verification_profile_selector.py`.
+- Runbook `docs/motor/0630_VERIFICATION_PROFILE_SELECTOR_TEST_COST_POLICY.md`.
+- Esempi JSON in `examples/verification_profiles/`.
+- Test `tests/unit/test_asf_verification_profile_selector.py`.
+
+### Changed
+
+- Aggiornati README, roadmap, decision log, Project Workflow Index, Workflow Health Check e note 0620 con il nuovo selector.
+- Il prossimo step consigliato diventa `0640) Verification Profile Integration with Publish Runner`.
+
+### Guardrails
+
+- Selector locale, deterministico e standard-library only.
+- Input vuoto, ambiguo o non riconosciuto gestito in modalita' fail-closed.
+- Nessuna integrazione fragile diretta nel Gate Decision Report 0620.
+- Nessuna chiamata provider live.
+- Nessun secret/API key letto o stampato.
+- Nessun commit, push, PR, merge o deploy eseguito da Codex durante lo STEP 0630.
+
+### Not included
+
+- Nessuna modifica al publish runner 0590.
+- Nessuna automazione di publish o merge.
+- Nessun Controlled Codex Executor.
+
+---
+
 ## [0.62.0] - 2026-06-07
 
 ### Added

@@ -1,0 +1,11 @@
+{
+  "changed_files": [
+    "scripts/asf_gate_decision_report.py",
+    "tests/unit/test_asf_gate_decision_report.py"
+  ],
+  "intent": [
+    "motor gate decision report change"
+  ],
+  "phase": "local",
+  "risk_level": "L2"
+}

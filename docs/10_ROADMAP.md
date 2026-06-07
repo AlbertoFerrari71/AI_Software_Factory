@@ -92,8 +92,8 @@ Esempio:
 | 600 | Risk Classifier + Gate Policy | Rendere deterministica la classificazione L0-L4 e la decisione fail-closed | Risk classifier, gate policy, test L0-L4, esempi JSON | MVP Motore | Completato |
 | 610 | Risk Classifier Integration with Dry-run Loop Runner | Collegare il classifier al checkpoint RISK_CLASSIFY del runner 0580 | Integrazione leggera, risk report stabile, test regressione runner | MVP Motore | Completato |
 | 620 | Gate Decision Report and Human Approval Packet | Rendere esplicito il pacchetto di decisione umana usando risk report e review dry-run | Report gate, schema human approval, fixture PASS/FAIL/NEEDS_HUMAN | MVP Motore | Completato |
-| 630 | Verification Profile Selector + Test Cost Policy | Definire profili di verifica per ridurre ridondanze senza ridurre sicurezza | Matrice profili, policy costi test, proposta CLI read-only | MVP Motore | Da fare |
-| 640 | Controlled Codex Executor | Preparare executor Codex preview/dry-run/read-only-first con gate espliciti | Executor controllato, output capture, no default write | MVP Motore | Da fare |
+| 630 | Verification Profile Selector + Test Cost Policy | Definire profili di verifica per ridurre ridondanze senza ridurre sicurezza | Selector CLI, matrice profili, policy costi test, esempi JSON e test | MVP Motore | Completato |
+| 640 | Verification Profile Integration with Publish Runner | Integrare il selector nel runner 0590 senza ridurre gate o safety | Uso profili in Phase B/C, dedup check prudente, fail-closed | MVP Motore | Da fare |
 | 650 | First End-to-End Dry Run | Eseguire un giro completo dry-run con evidence, tests, review e gate decision | Report end-to-end dry-run e target clean | MVP Motore | Da fare |
 | 660 | First Controlled Write Pilot | Provare una modifica minima e reversibile lasciata in working tree per review umana | Pilot write controllato, diff scoped, no commit/push/PR/merge | MVP Motore | Da fare |
 
@@ -1325,7 +1325,7 @@ Correggere la rotta strategica di ASF da autonomia fire-and-forget ad autonomia 
 - 0610 - Risk Classifier Integration with Dry-run Loop Runner;
 - 0620 - Gate Decision Report and Human Approval Packet;
 - 0630 - Verification Profile Selector + Test Cost Policy;
-- 0640 - Controlled Codex Executor;
+- 0640 - Verification Profile Integration with Publish Runner;
 - 0650 - First End-to-End Dry Run;
 - 0660 - First Controlled Write Pilot.
 
@@ -1480,3 +1480,31 @@ Trasformare l'output tecnico del Dry-run Loop Runner e del Risk Classifier in un
 ### Prossimo step consigliato
 
 0630) Verification Profile Selector + Test Cost Policy
+
+---
+
+## 70. STEP 630 - Verification Profile Selector + Test Cost Policy
+
+### Obiettivo
+
+Introdurre un selettore locale dei profili di verifica per bilanciare risultato, velocita', costo computazionale e rischio operativo.
+
+### Output realizzati
+
+- script `scripts/asf_verification_profile_selector.py`;
+- documento `docs/motor/0630_VERIFICATION_PROFILE_SELECTOR_TEST_COST_POLICY.md`;
+- esempi JSON in `examples/verification_profiles/`;
+- test automatici `tests/unit/test_asf_verification_profile_selector.py`;
+- integrazione leggera in workflow health e Project Workflow Index.
+
+### Guardrail
+
+- selector deterministico, locale e standard-library only;
+- input vuoto, ambiguo o non riconosciuto fail-closed;
+- profili `motor-core`, `publish`, `final-main` e `high-risk` conservativi;
+- nessuna chiamata live, nessun secret, nessuna pubblicazione Git;
+- nessuna modifica al publish runner 0590 in questo step.
+
+### Prossimo step consigliato
+
+0640) Verification Profile Integration with Publish Runner
