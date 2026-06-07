@@ -4,6 +4,36 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.68.0] - 2026-06-07
+
+### Added
+
+- STEP 0680 - State Machine Bridge Integration.
+- Opzioni `--write-bridge`, `--bridge-root`, `--step-title` e `--next-step` in `scripts/asf_step_state_machine.py`.
+- Bridge audit dedicato `state_machine` con `LAST-State.json`, `LAST-Event.json`, `LAST-Output_Compatto.md`, `LAST-Output_Completo.txt` e file progressivi dello step.
+- Runbook `docs/motor/0680_STATE_MACHINE_BRIDGE_INTEGRATION.md`.
+- Test Bridge temporanei per JSON valido, output compatto/completo, state file assente e transizioni fail-closed.
+
+### Changed
+
+- Se `--write-bridge` e' attivo e `--state-file` e' omesso, la state machine usa `<bridge-root>\LAST-State.json` come state file.
+- Workflow Health Check riconosce il runbook 0680 e i puntatori Bridge della state machine senza richiedere Dropbox reale.
+- README, roadmap, decision log, Project Workflow Index, runbook 0660 e runbook 0670 aggiornati con la separazione Bridge `state_machine`.
+- Verification Profile Selector e Publish Config Generator indicizzano anche il runbook 0680.
+
+### Guardrails
+
+- La state machine resta non operativa: non esegue Phase B, Phase C, commit, push, PR, merge o deploy.
+- Nessuna dipendenza esterna aggiunta.
+- Clipboard automatico non implementato; l'output compatto contiene il comando manuale `Get-Content -Raw | Set-Clipboard`.
+- I test usano solo directory temporanee.
+
+### Next
+
+- Prossimo step consigliato: `0690) State Machine Integration with Publish Config Generator`.
+
+---
+
 ## [0.67.0] - 2026-06-07
 
 ### Added
@@ -29,7 +59,7 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ### Next
 
-- Prossimo step consigliato: `0680) State Machine Integration with Publish Config Generator`.
+- Prossimo step consigliato: `0680) State Machine Bridge Integration`.
 
 ---
 

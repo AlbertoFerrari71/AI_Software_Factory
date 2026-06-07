@@ -49,6 +49,7 @@ The script `scripts/check_workflow_health.py` checks:
 - `docs/motor/0650_VERIFICATION_PROFILE_DRIVEN_PUBLISH_CONFIG_GENERATOR.md`, `scripts/asf_publish_config_generator.py`, `tests/unit/test_asf_publish_config_generator.py` and `examples/publish_config_generator/` are present and linked from the Project Workflow Index;
 - `docs/motor/0660_PUBLISH_CONFIG_GENERATOR_BRIDGE_OUTPUT_INTEGRATION.md` and `examples/publish_config_generator/sample_bridge_output_input.json` are present and linked from the Project Workflow Index;
 - `docs/motor/0670_STEP_EXECUTION_STATE_MACHINE.md`, `scripts/asf_step_state_machine.py`, `tests/unit/test_asf_step_state_machine.py` and `examples/state_machine/` are present and linked from the Project Workflow Index;
+- `docs/motor/0680_STATE_MACHINE_BRIDGE_INTEGRATION.md`, `LAST-State.json`, `LAST-Event.json` and `LAST-Output_Compatto.md` are referenced from the Project Workflow Index without requiring Dropbox real paths;
 - operational scripts do not contain dangerous Git/GitHub command patterns.
 
 The covered areas include:
@@ -99,6 +100,7 @@ The covered areas include:
 - ASF Publish Config Generator;
 - ASF Publish Config Generator Bridge Output Integration;
 - ASF Step Execution State Machine;
+- ASF State Machine Bridge Integration;
 - Project Workflow Index.
 
 ---
@@ -268,3 +270,5 @@ After STEP 540, it also treats `docs/69_ASF_OPENAI_API_ADAPTER_CONTROLLED_LIVE_E
 After STEP 0560, it also treats `scripts/asf_openai_first_authorized_live_run.py`, `docs/0560-01-Report_OpenAI_API_Adapter_First_Authorized_Live_Run.md` and `docs/0560-03-Diagnostic_OpenAI_Provider_HTTP_Error_And_Rate_Limit.md` as core workflow references because the first authorized live run must pass through the repository adapter, stay one-call, classify provider-side HTTP/rate/quota blocks, and record sanitized BLOCKED or success results without secrets.
 
 After STEP 0670, it also treats `docs/motor/0670_STEP_EXECUTION_STATE_MACHINE.md`, `scripts/asf_step_state_machine.py`, `tests/unit/test_asf_step_state_machine.py` and `examples/state_machine/` as core workflow references because step execution state, recovery and fail-closed transition checks are now part of the MVP Motore operating map.
+
+After STEP 0680, it also treats `docs/motor/0680_STATE_MACHINE_BRIDGE_INTEGRATION.md` and the Project Workflow Index pointers to `LAST-State.json`, `LAST-Event.json`, `LAST-Output_Compatto.md` and `state_machine` as core workflow references. The check only verifies repository docs and script references; it does not require or access the real Dropbox Bridge.

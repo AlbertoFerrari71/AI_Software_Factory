@@ -13,6 +13,12 @@ EXIT_SUCCESS = 0
 EXIT_INPUT_ERROR = 2
 
 SCHEMA = "asf_step_state_machine.v1"
+DEFAULT_STATE_MACHINE_BRIDGE_ROOT = (
+    r"D:\FG-SAB Dropbox\Alberto Ferrari\ChatGPT_Bridge\AI_Software_Factory\state_machine"
+)
+NO_OPERATIONAL_ACTION_NOTE = (
+    "No Phase B, Phase C, GitHub, publish, commit, push, PR, merge, or deploy action was executed."
+)
 
 STATES = {
     "PLANNED",
@@ -139,6 +145,10 @@ def sanitize_step_for_path(step: str) -> str:
     return re.sub(r"[^A-Za-z0-9]+", "_", step).strip("_") or "step"
 
 
+def bridge_artifact_name(step: str) -> str:
+    return f"step_{sanitize_step_for_path(step)}"
+
+
 def is_combined_step(step: str) -> bool:
     return "-" in step and len([part for part in step.split("-") if part.strip()]) > 1
 
@@ -219,6 +229,29 @@ def load_or_initialize_state(path: Path, *, step: str | None, initial: str = "PL
 def save_state(path: Path, state: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(state, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def bridge_root_from_args(args: argparse.Namespace) -> Path:
+    return Path(args.bridge_root or DEFAULT_STATE_MACHINE_BRIDGE_ROOT)
+
+
+def bridge_paths(bridge_root: Path, step: str) -> dict[str, Path]:
+    prefix = sanitize_step_for_path(step)
+    name = bridge_artifact_name(step)
+    return {
+        "state_progressive": bridge_root / f"{prefix}-State_{name}.json",
+        "event_progressive": bridge_root / f"{prefix}-Event_{name}.json",
+        "compact_progressive": bridge_root / f"{prefix}-Output_Compatto_{name}.md",
+        "complete_progressive": bridge_root / f"{prefix}-Output_Completo_{name}.txt",
+        "state_last": bridge_root / "LAST-State.json",
+        "event_last": bridge_root / "LAST-Event.json",
+        "compact_last": bridge_root / "LAST-Output_Compatto.md",
+        "complete_last": bridge_root / "LAST-Output_Completo.txt",
+    }
+
+
+def path_text(path: Path | None) -> str:
+    return "" if path is None else str(path)
 
 
 def observed_events(history: list[dict[str, Any]]) -> set[str]:
@@ -574,6 +607,262 @@ def render_markdown(packet: dict[str, Any]) -> str:
 """
 
 
+def bridge_event_timestamp(packet: dict[str, Any], state_for_bridge: dict[str, Any]) -> str:
+    history = state_for_bridge.get("history")
+    if isinstance(history, list) and history:
+        last_entry = history[-1]
+        if isinstance(last_entry, dict):
+            value = compact_string(last_entry.get("timestamp"))
+            if value:
+                return value
+    history = packet.get("history")
+    if isinstance(history, list) and history:
+        last_entry = history[-1]
+        if isinstance(last_entry, dict):
+            value = compact_string(last_entry.get("timestamp"))
+            if value:
+                return value
+    return timestamp()
+
+
+def bridge_blockers(packet: dict[str, Any]) -> list[str]:
+    if packet.get("fail_closed") or not packet.get("allowed"):
+        return list(packet.get("reasons", []))
+    return []
+
+
+def build_bridge_event_payload(
+    *,
+    packet: dict[str, Any],
+    state_for_bridge: dict[str, Any],
+) -> dict[str, Any]:
+    return {
+        "step": packet.get("step"),
+        "event": packet.get("event"),
+        "from_state": packet.get("current_state"),
+        "to_state": packet.get("next_state"),
+        "allowed": packet.get("allowed"),
+        "fail_closed": packet.get("fail_closed"),
+        "timestamp": bridge_event_timestamp(packet, state_for_bridge),
+        "reasons": packet.get("reasons", []),
+        "warnings": packet.get("warnings", []),
+        "required_gates": packet.get("required_gates", []),
+        "missing_gates": packet.get("missing_gates", []),
+    }
+
+
+def build_bridge_state_payload(
+    *,
+    packet: dict[str, Any],
+    state_for_bridge: dict[str, Any],
+    event_payload: dict[str, Any],
+    state_file: Path | None,
+    bridge_root: Path,
+    args: argparse.Namespace,
+    written_paths: list[Path],
+) -> dict[str, Any]:
+    current_state = normalize_state(state_for_bridge.get("current_state"))
+    if not current_state or current_state == "UNKNOWN":
+        current_state = normalize_state(packet.get("next_state")) or "RECOVERY_REQUIRED"
+
+    history = state_for_bridge.get("history", packet.get("history", []))
+    warnings = list(dict.fromkeys(list(state_for_bridge.get("warnings", [])) + list(packet.get("warnings", []))))
+    blockers = list(dict.fromkeys(list(state_for_bridge.get("blockers", [])) + bridge_blockers(packet)))
+
+    payload = dict(state_for_bridge)
+    payload.update(
+        {
+            "schema": state_for_bridge.get("schema", SCHEMA),
+            "step": packet.get("step") or state_for_bridge.get("step") or "UNKNOWN",
+            "current_state": current_state,
+            "last_event": packet.get("event"),
+            "last_update": event_payload["timestamp"],
+            "history": history,
+            "warnings": warnings,
+            "blockers": blockers,
+            "recommended_next_action": packet.get("recommended_next_action"),
+            "fail_closed": packet.get("fail_closed"),
+            "step_title": compact_string(args.step_title),
+            "next_step": compact_string(args.next_step),
+            "source": "scripts/asf_step_state_machine.py",
+            "state_file": path_text(state_file),
+            "bridge_root": str(bridge_root),
+            "bridge_files": [str(path) for path in written_paths],
+        }
+    )
+    payload.setdefault("timestamps", {})
+    if isinstance(payload["timestamps"], dict):
+        payload["timestamps"]["last_update"] = event_payload["timestamp"]
+    return payload
+
+
+def render_bridge_compact_markdown(
+    *,
+    state_payload: dict[str, Any],
+    event_payload: dict[str, Any],
+    paths: dict[str, Path],
+) -> str:
+    clipboard_command = f'Get-Content -Path "{paths["compact_last"]}" -Raw | Set-Clipboard'
+    return f"""# ASF State Machine Bridge Output
+
+## Summary
+
+- step: `{state_payload["step"]}`
+- current_state: `{state_payload["current_state"]}`
+- last_event: `{state_payload["last_event"]}`
+- transition: `{event_payload["from_state"]} -> {event_payload["to_state"]}`
+- allowed: `{str(event_payload["allowed"]).lower()}`
+- fail_closed: `{str(event_payload["fail_closed"]).lower()}`
+
+## Warnings
+
+{bullets(state_payload["warnings"])}
+
+## Blockers
+
+{bullets(state_payload["blockers"])}
+
+## Recommended Next Action
+
+{state_payload["recommended_next_action"]}
+
+## Bridge Pointers
+
+- LAST-State.json: `{paths["state_last"]}`
+- LAST-Output_Completo.txt: `{paths["complete_last"]}`
+
+## Clipboard
+
+```powershell
+{clipboard_command}
+```
+"""
+
+
+def render_bridge_complete_text(
+    *,
+    packet: dict[str, Any],
+    state_payload: dict[str, Any],
+    event_payload: dict[str, Any],
+    paths: dict[str, Path],
+    args: argparse.Namespace,
+) -> str:
+    input_payload = {
+        "step": compact_string(args.step) or state_payload.get("step"),
+        "event": normalize_event(args.event),
+        "state_file": state_payload.get("state_file"),
+        "initial_state": normalize_state(args.initial_state),
+        "target_state": normalize_state(args.target_state),
+        "config_step": compact_string(args.config_step),
+        "branch": compact_string(args.branch),
+        "expected_branch": compact_string(args.expected_branch),
+        "write_bridge": bool(args.write_bridge),
+        "bridge_root": state_payload.get("bridge_root"),
+        "dry_run": bool(args.dry_run),
+    }
+    files = [str(path) for path in paths.values()]
+    return "\n".join(
+        [
+            "ASF Step Execution State Machine - Bridge complete output",
+            "",
+            "Input normalizzato:",
+            json.dumps(input_payload, indent=2, sort_keys=True),
+            "",
+            "Stato precedente:",
+            compact_string(packet.get("current_state")),
+            "",
+            "Evento applicato:",
+            compact_string(packet.get("event")),
+            "",
+            "Stato successivo:",
+            compact_string(packet.get("next_state")),
+            "",
+            "Event JSON:",
+            json.dumps(event_payload, indent=2, sort_keys=True),
+            "",
+            "State JSON:",
+            json.dumps(state_payload, indent=2, sort_keys=True),
+            "",
+            "History completa:",
+            json.dumps(state_payload.get("history", []), indent=2, sort_keys=True),
+            "",
+            "Warning:",
+            "\n".join(f"- {item}" for item in state_payload.get("warnings", [])) or "- none",
+            "",
+            "Blocker:",
+            "\n".join(f"- {item}" for item in state_payload.get("blockers", [])) or "- none",
+            "",
+            "File Bridge scritti:",
+            "\n".join(f"- {item}" for item in files),
+            "",
+            "Nota sicurezza:",
+            NO_OPERATIONAL_ACTION_NOTE,
+            "",
+        ]
+    )
+
+
+def write_bridge_outputs(
+    *,
+    packet: dict[str, Any],
+    state_for_bridge: dict[str, Any],
+    state_file: Path | None,
+    args: argparse.Namespace,
+) -> list[Path]:
+    bridge_root = bridge_root_from_args(args)
+    step = compact_string(packet.get("step")) or compact_string(state_for_bridge.get("step")) or "UNKNOWN"
+    paths = bridge_paths(bridge_root, step)
+    ordered_paths = [
+        paths["state_progressive"],
+        paths["state_last"],
+        paths["event_progressive"],
+        paths["event_last"],
+        paths["compact_progressive"],
+        paths["compact_last"],
+        paths["complete_progressive"],
+        paths["complete_last"],
+    ]
+
+    bridge_root.mkdir(parents=True, exist_ok=True)
+    event_payload = build_bridge_event_payload(packet=packet, state_for_bridge=state_for_bridge)
+    event_payload["bridge_files"] = [str(path) for path in ordered_paths]
+    state_payload = build_bridge_state_payload(
+        packet=packet,
+        state_for_bridge=state_for_bridge,
+        event_payload=event_payload,
+        state_file=state_file,
+        bridge_root=bridge_root,
+        args=args,
+        written_paths=ordered_paths,
+    )
+    compact = render_bridge_compact_markdown(state_payload=state_payload, event_payload=event_payload, paths=paths)
+    complete = render_bridge_complete_text(
+        packet=packet,
+        state_payload=state_payload,
+        event_payload=event_payload,
+        paths=paths,
+        args=args,
+    )
+
+    state_text = json.dumps(state_payload, indent=2, sort_keys=True) + "\n"
+    event_text = json.dumps(event_payload, indent=2, sort_keys=True) + "\n"
+    for path, content in (
+        (paths["state_progressive"], state_text),
+        (paths["state_last"], state_text),
+        (paths["event_progressive"], event_text),
+        (paths["event_last"], event_text),
+        (paths["compact_progressive"], compact),
+        (paths["compact_last"], compact),
+        (paths["complete_progressive"], complete),
+        (paths["complete_last"], complete),
+    ):
+        path.write_text(content, encoding="utf-8")
+
+    packet["bridge_root"] = str(bridge_root)
+    packet["bridge_files"] = [str(path) for path in ordered_paths]
+    return ordered_paths
+
+
 def render_text(packet: dict[str, Any]) -> str:
     return (
         f"step={packet['step']} "
@@ -596,6 +885,16 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--config-step", help="Declared step in an external config, when available.")
     parser.add_argument("--branch", help="Declared/current branch, when available.")
     parser.add_argument("--expected-branch", help="Expected branch, when available.")
+    parser.add_argument("--step-title", help="Optional human-readable step title for Bridge state metadata.")
+    parser.add_argument("--next-step", help="Optional next recommended step for Bridge state metadata.")
+    parser.add_argument("--write-bridge", action="store_true", help="Write state, event and reports to the ASF Bridge.")
+    parser.add_argument(
+        "--bridge-root",
+        help=(
+            "Bridge root for --write-bridge. Defaults to the ASF state_machine Bridge folder. "
+            "When --state-file is omitted with --write-bridge, LAST-State.json under this root is used as state file."
+        ),
+    )
     parser.add_argument("--dry-run", action="store_true", help="Validate and render the transition without writing state.")
     parser.add_argument("--json", action="store_true", help="Print machine-readable JSON.")
     parser.add_argument("--markdown", action="store_true", help="Print readable Markdown.")
@@ -605,6 +904,8 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
 def state_file_from_args(args: argparse.Namespace) -> Path:
     if args.state_file:
         return Path(args.state_file)
+    if args.write_bridge:
+        return bridge_root_from_args(args) / "LAST-State.json"
     if not args.step:
         raise StateFileError("--step is required when --state-file is omitted.")
     return Path("tmp") / "state_machine" / f"{sanitize_step_for_path(args.step)}_state.json"
@@ -642,16 +943,43 @@ def run(argv: list[str]) -> int:
             save_state(state_file, updated)
         elif updated is not None and args.dry_run:
             packet["warnings"] = list(dict.fromkeys(packet["warnings"] + ["dry_run enabled; state file not written."]))
+        if args.write_bridge:
+            bridge_state = updated if updated is not None and not args.dry_run else state
+            write_bridge_outputs(packet=packet, state_for_bridge=bridge_state, state_file=state_file, args=args)
     except StateFileError as exc:
         fallback_step = compact_string(args.step)
         fallback_state = "UNKNOWN"
+        fallback_state_file = Path(args.state_file) if args.state_file else None
+        if args.write_bridge and fallback_state_file is None:
+            fallback_state_file = bridge_root_from_args(args) / "LAST-State.json"
         packet = fail_closed_result(
             step=fallback_step,
             current_state=fallback_state,
             event=args.event,
             reason=str(exc),
-            state_file=Path(args.state_file) if args.state_file else None,
+            state_file=fallback_state_file,
         )
+        if args.write_bridge:
+            fallback_state_payload = {
+                "schema": SCHEMA,
+                "step": fallback_step or "UNKNOWN",
+                "current_state": "RECOVERY_REQUIRED",
+                "history": [],
+                "timestamps": {
+                    "created_at": timestamp(),
+                    "last_update": timestamp(),
+                },
+                "last_event": normalize_event(args.event),
+                "last_update": timestamp(),
+                "warnings": packet["warnings"],
+                "blockers": packet["reasons"],
+            }
+            write_bridge_outputs(
+                packet=packet,
+                state_for_bridge=fallback_state_payload,
+                state_file=fallback_state_file,
+                args=args,
+            )
         print_packet(packet, args)
         return EXIT_INPUT_ERROR
 

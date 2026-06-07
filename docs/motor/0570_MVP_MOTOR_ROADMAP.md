@@ -37,21 +37,22 @@ Le eccezioni ammesse sono solo correzioni bloccanti emerse dai test o dalla revi
 | 0650 | Verification Profile Driven Publish Config Generator | L2/L3 config generation human-reviewed | `scripts/`, `examples/publish_step/`, docs, tests | Generatore produce bozze config publish coerenti con selector e scope, senza pubblicare | pytest mirati, workflow health, verify gate | Config che autorizza publish/merge, profilo ambiguo, Phase C indebolita |
 | 0660 | Publish Config Generator Bridge Output Integration | L2 output/audit trail locale | generator 0650, Bridge, docs, tests | Output generator salvabili con audit trail dedicato senza eseguire publish | pytest mirati, workflow health, verify gate | Bridge fragile, output ambiguo, confusione tra config draft e publish approval |
 | 0670 | Step Execution State Machine | L2/L3 orchestration design locale | generator, runner, docs, tests | Stati e transizioni dello step loop espliciti, auditabili e fail-closed | pytest mirati, workflow health, verify gate | Automazione publish implicita, stati ambigui, ripresa senza gate umano |
-| 0680 | State Machine Integration with Publish Config Generator | L2/L3 integration locale | generator, state machine, docs, tests | Config draft e stato iniziale coerenti senza avviare publish | pytest mirati, workflow health, verify gate | Generator che esegue runner, stato implicito, recovery non dichiarata |
+| 0680 | State Machine Bridge Integration | L2 output/audit trail locale | state machine, Bridge, docs, tests | Stato corrente e report state machine salvabili nel Bridge senza avviare publish | pytest mirati, workflow health, verify gate | Bridge reale richiesto dai test, stato implicito, recovery non dichiarata |
+| 0690 | State Machine Integration with Publish Config Generator | L2/L3 integration locale | generator, state machine, docs, tests | Config draft e stato iniziale coerenti senza avviare publish | pytest mirati, workflow health, verify gate | Generator che esegue runner, stato implicito, recovery non dichiarata |
 
 ---
 
 ## 4. Sequenza operativa prevista
 
 ```text
-0570 docs -> 0580 dry-run loop -> 0590 stable publish runner -> 0600 risk gate -> 0610 risk integration -> 0620 gate decision packet -> 0630 verification profiles -> 0640 selector integration with publish runner -> 0650 publish config generator -> 0660 bridge output integration -> 0670 state machine -> 0680 generator integration
+0570 docs -> 0580 dry-run loop -> 0590 stable publish runner -> 0600 risk gate -> 0610 risk integration -> 0620 gate decision packet -> 0630 verification profiles -> 0640 selector integration with publish runner -> 0650 publish config generator -> 0660 bridge output integration -> 0670 state machine -> 0680 state bridge -> 0690 generator integration
 ```
 
 Il criterio di maturita' minima non e' "il runner esiste". Il criterio e': un loop completo produce evidence leggibile, classifica rischio, esegue test disponibili, passa review indipendente e ferma correttamente il flusso quando un gate non passa.
 
 ---
 
-## 5. Ambiti ancora congelati dopo 0670
+## 5. Ambiti ancora congelati dopo 0680
 
 - Retry live OpenAI, salvo step separato e autorizzato da Alberto.
 - Nuove integrazioni MCP operative.
@@ -187,5 +188,25 @@ Non esegue Phase B, Phase C, commit, push, PR, merge o deploy.
 Il prossimo step consigliato e':
 
 ```text
-0680) State Machine Integration with Publish Config Generator
+0680) State Machine Bridge Integration
+```
+
+## 11. Stato dopo STEP 0680
+
+Lo STEP 0680 aggiunge output Bridge opzionale alla state machine:
+
+```text
+docs/motor/0680_STATE_MACHINE_BRIDGE_INTEGRATION.md
+```
+
+La state machine puo' produrre `LAST-State.json`, `LAST-Event.json`, `LAST-Output_Compatto.md`, `LAST-Output_Completo.txt` e file progressivi sotto `state_machine`.
+
+Se `--write-bridge` e' attivo e `--state-file` non viene passato, usa `<bridge-root>\LAST-State.json` come state file. I test restano su directory temporanee e non dipendono da Dropbox reale.
+
+Non esegue Phase B, Phase C, commit, push, PR, merge o deploy.
+
+Il prossimo step consigliato e':
+
+```text
+0690) State Machine Integration with Publish Config Generator
 ```

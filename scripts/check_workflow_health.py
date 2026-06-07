@@ -95,6 +95,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/motor/0650_VERIFICATION_PROFILE_DRIVEN_PUBLISH_CONFIG_GENERATOR.md",
         "docs/motor/0660_PUBLISH_CONFIG_GENERATOR_BRIDGE_OUTPUT_INTEGRATION.md",
         "docs/motor/0670_STEP_EXECUTION_STATE_MACHINE.md",
+        "docs/motor/0680_STATE_MACHINE_BRIDGE_INTEGRATION.md",
         "config/asf_project_profiles.json",
         "scripts/asf_openai_api_adapter.py",
         "scripts/asf_openai_controlled_live_execution_pack.py",
@@ -388,6 +389,14 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             (
                 "ASF Step Execution State Machine document",
                 ["docs/motor/0670_STEP_EXECUTION_STATE_MACHINE.md"],
+            ),
+            (
+                "ASF State Machine Bridge Integration document",
+                ["docs/motor/0680_STATE_MACHINE_BRIDGE_INTEGRATION.md"],
+            ),
+            (
+                "ASF State Machine Bridge Integration pointers",
+                ["LAST-State.json", "LAST-Output_Compatto.md", "state_machine"],
             ),
             (
                 "ASF Publish Config Generator script",

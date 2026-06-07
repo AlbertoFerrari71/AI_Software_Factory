@@ -2282,6 +2282,57 @@ Il prossimo step consigliato resta:
 
 ---
 
+## DEC-081 - State Machine Bridge Integration non operativa
+
+**Data:** 2026-06-07
+**Stato:** Accettata
+
+### Contesto
+
+Lo STEP 0670 ha introdotto una state machine locale, ma lo stato sotto `tmp/` non basta per riprendere il workflow tra ChatGPT, Codex e PowerShell.
+
+Serve una persistenza consultabile nel Bridge ASF, separata da prompt Codex, publish config e output del publish runner.
+
+### Decisione
+
+Estendere `scripts/asf_step_state_machine.py` con output Bridge opt-in tramite `--write-bridge`.
+
+Il Bridge dedicato e':
+
+```text
+D:\FG-SAB Dropbox\Alberto Ferrari\ChatGPT_Bridge\AI_Software_Factory\state_machine
+```
+
+Con `--write-bridge` la state machine produce:
+
+- `LAST-State.json`;
+- `LAST-Event.json`;
+- `LAST-Output_Compatto.md`;
+- `LAST-Output_Completo.txt`;
+- file progressivi dello step per state, event, output compatto e output completo.
+
+Se `--state-file` non viene passato insieme a `--write-bridge`, viene usato `<bridge-root>\LAST-State.json`.
+
+### Motivazione
+
+`LAST-State.json` rende recuperabile lo stato corrente dello step. `LAST-Output_Compatto.md` rende leggibile dove siamo e quale azione e' consigliata. L'output completo conserva input normalizzato, history, warning, blocker e file scritti.
+
+Separare `state_machine` da `codex_command`, `publish_config` e `pwsh_command` riduce il rischio di ripartenze ambigue o di confondere report di stato con autorizzazioni di pubblicazione.
+
+### Conseguenze
+
+La state machine resta non operativa: non esegue Phase B, Phase C, commit, push, PR, merge o deploy.
+
+I test usano solo root temporanee e non richiedono Dropbox reale.
+
+Il prossimo step consigliato e':
+
+```text
+0690) State Machine Integration with Publish Config Generator
+```
+
+---
+
 ## DEC-080 - Step Execution State Machine locale e non operativa
 
 **Data:** 2026-06-07
@@ -2320,7 +2371,7 @@ Il nuovo script entra nel profilo `motor-core` e viene riconosciuto da Workflow 
 Il prossimo step consigliato e':
 
 ```text
-0680) State Machine Integration with Publish Config Generator
+0680) State Machine Bridge Integration
 ```
 
 ---

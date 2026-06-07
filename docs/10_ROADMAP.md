@@ -97,7 +97,8 @@ Esempio:
 | 650 | Verification Profile Driven Publish Config Generator | Generare bozze config publish coerenti con profilo, rischio e file modificati | Config generator dry-run, esempi e test | MVP Motore | Completato |
 | 660 | Publish Config Generator Bridge Output Integration | Salvare output generator e riepiloghi in un flusso Bridge/audit dedicato senza pubblicare | Bridge output per config generator, audit trail, LAST config e test | MVP Motore | Completato |
 | 670 | Step Execution State Machine | Modellare stati, transizioni, stop condition e ripresa controllata del ciclo step | State machine locale, stati auditabili, nessuna pubblicazione automatica | MVP Motore | Completato |
-| 680 | State Machine Integration with Publish Config Generator | Collegare stato step e bozze config senza eseguire pubblicazione | Integrazione generator/state machine, riferimenti Bridge, test | MVP Motore | Da fare |
+| 680 | State Machine Bridge Integration | Salvare stato e report della state machine nel Bridge senza eseguire pubblicazione | Bridge `state_machine`, LAST state/event/output, test temporanei | MVP Motore | Completato |
+| 690 | State Machine Integration with Publish Config Generator | Collegare stato step e bozze config senza eseguire pubblicazione | Integrazione generator/state machine, riferimenti Bridge, test | MVP Motore | Da fare |
 
 ---
 
@@ -1626,4 +1627,31 @@ Modellare stati, eventi, transizioni, fail-closed e recovery del ciclo step ASF 
 
 ### Prossimo step consigliato
 
-0680) State Machine Integration with Publish Config Generator
+0680) State Machine Bridge Integration
+
+---
+
+## 75. STEP 680 - State Machine Bridge Integration
+
+### Obiettivo
+
+Salvare stato corrente, ultimo evento, output compatto e output completo della Step Execution State Machine nel Bridge ASF, senza eseguire pubblicazione.
+
+### Output realizzati
+
+- opzioni `--write-bridge`, `--bridge-root`, `--step-title` e `--next-step` in `scripts/asf_step_state_machine.py`;
+- file Bridge `LAST-State.json`, `LAST-Event.json`, `LAST-Output_Compatto.md`, `LAST-Output_Completo.txt`;
+- file progressivi `NNNN-State_<nome>.json`, `NNNN-Event_<nome>.json`, `NNNN-Output_Compatto_<nome>.md`, `NNNN-Output_Completo_<nome>.txt`;
+- documento `docs/motor/0680_STATE_MACHINE_BRIDGE_INTEGRATION.md`;
+- aggiornamento workflow health, README, decision log e Project Workflow Index.
+
+### Guardrail
+
+- `--state-file` resta compatibile;
+- se `--write-bridge` e' attivo e `--state-file` e' omesso, viene usato `<bridge-root>\LAST-State.json`;
+- test solo su directory temporanee, non sul Bridge reale;
+- nessuna Phase B, Phase C, commit, push, PR, merge o deploy eseguiti dallo script.
+
+### Prossimo step consigliato
+
+0690) State Machine Integration with Publish Config Generator
