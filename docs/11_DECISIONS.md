@@ -2333,6 +2333,58 @@ Il prossimo step consigliato e':
 
 ---
 
+## DEC-074 - Risk Classifier and Gate Policy fail-closed
+
+**Data:** 2026-06-07
+**Stato:** Accettata
+
+### Contesto
+
+Il Dry-run Loop Runner 0580 contiene una classificazione minima interna, sufficiente per dimostrare il loop, ma non abbastanza stabile come componente riusabile del motore ASF.
+
+Dopo lo STEP 0590, la pubblicazione degli step usa un runner PowerShell versionato e human-gated. Serve quindi separare la classificazione del rischio dalla pubblicazione, mantenendo il comportamento fail-closed e senza abilitare write automatici.
+
+### Decisione
+
+Introdurre `scripts/asf_risk_classifier.py` come classificatore locale, deterministico e standard-library-only.
+
+Il classificatore:
+
+- accetta testo libero o JSON leggero;
+- assegna il livello massimo L0-L4;
+- restituisce output strutturato con `risk_level`, `allowed`, `required_gate`, `reasons`, `matched_rules`, `fail_closed` e `recommended_next_action`;
+- fallisce chiuso su input vuoto, incompleto o non riconosciuto;
+- tratta commit, push e PR come L3;
+- tratta merge, deploy, cancellazioni, secret, live provider, rete e side effect esterni come L4.
+
+La gate policy iniziale e':
+
+- L0: `none`;
+- L1: `implicit_or_local_approval`;
+- L2: `local_verification`;
+- L3: `explicit_publish_approval`;
+- L4: `elevated_manual_approval`.
+
+Lo STEP 0600 non modifica direttamente il runner 0580 e non modifica `scripts/asf_publish_step.ps1`.
+
+### Motivazione
+
+Separare il classifier consente test mirati, esempi golden minimi e integrazione futura nel checkpoint `RISK_CLASSIFY` senza cambiare nello stesso step il comportamento del loop dry-run.
+
+La scelta fail-closed mantiene ASF coerente con il principio che l'ambiguita' non deve diventare autorizzazione implicita.
+
+### Conseguenze
+
+Il prossimo step dovrebbe collegare il nuovo classifier al Dry-run Loop Runner, sostituendo la classificazione minima interna o affiancandola con compatibilita' controllata.
+
+Il prossimo step consigliato e':
+
+```text
+0610) Risk Classifier Integration with Dry-run Loop Runner
+```
+
+---
+
 ## DEC-072 - Dry-run Loop Runner locale
 
 **Data:** 2026-06-07

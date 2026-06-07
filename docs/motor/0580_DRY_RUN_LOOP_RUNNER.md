@@ -163,10 +163,12 @@ git --no-pager status --short
 
 ---
 
-## 9. Prossimo step
+## 9. Evoluzione successiva
 
 ```text
-0590) Risk Classifier + Gate Policy
+0600) Risk Classifier + Gate Policy
 ```
 
-Lo STEP 0590 dovrebbe estrarre e irrigidire la classificazione L0-L4, la gate policy e i casi golden minimi, mantenendo il runner fail-closed e senza chiamate live.
+Lo STEP 0590 ha introdotto prima il publish runner stabile.
+
+Lo STEP 0600 estrae e irrigidisce la classificazione L0-L4, la gate policy e i casi golden minimi, mantenendo il runner 0580 separato e senza chiamate live.

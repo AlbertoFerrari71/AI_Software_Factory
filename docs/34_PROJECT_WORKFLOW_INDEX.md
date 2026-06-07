@@ -64,6 +64,7 @@ L'indice orienta il lavoro. Non sostituisce i documenti specifici, il Verificati
 | Orientare MVP Motore e autonomia a gate | `docs/adr/0570_SUPERVISED_GATE_AUTONOMY.md`, `docs/motor/0570_MVP_MOTOR_ROADMAP.md` | `docs/motor/0570_GATE_LOOP_SPEC.md`, `docs/motor/0570_INDEPENDENT_REVIEW_NODE.md` | Quando serve decidere il prossimo step dopo 0570 | Congela nuovo meta-processo finche' il motore non completa un end-to-end dry-run |
 | Eseguire ASF Dry-run Loop Runner | `docs/motor/0580_DRY_RUN_LOOP_RUNNER.md` | `scripts/asf_dry_run_loop_runner.py`, `examples/dry_run_loop/` | Quando serve dimostrare il primo loop locale supervisionato senza provider live o pubblicazione Git | Produce request normalizzata, piano, state log, risk report, review, gate decision e final report sotto `tmp/` |
 | Usare ASF Stable PowerShell Publish Runner | `docs/motor/0590_STABLE_POWERSHELL_PUBLISH_RUNNER.md` | `scripts/asf_publish_step.ps1`, `examples/publish_step/0590_publish_config.example.json` | Dopo report Codex e review umana, quando serve pubblicare uno step con comando corto e config | FASE A verifica locale; FASE B richiede `-ApprovePublish`; FASE C richiede `-ApproveMerge` |
+| Usare ASF Risk Classifier + Gate Policy | `docs/motor/0600_RISK_CLASSIFIER_GATE_POLICY.md` | `scripts/asf_risk_classifier.py`, `examples/risk_classifier/` | Quando serve classificare testo, file o comandi proposti in L0-L4 prima del gate | Rule-based, fail-closed, output JSON strutturato con `required_gate` e `allowed` |
 | Controllare Documentation Sync | `docs/21_DOCUMENTATION_SYNC.md` | Nessuno | Ogni step documentale o operativo | Valuta changelog, roadmap, decisions e documenti specifici |
 | Controllare Soft Protection Guardrails | `docs/24_SOFT_PROTECTION_GUARDRAILS.md` | `scripts/git/check_soft_guardrails.ps1` | Prima del commit o come controllo locale | Read-only; non installa hook |
 | Eseguire Workflow Health Check | `docs/35_WORKFLOW_HEALTH_CHECK.md` | `scripts/check_workflow_health.py` | Quando workflow docs, script o riferimenti centrali cambiano | Read-only; non sostituisce Verification Gate |
@@ -169,6 +170,7 @@ Regole operative:
 - `docs/motor/0570_INDEPENDENT_REVIEW_NODE.md`: contratto input/output JSON e criteri PASS/FAIL/NEEDS_HUMAN del nodo review.
 - `docs/motor/0580_DRY_RUN_LOOP_RUNNER.md`: primo runner locale dry-run del loop supervisionato a gate.
 - `docs/motor/0590_STABLE_POWERSHELL_PUBLISH_RUNNER.md`: runner PowerShell stabile per pubblicare step ASF con config JSON e gate espliciti.
+- `docs/motor/0600_RISK_CLASSIFIER_GATE_POLICY.md`: classificatore L0-L4 e gate policy fail-closed per il MVP Motore.
 
 ---
 
@@ -197,6 +199,7 @@ Regole operative:
 - `scripts/asf_openai_first_authorized_live_run.py`: wrapper STEP 0560 per un solo tentativo live autorizzato, sempre tramite adapter e con report/evidence sanitizzati.
 - `scripts/asf_dry_run_loop_runner.py`: runner locale STEP 0580 che attraversa richiesta, piano, risk report, review e gate decision in dry-run.
 - `scripts/asf_publish_step.ps1`: runner STEP 0590 per FASE A/B/C di pubblicazione step con comando corto, config JSON, Bridge output e flag espliciti.
+- `scripts/asf_risk_classifier.py`: classifier STEP 0600 per testo/JSON, livelli L0-L4 e gate policy strutturata.
 
 Questi script non devono essere usati per automatizzare commit, push, PR o merge salvo `scripts/asf_publish_step.ps1`, che lo consente solo nelle fasi esplicite `-ApprovePublish` e `-ApproveMerge`.
 
@@ -231,6 +234,7 @@ Config centrale:
 - `templates/pwsh_command_pack/step_540_openai_controlled_live_execution_pack_template.ps1`: safe bootstrap operatore per generare il pack controllato con artefatti progressivi e senza `LAST-*`.
 - `examples/dry_run_loop/`: richiesta e piano JSON di esempio per il Dry-run Loop Runner.
 - `examples/publish_step/0590_publish_config.example.json`: config esempio per Stable PowerShell Publish Runner.
+- `examples/risk_classifier/`: esempi JSON L0, L2, L3 e L4 per Risk Classifier + Gate Policy.
 
 ---
 
@@ -365,6 +369,13 @@ pwsh -NoProfile -ExecutionPolicy Bypass -File scripts\asf_publish_step.ps1 -Conf
 ```
 
 I comandi di commit, push, PR e merge restano azioni manuali di Alberto oppure fasi esplicitamente approvate del publish runner stabile.
+
+Per classificare rischio e gate policy in JSON:
+
+```powershell
+python scripts/asf_risk_classifier.py --text "commit and push branch" --json
+python scripts/asf_risk_classifier.py --input-file examples/risk_classifier/sample_l3_publish.json --json
+```
 
 ---
 

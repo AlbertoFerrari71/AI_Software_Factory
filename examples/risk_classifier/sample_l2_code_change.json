@@ -1,0 +1,10 @@
+{
+  "description": "Implement a local Python script and unit tests.",
+  "files_changed": [
+    "scripts/asf_risk_classifier.py",
+    "tests/unit/test_asf_risk_classifier.py"
+  ],
+  "commands": [
+    "python -m pytest"
+  ]
+}
