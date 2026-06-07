@@ -1,7 +1,7 @@
 # AI Software Factory
 
 **Metodo interno:** Codex Alchemy Method
-**Stato:** STEP 0730 - End-to-End MVP Closure Pack
+**Stato:** STEP 0740 - MVP Real Step Pilot
 **Data bootstrap:** 2026-05-25
 **Strategia:** local-first personale, progettato per evoluzione SaaS
 
@@ -28,7 +28,7 @@ Il metodo interno si chiama **Codex Alchemy Method**: l'idea grezza viene trasfo
 
 ## 2. Stato repository
 
-Questo repository e' nello stato **STEP 0730 - End-to-End MVP Closure Pack**.
+Questo repository e' nello stato **STEP 0740 - MVP Real Step Pilot**.
 
 Sono presenti:
 
@@ -74,6 +74,7 @@ Sono presenti:
 - Motor Run Manifest and Evidence Pack, con manifest unico `motor_run_manifest.json`, summary Markdown, checksum artifact, decisione prudente e Bridge opzionale sotto `motor_run`.
 - MVP Usage Runbook, con procedura operativa smoke -> manifest -> review -> publish config -> Phase B -> Phase C, directory Bridge, checklist Alberto, recovery e limiti MVP.
 - End-to-End MVP Closure Pack, con perimetro MVP, evidenze, criteri GO/WARNING/NO-GO, stato gate/test/Bridge/state machine/manifest e decisione prudente `MVP STATUS: GO WITH WARNINGS`.
+- MVP Real Step Pilot, con modifica reale piccola, state machine locale, evidence temporanee, manifest documentale e decisione `PILOT STATUS: GO WITH WARNINGS`.
 
 Non sono ancora presenti:
 
@@ -370,6 +371,7 @@ docs/motor/0700_END_TO_END_MVP_SMOKE_SCENARIO.md
 docs/motor/0710_MOTOR_RUN_MANIFEST_AND_EVIDENCE_PACK.md
 docs/motor/0720_MVP_USAGE_RUNBOOK.md
 docs/motor/0730_END_TO_END_MVP_CLOSURE_PACK.md
+docs/motor/0740_MVP_REAL_STEP_PILOT.md
 ```
 
 ---
@@ -428,7 +430,7 @@ policies/path_policy.v0.json
 ## 11. Prossimo step
 
 ```text
-0740) MVP Real Step Pilot
+0750) State Machine Publish Runner Event Hooks
 ```
 
-Obiettivo: applicare la baseline MVP Motore a uno step reale piccolo e non sintetico, documentando frizioni operative prima di aggiungere hook automatici al runner.
+Obiettivo: ridurre la frizione manuale emersa dal primo pilot reale collegando in modo prudente publish runner e state machine, senza ridurre i gate Phase B/Phase C.

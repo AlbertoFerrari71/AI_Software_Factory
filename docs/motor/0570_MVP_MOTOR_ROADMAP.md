@@ -43,13 +43,14 @@ Le eccezioni ammesse sono solo correzioni bloccanti emerse dai test o dalla revi
 | 0710 | Motor Run Manifest and Evidence Pack | L2 evidence locale | manifest, evidence pack, docs, tests | Una run Motore produce manifest JSON e summary Markdown auditabili | pytest mirati, workflow health, verify gate | READY_TO_PUBLISH senza artifact richiesti, Bridge reale richiesto |
 | 0720 | MVP Usage Runbook | L0/L1 docs operative | docs/motor, README, changelog, roadmap, decision log, workflow index, health check | Procedura operativa MVP end-to-end documentata e human-gated | workflow health, pytest, verify gate, diff check | Runbook che sembra autorizzare publish automatico o saltare Phase C |
 | 0730 | End-to-End MVP Closure Pack | L0/L1 docs operative | docs/motor, README, changelog, roadmap, decision log, workflow index, health check | MVP Motore chiuso formalmente con criteri GO/WARNING/NO-GO e warning residui | workflow health, pytest, verify gate, diff check | Closure pack che dichiara successo pieno ignorando smoke sintetico, hook manuali o pilot reale assente |
+| 0740 | MVP Real Step Pilot | L1/L2 docs/tooling locale | docs/motor, README, changelog, roadmap, decision log, workflow index, health check, tests | Baseline MVP usata su modifica reale piccola con evidence e decisione prudente | workflow health, pytest, verify gate, diff check | Pilot trattato come prova produttiva, Phase B/C eseguite da Codex, warning manuali ignorati |
 
 ---
 
 ## 4. Sequenza operativa prevista
 
 ```text
-0570 docs -> 0580 dry-run loop -> 0590 stable publish runner -> 0600 risk gate -> 0610 risk integration -> 0620 gate decision packet -> 0630 verification profiles -> 0640 selector integration with publish runner -> 0650 publish config generator -> 0660 bridge output integration -> 0670 state machine -> 0680 state bridge -> 0690 generator integration -> 0700 end-to-end smoke -> 0710 run manifest -> 0720 usage runbook -> 0730 closure pack
+0570 docs -> 0580 dry-run loop -> 0590 stable publish runner -> 0600 risk gate -> 0610 risk integration -> 0620 gate decision packet -> 0630 verification profiles -> 0640 selector integration with publish runner -> 0650 publish config generator -> 0660 bridge output integration -> 0670 state machine -> 0680 state bridge -> 0690 generator integration -> 0700 end-to-end smoke -> 0710 run manifest -> 0720 usage runbook -> 0730 closure pack -> 0740 real step pilot
 ```
 
 Il criterio di maturita' minima non e' "il runner esiste". Il criterio e': un loop completo produce evidence leggibile, classifica rischio, esegue test disponibili, passa review indipendente e ferma correttamente il flusso quando un gate non passa.
@@ -347,8 +348,39 @@ Restano fuori dal MVP:
 - pilot reale non sintetico;
 - UI grafica e orchestrazione multi-modello.
 
-Prossimo step consigliato:
+Prossimo step eseguito:
 
 ```text
 0740) MVP Real Step Pilot
+```
+
+## 17. Stato dopo STEP 0740
+
+Lo STEP 0740 aggiunge il primo pilot reale post-MVP:
+
+```text
+docs/motor/0740_MVP_REAL_STEP_PILOT.md
+```
+
+Il pilot applica la baseline MVP a una modifica reale piccola e versionabile,
+usa state machine, publish config generator e manifest come evidence locali, e
+mantiene fuori scope Phase B, Phase C, commit, push, PR, merge e deploy.
+
+Decisione prudente:
+
+```text
+PILOT STATUS: GO WITH WARNINGS
+```
+
+Warning principali:
+
+- lo step resta documentale/strumentale;
+- state machine e generator richiedono ancora comandi manuali;
+- il manifest e' utile ma non sostituisce review semantica;
+- `READY_TO_PUBLISH` non equivale ad approval.
+
+Prossimo step consigliato:
+
+```text
+0750) State Machine Publish Runner Event Hooks
 ```

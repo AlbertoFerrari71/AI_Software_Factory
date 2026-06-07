@@ -10,6 +10,7 @@ SCRIPT = ROOT / "scripts" / "check_workflow_health.py"
 DOC = ROOT / "docs" / "35_WORKFLOW_HEALTH_CHECK.md"
 INDEX = ROOT / "docs" / "34_PROJECT_WORKFLOW_INDEX.md"
 CLOSURE_PACK = ROOT / "docs" / "motor" / "0730_END_TO_END_MVP_CLOSURE_PACK.md"
+PILOT_NOTES = ROOT / "docs" / "motor" / "0740_MVP_REAL_STEP_PILOT.md"
 
 
 def read(path: Path) -> str:
@@ -20,6 +21,7 @@ def test_workflow_health_check_files_exist() -> None:
     assert SCRIPT.exists()
     assert DOC.exists()
     assert CLOSURE_PACK.exists()
+    assert PILOT_NOTES.exists()
 
 
 def test_workflow_health_check_script_runs_successfully() -> None:
@@ -103,3 +105,31 @@ def test_workflow_health_tracks_mvp_closure_pack() -> None:
 
     for fragment in closure_fragments:
         assert fragment in closure_pack
+
+
+def test_workflow_health_tracks_mvp_real_step_pilot() -> None:
+    script = read(SCRIPT)
+    doc = read(DOC)
+    index = read(INDEX)
+    pilot_notes = read(PILOT_NOTES)
+
+    indexed_fragments = [
+        "docs/motor/0740_MVP_REAL_STEP_PILOT.md",
+        "PILOT STATUS: GO WITH WARNINGS",
+        "tmp/0740_mvp_real_step_pilot",
+        "0750) State Machine Publish Runner Event Hooks",
+    ]
+
+    for fragment in indexed_fragments:
+        assert fragment in script
+        assert fragment in doc
+        assert fragment in index
+
+    pilot_fragments = [
+        "PILOT STATUS: GO WITH WARNINGS",
+        "tmp/0740_mvp_real_step_pilot",
+        "0750) State Machine Publish Runner Event Hooks",
+    ]
+
+    for fragment in pilot_fragments:
+        assert fragment in pilot_notes

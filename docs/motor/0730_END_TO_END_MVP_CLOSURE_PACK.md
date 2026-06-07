@@ -363,6 +363,28 @@ conviene usare la baseline MVP su uno step reale piccolo, non sintetico,
 documentare frizioni operative, verificare che manifest/config/gate reggano in
 uso effettivo e solo dopo automatizzare ulteriormente.
 
+## 20.1 Aggiornamento STEP 0740
+
+Lo STEP 0740 ha eseguito il primo pilot reale post-MVP:
+
+```text
+docs/motor/0740_MVP_REAL_STEP_PILOT.md
+```
+
+Il pilot usa una modifica reale piccola, evidence temporanee locali, state
+machine, publish config generator e manifest documentale. La decisione resta
+prudente:
+
+```text
+PILOT STATUS: GO WITH WARNINGS
+```
+
+Il prossimo step consigliato dopo il pilot e':
+
+```text
+0750) State Machine Publish Runner Event Hooks
+```
+
 ## 21. Sintesi di chiusura
 
 Il Motore ASF MVP e' chiuso come baseline usabile, locale, human-gated e

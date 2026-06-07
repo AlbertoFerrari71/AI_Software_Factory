@@ -2282,6 +2282,51 @@ Il prossimo step consigliato resta:
 
 ---
 
+## DEC-087 - MVP Real Step Pilot con GO WITH WARNINGS
+
+**Data:** 2026-06-07
+**Stato:** Accettata
+
+### Contesto
+
+Dopo STEP 0730 il Motore ASF MVP era chiuso come baseline `GO WITH WARNINGS`,
+ma restava da provarlo su una modifica reale piccola invece che solo su smoke
+sintetici o documenti di closure.
+
+### Decisione
+
+Lo STEP 0740 introduce `docs/motor/0740_MVP_REAL_STEP_PILOT.md`.
+
+Il pilot:
+
+- usa il runbook 0720 come riferimento operativo;
+- registra lo stato con `scripts/asf_step_state_machine.py`;
+- produce evidence temporanee sotto `tmp/0740_mvp_real_step_pilot/`;
+- usa il Publish Config Generator senza eseguire pubblicazione;
+- normalizza la run con un manifest documentale;
+- aggiorna indici e workflow health in modo minimale;
+- conclude con decisione prudente `PILOT STATUS: GO WITH WARNINGS`.
+
+### Motivazione
+
+Un pilot reale piccolo valida l'usabilita' della baseline MVP senza introdurre
+automazioni pericolose. La scelta resta volutamente bassa nel rischio: il focus
+e' capire frizioni operative, non dimostrare produzione o autonomia completa.
+
+### Conseguenze
+
+- Il Motore ASF MVP e' stato provato su una modifica reale e versionabile.
+- Il pilot conferma che runbook, state machine, generator, manifest e verifiche
+  locali sono usabili, ma ancora manuali.
+- Phase B, Phase C, commit, push, PR, merge e deploy restano fuori dallo step.
+- Il prossimo step consigliato e':
+
+```text
+0750) State Machine Publish Runner Event Hooks
+```
+
+---
+
 ## DEC-086 - End-to-End MVP Closure Pack con GO WITH WARNINGS
 
 **Data:** 2026-06-07

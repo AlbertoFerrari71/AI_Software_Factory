@@ -4,6 +4,31 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.74.0] - 2026-06-07
+
+### Added
+
+- STEP 0740 - MVP Real Step Pilot.
+- Documento `docs/motor/0740_MVP_REAL_STEP_PILOT.md` con scopo, flusso MVP applicato, componenti usati, evidence summary, warning, lezioni apprese e decisione finale.
+- Evidence temporanee sotto `tmp/0740_mvp_real_step_pilot/` tramite state machine, publish config generator e manifest locale.
+
+### Changed
+
+- README, roadmap, decision log, Project Workflow Index, Workflow Health Check, roadmap motore e closure pack 0730 riconoscono lo STEP 0740.
+- Workflow Health Check e relativo test tracciano il nuovo documento senza eseguire smoke, manifest, publish, merge o Bridge reale.
+
+### Guardrails
+
+- Nessuna nuova automazione operativa introdotta.
+- Nessuna Phase B, Phase C, commit, push, PR, merge o deploy eseguiti da Codex.
+- Decisione prudente `PILOT STATUS: GO WITH WARNINGS` perche' il pilot resta piccolo/documentale e gli hook runner/state machine restano manuali.
+
+### Next
+
+- Prossimo step consigliato: `0750) State Machine Publish Runner Event Hooks`.
+
+---
+
 ## [0.73.0] - 2026-06-07
 
 ### Added
