@@ -84,10 +84,12 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/69_ASF_OPENAI_API_ADAPTER_CONTROLLED_LIVE_EXECUTION_PACK.md",
         "docs/0560-01-Report_OpenAI_API_Adapter_First_Authorized_Live_Run.md",
         "docs/0560-03-Diagnostic_OpenAI_Provider_HTTP_Error_And_Rate_Limit.md",
+        "docs/motor/0580_DRY_RUN_LOOP_RUNNER.md",
         "config/asf_project_profiles.json",
         "scripts/asf_openai_api_adapter.py",
         "scripts/asf_openai_controlled_live_execution_pack.py",
         "scripts/asf_openai_first_authorized_live_run.py",
+        "scripts/asf_dry_run_loop_runner.py",
         "scripts/install_pwsh_command_pack_skill.py",
         "scripts/migrate_artifact_names_4digit.py",
         "scripts/asf_codex_invocation_dry_run.py",
@@ -131,6 +133,8 @@ def check_files(root: Path) -> list[HealthIssue]:
         "templates/pwsh_command_pack/as-common-pwsh-command-pack-SKILL.md",
         "templates/pwsh_command_pack/export/as-common-pwsh-command-pack/SKILL.md",
         "templates/pwsh_command_pack/step_540_openai_controlled_live_execution_pack_template.ps1",
+        "examples/dry_run_loop/step_0580_simulated_request.json",
+        "examples/dry_run_loop/step_0580_execution_plan.json",
     ]
 
     issues: list[HealthIssue] = []
@@ -250,6 +254,7 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                 "OpenAI Provider HTTP Error and Rate Limit Diagnostic",
                 ["OpenAI Provider HTTP Error and Rate Limit Diagnostic"],
             ),
+            ("ASF Dry-run Loop Runner", ["ASF Dry-run Loop Runner"]),
             ("generate task packet script", ["scripts/generate_task_packet.py"]),
             ("task packet validator script", ["scripts/validate_task_packet.py"]),
             ("ASF Next Step Runner script", ["scripts/asf_next_step.py"]),
@@ -270,6 +275,10 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             (
                 "OpenAI API Adapter First Authorized Live Run script",
                 ["scripts/asf_openai_first_authorized_live_run.py"],
+            ),
+            (
+                "ASF Dry-run Loop Runner script",
+                ["scripts/asf_dry_run_loop_runner.py"],
             ),
             (
                 "artifact naming migration script",
@@ -380,6 +389,10 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                 "OpenAI Provider HTTP Error and Rate Limit Diagnostic document",
                 ["docs/0560-03-Diagnostic_OpenAI_Provider_HTTP_Error_And_Rate_Limit.md"],
             ),
+            (
+                "ASF Dry-run Loop Runner document",
+                ["docs/motor/0580_DRY_RUN_LOOP_RUNNER.md"],
+            ),
             ("ASF project profiles config", ["config/asf_project_profiles.json"]),
             (
                 "ASF Next Step Runner handoff template",
@@ -456,6 +469,10 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             (
                 "PowerShell command pack skill installer",
                 ["scripts/install_pwsh_command_pack_skill.py"],
+            ),
+            (
+                "ASF Dry-run Loop Runner examples",
+                ["examples/dry_run_loop/step_0580_simulated_request.json"],
             ),
         ],
     )
@@ -545,6 +562,7 @@ def check_script_safety(root: Path) -> list[HealthIssue]:
         "scripts/asf_codex_readonly_trial_compare.py",
         "scripts/asf_openai_api_adapter.py",
         "scripts/asf_openai_controlled_live_execution_pack.py",
+        "scripts/asf_dry_run_loop_runner.py",
         "scripts/migrate_artifact_names_4digit.py",
     ]
     patterns = forbidden_script_patterns()

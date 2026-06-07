@@ -1,7 +1,7 @@
 # AI Software Factory
 
 **Metodo interno:** Codex Alchemy Method
-**Stato:** STEP 0570 - ASF Supervised Gate Autonomy ADR and MVP Motor Roadmap
+**Stato:** STEP 0580 - Dry-run Loop Runner
 **Data bootstrap:** 2026-05-25
 **Strategia:** local-first personale, progettato per evoluzione SaaS
 
@@ -28,7 +28,7 @@ Il metodo interno si chiama **Codex Alchemy Method**: l'idea grezza viene trasfo
 
 ## 2. Stato repository
 
-Questo repository e' nello stato **STEP 0570 - ASF Supervised Gate Autonomy ADR and MVP Motor Roadmap**.
+Questo repository e' nello stato **STEP 0580 - Dry-run Loop Runner**.
 
 Sono presenti:
 
@@ -58,6 +58,7 @@ Sono presenti:
 - wrapper STEP 0560 per primo live run autorizzato via adapter, con report versionato `docs/0560-01-Report_OpenAI_API_Adapter_First_Authorized_Live_Run.md`.
 - diagnostic pack STEP 0560 provider-side, con `docs/0560-03-Diagnostic_OpenAI_Provider_HTTP_Error_And_Rate_Limit.md`, stato `BLOCKED_BY_RATE_LIMIT_OR_QUOTA` e nessuna evidence positiva inventata.
 - ADR e roadmap per autonomia supervisionata a gate, MVP Motore, loop a gate e nodo revisione indipendente.
+- Dry-run Loop Runner locale che legge richiesta simulata, genera o legge piano dry-run, produce artifact strutturati e ferma il ciclo su gate supervisionato.
 
 Non sono ancora presenti:
 
@@ -67,7 +68,8 @@ Non sono ancora presenti:
 - integrazioni OpenAI API live produttive;
 - integrazioni MCP;
 - automazioni Codex operative;
-- motore dry-run end-to-end;
+- Controlled Codex Executor;
+- first controlled write pilot;
 - logica applicativa reale.
 
 ---
@@ -336,6 +338,7 @@ docs/adr/0570_SUPERVISED_GATE_AUTONOMY.md
 docs/motor/0570_MVP_MOTOR_ROADMAP.md
 docs/motor/0570_GATE_LOOP_SPEC.md
 docs/motor/0570_INDEPENDENT_REVIEW_NODE.md
+docs/motor/0580_DRY_RUN_LOOP_RUNNER.md
 ```
 
 ---
@@ -394,7 +397,7 @@ policies/path_policy.v0.json
 ## 11. Prossimo step
 
 ```text
-0580) Dry-run Loop Runner
+0590) Risk Classifier + Gate Policy
 ```
 
-Obiettivo: creare il primo runner del loop a gate in modalita' dry-run, senza modificare repository target e senza introdurre commit, push, PR, merge, deploy o live run OpenAI.
+Obiettivo: estrarre e irrigidire la classificazione L0-L4 e la gate policy del runner, con casi golden minimi e comportamento fail-closed, senza introdurre live run, write automatico o pubblicazione Git.

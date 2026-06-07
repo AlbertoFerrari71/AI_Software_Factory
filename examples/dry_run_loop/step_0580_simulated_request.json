@@ -1,0 +1,31 @@
+{
+  "project_name": "AI_Software_Factory",
+  "repo_path": ".",
+  "step": "0580",
+  "title": "Dry-run Loop Runner",
+  "branch": "main",
+  "objective": "Demonstrate the first local supervised dry-run loop without live provider calls or Git publication.",
+  "allowed_scope": [
+    "scripts/asf_dry_run_loop_runner.py",
+    "docs/motor/0580_DRY_RUN_LOOP_RUNNER.md",
+    "tests/unit/test_asf_dry_run_loop_runner.py",
+    "examples/dry_run_loop/**"
+  ],
+  "forbidden_actions": [
+    "live provider calls",
+    "secret or API key usage",
+    "target repository writes",
+    "commit",
+    "push",
+    "PR",
+    "merge",
+    "deploy"
+  ],
+  "checks": [
+    "python -m pytest",
+    "python scripts/check_workflow_health.py",
+    "pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1",
+    "git --no-pager diff --check",
+    "git --no-pager status --short"
+  ]
+}

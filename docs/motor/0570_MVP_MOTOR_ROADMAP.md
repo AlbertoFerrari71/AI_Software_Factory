@@ -54,3 +54,23 @@ Il criterio di maturita' minima non e' "il runner esiste". Il criterio e': un lo
 - Validatori strict non necessari al loop.
 - Nuovi package o dipendenze runtime.
 - Refactor dei documenti storici non necessari.
+
+---
+
+## 6. Stato dopo STEP 0580
+
+Lo STEP 0580 ha introdotto il primo Dry-run Loop Runner:
+
+```text
+scripts/asf_dry_run_loop_runner.py
+docs/motor/0580_DRY_RUN_LOOP_RUNNER.md
+examples/dry_run_loop/
+```
+
+Il runner attraversa gli stati del loop e produce evidence sotto `tmp/asf_dry_run_loop/`, ma non autorizza ancora write, executor Codex, live run o pubblicazione Git.
+
+Il prossimo step resta:
+
+```text
+0590) Risk Classifier + Gate Policy
+```

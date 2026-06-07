@@ -62,6 +62,7 @@ L'indice orienta il lavoro. Non sostituisce i documenti specifici, il Verificati
 | Eseguire OpenAI API Adapter First Authorized Live Run | `docs/0560-01-Report_OpenAI_API_Adapter_First_Authorized_Live_Run.md` | `scripts/asf_openai_first_authorized_live_run.py`, `scripts/asf_openai_api_adapter.py` | Quando lo step autorizza un solo tentativo live OpenAI via adapter | `--live` o `ASF_OPENAI_LIVE_RUN=1`; JSON evidence solo su success; nessun secret |
 | OpenAI Provider HTTP Error and Rate Limit Diagnostic | `docs/0560-03-Diagnostic_OpenAI_Provider_HTTP_Error_And_Rate_Limit.md` | `scripts/asf_openai_first_authorized_live_run.py`, `scripts/asf_openai_api_adapter.py` | Dopo una live run autorizzata provider-blocked | No live call; classifica quota/rate/model/project/auth e prepara retry separato |
 | Orientare MVP Motore e autonomia a gate | `docs/adr/0570_SUPERVISED_GATE_AUTONOMY.md`, `docs/motor/0570_MVP_MOTOR_ROADMAP.md` | `docs/motor/0570_GATE_LOOP_SPEC.md`, `docs/motor/0570_INDEPENDENT_REVIEW_NODE.md` | Quando serve decidere il prossimo step dopo 0570 | Congela nuovo meta-processo finche' il motore non completa un end-to-end dry-run |
+| Eseguire ASF Dry-run Loop Runner | `docs/motor/0580_DRY_RUN_LOOP_RUNNER.md` | `scripts/asf_dry_run_loop_runner.py`, `examples/dry_run_loop/` | Quando serve dimostrare il primo loop locale supervisionato senza provider live o pubblicazione Git | Produce request normalizzata, piano, state log, risk report, review, gate decision e final report sotto `tmp/` |
 | Controllare Documentation Sync | `docs/21_DOCUMENTATION_SYNC.md` | Nessuno | Ogni step documentale o operativo | Valuta changelog, roadmap, decisions e documenti specifici |
 | Controllare Soft Protection Guardrails | `docs/24_SOFT_PROTECTION_GUARDRAILS.md` | `scripts/git/check_soft_guardrails.ps1` | Prima del commit o come controllo locale | Read-only; non installa hook |
 | Eseguire Workflow Health Check | `docs/35_WORKFLOW_HEALTH_CHECK.md` | `scripts/check_workflow_health.py` | Quando workflow docs, script o riferimenti centrali cambiano | Read-only; non sostituisce Verification Gate |
@@ -164,6 +165,7 @@ Regole operative:
 - `docs/motor/0570_MVP_MOTOR_ROADMAP.md`: roadmap 0570-0630 per MVP Motore.
 - `docs/motor/0570_GATE_LOOP_SPEC.md`: stati formali del loop a gate, STOP condition ed evidence.
 - `docs/motor/0570_INDEPENDENT_REVIEW_NODE.md`: contratto input/output JSON e criteri PASS/FAIL/NEEDS_HUMAN del nodo review.
+- `docs/motor/0580_DRY_RUN_LOOP_RUNNER.md`: primo runner locale dry-run del loop supervisionato a gate.
 
 ---
 
@@ -190,6 +192,7 @@ Regole operative:
 - `scripts/asf_openai_api_adapter.py`: adapter dry-run/mock, live boundary gate, smoke live controllata e hardening risultati per payload OpenAI Responses-style.
 - `scripts/asf_openai_controlled_live_execution_pack.py`: pack operativo dry-run-default per preflight, mock provider e futura live OpenAI con doppio consenso.
 - `scripts/asf_openai_first_authorized_live_run.py`: wrapper STEP 0560 per un solo tentativo live autorizzato, sempre tramite adapter e con report/evidence sanitizzati.
+- `scripts/asf_dry_run_loop_runner.py`: runner locale STEP 0580 che attraversa richiesta, piano, risk report, review e gate decision in dry-run.
 
 Questi script non devono essere usati per automatizzare commit, push, PR o merge.
 
@@ -222,6 +225,7 @@ Config centrale:
 - `templates/codex_tasks/asf_openai_api_live_boundary_gate_template.md`: struttura task packet per live boundary, credential gate e futura smoke controllata.
 - `templates/codex_tasks/asf_openai_api_live_smoke_test_template.md`: struttura task packet per smoke live controllata e hardening risultati.
 - `templates/pwsh_command_pack/step_540_openai_controlled_live_execution_pack_template.ps1`: safe bootstrap operatore per generare il pack controllato con artefatti progressivi e senza `LAST-*`.
+- `examples/dry_run_loop/`: richiesta e piano JSON di esempio per il Dry-run Loop Runner.
 
 ---
 
@@ -342,6 +346,12 @@ python scripts/asf_openai_controlled_live_execution_pack.py
 ```
 
 Per mock provider no-network con gate espliciti, usare `--execution-mode mock` solo con credenziale fake/test o ambiente locale autorizzato. Per live reale futuro servono `ASF_OPENAI_LIVE_ENABLED=1`, `--confirm-live-openai`, artifact sotto `tmp/` e uno step separato autorizzato.
+
+Per eseguire il primo loop locale dry-run supervisionato:
+
+```powershell
+python scripts/asf_dry_run_loop_runner.py --request-json examples/dry_run_loop/step_0580_simulated_request.json --plan-json examples/dry_run_loop/step_0580_execution_plan.json
+```
 
 I comandi di commit, push, PR e merge restano azioni manuali di Alberto e non sono raccolti qui in una sequenza automatica.
 

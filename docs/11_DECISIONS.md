@@ -2282,6 +2282,59 @@ Il prossimo step consigliato resta:
 
 ---
 
+## DEC-072 - Dry-run Loop Runner locale
+
+**Data:** 2026-06-07
+**Stato:** Accettata
+
+### Contesto
+
+Lo STEP 0570 ha fissato la rotta verso autonomia supervisionata a gate e ha congelato nuovi raffinamenti di meta-processo finche' il motore non dimostra almeno un giro end-to-end dry-run.
+
+Serve quindi un runner minimo che colleghi richiesta simulata, piano, checkpoint, evidence, review e decisione finale senza introdurre live run, write automatico o pubblicazione Git.
+
+### Decisione
+
+Introdurre `scripts/asf_dry_run_loop_runner.py` come primo runner locale del MVP Motore.
+
+Il runner:
+
+- legge una richiesta JSON simulata;
+- legge un piano dry-run fornito oppure ne genera uno deterministico;
+- attraversa gli stati dello spec 0570;
+- produce artifact JSON/Markdown e `state_log.jsonl`;
+- classifica il rischio in modo minimo e fail-closed;
+- produce review deterministica locale;
+- termina con `NEEDS_HUMAN` oppure `FAIL`;
+- non chiama provider esterni;
+- non legge secret/API key;
+- non modifica il repository target;
+- non esegue commit, push, PR, merge, deploy o release.
+
+### Motivazione
+
+Il primo valore del motore non e' eseguire Codex o scrivere codice nei target, ma dimostrare che la sequenza e' osservabile, ripetibile e bloccabile da gate.
+
+Mantenere risk classifier e review nello stesso script e' accettabile per STEP 0580, ma solo come MVP. Gli step successivi devono separarli e renderli piu' espliciti.
+
+### Conseguenze
+
+Gli artifact runtime vivono sotto:
+
+```text
+tmp/asf_dry_run_loop/<project>/step_<step>/
+```
+
+Lo STEP 0590 deve estrarre e irrigidire Risk Classifier + Gate Policy con casi golden minimi e comportamento fail-closed.
+
+Il prossimo step consigliato e':
+
+```text
+0590) Risk Classifier + Gate Policy
+```
+
+---
+
 ## DEC-071 - Supervised gate autonomy and MVP motor roadmap
 
 **Data:** 2026-06-07
