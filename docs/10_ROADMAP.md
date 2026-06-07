@@ -86,7 +86,13 @@ Esempio:
 | 548 | Git Line Endings Warning Cleanup | Diagnosticare e mitigare warning LF/CRLF con policy repository-level controllata | `.gitattributes`, documento STEP 548, test guardrail | MVP personale | Completato |
 | 550 | LAST Deprecation and 4-Digit Artifact Naming Standard | Deprecare `LAST-*` e standardizzare artefatti progressivi `NNNN-II-Tipo_Nome.ext` | Documento standard, utility migrazione dry-run/apply, template e test aggiornati | MVP personale | Completato |
 | 560 | OpenAI API Adapter First Authorized Live Run | Eseguire una prima live reale futura solo con autorizzazione esplicita di Alberto | Wrapper autorizzato, report provider-side `BLOCKED_BY_RATE_LIMIT_OR_QUOTA`, diagnostic pack 0560-03, nessuna evidence positiva | SaaS-ready | Bloccato da provider |
-| 570 | OpenAI API Adapter Live Error Taxonomy and Retry Policy | Consolidare error taxonomy, stop policy e retry policy per futuri tentativi live separati | Tassonomia errori, retry policy, guardrail tentativi successivi | SaaS-ready | Da fare |
+| 570 | ASF Supervised Gate Autonomy ADR and MVP Motor Roadmap | Formalizzare autonomia supervisionata a gate, roadmap MVP Motore, loop spec e nodo review indipendente | ADR, roadmap motore, loop spec, independent review node | MVP Motore | Completato |
+| 580 | Dry-run Loop Runner | Creare il primo runner che attraversa il loop senza modificare target repository | Runner dry-run, state log, gate summary sotto `tmp/` | MVP Motore | Da fare |
+| 590 | Risk Classifier + Gate Policy | Rendere deterministica la classificazione L0-L4 e la decisione fail-closed | Risk classifier, gate policy, test L0-L4 | MVP Motore | Da fare |
+| 600 | Independent Review Node | Separare produzione del lavoro e revisione critica con output JSON | Review node, schema JSON, fixture PASS/FAIL/NEEDS_HUMAN | MVP Motore | Da fare |
+| 610 | Controlled Codex Executor | Preparare executor Codex preview/dry-run/read-only-first con gate espliciti | Executor controllato, output capture, no default write | MVP Motore | Da fare |
+| 620 | First End-to-End Dry Run | Eseguire un giro completo dry-run con evidence, tests, review e gate decision | Report end-to-end dry-run e target clean | MVP Motore | Da fare |
+| 630 | First Controlled Write Pilot | Provare una modifica minima e reversibile lasciata in working tree per review umana | Pilot write controllato, diff scoped, no commit/push/PR/merge | MVP Motore | Da fare |
 
 ---
 
@@ -1288,4 +1294,35 @@ Eseguire una prima live reale futura solo se Alberto autorizza esplicitamente lo
 
 ### Prossimo step consigliato
 
-0560-F) Publish Provider-Blocked Live Run Diagnostic Pack
+0570) ASF Supervised Gate Autonomy ADR and MVP Motor Roadmap
+
+---
+
+## 64. STEP 570 - ASF Supervised Gate Autonomy ADR and MVP Motor Roadmap
+
+### Obiettivo
+
+Correggere la rotta strategica di ASF da autonomia fire-and-forget ad autonomia supervisionata a gate, congelando nuovi step di meta-processo finche' il motore non completa almeno un giro end-to-end dry-run.
+
+### Output realizzati
+
+- ADR `docs/adr/0570_SUPERVISED_GATE_AUTONOMY.md`;
+- roadmap MVP Motore `docs/motor/0570_MVP_MOTOR_ROADMAP.md`;
+- specifica loop a gate `docs/motor/0570_GATE_LOOP_SPEC.md`;
+- nodo revisione indipendente `docs/motor/0570_INDEPENDENT_REVIEW_NODE.md`;
+- aggiornamento README, changelog, roadmap, decision log e Project Workflow Index;
+- nessun runner operativo, nessuna live run OpenAI e nessuna modifica alle evidence STEP 0560.
+
+### Roadmap MVP Motore
+
+- 0570 - ADR + MVP Motor Roadmap;
+- 0580 - Dry-run Loop Runner;
+- 0590 - Risk Classifier + Gate Policy;
+- 0600 - Independent Review Node;
+- 0610 - Controlled Codex Executor;
+- 0620 - First End-to-End Dry Run;
+- 0630 - First Controlled Write Pilot.
+
+### Prossimo step consigliato
+
+0580) Dry-run Loop Runner
