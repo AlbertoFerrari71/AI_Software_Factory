@@ -4,6 +4,31 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.72.0] - 2026-06-07
+
+### Added
+
+- STEP 0720 - MVP Usage Runbook.
+- Runbook `docs/motor/0720_MVP_USAGE_RUNBOOK.md` con flusso operativo smoke -> manifest -> review -> publish config -> Phase B -> Phase C.
+- Checklist decisionale per Alberto, gestione `LAST-*`, directory Bridge, recovery scenario e limiti MVP.
+
+### Changed
+
+- Workflow Health Check, README, roadmap, decision log e Project Workflow Index riconoscono lo STEP 0720.
+- Lo stato MVP Motore passa da evidence/manifest disponibili a procedura operativa end-to-end documentata e human-gated.
+
+### Guardrails
+
+- Il runbook non introduce automazioni nuove.
+- Phase B e Phase C restano manuali e richiedono `-ApprovePublish` e `-ApproveMerge`.
+- Il Bridge resta operativo e non autorevole: Git e file versionati restano la fonte ufficiale.
+
+### Next
+
+- Prossimo step consigliato: `0730) End-to-End MVP Closure Pack`.
+
+---
+
 ## [0.71.0] - 2026-06-07
 
 ### Added

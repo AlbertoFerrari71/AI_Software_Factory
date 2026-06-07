@@ -101,7 +101,8 @@ Esempio:
 | 690 | State Machine Integration with Publish Config Generator | Collegare stato step e bozze config senza eseguire pubblicazione | Integrazione generator/state machine, riferimenti Bridge, test | MVP Motore | Completato |
 | 700 | End-to-End MVP Smoke Scenario | Validare un percorso locale end-to-end del MVP Motore senza pubblicare | Smoke scenario con generator, state machine, Bridge temporaneo e report evidenze | MVP Motore | Completato |
 | 710 | Motor Run Manifest and Evidence Pack | Normalizzare manifest run ed evidence pack dello smoke MVP | Manifest unico, riferimenti artifact e criteri riuso | MVP Motore | Completato |
-| 720 | MVP Usage Runbook | Rendere operativo il percorso manuale smoke -> manifest -> publish runner | Runbook uso MVP, checklist human-gated, criteri closure | MVP Motore | Da fare |
+| 720 | MVP Usage Runbook | Rendere operativo il percorso manuale smoke -> manifest -> publish runner | Runbook uso MVP, checklist human-gated, criteri closure | MVP Motore | Completato |
+| 730 | End-to-End MVP Closure Pack | Verificare e chiudere formalmente il MVP Motore senza aggiungere automazione publish | Closure pack MVP, criteri GO/WARNING/NO-GO, handoff prossimo ciclo | MVP Motore | Da fare |
 
 ---
 

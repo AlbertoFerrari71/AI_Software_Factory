@@ -99,6 +99,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/motor/0690_STATE_MACHINE_INTEGRATION_WITH_PUBLISH_CONFIG_GENERATOR.md",
         "docs/motor/0700_END_TO_END_MVP_SMOKE_SCENARIO.md",
         "docs/motor/0710_MOTOR_RUN_MANIFEST_AND_EVIDENCE_PACK.md",
+        "docs/motor/0720_MVP_USAGE_RUNBOOK.md",
         "config/asf_project_profiles.json",
         "scripts/asf_openai_api_adapter.py",
         "scripts/asf_openai_controlled_live_execution_pack.py",
@@ -419,6 +420,10 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                 ["docs/motor/0710_MOTOR_RUN_MANIFEST_AND_EVIDENCE_PACK.md"],
             ),
             (
+                "ASF MVP Usage Runbook document",
+                ["docs/motor/0720_MVP_USAGE_RUNBOOK.md"],
+            ),
+            (
                 "ASF State Machine Bridge Integration pointers",
                 ["LAST-State.json", "LAST-Output_Compatto.md", "state_machine"],
             ),
@@ -433,6 +438,20 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             (
                 "ASF Motor Run Manifest pointers",
                 ["motor_run_manifest.json", "motor_run_summary.md", "LAST-Run_Manifest.json"],
+            ),
+            (
+                "ASF MVP Usage Runbook pointers",
+                [
+                    "codex_command",
+                    "publish_config",
+                    "state_machine",
+                    "motor_run",
+                    "Phase B",
+                    "Phase C",
+                    "-ApprovePublish",
+                    "-ApproveMerge",
+                    "READY_TO_PUBLISH",
+                ],
             ),
             (
                 "ASF Publish Config Generator script",
