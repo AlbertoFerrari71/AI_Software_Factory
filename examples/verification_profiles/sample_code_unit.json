@@ -1,0 +1,11 @@
+{
+  "changed_files": [
+    "scripts/show_workflow_status.py",
+    "tests/unit/test_workflow_status_dashboard.py"
+  ],
+  "intent": [
+    "local code and related unit test update"
+  ],
+  "phase": "local",
+  "risk_level": "L2"
+}

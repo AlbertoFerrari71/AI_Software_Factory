@@ -180,6 +180,14 @@ Lo STEP 0620 consuma quell'evidence e produce un Approval Packet piu' esplicito.
 
 Lo STEP 0620 non modifica il publish runner 0590 e non sostituisce Alberto nel gate umano.
 
+Lo STEP 0630 aggiunge un componente separato:
+
+```text
+scripts/asf_verification_profile_selector.py
+```
+
+Il Gate Decision Report non lo importa ancora direttamente. Un futuro step potra' includere la raccomandazione del verification profile nel packet umano senza duplicare le regole del selector.
+
 ---
 
 ## 9. Non azioni
@@ -218,7 +226,7 @@ git status --short --untracked-files=all
 ## 11. Prossimo step
 
 ```text
-0630) Verification Profile Selector + Test Cost Policy
+0640) Verification Profile Integration with Publish Runner
 ```
 
-Motivo: prima di introdurre un executor Codex piu' operativo, ASF deve distinguere meglio i profili di verifica per ridurre ridondanze senza ridurre sicurezza.
+Motivo: dopo avere introdotto il selector 0630, ASF deve collegarlo al runner 0590 in modo prudente prima di aumentare l'autonomia operativa.

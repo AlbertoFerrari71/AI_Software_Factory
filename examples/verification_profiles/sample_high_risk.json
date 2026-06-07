@@ -1,0 +1,10 @@
+{
+  "changed_files": [
+    "README.md"
+  ],
+  "intent": [
+    "deploy to production and delete generated data"
+  ],
+  "phase": "local",
+  "risk_level": "L4"
+}

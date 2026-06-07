@@ -2282,6 +2282,52 @@ Il prossimo step consigliato resta:
 
 ---
 
+## DEC-077 - Verification Profile Selector and Test Cost Policy
+
+**Data:** 2026-06-07
+**Stato:** Accettata
+
+### Contesto
+
+Gli step 0580-0620 hanno reso il motore ASF piu' osservabile: dry-run loop, risk classifier, integrazione del rischio e Gate Decision Report.
+
+Le verifiche locali sono pero' volutamente ridondanti: test mirati, full pytest, workflow health, verify gate, Phase A, Phase B e Phase C possono ripetersi. La ridondanza e' utile prima di publish o merge, ma puo' diventare costosa durante iterazioni locali a scope chiaro.
+
+### Decisione
+
+Introdurre `scripts/asf_verification_profile_selector.py` come selettore locale dei profili di verifica.
+
+Il selector:
+
+- supporta `docs-only`, `code-unit`, `motor-core`, `publish`, `final-main` e `high-risk`;
+- restituisce JSON, Markdown o testo compatto;
+- include `recommended_checks`, `required_checks`, `optional_checks`, `skipped_checks`, `estimated_cost` e note safety;
+- fallisce chiuso su input vuoto, ambiguo, non riconosciuto o high-risk senza approval elevato;
+- tratta `scripts/asf_publish_step.ps1` come file `motor-core` quando viene modificato;
+- tratta `publish` come intento operativo, non come semplice presenza della parola in un path.
+
+Lo STEP 0630 non modifica direttamente `scripts/asf_publish_step.ps1` e non integra ancora il selector nel Gate Decision Report.
+
+### Motivazione
+
+La scelta dei test deve diventare esplicita e verificabile, non una scorciatoia implicita.
+
+Separare il selector consente di testare la policy di costo prima di collegarla a runner o packet decisionali. La sicurezza resta fail-closed: se non e' chiaro che un profilo ridotto sia appropriato, il sistema raccomanda full verification o review manuale.
+
+### Conseguenze
+
+`docs-only` e `code-unit` possono ridurre tempi locali quando scope e rischio sono chiari.
+
+`motor-core`, `publish`, `final-main` e `high-risk` restano conservativi e preservano full pytest, workflow health, verify gate, approval o verifica finale quando serve.
+
+Il prossimo step consigliato e':
+
+```text
+0640) Verification Profile Integration with Publish Runner
+```
+
+---
+
 ## DEC-076 - Gate Decision Report and Human Approval Packet
 
 **Data:** 2026-06-07

@@ -90,6 +90,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/motor/0610_RISK_CLASSIFIER_DRY_RUN_INTEGRATION.md",
         "docs/motor/0620_GATE_DECISION_REPORT_HUMAN_APPROVAL_PACKET.md",
         "docs/motor/0620_VERIFICATION_BALANCE_NOTES.md",
+        "docs/motor/0630_VERIFICATION_PROFILE_SELECTOR_TEST_COST_POLICY.md",
         "config/asf_project_profiles.json",
         "scripts/asf_openai_api_adapter.py",
         "scripts/asf_openai_controlled_live_execution_pack.py",
@@ -98,6 +99,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "scripts/asf_publish_step.ps1",
         "scripts/asf_risk_classifier.py",
         "scripts/asf_gate_decision_report.py",
+        "scripts/asf_verification_profile_selector.py",
         "scripts/install_pwsh_command_pack_skill.py",
         "scripts/migrate_artifact_names_4digit.py",
         "scripts/asf_codex_invocation_dry_run.py",
@@ -158,6 +160,14 @@ def check_files(root: Path) -> list[HealthIssue]:
         "examples/gate_decision/sample_l3_publish_approved.json",
         "examples/gate_decision/sample_l4_blocked.json",
         "examples/gate_decision/sample_invalid_fail_closed.json",
+        "examples/verification_profiles/sample_docs_only.json",
+        "examples/verification_profiles/sample_code_unit.json",
+        "examples/verification_profiles/sample_motor_core.json",
+        "examples/verification_profiles/sample_publish.json",
+        "examples/verification_profiles/sample_final_main.json",
+        "examples/verification_profiles/sample_high_risk.json",
+        "examples/verification_profiles/sample_ambiguous_fail_closed.json",
+        "tests/unit/test_asf_verification_profile_selector.py",
     ]
 
     issues: list[HealthIssue] = []
@@ -321,6 +331,10 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                 ["scripts/asf_gate_decision_report.py"],
             ),
             (
+                "ASF Verification Profile Selector script",
+                ["scripts/asf_verification_profile_selector.py"],
+            ),
+            (
                 "ASF Risk Classifier Dry-run Integration document",
                 ["docs/motor/0610_RISK_CLASSIFIER_DRY_RUN_INTEGRATION.md"],
             ),
@@ -331,6 +345,10 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             (
                 "ASF Verification Balance Notes document",
                 ["docs/motor/0620_VERIFICATION_BALANCE_NOTES.md"],
+            ),
+            (
+                "ASF Verification Profile Selector document",
+                ["docs/motor/0630_VERIFICATION_PROFILE_SELECTOR_TEST_COST_POLICY.md"],
             ),
             (
                 "artifact naming migration script",
@@ -546,6 +564,10 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                 "ASF Gate Decision Report examples",
                 ["examples/gate_decision/"],
             ),
+            (
+                "ASF Verification Profile Selector examples",
+                ["examples/verification_profiles/"],
+            ),
         ],
     )
 
@@ -638,6 +660,7 @@ def check_script_safety(root: Path) -> list[HealthIssue]:
         "scripts/asf_publish_step.ps1",
         "scripts/asf_risk_classifier.py",
         "scripts/asf_gate_decision_report.py",
+        "scripts/asf_verification_profile_selector.py",
         "scripts/migrate_artifact_names_4digit.py",
     ]
     patterns = forbidden_script_patterns()
