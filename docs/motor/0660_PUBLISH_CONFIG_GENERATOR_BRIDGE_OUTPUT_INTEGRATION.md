@@ -22,9 +22,17 @@ Il runner continua a usare il proprio Bridge operativo:
 D:\FG-SAB Dropbox\Alberto Ferrari\ChatGPT_Bridge\AI_Software_Factory\pwsh_command
 ```
 
+La state machine usa un Bridge separato introdotto dopo STEP 0680:
+
+```text
+D:\FG-SAB Dropbox\Alberto Ferrari\ChatGPT_Bridge\AI_Software_Factory\state_machine
+```
+
 Questa separazione evita di mischiare:
 
+- prompt Codex salvati in `codex_command`;
 - audit della generazione config;
+- stato corrente dello step;
 - output del publish runner;
 - comandi effettivi Phase B/Phase C.
 
@@ -189,10 +197,12 @@ git status --short --untracked-files=all
 
 Lo STEP 0670 ha aggiunto la Step Execution State Machine locale per modellare stati, transizioni e recovery del ciclo step.
 
-Prossimo step consigliato dopo 0670:
+Lo STEP 0680 ha aggiunto l'output Bridge della state machine in `state_machine`, con `LAST-State.json`, `LAST-Event.json`, output compatto e output completo.
+
+Prossimo step consigliato dopo 0680:
 
 ```text
-0680) State Machine Integration with Publish Config Generator
+0690) State Machine Integration with Publish Config Generator
 ```
 
-Motivo: dopo STEP 0660 il generator lascia un pacchetto Bridge ordinato e riusabile, e dopo STEP 0670 lo stato step e' modellato. Il prossimo collo di bottiglia e' collegare i due componenti senza rendere automatica la pubblicazione.
+Motivo: dopo STEP 0660 il generator lascia un pacchetto Bridge ordinato e riusabile, e dopo STEP 0680 lo stato step e' persistente nel Bridge. Il prossimo collo di bottiglia e' collegare i due componenti senza rendere automatica la pubblicazione.

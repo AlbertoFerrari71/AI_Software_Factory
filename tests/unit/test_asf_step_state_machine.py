@@ -41,6 +41,10 @@ def run_cli(*args: str | Path) -> subprocess.CompletedProcess[str]:
     )
 
 
+def read_json(path: Path) -> dict[str, object]:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
 def apply_sequence(module, step: str, events: list[str]) -> dict[str, object]:
     state = module.initial_state(step)
     for event in events:
@@ -229,6 +233,204 @@ def test_cli_base_resume_works(tmp_path: Path) -> None:
     assert "IMPLEMENTED" in second.stdout
     saved = json.loads(state_file.read_text(encoding="utf-8"))
     assert saved["current_state"] == "IMPLEMENTED"
+
+
+def test_write_bridge_generates_progressive_and_last_files(tmp_path: Path) -> None:
+    bridge_root = tmp_path / "bridge"
+    state_file = tmp_path / "0680_state.json"
+
+    result = run_cli(
+        "--step",
+        "0680",
+        "--event",
+        "prompt_saved",
+        "--state-file",
+        state_file,
+        "--write-bridge",
+        "--bridge-root",
+        bridge_root,
+        "--json",
+    )
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    for relative in [
+        "0680-State_step_0680.json",
+        "0680-Event_step_0680.json",
+        "0680-Output_Compatto_step_0680.md",
+        "0680-Output_Completo_step_0680.txt",
+        "LAST-State.json",
+        "LAST-Event.json",
+        "LAST-Output_Compatto.md",
+        "LAST-Output_Completo.txt",
+    ]:
+        assert (bridge_root / relative).is_file()
+
+
+def test_bridge_last_state_and_event_are_valid_json(tmp_path: Path) -> None:
+    bridge_root = tmp_path / "bridge"
+
+    result = run_cli(
+        "--step",
+        "0680",
+        "--event",
+        "prompt_saved",
+        "--write-bridge",
+        "--bridge-root",
+        bridge_root,
+        "--json",
+    )
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    state = read_json(bridge_root / "LAST-State.json")
+    event = read_json(bridge_root / "LAST-Event.json")
+    assert state["step"] == "0680"
+    assert state["current_state"] == "PROMPT_PREPARED"
+    assert state["last_event"] == "prompt_saved"
+    assert state["state_file"] == str(bridge_root / "LAST-State.json")
+    assert event["event"] == "prompt_saved"
+    assert event["from_state"] == "PLANNED"
+    assert event["to_state"] == "PROMPT_PREPARED"
+
+
+def test_bridge_compact_output_contains_state_event_and_next_action(tmp_path: Path) -> None:
+    bridge_root = tmp_path / "bridge"
+
+    result = run_cli(
+        "--step",
+        "0680",
+        "--event",
+        "prompt_saved",
+        "--write-bridge",
+        "--bridge-root",
+        bridge_root,
+        "--markdown",
+    )
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    compact = (bridge_root / "LAST-Output_Compatto.md").read_text(encoding="utf-8")
+    assert "PROMPT_PREPARED" in compact
+    assert "prompt_saved" in compact
+    assert "Recommended Next Action" in compact
+    assert "LAST-State.json" in compact
+    assert "LAST-Output_Completo.txt" in compact
+    assert "Set-Clipboard" in compact
+
+
+def test_bridge_complete_output_contains_history_and_safety_note(tmp_path: Path) -> None:
+    bridge_root = tmp_path / "bridge"
+    state_file = tmp_path / "0680_state.json"
+
+    result = run_cli(
+        "--step",
+        "0680",
+        "--event",
+        "prompt_saved",
+        "--state-file",
+        state_file,
+        "--write-bridge",
+        "--bridge-root",
+        bridge_root,
+    )
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    complete = (bridge_root / "LAST-Output_Completo.txt").read_text(encoding="utf-8")
+    assert "History completa" in complete
+    assert "prompt_saved" in complete
+    assert "No Phase B, Phase C, GitHub, publish, commit, push, PR, merge, or deploy action was executed." in complete
+
+
+def test_bridge_custom_root_uses_temporary_directory_not_real_bridge(tmp_path: Path) -> None:
+    module = load_module()
+    bridge_root = tmp_path / "custom_state_machine_bridge"
+
+    result = run_cli(
+        "--step",
+        "0680",
+        "--event",
+        "prompt_saved",
+        "--write-bridge",
+        "--bridge-root",
+        bridge_root,
+        "--json",
+    )
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert str(bridge_root) != module.DEFAULT_STATE_MACHINE_BRIDGE_ROOT
+    assert module.DEFAULT_STATE_MACHINE_BRIDGE_ROOT not in result.stdout
+    assert (bridge_root / "LAST-State.json").is_file()
+
+
+def test_invalid_transition_with_bridge_writes_fail_closed_outputs(tmp_path: Path) -> None:
+    bridge_root = tmp_path / "bridge"
+
+    result = run_cli(
+        "--step",
+        "0680",
+        "--event",
+        "phase_c_started",
+        "--write-bridge",
+        "--bridge-root",
+        bridge_root,
+        "--json",
+    )
+
+    assert result.returncode == 2
+    event = read_json(bridge_root / "LAST-Event.json")
+    state = read_json(bridge_root / "LAST-State.json")
+    assert event["allowed"] is False
+    assert event["fail_closed"] is True
+    assert state["fail_closed"] is True
+    assert state["blockers"]
+
+
+def test_write_bridge_without_state_file_uses_last_state_as_state_file(tmp_path: Path) -> None:
+    bridge_root = tmp_path / "bridge"
+
+    first = run_cli(
+        "--step",
+        "0680",
+        "--event",
+        "prompt_saved",
+        "--write-bridge",
+        "--bridge-root",
+        bridge_root,
+        "--json",
+    )
+    second = run_cli(
+        "--event",
+        "codex_completed",
+        "--write-bridge",
+        "--bridge-root",
+        bridge_root,
+        "--json",
+    )
+
+    assert first.returncode == 0, first.stdout + first.stderr
+    assert second.returncode == 0, second.stdout + second.stderr
+    state = read_json(bridge_root / "LAST-State.json")
+    assert state["state_file"] == str(bridge_root / "LAST-State.json")
+    assert state["current_state"] == "IMPLEMENTED"
+    assert len(state["history"]) == 2
+
+
+def test_cli_base_write_bridge_returns_bridge_paths(tmp_path: Path) -> None:
+    bridge_root = tmp_path / "bridge"
+
+    result = run_cli(
+        "--step",
+        "0680",
+        "--event",
+        "prompt_saved",
+        "--write-bridge",
+        "--bridge-root",
+        bridge_root,
+        "--json",
+    )
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    payload = json.loads(result.stdout)
+    assert payload["bridge_root"] == str(bridge_root)
+    assert any("LAST-State.json" in path for path in payload["bridge_files"])
 
 
 def test_state_machine_script_has_no_runner_side_effect_path() -> None:

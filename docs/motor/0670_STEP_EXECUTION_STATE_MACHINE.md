@@ -207,6 +207,22 @@ Lo state file contiene almeno:
 
 Uno state file corrotto non viene riparato automaticamente. Lo script produce output fail-closed e non avanza lo stato.
 
+### Bridge dopo STEP 0680
+
+Dopo STEP 0680 la state machine puo' scrivere una copia auditabile nel Bridge con:
+
+```powershell
+python scripts/asf_step_state_machine.py --step 0680 --event prompt_saved --write-bridge --bridge-root "D:\FG-SAB Dropbox\Alberto Ferrari\ChatGPT_Bridge\AI_Software_Factory\state_machine" --json
+```
+
+Con `--write-bridge` vengono prodotti `LAST-State.json`, `LAST-Event.json`, `LAST-Output_Compatto.md`, `LAST-Output_Completo.txt` e i corrispondenti file progressivi dello step.
+
+Se `--state-file` e' omesso insieme a `--write-bridge`, lo state file usato e':
+
+```text
+<bridge-root>\LAST-State.json
+```
+
 ---
 
 ## 10. Guardrail
@@ -282,7 +298,7 @@ git status --short --untracked-files=all
 Prossimo step consigliato:
 
 ```text
-0680) State Machine Integration with Publish Config Generator
+0690) State Machine Integration with Publish Config Generator
 ```
 
-Motivo: dopo STEP 0670 lo stato e' modellato localmente. Il passo successivo piu' utile e' far generare al Publish Config Generator una bozza di stato iniziale e riferimenti coerenti, senza ancora automatizzare Phase B o Phase C.
+Motivo: dopo STEP 0680 lo stato e' modellato e persistente nel Bridge. Il passo successivo piu' utile e' far generare al Publish Config Generator riferimenti coerenti alla state machine, senza ancora automatizzare Phase B o Phase C.
