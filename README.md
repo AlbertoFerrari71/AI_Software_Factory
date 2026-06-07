@@ -1,7 +1,7 @@
 # AI Software Factory
 
 **Metodo interno:** Codex Alchemy Method
-**Stato:** STEP 0610 - Risk Classifier Integration with Dry-run Loop Runner
+**Stato:** STEP 0620 - Gate Decision Report and Human Approval Packet
 **Data bootstrap:** 2026-05-25
 **Strategia:** local-first personale, progettato per evoluzione SaaS
 
@@ -28,7 +28,7 @@ Il metodo interno si chiama **Codex Alchemy Method**: l'idea grezza viene trasfo
 
 ## 2. Stato repository
 
-Questo repository e' nello stato **STEP 0610 - Risk Classifier Integration with Dry-run Loop Runner**.
+Questo repository e' nello stato **STEP 0620 - Gate Decision Report and Human Approval Packet**.
 
 Sono presenti:
 
@@ -62,6 +62,7 @@ Sono presenti:
 - Stable PowerShell Publish Runner versionato per sostituire i mega-blocchi PowerShell copiati in chat con comando corto, config JSON, gate espliciti e output Bridge.
 - Risk Classifier + Gate Policy deterministico, rule-based e fail-closed per assegnare livelli L0-L4 e gate richiesti.
 - integrazione del Risk Classifier nel checkpoint `RISK_CLASSIFY` del Dry-run Loop Runner, con risk report strutturato e nessuna autorizzazione write/publish/live.
+- Gate Decision Report che trasforma risk report e check evidence in un Approval Packet umano JSON/Markdown/testo, fail-closed e senza azioni operative.
 
 Non sono ancora presenti:
 
@@ -345,6 +346,8 @@ docs/motor/0580_DRY_RUN_LOOP_RUNNER.md
 docs/motor/0590_STABLE_POWERSHELL_PUBLISH_RUNNER.md
 docs/motor/0600_RISK_CLASSIFIER_GATE_POLICY.md
 docs/motor/0610_RISK_CLASSIFIER_DRY_RUN_INTEGRATION.md
+docs/motor/0620_GATE_DECISION_REPORT_HUMAN_APPROVAL_PACKET.md
+docs/motor/0620_VERIFICATION_BALANCE_NOTES.md
 ```
 
 ---
@@ -403,7 +406,7 @@ policies/path_policy.v0.json
 ## 11. Prossimo step
 
 ```text
-0620) Gate Decision Report and Human Approval Packet
+0630) Verification Profile Selector + Test Cost Policy
 ```
 
-Obiettivo: rendere piu' esplicito il pacchetto di decisione umana usando il risk report 0610 come input stabile, senza trasformare il dry-run runner in un executor operativo.
+Obiettivo: introdurre una policy leggera di profili di verifica per ridurre ridondanze locali senza indebolire i gate `motor-core`, `publish` e `high-risk`.

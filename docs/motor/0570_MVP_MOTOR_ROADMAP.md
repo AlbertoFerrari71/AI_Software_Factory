@@ -31,24 +31,25 @@ Le eccezioni ammesse sono solo correzioni bloccanti emerse dai test o dalla revi
 | 0590 | Stabilizzare la pubblicazione step con runner PowerShell versionato | L3 Git automation human-gated | `scripts/`, `examples/publish_step/`, `docs/motor/`, `tests/` | Runner FASE A/B/C con config JSON, Bridge output e flag espliciti per publish/merge | pytest mirati, self-test DOCX, workflow health, verify gate | Pubblicazione senza flag, scope ambiguo, no checks non autorizzato, comandi distruttivi |
 | 0600 | Implementare Risk Classifier + Gate Policy deterministici | L2 codice/test ordinario, con aspetti L3 per policy | `scripts/`, `policies/` se necessario, `docs/motor/`, `tests/` | Classificazione L0-L4 stabile e fail-closed con casi golden minimi | pytest classifier, casi L0-L4, diff check, verify gate | Rischio non classificabile, L3/L4 non human-gated, policy ambigua |
 | 0610 | Integrare Risk Classifier nel Dry-run Loop Runner | L2 codice/test ordinario | `scripts/asf_dry_run_loop_runner.py`, `scripts/asf_risk_classifier.py`, `tests/`, `docs/motor/` | Il checkpoint RISK_CLASSIFY usa la policy stabile senza cambiare autorizzazioni write/publish/live | pytest classifier + runner, workflow health, verify gate | Regressione runner 0580, L3/L4 sottostimati, integrazione non fail-closed |
-| 0620 | Aggiungere Gate Decision Report and Human Approval Packet | L2 codice/test ordinario | `scripts/`, `templates/`, `docs/motor/`, `tests/` | Pacchetto gate produce verdict, risk, scope/test checks, finding e azione umana esplicita | pytest schema/criteri, fixture PASS/FAIL/NEEDS_HUMAN | Report che promuove scope fail, test fail, L3/L4 senza approval o diff non spiegato |
-| 0630 | Preparare Controlled Codex Executor dry-run/readonly-first | L3 runner/Codex automation | `scripts/`, `docs/motor/`, invocation docs esistenti, `tests/` | Executor default preview/dry-run, read-only solo con gate esplicito, nessun write automatico | pytest mock, check target clean, verify gate | Sandbox write default, danger-full-access, CODEX_NOT_AVAILABLE trattato come target failure |
-| 0640 | Eseguire First End-to-End Dry Run su target controllato | L3 runner/Git automation controllata | `tmp/`, docs results, runner/executor/review | Loop completo produce evidence, tests, review e gate decision senza write | pytest, workflow health, verify gate, controllo target clean | Stato mancante, evidence incompleta, target dirty, review FAIL o NEEDS_HUMAN non gestito |
-| 0650 | First Controlled Write Pilot su modifica minima e reversibile | L3 write controllato; L4 se deploy/costi/live/merge automatici | target pilota esplicito, runner, review, tests, docs result | Una modifica minima resta in working tree per review umana, senza commit/push/PR/merge automatico | test target, diff review, gate decision, status scoped | L4 richiesto, target non clean, scope ambiguo, rollback non chiaro, gate non PASS |
+| 0620 | Aggiungere Gate Decision Report and Human Approval Packet | L2 codice/test ordinario | `scripts/`, `examples/`, `docs/motor/`, `tests/` | Pacchetto gate produce decision, risk, scope/test checks, blocker e azione umana esplicita | pytest schema/criteri, fixture PASS/FAIL/NEEDS_HUMAN | Report che promuove scope fail, test fail, L3/L4 senza approval o diff non spiegato |
+| 0630 | Definire Verification Profile Selector + Test Cost Policy | L2 documentazione/codice locale | `scripts/`, `docs/motor/`, `tests/` | Profili docs-only, code-unit, motor-core, publish e high-risk documentati e suggeribili senza publish | pytest mirati, workflow health, verify gate | Shortcut che riduce sicurezza su motor-core, publish o high-risk |
+| 0640 | Preparare Controlled Codex Executor dry-run/readonly-first | L3 runner/Codex automation | `scripts/`, `docs/motor/`, invocation docs esistenti, `tests/` | Executor default preview/dry-run, read-only solo con gate esplicito, nessun write automatico | pytest mock, check target clean, verify gate | Sandbox write default, danger-full-access, CODEX_NOT_AVAILABLE trattato come target failure |
+| 0650 | Eseguire First End-to-End Dry Run su target controllato | L3 runner/Git automation controllata | `tmp/`, docs results, runner/executor/review | Loop completo produce evidence, tests, review e gate decision senza write | pytest, workflow health, verify gate, controllo target clean | Stato mancante, evidence incompleta, target dirty, review FAIL o NEEDS_HUMAN non gestito |
+| 0660 | First Controlled Write Pilot su modifica minima e reversibile | L3 write controllato; L4 se deploy/costi/live/merge automatici | target pilota esplicito, runner, review, tests, docs result | Una modifica minima resta in working tree per review umana, senza commit/push/PR/merge automatico | test target, diff review, gate decision, status scoped | L4 richiesto, target non clean, scope ambiguo, rollback non chiaro, gate non PASS |
 
 ---
 
 ## 4. Sequenza operativa prevista
 
 ```text
-0570 docs -> 0580 dry-run loop -> 0590 stable publish runner -> 0600 risk gate -> 0610 risk integration -> 0620 gate decision packet -> 0630 controlled executor -> 0640 e2e dry run -> 0650 controlled write pilot
+0570 docs -> 0580 dry-run loop -> 0590 stable publish runner -> 0600 risk gate -> 0610 risk integration -> 0620 gate decision packet -> 0630 verification profiles -> 0640 controlled executor -> 0650 e2e dry run -> 0660 controlled write pilot
 ```
 
 Il criterio di maturita' minima non e' "il runner esiste". Il criterio e': un loop completo produce evidence leggibile, classifica rischio, esegue test disponibili, passa review indipendente e ferma correttamente il flusso quando un gate non passa.
 
 ---
 
-## 5. Ambiti congelati fino a 0620
+## 5. Ambiti congelati fino a 0640
 
 - Retry live OpenAI, salvo step separato e autorizzato da Alberto.
 - Nuove integrazioni MCP operative.
@@ -59,7 +60,7 @@ Il criterio di maturita' minima non e' "il runner esiste". Il criterio e': un lo
 
 ---
 
-## 6. Stato dopo STEP 0610
+## 6. Stato dopo STEP 0620
 
 Lo STEP 0580 ha introdotto il primo Dry-run Loop Runner:
 
@@ -83,8 +84,19 @@ examples/risk_classifier/
 
 Lo STEP 0610 collega il classifier al checkpoint `RISK_CLASSIFY` del runner 0580 e produce risk report strutturato con blocchi `risk`, `gate` e `dry_run`.
 
-Il prossimo step resta:
+Lo STEP 0620 aggiunge:
 
 ```text
-0620) Gate Decision Report and Human Approval Packet
+scripts/asf_gate_decision_report.py
+docs/motor/0620_GATE_DECISION_REPORT_HUMAN_APPROVAL_PACKET.md
+docs/motor/0620_VERIFICATION_BALANCE_NOTES.md
+examples/gate_decision/
+```
+
+Il Gate Decision Report produce Approval Packet JSON/Markdown/testo, mantiene il sistema fail-closed e non esegue azioni operative.
+
+Il prossimo step consigliato e':
+
+```text
+0630) Verification Profile Selector + Test Cost Policy
 ```

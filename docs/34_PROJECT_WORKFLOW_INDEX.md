@@ -66,6 +66,7 @@ L'indice orienta il lavoro. Non sostituisce i documenti specifici, il Verificati
 | Usare ASF Stable PowerShell Publish Runner | `docs/motor/0590_STABLE_POWERSHELL_PUBLISH_RUNNER.md` | `scripts/asf_publish_step.ps1`, `examples/publish_step/0590_publish_config.example.json` | Dopo report Codex e review umana, quando serve pubblicare uno step con comando corto e config | FASE A verifica locale; FASE B richiede `-ApprovePublish`; FASE C richiede `-ApproveMerge` |
 | Usare ASF Risk Classifier + Gate Policy | `docs/motor/0600_RISK_CLASSIFIER_GATE_POLICY.md` | `scripts/asf_risk_classifier.py`, `examples/risk_classifier/` | Quando serve classificare testo, file o comandi proposti in L0-L4 prima del gate | Rule-based, fail-closed, output JSON strutturato con `required_gate` e `allowed` |
 | Verificare ASF Risk Classifier Dry-run Integration | `docs/motor/0610_RISK_CLASSIFIER_DRY_RUN_INTEGRATION.md` | `scripts/asf_dry_run_loop_runner.py`, `scripts/asf_risk_classifier.py`, `examples/dry_run_loop/step_0610_*_request.json` | Quando serve verificare il checkpoint `RISK_CLASSIFY` con la policy 0600 dentro il runner 0580 | Dry-run only; risk report strutturato; non esegue gate reali, publish, merge, deploy o write target |
+| Generare ASF Gate Decision Report | `docs/motor/0620_GATE_DECISION_REPORT_HUMAN_APPROVAL_PACKET.md`, `docs/motor/0620_VERIFICATION_BALANCE_NOTES.md` | `scripts/asf_gate_decision_report.py`, `examples/gate_decision/` | Quando serve trasformare risk report e check evidence in un Approval Packet umano | Produce JSON/Markdown/testo; fail-closed su input ambiguo; non esegue publish o azioni operative |
 | Controllare Documentation Sync | `docs/21_DOCUMENTATION_SYNC.md` | Nessuno | Ogni step documentale o operativo | Valuta changelog, roadmap, decisions e documenti specifici |
 | Controllare Soft Protection Guardrails | `docs/24_SOFT_PROTECTION_GUARDRAILS.md` | `scripts/git/check_soft_guardrails.ps1` | Prima del commit o come controllo locale | Read-only; non installa hook |
 | Eseguire Workflow Health Check | `docs/35_WORKFLOW_HEALTH_CHECK.md` | `scripts/check_workflow_health.py` | Quando workflow docs, script o riferimenti centrali cambiano | Read-only; non sostituisce Verification Gate |
@@ -166,13 +167,15 @@ Regole operative:
 - `docs/0560-01-Report_OpenAI_API_Adapter_First_Authorized_Live_Run.md`: report sanitizzato STEP 0560, attualmente `BLOCKED_BY_RATE_LIMIT_OR_QUOTA` per HTTP 429 `insufficient_quota`.
 - `docs/0560-03-Diagnostic_OpenAI_Provider_HTTP_Error_And_Rate_Limit.md`: diagnostic pack provider-side STEP 0560-E, senza live call e senza evidence positiva inventata.
 - `docs/adr/0570_SUPERVISED_GATE_AUTONOMY.md`: decisione strategica per autonomia supervisionata a gate.
-- `docs/motor/0570_MVP_MOTOR_ROADMAP.md`: roadmap 0570-0630 per MVP Motore.
+- `docs/motor/0570_MVP_MOTOR_ROADMAP.md`: roadmap 0570-0660 per MVP Motore.
 - `docs/motor/0570_GATE_LOOP_SPEC.md`: stati formali del loop a gate, STOP condition ed evidence.
 - `docs/motor/0570_INDEPENDENT_REVIEW_NODE.md`: contratto input/output JSON e criteri PASS/FAIL/NEEDS_HUMAN del nodo review.
 - `docs/motor/0580_DRY_RUN_LOOP_RUNNER.md`: primo runner locale dry-run del loop supervisionato a gate.
 - `docs/motor/0590_STABLE_POWERSHELL_PUBLISH_RUNNER.md`: runner PowerShell stabile per pubblicare step ASF con config JSON e gate espliciti.
 - `docs/motor/0600_RISK_CLASSIFIER_GATE_POLICY.md`: classificatore L0-L4 e gate policy fail-closed per il MVP Motore.
 - `docs/motor/0610_RISK_CLASSIFIER_DRY_RUN_INTEGRATION.md`: integrazione del classifier nel checkpoint `RISK_CLASSIFY` del dry-run runner.
+- `docs/motor/0620_GATE_DECISION_REPORT_HUMAN_APPROVAL_PACKET.md`: Approval Packet umano generato da risk report e check evidence.
+- `docs/motor/0620_VERIFICATION_BALANCE_NOTES.md`: Verification Balance Notes con matrice iniziale dei profili di verifica per bilanciare velocita' e sicurezza.
 
 ---
 
@@ -202,6 +205,7 @@ Regole operative:
 - `scripts/asf_dry_run_loop_runner.py`: runner locale STEP 0580/0610 che attraversa richiesta, piano, classifier reale, risk report, review e gate decision in dry-run.
 - `scripts/asf_publish_step.ps1`: runner STEP 0590 per FASE A/B/C di pubblicazione step con comando corto, config JSON, Bridge output e flag espliciti.
 - `scripts/asf_risk_classifier.py`: classifier STEP 0600 per testo/JSON, livelli L0-L4 e gate policy strutturata.
+- `scripts/asf_gate_decision_report.py`: report STEP 0620 che produce Approval Packet JSON/Markdown/testo da evidence dry-run/risk.
 
 Questi script non devono essere usati per automatizzare commit, push, PR o merge salvo `scripts/asf_publish_step.ps1`, che lo consente solo nelle fasi esplicite `-ApprovePublish` e `-ApproveMerge`.
 
@@ -237,6 +241,7 @@ Config centrale:
 - `examples/dry_run_loop/`: richiesta e piano JSON di esempio per il Dry-run Loop Runner, inclusi request 0610 L0/L1, L2, L3 e L4.
 - `examples/publish_step/0590_publish_config.example.json`: config esempio per Stable PowerShell Publish Runner.
 - `examples/risk_classifier/`: esempi JSON L0, L2, L3 e L4 per Risk Classifier + Gate Policy.
+- `examples/gate_decision/`: esempi JSON L1, L2, L3 approvato/non approvato, L4 e input ambiguo per il Gate Decision Report.
 
 ---
 
@@ -383,6 +388,13 @@ Per classificare rischio e gate policy in JSON:
 ```powershell
 python scripts/asf_risk_classifier.py --text "commit and push branch" --json
 python scripts/asf_risk_classifier.py --input-file examples/risk_classifier/sample_l3_publish.json --json
+```
+
+Per generare un Approval Packet umano da evidence dry-run/risk:
+
+```powershell
+python scripts/asf_gate_decision_report.py --input-file examples/gate_decision/sample_l2_code_change_checked.json --markdown
+python scripts/asf_gate_decision_report.py --input-file examples/gate_decision/sample_l3_publish_approved.json --json
 ```
 
 ---

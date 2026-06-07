@@ -1,0 +1,54 @@
+{
+  "step": "0620",
+  "title": "Gate Decision Report implementation",
+  "summary": "Local code and tests with completed verification evidence.",
+  "files_in_scope": [
+    "scripts/asf_gate_decision_report.py",
+    "tests/unit/test_asf_gate_decision_report.py"
+  ],
+  "checks_required": [
+    "python -m pytest tests/unit/test_asf_gate_decision_report.py -q",
+    "git --no-pager diff --check"
+  ],
+  "checks_reported": [
+    {
+      "name": "python -m pytest tests/unit/test_asf_gate_decision_report.py -q",
+      "status": "PASS"
+    },
+    {
+      "name": "git --no-pager diff --check",
+      "status": "PASS"
+    }
+  ],
+  "risk_report": {
+    "checkpoint": "RISK_CLASSIFY",
+    "status": "PASS",
+    "risk": {
+      "risk_level": "L2",
+      "allowed": true,
+      "required_gate": "local_verification",
+      "reasons": [
+        "source or test change without external side effect"
+      ],
+      "matched_rules": [],
+      "fail_closed": false,
+      "recommended_next_action": "Run local verification before proceeding."
+    },
+    "gate": {
+      "required_gate": "local_verification",
+      "provided_gates": [
+        "local_verification"
+      ],
+      "declared_satisfied": true,
+      "dry_run_enforced": true,
+      "runner_executes_gate": false
+    },
+    "dry_run": {
+      "fail_closed": false,
+      "no_live_provider_calls": true,
+      "no_target_repo_writes": true,
+      "no_git_publication": true
+    },
+    "plan_blockers": []
+  }
+}

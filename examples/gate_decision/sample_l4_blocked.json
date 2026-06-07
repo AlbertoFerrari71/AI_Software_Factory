@@ -1,0 +1,51 @@
+{
+  "step": "0620",
+  "title": "L4 blocked operation",
+  "summary": "High-risk external side effect evidence must stay blocked.",
+  "files_in_scope": [
+    "scripts/asf_publish_step.ps1"
+  ],
+  "checks_required": [
+    "python -m pytest -q",
+    "git --no-pager diff --check"
+  ],
+  "checks_reported": [
+    {
+      "name": "python -m pytest -q",
+      "status": "PASS"
+    },
+    {
+      "name": "git --no-pager diff --check",
+      "status": "PASS"
+    }
+  ],
+  "risk_report": {
+    "checkpoint": "RISK_CLASSIFY",
+    "status": "PASS",
+    "risk": {
+      "risk_level": "L4",
+      "allowed": false,
+      "required_gate": "elevated_manual_approval",
+      "reasons": [
+        "destructive or external side effect signal"
+      ],
+      "matched_rules": [],
+      "fail_closed": false,
+      "recommended_next_action": "Stop and require elevated manual approval, dry-run evidence and rollback planning."
+    },
+    "gate": {
+      "required_gate": "elevated_manual_approval",
+      "provided_gates": [],
+      "declared_satisfied": false,
+      "dry_run_enforced": true,
+      "runner_executes_gate": false
+    },
+    "dry_run": {
+      "fail_closed": false,
+      "no_live_provider_calls": true,
+      "no_target_repo_writes": true,
+      "no_git_publication": true
+    },
+    "plan_blockers": []
+  }
+}
