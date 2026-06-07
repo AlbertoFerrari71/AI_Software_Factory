@@ -1,8 +1,8 @@
 # AI Software Factory
 
-**Metodo interno:** Codex Alchemy Method  
-**Stato:** STEP 0560 - OpenAI Provider HTTP Error and Rate Limit Diagnostic Pack
-**Data bootstrap:** 2026-05-25  
+**Metodo interno:** Codex Alchemy Method
+**Stato:** STEP 0570 - ASF Supervised Gate Autonomy ADR and MVP Motor Roadmap
+**Data bootstrap:** 2026-05-25
 **Strategia:** local-first personale, progettato per evoluzione SaaS
 
 ---
@@ -28,7 +28,7 @@ Il metodo interno si chiama **Codex Alchemy Method**: l'idea grezza viene trasfo
 
 ## 2. Stato repository
 
-Questo repository e' nello stato **STEP 0560 - OpenAI Provider HTTP Error and Rate Limit Diagnostic Pack**.
+Questo repository e' nello stato **STEP 0570 - ASF Supervised Gate Autonomy ADR and MVP Motor Roadmap**.
 
 Sono presenti:
 
@@ -57,6 +57,7 @@ Sono presenti:
 - controlled live execution pack OpenAI dry-run-default con doppio consenso futuro, artifact safe sotto `tmp/` e template operatore PowerShell.
 - wrapper STEP 0560 per primo live run autorizzato via adapter, con report versionato `docs/0560-01-Report_OpenAI_API_Adapter_First_Authorized_Live_Run.md`.
 - diagnostic pack STEP 0560 provider-side, con `docs/0560-03-Diagnostic_OpenAI_Provider_HTTP_Error_And_Rate_Limit.md`, stato `BLOCKED_BY_RATE_LIMIT_OR_QUOTA` e nessuna evidence positiva inventata.
+- ADR e roadmap per autonomia supervisionata a gate, MVP Motore, loop a gate e nodo revisione indipendente.
 
 Non sono ancora presenti:
 
@@ -66,13 +67,14 @@ Non sono ancora presenti:
 - integrazioni OpenAI API live produttive;
 - integrazioni MCP;
 - automazioni Codex operative;
+- motore dry-run end-to-end;
 - logica applicativa reale.
 
 ---
 
 ## 3. Principio guida
 
-> L'AI non sostituisce il controllo umano.  
+> L'AI non sostituisce il controllo umano.
 > L'AI accelera il passaggio da idea confusa a software affidabile attraverso un processo controllato, tracciabile, testabile e reversibile.
 
 ---
@@ -327,6 +329,15 @@ OpenAI API Adapter controlled live execution pack:
 docs/69_ASF_OPENAI_API_ADAPTER_CONTROLLED_LIVE_EXECUTION_PACK.md
 ```
 
+Autonomia supervisionata a gate e MVP Motore:
+
+```text
+docs/adr/0570_SUPERVISED_GATE_AUTONOMY.md
+docs/motor/0570_MVP_MOTOR_ROADMAP.md
+docs/motor/0570_GATE_LOOP_SPEC.md
+docs/motor/0570_INDEPENDENT_REVIEW_NODE.md
+```
+
 ---
 
 ## 8. Setup locale minimo
@@ -383,7 +394,7 @@ policies/path_policy.v0.json
 ## 11. Prossimo step
 
 ```text
-0560-F) Publish Provider-Blocked Live Run Diagnostic Pack
+0580) Dry-run Loop Runner
 ```
 
-Obiettivo: pubblicare il diagnostic pack provider-blocked dopo revisione umana. Un eventuale `0560-D2` retry live con modello a costo/latenza minori resta separato e richiede prima verifica manuale di quota, billing, progetto e accesso modello nella dashboard OpenAI.
+Obiettivo: creare il primo runner del loop a gate in modalita' dry-run, senza modificare repository target e senza introdurre commit, push, PR, merge, deploy o live run OpenAI.

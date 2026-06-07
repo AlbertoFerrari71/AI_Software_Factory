@@ -91,7 +91,7 @@ I documenti devono distinguere sempre tra:
 
 ## DEC-004 — Stack iniziale candidato
 
-**Data:** 2026-05-25  
+**Data:** 2026-05-25
 **Stato:** Accettata provvisoria
 
 ### Decisione
@@ -120,7 +120,7 @@ Lo stack può essere confermato o corretto negli step successivi. Nessun codice 
 
 ## DEC-005 — GitHub come centro operativo
 
-**Data:** 2026-05-25  
+**Data:** 2026-05-25
 **Stato:** Accettata
 
 ### Decisione
@@ -147,7 +147,7 @@ Il metodo standard sarà issue → branch → PR → test → review → merge.
 
 ## DEC-006 — Codex CLI e Codex Cloud entrambi previsti
 
-**Data:** 2026-05-25  
+**Data:** 2026-05-25
 **Stato:** Accettata
 
 ### Decisione
@@ -169,7 +169,7 @@ I task dovranno dichiarare quale modalità Codex è ammessa.
 
 ## DEC-007 — Safety Model L0-L4 obbligatorio
 
-**Data:** 2026-05-25  
+**Data:** 2026-05-25
 **Stato:** Accettata
 
 ### Decisione
@@ -188,7 +188,7 @@ Gli step successivi dovranno implementare approval gate, dry-run e rollback.
 
 ## DEC-008 — Family Photo Organizer come caso pilota
 
-**Data:** 2026-05-25  
+**Data:** 2026-05-25
 **Stato:** Accettata
 
 ### Decisione
@@ -207,7 +207,7 @@ Il framework sarà testato su Family Photo Organizer ma non vincolato a quel dom
 
 ## DEC-009 — No automazioni distruttive senza controllo
 
-**Data:** 2026-05-25  
+**Data:** 2026-05-25
 **Stato:** Accettata
 
 ### Decisione
@@ -231,7 +231,7 @@ Nessun agente potrà eseguire azioni distruttive in automatico.
 
 ## DEC-010 — Primo MVP centrato su metodo e template
 
-**Data:** 2026-05-25  
+**Data:** 2026-05-25
 **Stato:** Accettata
 
 ### Decisione
@@ -257,7 +257,7 @@ Gli step 010–100 sono prioritari rispetto a dashboard, API e SaaS.
 
 ## DEC-011 — Repository Genesis come scheletro senza logica applicativa
 
-**Data:** 2026-05-25  
+**Data:** 2026-05-25
 **Stato:** Accettata
 
 ### Contesto
@@ -280,7 +280,7 @@ Il package Python contiene solo skeleton e metadata minimi.
 
 ## DEC-012 — CI minima con smoke test
 
-**Data:** 2026-05-25  
+**Data:** 2026-05-25
 **Stato:** Accettata
 
 ### Decisione
@@ -299,7 +299,7 @@ La CI non fa ancora lint, security scan o build complessa. Questi controlli sara
 
 ## DEC-013 — Template GitHub presenti da subito
 
-**Data:** 2026-05-25  
+**Data:** 2026-05-25
 **Stato:** Accettata
 
 ### Decisione
@@ -318,7 +318,7 @@ Ogni step futuro avrà una struttura standard.
 
 ## DEC-014 — Branch principale previsto come main
 
-**Data:** 2026-05-25  
+**Data:** 2026-05-25
 **Stato:** Accettata provvisoria
 
 ### Decisione
@@ -337,7 +337,7 @@ Se il repository viene creato diversamente, aggiornare documentazione e workflow
 
 ## DEC-015 — Nessuna branch protection automatica nello STEP 020
 
-**Data:** 2026-05-25  
+**Data:** 2026-05-25
 **Stato:** Accettata
 
 ### Decisione
@@ -357,7 +357,7 @@ La branch protection sarà attivata manualmente o tramite tool controllato in st
 
 ## DEC-016 — Safety Model operativo L0-L4
 
-**Data:** 2026-05-25  
+**Data:** 2026-05-25
 **Stato:** Accettata
 
 ### Contesto
@@ -380,7 +380,7 @@ Ogni task futuro deve indicare il livello massimo consentito e rispettare la pol
 
 ## DEC-017 — Fail closed come default
 
-**Data:** 2026-05-25  
+**Data:** 2026-05-25
 **Stato:** Accettata
 
 ### Decisione
@@ -399,7 +399,7 @@ I prompt, i task packet e i futuri adapter devono dichiarare chiaramente scope e
 
 ## DEC-018 — Policy machine-readable in JSON
 
-**Data:** 2026-05-25  
+**Data:** 2026-05-25
 **Stato:** Accettata
 
 ### Decisione
@@ -418,7 +418,7 @@ I test automatici possono verificare le proprietà critiche della policy senza i
 
 ## DEC-019 — L4 richiede doppia conferma
 
-**Data:** 2026-05-25  
+**Data:** 2026-05-25
 **Stato:** Accettata
 
 ### Decisione
@@ -437,7 +437,7 @@ Il framework dovrà sempre presentare un approval request prima di qualunque L4.
 
 ## DEC-020 — MCP e tool remoti con approval default
 
-**Data:** 2026-05-25  
+**Data:** 2026-05-25
 **Stato:** Accettata
 
 ### Decisione
@@ -2278,4 +2278,57 @@ Il prossimo step consigliato resta:
 
 ```text
 560) OpenAI API Adapter First Authorized Live Run
+```
+
+---
+
+## DEC-071 - Supervised gate autonomy and MVP motor roadmap
+
+**Data:** 2026-06-07
+**Stato:** Accettata
+
+### Contesto
+
+Dopo STEP 0560 il progetto deve evitare due derive: retry/live work non prioritario e accumulo di nuovo meta-processo senza un loop operativo verificabile.
+
+ASF ha gia' prompt packet, verification gate, report intake, human gate, closure pack e design di invocation. Manca pero' un motore minimo che attraversi questi pezzi in sequenza, produca evidence e si fermi ai gate.
+
+### Decisione
+
+Adottare autonomia supervisionata a gate come rotta strategica.
+
+Il motore futuro deve attraversare stati espliciti:
+
+```text
+PLAN_NEXT_STEP -> BUILD_TASK_PACKET -> RISK_CLASSIFY -> EXECUTE_DRY_OR_WRITE -> RUN_TESTS -> INDEPENDENT_REVIEW -> GATE_DECISION -> COMMIT_OR_HOLD
+```
+
+La roadmap prioritaria diventa:
+
+```text
+0570 ADR + MVP Motor Roadmap
+0580 Dry-run Loop Runner
+0590 Risk Classifier + Gate Policy
+0600 Independent Review Node
+0610 Controlled Codex Executor
+0620 First End-to-End Dry Run
+0630 First Controlled Write Pilot
+```
+
+Nuovi step di meta-processo, naming, packaging, validazioni strict o guardrail isolati restano congelati finche' il motore non completa almeno un giro end-to-end dry-run.
+
+### Motivazione
+
+Il valore di ASF non e' autonomia cieca, ma automazione locale, diagnosabile e supervisionata. Il gate condizionale consente avanzamento quando rischio, scope, test, review e confidence sono favorevoli, e impone hold o revisione umana quando l'evidence non basta.
+
+### Conseguenze
+
+I futuri step devono privilegiare MVP Motore rispetto a raffinamenti laterali.
+
+L3 e L4 restano human-gated. Commit, push, PR, merge, deploy, cancellazioni e costi API live non diventano azioni automatiche.
+
+Il prossimo step consigliato e':
+
+```text
+0580) Dry-run Loop Runner
 ```

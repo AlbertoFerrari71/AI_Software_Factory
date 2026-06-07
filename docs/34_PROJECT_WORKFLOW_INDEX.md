@@ -61,6 +61,7 @@ L'indice orienta il lavoro. Non sostituisce i documenti specifici, il Verificati
 | Preparare ASF OpenAI API Adapter Controlled Live Execution Pack | `docs/69_ASF_OPENAI_API_ADAPTER_CONTROLLED_LIVE_EXECUTION_PACK.md` | `scripts/asf_openai_controlled_live_execution_pack.py`, `templates/pwsh_command_pack/step_540_openai_controlled_live_execution_pack_template.ps1` | Quando serve preparare artifact e preflight per una futura esecuzione live autorizzata | Dry-run default; richiede `ASF_OPENAI_LIVE_ENABLED=1` e `--confirm-live-openai` per live futuro |
 | Eseguire OpenAI API Adapter First Authorized Live Run | `docs/0560-01-Report_OpenAI_API_Adapter_First_Authorized_Live_Run.md` | `scripts/asf_openai_first_authorized_live_run.py`, `scripts/asf_openai_api_adapter.py` | Quando lo step autorizza un solo tentativo live OpenAI via adapter | `--live` o `ASF_OPENAI_LIVE_RUN=1`; JSON evidence solo su success; nessun secret |
 | OpenAI Provider HTTP Error and Rate Limit Diagnostic | `docs/0560-03-Diagnostic_OpenAI_Provider_HTTP_Error_And_Rate_Limit.md` | `scripts/asf_openai_first_authorized_live_run.py`, `scripts/asf_openai_api_adapter.py` | Dopo una live run autorizzata provider-blocked | No live call; classifica quota/rate/model/project/auth e prepara retry separato |
+| Orientare MVP Motore e autonomia a gate | `docs/adr/0570_SUPERVISED_GATE_AUTONOMY.md`, `docs/motor/0570_MVP_MOTOR_ROADMAP.md` | `docs/motor/0570_GATE_LOOP_SPEC.md`, `docs/motor/0570_INDEPENDENT_REVIEW_NODE.md` | Quando serve decidere il prossimo step dopo 0570 | Congela nuovo meta-processo finche' il motore non completa un end-to-end dry-run |
 | Controllare Documentation Sync | `docs/21_DOCUMENTATION_SYNC.md` | Nessuno | Ogni step documentale o operativo | Valuta changelog, roadmap, decisions e documenti specifici |
 | Controllare Soft Protection Guardrails | `docs/24_SOFT_PROTECTION_GUARDRAILS.md` | `scripts/git/check_soft_guardrails.ps1` | Prima del commit o come controllo locale | Read-only; non installa hook |
 | Eseguire Workflow Health Check | `docs/35_WORKFLOW_HEALTH_CHECK.md` | `scripts/check_workflow_health.py` | Quando workflow docs, script o riferimenti centrali cambiano | Read-only; non sostituisce Verification Gate |
@@ -159,6 +160,10 @@ Regole operative:
 - `docs/69_ASF_OPENAI_API_ADAPTER_CONTROLLED_LIVE_EXECUTION_PACK.md`: pack dry-run-default per futura esecuzione live controllata con doppio consenso e artifact safe.
 - `docs/0560-01-Report_OpenAI_API_Adapter_First_Authorized_Live_Run.md`: report sanitizzato STEP 0560, attualmente `BLOCKED_BY_RATE_LIMIT_OR_QUOTA` per HTTP 429 `insufficient_quota`.
 - `docs/0560-03-Diagnostic_OpenAI_Provider_HTTP_Error_And_Rate_Limit.md`: diagnostic pack provider-side STEP 0560-E, senza live call e senza evidence positiva inventata.
+- `docs/adr/0570_SUPERVISED_GATE_AUTONOMY.md`: decisione strategica per autonomia supervisionata a gate.
+- `docs/motor/0570_MVP_MOTOR_ROADMAP.md`: roadmap 0570-0630 per MVP Motore.
+- `docs/motor/0570_GATE_LOOP_SPEC.md`: stati formali del loop a gate, STOP condition ed evidence.
+- `docs/motor/0570_INDEPENDENT_REVIEW_NODE.md`: contratto input/output JSON e criteri PASS/FAIL/NEEDS_HUMAN del nodo review.
 
 ---
 

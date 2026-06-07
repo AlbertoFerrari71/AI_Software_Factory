@@ -4,6 +4,36 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.57.0] - 2026-06-07
+
+### Added
+
+- STEP 0570 - ASF Supervised Gate Autonomy ADR and MVP Motor Roadmap.
+- ADR `docs/adr/0570_SUPERVISED_GATE_AUTONOMY.md`.
+- Roadmap motore `docs/motor/0570_MVP_MOTOR_ROADMAP.md`.
+- Specifica loop a gate `docs/motor/0570_GATE_LOOP_SPEC.md`.
+- Nodo revisione indipendente `docs/motor/0570_INDEPENDENT_REVIEW_NODE.md`.
+
+### Changed
+
+- Ri-prioritizzata la roadmap da autonomia fire-and-forget o retry live verso autonomia supervisionata a gate.
+- Aggiornati README, roadmap, decision log e Project Workflow Index con la rotta MVP Motore 0570-0630.
+- Esplicitato il congelamento dei nuovi step di meta-processo finche' il motore non completa almeno un giro end-to-end dry-run.
+
+### Guardrails
+
+- Nessun runner operativo introdotto nello STEP 0570.
+- Nessuna live run OpenAI, nessun secret e nessuna evidence STEP 0560 toccata.
+- Nessun commit, push, PR, merge, deploy o automazione Git.
+
+### Not included
+
+- Nessun Dry-run Loop Runner: rimandato allo STEP 0580.
+- Nessun Controlled Codex Executor: rimandato allo STEP 0610.
+- Nessun First Controlled Write Pilot: rimandato allo STEP 0630.
+
+---
+
 ## [0.56.0] - 2026-06-06
 
 ### Added
