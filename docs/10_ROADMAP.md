@@ -106,7 +106,8 @@ Esempio:
 | 740 | MVP Real Step Pilot | Applicare la baseline MVP a uno step reale piccolo e non sintetico | Pilot reale, friction log, decisione post-MVP | Post-MVP Motore | Completato con warning |
 | 750 | State Machine Publish Runner Event Hooks | Collegare in modo prudente runner e state machine senza ridurre i gate | Eventi runner/state machine human-gated, docs, test | Post-MVP Motore | Completato con warning |
 | 760 | MVP Real Step Pilot 2 with State Hooks | Validare gli hook runner/state machine su un altro step reale piccolo | Pilot reale con Phase B/C state hooks e recovery osservabile | Post-MVP Motore | Completato con warning |
-| 770 | Runner Hook Evidence Manifest Integration | Collegare eventi runner/state machine a manifest ed evidence pack | Mapping hook -> manifest, riferimenti LAST-State/Event e report pubblicazione | Post-MVP Motore | Da fare |
+| 770 | Runner Hook Evidence Manifest Integration | Collegare eventi runner/state machine a manifest ed evidence pack | Sezione `runner_hooks`, validazione eventi/final state, Bridge summary e test locali | Post-MVP Motore | Completato |
+| 780 | MVP Real Step Pilot 3 with Manifest Hooks | Usare il manifest hook-aware su una pubblicazione reale piccola e human-gated | Evidence reale runner/state machine/manifest dopo Phase B/C | Post-MVP Motore | Da fare |
 
 ---
 

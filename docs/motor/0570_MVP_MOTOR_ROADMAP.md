@@ -46,13 +46,14 @@ Le eccezioni ammesse sono solo correzioni bloccanti emerse dai test o dalla revi
 | 0740 | MVP Real Step Pilot | L1/L2 docs/tooling locale | docs/motor, README, changelog, roadmap, decision log, workflow index, health check, tests | Baseline MVP usata su modifica reale piccola con evidence e decisione prudente | workflow health, pytest, verify gate, diff check | Pilot trattato come prova produttiva, Phase B/C eseguite da Codex, warning manuali ignorati |
 | 0750 | State Machine Publish Runner Event Hooks | L2/L3 runner integration human-gated | `scripts/asf_publish_step.ps1`, state machine, docs, tests, examples | Runner emette eventi state machine opzionali durante Phase B/C senza ridurre gate | pytest runner/state machine/generator/selector, workflow health, verify gate, diff check | Hook che pubblicano senza approval, shell execution, config legacy rotte, Dropbox/GitHub reali nei test |
 | 0760 | MVP Real Step Pilot 2 with State Hooks | L1/L2 docs/tooling locale | docs/motor, README, changelog, roadmap, decision log, workflow index, health check, tests, tmp evidence | Secondo pilot reale prepara state file `READY_TO_PUBLISH` e config hook-aware validata in `Phase Plan` | workflow health, pytest, verify gate, diff check, Phase Plan hook-aware | Pilot trattato come validazione finale degli hook, Phase B/C eseguite da Codex, warning manuali ignorati |
+| 0770 | Runner Hook Evidence Manifest Integration | L2 evidence locale | manifest, state machine examples, docs, tests, health check | Manifest include `runner_hooks`, final state, eventi osservati/mancanti e Bridge pointers senza pubblicare | pytest manifest/state machine/publish runner, workflow health, verify gate, diff check | Manifest che dichiara successo con eventi mancanti, state mismatch non fail-closed, test con Dropbox/GitHub reali |
 
 ---
 
 ## 4. Sequenza operativa prevista
 
 ```text
-0570 docs -> 0580 dry-run loop -> 0590 stable publish runner -> 0600 risk gate -> 0610 risk integration -> 0620 gate decision packet -> 0630 verification profiles -> 0640 selector integration with publish runner -> 0650 publish config generator -> 0660 bridge output integration -> 0670 state machine -> 0680 state bridge -> 0690 generator integration -> 0700 end-to-end smoke -> 0710 run manifest -> 0720 usage runbook -> 0730 closure pack -> 0740 real step pilot -> 0750 publish runner state hooks -> 0760 real pilot with state hooks
+0570 docs -> 0580 dry-run loop -> 0590 stable publish runner -> 0600 risk gate -> 0610 risk integration -> 0620 gate decision packet -> 0630 verification profiles -> 0640 selector integration with publish runner -> 0650 publish config generator -> 0660 bridge output integration -> 0670 state machine -> 0680 state bridge -> 0690 generator integration -> 0700 end-to-end smoke -> 0710 run manifest -> 0720 usage runbook -> 0730 closure pack -> 0740 real step pilot -> 0750 publish runner state hooks -> 0760 real pilot with state hooks -> 0770 runner hook manifest evidence
 ```
 
 Il criterio di maturita' minima non e' "il runner esiste". Il criterio e': un loop completo produce evidence leggibile, classifica rischio, esegue test disponibili, passa review indipendente e ferma correttamente il flusso quando un gate non passa.
@@ -441,4 +442,37 @@ Prossimo step consigliato:
 
 ```text
 0770) Runner Hook Evidence Manifest Integration
+```
+
+## 20. Stato dopo STEP 0770
+
+Lo STEP 0770 collega gli hook runner/state machine al manifest:
+
+```text
+docs/motor/0770_RUNNER_HOOK_EVIDENCE_MANIFEST_INTEGRATION.md
+```
+
+Il manifest legge uno state file gia' prodotto dal runner e normalizza la
+sezione `runner_hooks` con final state, last event, eventi osservati, eventi
+mancanti, state file, state Bridge root, publish runner output e publish
+config.
+
+Decisione prudente:
+
+- state file mancante: `INCOMPLETE`;
+- state file corrotto, step mismatch o final state mismatch: `FAIL_CLOSED`;
+- eventi richiesti mancanti: `INCOMPLETE`;
+- state file `CLOSED` con eventi richiesti presenti: decisione `CLOSED`.
+
+Restano manuali:
+
+- approval Phase B;
+- approval Phase C;
+- commit, push, PR, merge e verifica finale su `main`;
+- pubblicazione tramite `scripts/asf_publish_step.ps1`.
+
+Prossimo step consigliato:
+
+```text
+0780) MVP Real Step Pilot 3 with Manifest Hooks
 ```

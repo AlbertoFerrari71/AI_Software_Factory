@@ -117,6 +117,59 @@ def ready_input_payload() -> dict[str, object]:
     }
 
 
+RUNNER_HOOK_EVENTS = [
+    "phase_b_started",
+    "phase_b_passed",
+    "pr_created",
+    "phase_c_started",
+    "phase_c_passed",
+    "main_verified",
+    "close_step",
+]
+
+
+def runner_hook_state_payload(
+    *,
+    step: str = "0770-sample",
+    current_state: str = "CLOSED",
+    events: list[str] | None = None,
+) -> dict[str, object]:
+    selected_events = RUNNER_HOOK_EVENTS if events is None else events
+    return {
+        "schema": "asf_step_state_machine.v1",
+        "step": step,
+        "current_state": current_state,
+        "last_event": selected_events[-1] if selected_events else None,
+        "last_update": "2026-06-07T12:20:00Z",
+        "history": [
+            {
+                "event": event,
+                "from_state": "UNKNOWN",
+                "to_state": "UNKNOWN",
+                "timestamp": f"2026-06-07T12:{index:02d}:00Z",
+            }
+            for index, event in enumerate(selected_events)
+        ],
+        "warnings": [],
+        "blockers": [],
+        "state_file": "tmp/0770/state_machine/0770_state.json",
+        "bridge_root": "tmp/0770/state_bridge",
+        "bridge_files": [
+            "tmp/0770/state_bridge/LAST-State.json",
+            "tmp/0770/state_bridge/LAST-Event.json",
+        ],
+    }
+
+
+def write_runner_hook_input(path: Path, *, step: str = "0770-sample") -> Path:
+    payload = ready_input_payload()
+    payload["run_id"] = "sample-runner-hooks"
+    payload["step"] = step
+    payload["scenario"] = "runner-hooks-closed"
+    write_json(path, payload)
+    return path
+
+
 def test_manifest_created_from_complete_evidence_dir(tmp_path: Path) -> None:
     module = load_module()
     evidence = complete_evidence_dir(tmp_path)
@@ -282,3 +335,279 @@ def test_corrupt_input_json_writes_fail_closed_manifest(tmp_path: Path) -> None:
     assert manifest["decision"] == "FAIL_CLOSED"
     assert manifest["fail_closed"] is True
     assert manifest["blockers"]
+
+
+def test_runner_hooks_closed_state_complete_events_produces_closed_decision(tmp_path: Path) -> None:
+    module = load_module()
+    input_file = write_runner_hook_input(tmp_path / "runner_input.json")
+    state_file = tmp_path / "state" / "closed.json"
+    publish_output = tmp_path / "runner_bridge" / "LAST-Output_Completo.txt"
+    publish_config = tmp_path / "publish_config.json"
+    write_json(state_file, runner_hook_state_payload())
+    publish_output.parent.mkdir(parents=True)
+    publish_output.write_text("runner output\n", encoding="utf-8")
+    write_json(publish_config, {"state_machine_enabled": True})
+
+    code = module.run(
+        [
+            "--input-file",
+            str(input_file),
+            "--out-dir",
+            str(tmp_path / "out"),
+            "--include-runner-hooks",
+            "--state-file",
+            str(state_file),
+            "--state-bridge-root",
+            str(tmp_path / "state_bridge"),
+            "--publish-runner-output",
+            str(publish_output),
+            "--publish-config",
+            str(publish_config),
+            "--expected-step",
+            "0770-sample",
+            "--expected-final-state",
+            "CLOSED",
+            "--expected-events",
+            *RUNNER_HOOK_EVENTS,
+        ]
+    )
+
+    manifest = read_json(tmp_path / "out" / "motor_run_manifest.json")
+    runner_hooks = manifest["runner_hooks"]
+    assert code == 0
+    assert manifest["decision"] == "CLOSED"
+    assert manifest["status"] == "closed"
+    assert runner_hooks["final_state"] == "CLOSED"
+    assert runner_hooks["last_event"] == "close_step"
+    assert runner_hooks["events"] == RUNNER_HOOK_EVENTS
+    assert runner_hooks["required_events_present"] is True
+    assert runner_hooks["missing_events"] == []
+    assert runner_hooks["publish_runner_output"] == str(publish_output)
+    assert runner_hooks["publish_config"] == str(publish_config)
+    assert manifest["machine_readable"]["publication_actions_executed"] is False
+    assert manifest["machine_readable"]["phase_b_executed"] is False
+    assert manifest["machine_readable"]["phase_c_executed"] is False
+    assert manifest["machine_readable"]["runner_phase_b_event_observed"] is True
+    assert manifest["machine_readable"]["runner_phase_c_event_observed"] is True
+
+
+def test_runner_hooks_missing_required_event_produces_incomplete(tmp_path: Path) -> None:
+    module = load_module()
+    input_file = write_runner_hook_input(tmp_path / "runner_input.json")
+    state_file = tmp_path / "state" / "missing_event.json"
+    write_json(state_file, runner_hook_state_payload(events=RUNNER_HOOK_EVENTS[:-1]))
+
+    assert (
+        module.run(
+            [
+                "--input-file",
+                str(input_file),
+                "--out-dir",
+                str(tmp_path / "out"),
+                "--include-runner-hooks",
+                "--state-file",
+                str(state_file),
+                "--expected-step",
+                "0770-sample",
+                "--expected-final-state",
+                "CLOSED",
+                "--expected-events",
+                ",".join(RUNNER_HOOK_EVENTS),
+            ]
+        )
+        == 0
+    )
+
+    manifest = read_json(tmp_path / "out" / "motor_run_manifest.json")
+    assert manifest["decision"] == "INCOMPLETE"
+    assert manifest["runner_hooks"]["required_events_present"] is False
+    assert manifest["runner_hooks"]["missing_events"] == ["close_step"]
+
+
+def test_runner_hooks_missing_state_file_produces_incomplete(tmp_path: Path) -> None:
+    module = load_module()
+    input_file = write_runner_hook_input(tmp_path / "runner_input.json")
+
+    assert (
+        module.run(
+            [
+                "--input-file",
+                str(input_file),
+                "--out-dir",
+                str(tmp_path / "out"),
+                "--include-runner-hooks",
+                "--state-file",
+                str(tmp_path / "missing.json"),
+                "--expected-step",
+                "0770-sample",
+                "--expected-events",
+                "phase_b_started",
+            ]
+        )
+        == 0
+    )
+
+    manifest = read_json(tmp_path / "out" / "motor_run_manifest.json")
+    assert manifest["decision"] == "INCOMPLETE"
+    assert "State file required for runner hooks is missing" in manifest["runner_hooks"]["warnings"][0]
+
+
+def test_runner_hooks_corrupt_state_file_produces_fail_closed(tmp_path: Path) -> None:
+    module = load_module()
+    input_file = write_runner_hook_input(tmp_path / "runner_input.json")
+    state_file = tmp_path / "state" / "corrupt.json"
+    state_file.parent.mkdir(parents=True)
+    state_file.write_text("{not-json", encoding="utf-8")
+
+    assert (
+        module.run(
+            [
+                "--input-file",
+                str(input_file),
+                "--out-dir",
+                str(tmp_path / "out"),
+                "--include-runner-hooks",
+                "--state-file",
+                str(state_file),
+                "--expected-step",
+                "0770-sample",
+            ]
+        )
+        == 0
+    )
+
+    manifest = read_json(tmp_path / "out" / "motor_run_manifest.json")
+    assert manifest["decision"] == "FAIL_CLOSED"
+    assert manifest["fail_closed"] is True
+    assert manifest["runner_hooks"]["fail_closed"] is True
+    assert "not valid JSON" in manifest["runner_hooks"]["blockers"][0]
+
+
+def test_runner_hooks_step_mismatch_produces_fail_closed(tmp_path: Path) -> None:
+    module = load_module()
+    input_file = write_runner_hook_input(tmp_path / "runner_input.json")
+    state_file = tmp_path / "state" / "step_mismatch.json"
+    write_json(state_file, runner_hook_state_payload(step="0760"))
+
+    assert (
+        module.run(
+            [
+                "--input-file",
+                str(input_file),
+                "--out-dir",
+                str(tmp_path / "out"),
+                "--include-runner-hooks",
+                "--state-file",
+                str(state_file),
+                "--expected-step",
+                "0770-sample",
+            ]
+        )
+        == 0
+    )
+
+    manifest = read_json(tmp_path / "out" / "motor_run_manifest.json")
+    assert manifest["decision"] == "FAIL_CLOSED"
+    assert "does not match expected step" in manifest["runner_hooks"]["blockers"][0]
+
+
+def test_runner_hooks_expected_final_state_mismatch_produces_fail_closed(tmp_path: Path) -> None:
+    module = load_module()
+    input_file = write_runner_hook_input(tmp_path / "runner_input.json")
+    state_file = tmp_path / "state" / "state_mismatch.json"
+    write_json(state_file, runner_hook_state_payload(current_state="PUBLISHED", events=RUNNER_HOOK_EVENTS[:-1]))
+
+    assert (
+        module.run(
+            [
+                "--input-file",
+                str(input_file),
+                "--out-dir",
+                str(tmp_path / "out"),
+                "--include-runner-hooks",
+                "--state-file",
+                str(state_file),
+                "--expected-step",
+                "0770-sample",
+                "--expected-final-state",
+                "CLOSED",
+            ]
+        )
+        == 0
+    )
+
+    manifest = read_json(tmp_path / "out" / "motor_run_manifest.json")
+    assert manifest["decision"] == "FAIL_CLOSED"
+    assert "does not match expected final state" in manifest["runner_hooks"]["blockers"][0]
+
+
+def test_runner_hooks_markdown_contains_section(tmp_path: Path) -> None:
+    module = load_module()
+    input_file = write_runner_hook_input(tmp_path / "runner_input.json")
+    state_file = tmp_path / "state" / "closed.json"
+    write_json(state_file, runner_hook_state_payload())
+
+    assert (
+        module.run(
+            [
+                "--input-file",
+                str(input_file),
+                "--out-dir",
+                str(tmp_path / "out"),
+                "--include-runner-hooks",
+                "--state-file",
+                str(state_file),
+                "--expected-step",
+                "0770-sample",
+                "--expected-events",
+                "phase_b_started",
+                "close_step",
+            ]
+        )
+        == 0
+    )
+
+    markdown = (tmp_path / "out" / "motor_run_summary.md").read_text(encoding="utf-8")
+    assert "## Runner Hooks" in markdown
+    assert "required events present" in markdown
+    assert "phase_b_started" in markdown
+
+
+def test_runner_hooks_bridge_output_uses_temporary_root(tmp_path: Path) -> None:
+    module = load_module()
+    input_file = write_runner_hook_input(tmp_path / "runner_input.json")
+    state_file = tmp_path / "state" / "closed.json"
+    bridge_root = tmp_path / "bridge"
+    write_json(state_file, runner_hook_state_payload())
+
+    assert (
+        module.run(
+            [
+                "--input-file",
+                str(input_file),
+                "--out-dir",
+                str(tmp_path / "out"),
+                "--write-bridge",
+                "--bridge-root",
+                str(bridge_root),
+                "--include-runner-hooks",
+                "--state-file",
+                str(state_file),
+                "--expected-step",
+                "0770-sample",
+                "--expected-final-state",
+                "CLOSED",
+                "--expected-events",
+                *RUNNER_HOOK_EVENTS,
+            ]
+        )
+        == 0
+    )
+
+    manifest = read_json(bridge_root / "LAST-Run_Manifest.json")
+    summary = (bridge_root / "LAST-Run_Summary.md").read_text(encoding="utf-8")
+    complete = (bridge_root / "LAST-Output_Completo.txt").read_text(encoding="utf-8")
+    assert manifest["runner_hooks"]["enabled"] is True
+    assert "## Runner Hooks" in summary
+    assert '"runner_hooks"' in complete
+    assert str(bridge_root).startswith(str(tmp_path))

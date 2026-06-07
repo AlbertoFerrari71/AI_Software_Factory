@@ -13,6 +13,7 @@ CLOSURE_PACK = ROOT / "docs" / "motor" / "0730_END_TO_END_MVP_CLOSURE_PACK.md"
 PILOT_NOTES = ROOT / "docs" / "motor" / "0740_MVP_REAL_STEP_PILOT.md"
 HOOK_DOC = ROOT / "docs" / "motor" / "0750_STATE_MACHINE_PUBLISH_RUNNER_EVENT_HOOKS.md"
 HOOK_PILOT_DOC = ROOT / "docs" / "motor" / "0760_MVP_REAL_STEP_PILOT_2_WITH_STATE_HOOKS.md"
+RUNNER_HOOK_MANIFEST_DOC = ROOT / "docs" / "motor" / "0770_RUNNER_HOOK_EVIDENCE_MANIFEST_INTEGRATION.md"
 
 
 def read(path: Path) -> str:
@@ -26,6 +27,7 @@ def test_workflow_health_check_files_exist() -> None:
     assert PILOT_NOTES.exists()
     assert HOOK_DOC.exists()
     assert HOOK_PILOT_DOC.exists()
+    assert RUNNER_HOOK_MANIFEST_DOC.exists()
 
 
 def test_workflow_health_check_script_runs_successfully() -> None:
@@ -213,3 +215,45 @@ def test_workflow_health_tracks_mvp_real_step_pilot_2_with_state_hooks() -> None
 
     for fragment in pilot_fragments:
         assert fragment in pilot_doc
+
+
+def test_workflow_health_tracks_runner_hook_evidence_manifest_integration() -> None:
+    script = read(SCRIPT)
+    doc = read(DOC)
+    index = read(INDEX)
+    manifest_doc = read(RUNNER_HOOK_MANIFEST_DOC)
+
+    indexed_fragments = [
+        "docs/motor/0770_RUNNER_HOOK_EVIDENCE_MANIFEST_INTEGRATION.md",
+        "runner_hooks",
+        "--include-runner-hooks",
+        "--expected-events",
+        "sample_manifest_input_runner_hooks_closed.json",
+        "sample_closed_with_runner_hooks_state.json",
+        "0780) MVP Real Step Pilot 3 with Manifest Hooks",
+    ]
+
+    for fragment in indexed_fragments:
+        assert fragment in script
+        assert fragment in doc
+        assert fragment in index
+
+    manifest_fragments = [
+        "runner_hooks",
+        "--state-file",
+        "--state-bridge-root",
+        "--publish-runner-output",
+        "--publish-config",
+        "--require-closed-state",
+        "--expected-step",
+        "--expected-final-state",
+        "--expected-events",
+        "CLOSED",
+        "INCOMPLETE",
+        "FAIL_CLOSED",
+        "no Phase B",
+        "no Phase C",
+    ]
+
+    for fragment in manifest_fragments:
+        assert fragment in manifest_doc

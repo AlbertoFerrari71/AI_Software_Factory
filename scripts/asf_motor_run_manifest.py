@@ -21,6 +21,8 @@ DEFAULT_BRIDGE_ROOT = (
 )
 
 READY_DECISION = "READY_TO_PUBLISH"
+CLOSED_DECISION = "CLOSED"
+PUBLISHED_VERIFIED_DECISION = "PUBLISHED_VERIFIED"
 BLOCKED_DECISION = "BLOCKED"
 FAIL_CLOSED_DECISION = "FAIL_CLOSED"
 INCOMPLETE_DECISION = "INCOMPLETE"
@@ -122,6 +124,25 @@ def compact_list(value: Any) -> list[str]:
         return [compact_string(item) for item in value if compact_string(item)]
     text = compact_string(value)
     return [text] if text else []
+
+
+def compact_upper(value: Any, *, fallback: str = "") -> str:
+    return compact_string(value, fallback=fallback).upper()
+
+
+def compact_event(value: Any) -> str:
+    return compact_string(value).casefold()
+
+
+def unique_strings(values: list[str]) -> list[str]:
+    seen: set[str] = set()
+    result: list[str] = []
+    for value in values:
+        text = compact_string(value)
+        if text and text not in seen:
+            seen.add(text)
+            result.append(text)
+    return result
 
 
 def as_dict(value: Any) -> dict[str, Any]:
@@ -329,11 +350,39 @@ def current_state(state: dict[str, Any]) -> str:
     return compact_string(after.get("current_state"), fallback=compact_string(before.get("current_state"), fallback="UNKNOWN"))
 
 
+def events_from_state_payload(state: dict[str, Any]) -> list[str]:
+    events: list[str] = []
+    history = state.get("history")
+    if isinstance(history, list):
+        for entry in history:
+            raw = as_dict(entry)
+            event = compact_event(raw.get("event"))
+            if event:
+                events.append(event)
+    last_event = compact_event(state.get("last_event"))
+    if last_event:
+        events.append(last_event)
+    return unique_strings(events)
+
+
+def split_expected_events(values: list[str] | None) -> list[str]:
+    events: list[str] = []
+    for value in values or []:
+        for item in re.split(r"[\s,]+", compact_string(value)):
+            event = compact_event(item)
+            if event:
+                events.append(event)
+    return unique_strings(events)
+
+
 def normalize_decision(value: Any) -> str:
     decision = compact_string(value).upper().replace("-", "_").replace(" ", "_")
     aliases = {
         "READY": READY_DECISION,
         "OK": READY_DECISION,
+        "CLOSED": CLOSED_DECISION,
+        "PUBLISHED": PUBLISHED_VERIFIED_DECISION,
+        "PUBLISHED_VERIFIED": PUBLISHED_VERIFIED_DECISION,
         "FAILCLOSED": FAIL_CLOSED_DECISION,
         "FAIL_CLOSED": FAIL_CLOSED_DECISION,
         "BLOCKED": BLOCKED_DECISION,
@@ -361,7 +410,15 @@ def decide(
     if missing_artifacts or failed_checks:
         return INCOMPLETE_DECISION
     explicit = normalize_decision(explicit_decision)
-    if explicit in {READY_DECISION, BLOCKED_DECISION, FAIL_CLOSED_DECISION, INCOMPLETE_DECISION, REVIEW_DECISION}:
+    if explicit in {
+        READY_DECISION,
+        CLOSED_DECISION,
+        PUBLISHED_VERIFIED_DECISION,
+        BLOCKED_DECISION,
+        FAIL_CLOSED_DECISION,
+        INCOMPLETE_DECISION,
+        REVIEW_DECISION,
+    }:
         return explicit
     if current_state(state) == READY_DECISION or source_status.casefold() in {"ok", "ready", "ready_to_publish"}:
         return READY_DECISION
@@ -371,6 +428,8 @@ def decide(
 def status_from_decision(decision: str) -> str:
     return {
         READY_DECISION: "ready_to_publish",
+        CLOSED_DECISION: "closed",
+        PUBLISHED_VERIFIED_DECISION: "published_verified",
         BLOCKED_DECISION: "blocked",
         FAIL_CLOSED_DECISION: "fail_closed",
         INCOMPLETE_DECISION: "incomplete",
@@ -379,6 +438,10 @@ def status_from_decision(decision: str) -> str:
 
 
 def recommended_next_action(decision: str) -> str:
+    if decision == CLOSED_DECISION:
+        return "Archive the manifest with the runner and state machine evidence for final human audit."
+    if decision == PUBLISHED_VERIFIED_DECISION:
+        return "Verify main and close the state machine step before archiving the manifest."
     if decision == READY_DECISION:
         return "Review the manifest, then publish through scripts/asf_publish_step.ps1 with the standard human gates."
     if decision == FAIL_CLOSED_DECISION:
@@ -409,6 +472,196 @@ def build_machine_readable(
         "phase_b_executed": False,
         "phase_c_executed": False,
     }
+
+
+def runner_state_file_from_options(*, state_file: str, state_bridge_root: str) -> Path | None:
+    state_file_text = compact_string(state_file)
+    if state_file_text:
+        return Path(state_file_text)
+    bridge_root_text = compact_string(state_bridge_root)
+    if bridge_root_text:
+        return Path(bridge_root_text) / "LAST-State.json"
+    return None
+
+
+def runner_hook_decision_from_state(final_state: str) -> str:
+    if final_state == "CLOSED":
+        return CLOSED_DECISION
+    if final_state == "PUBLISHED":
+        return PUBLISHED_VERIFIED_DECISION
+    if final_state == READY_DECISION:
+        return READY_DECISION
+    return REVIEW_DECISION
+
+
+def empty_runner_hooks(
+    *,
+    state_file: Path | None,
+    state_bridge_root: str,
+    publish_runner_output: str,
+    publish_config: str,
+    expected_step: str,
+    expected_final_state: str,
+    expected_events: list[str],
+) -> dict[str, Any]:
+    return {
+        "enabled": True,
+        "state_file": str(state_file) if state_file else "",
+        "state_bridge_root": compact_string(state_bridge_root),
+        "publish_runner_output": compact_string(publish_runner_output),
+        "publish_config": compact_string(publish_config),
+        "state_step": "",
+        "expected_step": compact_string(expected_step),
+        "final_state": "UNKNOWN",
+        "expected_final_state": compact_upper(expected_final_state),
+        "last_event": "",
+        "events": [],
+        "expected_events": expected_events,
+        "required_events_present": not expected_events,
+        "missing_events": list(expected_events),
+        "bridge_files": [],
+        "warnings": [],
+        "blockers": [],
+        "fail_closed": False,
+        "decision_impact": INCOMPLETE_DECISION,
+    }
+
+
+def build_runner_hooks(
+    *,
+    state_file: Path | None,
+    state_bridge_root: str,
+    publish_runner_output: str,
+    publish_config: str,
+    expected_step: str,
+    expected_final_state: str,
+    expected_events: list[str],
+) -> dict[str, Any]:
+    hooks = empty_runner_hooks(
+        state_file=state_file,
+        state_bridge_root=state_bridge_root,
+        publish_runner_output=publish_runner_output,
+        publish_config=publish_config,
+        expected_step=expected_step,
+        expected_final_state=expected_final_state,
+        expected_events=expected_events,
+    )
+    if state_file is None:
+        hooks["warnings"].append("--include-runner-hooks requires --state-file or --state-bridge-root.")
+        return hooks
+    if not state_file.is_file():
+        hooks["warnings"].append(f"State file required for runner hooks is missing: {state_file}")
+        return hooks
+
+    try:
+        state = read_json_object(state_file)
+    except json.JSONDecodeError as exc:
+        hooks["blockers"].append(f"State file is not valid JSON: {state_file}: {exc.msg}")
+        hooks["fail_closed"] = True
+        hooks["decision_impact"] = FAIL_CLOSED_DECISION
+        return hooks
+    except (OSError, ValueError) as exc:
+        hooks["blockers"].append(f"State file could not be loaded: {state_file}: {exc}")
+        hooks["fail_closed"] = True
+        hooks["decision_impact"] = FAIL_CLOSED_DECISION
+        return hooks
+
+    state_step = compact_string(state.get("step"))
+    final_state = compact_upper(state.get("current_state"), fallback="UNKNOWN")
+    events = events_from_state_payload(state)
+    expected_events_set = set(expected_events)
+    observed_events_set = set(events)
+    missing_events = [event for event in expected_events if event not in observed_events_set]
+    state_warnings = [f"State file warning: {item}" for item in compact_list(state.get("warnings"))]
+    state_blockers = [f"State file blocker: {item}" for item in compact_list(state.get("blockers"))]
+    resolved_bridge_root = compact_string(state_bridge_root, fallback=compact_string(state.get("bridge_root")))
+
+    hooks.update(
+        {
+            "state_file": str(state_file),
+            "state_bridge_root": resolved_bridge_root,
+            "state_step": state_step,
+            "final_state": final_state,
+            "last_event": compact_event(state.get("last_event")),
+            "events": events,
+            "required_events_present": not missing_events,
+            "missing_events": missing_events,
+            "bridge_files": compact_list(state.get("bridge_files")),
+            "warnings": state_warnings,
+            "blockers": state_blockers,
+        }
+    )
+
+    if expected_step and state_step != expected_step:
+        hooks["blockers"].append(f"State file step {state_step or 'UNKNOWN'} does not match expected step {expected_step}.")
+        hooks["fail_closed"] = True
+        hooks["decision_impact"] = FAIL_CLOSED_DECISION
+        return hooks
+
+    normalized_expected_final = compact_upper(expected_final_state)
+    if normalized_expected_final and final_state != normalized_expected_final:
+        hooks["blockers"].append(
+            f"State file final state {final_state or 'UNKNOWN'} does not match expected final state {normalized_expected_final}."
+        )
+        hooks["fail_closed"] = True
+        hooks["decision_impact"] = FAIL_CLOSED_DECISION
+        return hooks
+
+    if missing_events:
+        hooks["warnings"].append("Runner hook state history is missing required events.")
+        hooks["decision_impact"] = INCOMPLETE_DECISION
+        return hooks
+
+    if expected_events_set and not observed_events_set:
+        hooks["warnings"].append("Runner hook expected events were declared but state history is empty.")
+        hooks["decision_impact"] = INCOMPLETE_DECISION
+        return hooks
+
+    hooks["decision_impact"] = runner_hook_decision_from_state(final_state)
+    return hooks
+
+
+def apply_runner_hooks(manifest: dict[str, Any], runner_hooks: dict[str, Any]) -> dict[str, Any]:
+    manifest["runner_hooks"] = runner_hooks
+    manifest["warnings"] = unique_strings(compact_list(manifest.get("warnings")) + compact_list(runner_hooks.get("warnings")))
+    manifest["blockers"] = unique_strings(compact_list(manifest.get("blockers")) + compact_list(runner_hooks.get("blockers")))
+
+    base_decision = normalize_decision(manifest.get("decision"))
+    hook_decision = normalize_decision(runner_hooks.get("decision_impact"))
+    if bool(runner_hooks.get("fail_closed")) or hook_decision == FAIL_CLOSED_DECISION:
+        decision = FAIL_CLOSED_DECISION
+        manifest["fail_closed"] = True
+    elif base_decision == FAIL_CLOSED_DECISION:
+        decision = FAIL_CLOSED_DECISION
+        manifest["fail_closed"] = True
+    elif base_decision == BLOCKED_DECISION:
+        decision = BLOCKED_DECISION
+    elif hook_decision == INCOMPLETE_DECISION or base_decision == INCOMPLETE_DECISION:
+        decision = INCOMPLETE_DECISION
+    elif hook_decision in {CLOSED_DECISION, PUBLISHED_VERIFIED_DECISION, READY_DECISION}:
+        decision = hook_decision
+    else:
+        decision = base_decision or REVIEW_DECISION
+
+    manifest["decision"] = decision
+    manifest["status"] = status_from_decision(decision)
+    manifest["recommended_next_action"] = recommended_next_action(decision)
+    manifest["human_summary"] = human_summary(manifest)
+    machine = as_dict(manifest.get("machine_readable"))
+    machine.update(
+        {
+            "decision": decision,
+            "runner_hooks_enabled": True,
+            "runner_hooks_required_events_present": bool(runner_hooks.get("required_events_present")),
+            "runner_hooks_missing_events": compact_list(runner_hooks.get("missing_events")),
+            "runner_hooks_final_state": compact_string(runner_hooks.get("final_state")),
+            "runner_hooks_last_event": compact_string(runner_hooks.get("last_event")),
+            "runner_phase_b_event_observed": "phase_b_started" in set(compact_list(runner_hooks.get("events"))),
+            "runner_phase_c_event_observed": "phase_c_started" in set(compact_list(runner_hooks.get("events"))),
+        }
+    )
+    manifest["machine_readable"] = machine
+    return manifest
 
 
 def human_summary(manifest: dict[str, Any]) -> str:
@@ -601,6 +854,35 @@ def markdown_bullets(items: list[str], *, fallback: str = "none") -> str:
     return "\n".join(f"- {item}" for item in items)
 
 
+def render_runner_hooks_markdown(runner_hooks: dict[str, Any]) -> str:
+    if not runner_hooks or not runner_hooks.get("enabled"):
+        return ""
+    return f"""
+## Runner Hooks
+
+- enabled: `{str(bool(runner_hooks.get("enabled"))).lower()}`
+- state file: `{compact_string(runner_hooks.get("state_file"), fallback="-")}`
+- state bridge root: `{compact_string(runner_hooks.get("state_bridge_root"), fallback="-")}`
+- publish runner output: `{compact_string(runner_hooks.get("publish_runner_output"), fallback="-")}`
+- publish config: `{compact_string(runner_hooks.get("publish_config"), fallback="-")}`
+- state step: `{compact_string(runner_hooks.get("state_step"), fallback="-")}`
+- final state: `{compact_string(runner_hooks.get("final_state"), fallback="-")}`
+- last event: `{compact_string(runner_hooks.get("last_event"), fallback="-")}`
+- required events present: `{str(bool(runner_hooks.get("required_events_present"))).lower()}`
+- events: `{', '.join(compact_list(runner_hooks.get("events"))) or "-"}`
+- missing events: `{', '.join(compact_list(runner_hooks.get("missing_events"))) or "-"}`
+- decision impact: `{compact_string(runner_hooks.get("decision_impact"), fallback="-")}`
+
+### Runner Hook Warnings
+
+{markdown_bullets(compact_list(runner_hooks.get("warnings")))}
+
+### Runner Hook Blockers
+
+{markdown_bullets(compact_list(runner_hooks.get("blockers")))}
+"""
+
+
 def render_markdown(manifest: dict[str, Any]) -> str:
     artifacts = manifest.get("artifacts", [])
     checks = manifest.get("checks", [])
@@ -671,6 +953,8 @@ def render_markdown(manifest: dict[str, Any]) -> str:
 
 {markdown_bullets(compact_list(manifest.get("blockers")))}
 
+{render_runner_hooks_markdown(as_dict(manifest.get("runner_hooks")))}
+
 ## Recommended Next Action
 
 {manifest.get("recommended_next_action")}
@@ -736,6 +1020,24 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--created-at", default="", help="Optional ISO timestamp for deterministic output.")
     parser.add_argument("--write-bridge", action="store_true", help="Write manifest outputs to a Bridge root.")
     parser.add_argument("--bridge-root", default=DEFAULT_BRIDGE_ROOT, help="Bridge root for optional output.")
+    parser.add_argument("--include-runner-hooks", action="store_true", help="Include state machine output produced by publish runner hooks.")
+    parser.add_argument("--state-file", default="", help="State machine JSON output to read for runner hook evidence.")
+    parser.add_argument(
+        "--state-bridge-root",
+        default="",
+        help="State machine Bridge root. Used as metadata and as LAST-State.json source when --state-file is omitted.",
+    )
+    parser.add_argument("--publish-runner-output", default="", help="Optional publish runner Bridge output path to record.")
+    parser.add_argument("--publish-config", default="", help="Optional publish config path to record in runner hook evidence.")
+    parser.add_argument("--require-closed-state", action="store_true", help="Require runner hook state output to end in CLOSED.")
+    parser.add_argument("--expected-step", default="", help="Expected state file step when runner hooks are included.")
+    parser.add_argument("--expected-final-state", default="", help="Expected final state when runner hooks are included.")
+    parser.add_argument(
+        "--expected-events",
+        nargs="*",
+        default=[],
+        help="Required runner hook events, separated by spaces or commas.",
+    )
     parser.add_argument("--json", action="store_true", help="Print manifest JSON.")
     parser.add_argument("--markdown", action="store_true", help="Print summary Markdown.")
     return parser.parse_args(argv)
@@ -761,6 +1063,22 @@ def run(argv: list[str]) -> int:
                 run_id=compact_string(args.run_id) or None,
                 created_at=compact_string(args.created_at) or None,
             )
+        if args.include_runner_hooks:
+            expected_final_state = compact_string(args.expected_final_state)
+            if args.require_closed_state and not expected_final_state:
+                expected_final_state = CLOSED_DECISION
+            expected_step = compact_string(args.expected_step, fallback=compact_string(manifest.get("step")))
+            state_file = runner_state_file_from_options(state_file=args.state_file, state_bridge_root=args.state_bridge_root)
+            runner_hooks = build_runner_hooks(
+                state_file=state_file,
+                state_bridge_root=args.state_bridge_root,
+                publish_runner_output=args.publish_runner_output,
+                publish_config=args.publish_config,
+                expected_step=expected_step,
+                expected_final_state=expected_final_state,
+                expected_events=split_expected_events(args.expected_events),
+            )
+            apply_runner_hooks(manifest, runner_hooks)
     except (OSError, json.JSONDecodeError, ValueError) as exc:
         manifest = fail_closed_manifest_for_error(
             error=str(exc),

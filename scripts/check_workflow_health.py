@@ -104,6 +104,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/motor/0740_MVP_REAL_STEP_PILOT.md",
         "docs/motor/0750_STATE_MACHINE_PUBLISH_RUNNER_EVENT_HOOKS.md",
         "docs/motor/0760_MVP_REAL_STEP_PILOT_2_WITH_STATE_HOOKS.md",
+        "docs/motor/0770_RUNNER_HOOK_EVIDENCE_MANIFEST_INTEGRATION.md",
         "config/asf_project_profiles.json",
         "scripts/asf_openai_api_adapter.py",
         "scripts/asf_openai_controlled_live_execution_pack.py",
@@ -203,9 +204,13 @@ def check_files(root: Path) -> list[HealthIssue]:
         "examples/state_machine/sample_combined_recovery_step.json",
         "examples/state_machine/sample_invalid_transition_fail_closed.json",
         "examples/state_machine/sample_local_verified_state.json",
+        "examples/state_machine/sample_closed_with_runner_hooks_state.json",
         "examples/motor_run_manifest/sample_manifest_input_ready.json",
         "examples/motor_run_manifest/sample_manifest_input_fail_closed.json",
         "examples/motor_run_manifest/sample_manifest_input_missing_artifacts.json",
+        "examples/motor_run_manifest/sample_manifest_input_runner_hooks_closed.json",
+        "examples/motor_run_manifest/sample_manifest_input_runner_hooks_missing_event.json",
+        "examples/motor_run_manifest/sample_manifest_input_runner_hooks_step_mismatch.json",
         "tests/unit/test_asf_verification_profile_selector.py",
         "tests/unit/test_asf_publish_step_runner.py",
         "tests/unit/test_asf_publish_config_generator.py",
@@ -447,6 +452,10 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                 ["docs/motor/0760_MVP_REAL_STEP_PILOT_2_WITH_STATE_HOOKS.md"],
             ),
             (
+                "ASF Runner Hook Evidence Manifest Integration document",
+                ["docs/motor/0770_RUNNER_HOOK_EVIDENCE_MANIFEST_INTEGRATION.md"],
+            ),
+            (
                 "ASF State Machine Bridge Integration pointers",
                 ["LAST-State.json", "LAST-Output_Compatto.md", "state_machine"],
             ),
@@ -516,6 +525,17 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                 ],
             ),
             (
+                "ASF Runner Hook Evidence Manifest Integration pointers",
+                [
+                    "runner_hooks",
+                    "--include-runner-hooks",
+                    "--expected-events",
+                    "sample_manifest_input_runner_hooks_closed.json",
+                    "sample_closed_with_runner_hooks_state.json",
+                    "0780) MVP Real Step Pilot 3 with Manifest Hooks",
+                ],
+            ),
+            (
                 "ASF Publish Config Generator script",
                 ["scripts/asf_publish_config_generator.py"],
             ),
@@ -556,8 +576,20 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                 ["examples/motor_run_manifest/"],
             ),
             (
+                "ASF Motor Run Manifest runner hook examples",
+                [
+                    "sample_manifest_input_runner_hooks_closed.json",
+                    "sample_manifest_input_runner_hooks_missing_event.json",
+                    "sample_manifest_input_runner_hooks_step_mismatch.json",
+                ],
+            ),
+            (
                 "ASF State Machine local verified example",
                 ["sample_local_verified_state.json"],
+            ),
+            (
+                "ASF State Machine closed runner hooks example",
+                ["sample_closed_with_runner_hooks_state.json"],
             ),
             (
                 "artifact naming migration script",

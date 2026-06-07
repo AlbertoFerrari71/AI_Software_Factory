@@ -1,0 +1,61 @@
+{
+  "blockers": [],
+  "bridge_files": [
+    "tmp/0770_runner_hooks/state_bridge/LAST-State.json",
+    "tmp/0770_runner_hooks/state_bridge/LAST-Event.json",
+    "tmp/0770_runner_hooks/state_bridge/LAST-Output_Completo.txt"
+  ],
+  "bridge_root": "tmp/0770_runner_hooks/state_bridge",
+  "current_state": "CLOSED",
+  "history": [
+    {
+      "event": "phase_b_started",
+      "from_state": "READY_TO_PUBLISH",
+      "timestamp": "2026-06-07T12:00:00Z",
+      "to_state": "PUBLISHING"
+    },
+    {
+      "event": "phase_b_passed",
+      "from_state": "PUBLISHING",
+      "timestamp": "2026-06-07T12:01:00Z",
+      "to_state": "PR_CREATED"
+    },
+    {
+      "event": "pr_created",
+      "from_state": "PR_CREATED",
+      "timestamp": "2026-06-07T12:02:00Z",
+      "to_state": "PR_CREATED"
+    },
+    {
+      "event": "phase_c_started",
+      "from_state": "PR_CREATED",
+      "timestamp": "2026-06-07T12:03:00Z",
+      "to_state": "MERGING"
+    },
+    {
+      "event": "phase_c_passed",
+      "from_state": "MERGING",
+      "timestamp": "2026-06-07T12:04:00Z",
+      "to_state": "PUBLISHED"
+    },
+    {
+      "event": "main_verified",
+      "from_state": "PUBLISHED",
+      "timestamp": "2026-06-07T12:05:00Z",
+      "to_state": "CLOSED"
+    },
+    {
+      "event": "close_step",
+      "from_state": "CLOSED",
+      "timestamp": "2026-06-07T12:06:00Z",
+      "to_state": "CLOSED"
+    }
+  ],
+  "last_event": "close_step",
+  "last_update": "2026-06-07T12:06:00Z",
+  "schema": "asf_step_state_machine.v1",
+  "source": "scripts/asf_step_state_machine.py",
+  "state_file": "tmp/0770_runner_hooks/state_machine/0770_state.json",
+  "step": "0770-sample",
+  "warnings": []
+}
