@@ -1,0 +1,17 @@
+{
+  "step": "0670",
+  "description": "Normal ASF step flow from prompt saved to closed state.",
+  "events": [
+    {"event": "prompt_saved"},
+    {"event": "codex_started"},
+    {"event": "codex_completed"},
+    {"event": "local_checks_passed"},
+    {"event": "publish_config_generated"},
+    {"event": "phase_b_started"},
+    {"event": "phase_b_passed"},
+    {"event": "phase_c_started"},
+    {"event": "phase_c_passed"},
+    {"event": "main_verified"}
+  ],
+  "expected_final_state": "CLOSED"
+}

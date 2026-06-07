@@ -2282,6 +2282,49 @@ Il prossimo step consigliato resta:
 
 ---
 
+## DEC-080 - Step Execution State Machine locale e non operativa
+
+**Data:** 2026-06-07
+**Stato:** Accettata
+
+### Contesto
+
+Gli step 0650/0660 hanno mostrato un problema reale di sequenza: sviluppo sopra stato non ancora pubblicato, config Phase C non aggiornata, diagnostica manuale e rischio di messaggi di chiusura positivi dopo un errore.
+
+Il problema non e' solo di comando PowerShell. Manca uno stato esplicito e persistente dello step.
+
+### Decisione
+
+Introdurre `scripts/asf_step_state_machine.py` come macchina a stati locale.
+
+La state machine:
+
+- modella stati ed eventi dello step ASF;
+- valida transizioni ammesse;
+- fallisce chiuso su stato ambiguo, state file corrotto o transizione incoerente;
+- produce JSON, Markdown e testo compatto;
+- persiste stato JSON sotto `tmp/`;
+- rappresenta recovery e step combinati come `0650-0660` con warning espliciti;
+- non esegue Phase B, Phase C, commit, push, PR, merge o deploy.
+
+### Motivazione
+
+Lo stato dello step deve essere osservabile e riprendibile prima di integrare generator, runner e futuri componenti del motore.
+
+Separare il modello di stato dalle azioni operative evita che una transizione dichiarata diventi autorizzazione implicita alla pubblicazione.
+
+### Conseguenze
+
+Il nuovo script entra nel profilo `motor-core` e viene riconosciuto da Workflow Health Check, Verification Profile Selector e Publish Config Generator.
+
+Il prossimo step consigliato e':
+
+```text
+0680) State Machine Integration with Publish Config Generator
+```
+
+---
+
 ## DEC-079 - Publish Config Generator Bridge Output separato dal Publish Runner
 
 **Data:** 2026-06-07

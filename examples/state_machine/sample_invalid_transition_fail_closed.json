@@ -1,0 +1,10 @@
+{
+  "step": "0670",
+  "description": "Phase C cannot start before a PR is created.",
+  "events": [
+    {"event": "phase_c_started"}
+  ],
+  "expected_allowed": false,
+  "expected_fail_closed": true,
+  "expected_state": "PLANNED"
+}

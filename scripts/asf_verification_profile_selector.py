@@ -21,6 +21,7 @@ MOTOR_CORE_FILES = {
     "scripts/asf_risk_classifier.py",
     "scripts/asf_gate_decision_report.py",
     "scripts/asf_verification_profile_selector.py",
+    "scripts/asf_step_state_machine.py",
     "scripts/check_workflow_health.py",
 }
 
@@ -31,6 +32,7 @@ SCRIPT_TESTS = {
     "scripts/asf_risk_classifier.py": "python -m pytest tests/unit/test_asf_risk_classifier.py -q",
     "scripts/asf_gate_decision_report.py": "python -m pytest tests/unit/test_asf_gate_decision_report.py -q",
     "scripts/asf_verification_profile_selector.py": "python -m pytest tests/unit/test_asf_verification_profile_selector.py -q",
+    "scripts/asf_step_state_machine.py": "python -m pytest tests/unit/test_asf_step_state_machine.py -q",
     "scripts/check_workflow_health.py": "python -m pytest tests/unit/test_workflow_health_check.py -q",
 }
 
@@ -47,6 +49,7 @@ INDEXED_DOC_PATHS = {
     "docs/motor/0630_VERIFICATION_PROFILE_SELECTOR_TEST_COST_POLICY.md",
     "docs/motor/0650_VERIFICATION_PROFILE_DRIVEN_PUBLISH_CONFIG_GENERATOR.md",
     "docs/motor/0660_PUBLISH_CONFIG_GENERATOR_BRIDGE_OUTPUT_INTEGRATION.md",
+    "docs/motor/0670_STEP_EXECUTION_STATE_MACHINE.md",
 }
 
 PUBLISH_INTENT_KEYWORDS = (

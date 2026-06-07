@@ -1,7 +1,7 @@
 # AI Software Factory
 
 **Metodo interno:** Codex Alchemy Method
-**Stato:** STEP 0660 - Publish Config Generator Bridge Output Integration
+**Stato:** STEP 0670 - Step Execution State Machine
 **Data bootstrap:** 2026-05-25
 **Strategia:** local-first personale, progettato per evoluzione SaaS
 
@@ -28,7 +28,7 @@ Il metodo interno si chiama **Codex Alchemy Method**: l'idea grezza viene trasfo
 
 ## 2. Stato repository
 
-Questo repository e' nello stato **STEP 0660 - Publish Config Generator Bridge Output Integration**.
+Questo repository e' nello stato **STEP 0670 - Step Execution State Machine**.
 
 Sono presenti:
 
@@ -67,6 +67,7 @@ Sono presenti:
 - integrazione del Verification Profile Selector nel Publish Runner, con validazione opzionale delle config profilo, fail-closed su mismatch e Phase B/Phase C ancora human-gated.
 - Publish Config Generator guidato dal Verification Profile Selector, che produce bozze JSON/Markdown per il runner senza eseguire publish, merge o altre azioni operative.
 - output Bridge dedicato del Publish Config Generator in `publish_config`, con artifact progressivi, `LAST-Publish_Config.json`, riepilogo compatto, output completo e validazione `-Phase Plan` opt-in.
+- Step Execution State Machine locale, con stati/eventi ASF, transizioni fail-closed, persistenza JSON sotto `tmp/` e output JSON/Markdown/testo senza eseguire Phase B/C o Git/GitHub.
 
 Non sono ancora presenti:
 
@@ -356,6 +357,7 @@ docs/motor/0630_VERIFICATION_PROFILE_SELECTOR_TEST_COST_POLICY.md
 docs/motor/0640_VERIFICATION_PROFILE_INTEGRATION_PUBLISH_RUNNER.md
 docs/motor/0650_VERIFICATION_PROFILE_DRIVEN_PUBLISH_CONFIG_GENERATOR.md
 docs/motor/0660_PUBLISH_CONFIG_GENERATOR_BRIDGE_OUTPUT_INTEGRATION.md
+docs/motor/0670_STEP_EXECUTION_STATE_MACHINE.md
 ```
 
 ---
@@ -414,7 +416,7 @@ policies/path_policy.v0.json
 ## 11. Prossimo step
 
 ```text
-0670) Step Execution State Machine
+0680) State Machine Integration with Publish Config Generator
 ```
 
-Obiettivo: modellare stati, transizioni, stop condition e ripresa controllata del ciclo step, usando anche `LAST-Publish_Config.json` senza rendere automatica la pubblicazione.
+Obiettivo: collegare la state machine alle bozze del Publish Config Generator, mantenendo review umana, Phase B/C esplicite e nessuna pubblicazione automatica.
