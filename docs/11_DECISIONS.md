@@ -2282,6 +2282,43 @@ Il prossimo step consigliato resta:
 
 ---
 
+## DEC-083 - End-to-End MVP Smoke Scenario locale e non operativo
+
+**Data:** 2026-06-07
+**Stato:** Accettata
+
+### Contesto
+
+Dopo STEP 0690, il Motore ASF aveva componenti collegati ma mancava una prova locale end-to-end che attraversasse classifier, dry-run, gate report, selector, generator e state machine.
+
+### Decisione
+
+Lo STEP 0700 introduce `scripts/asf_e2e_mvp_smoke.py` come smoke locale controllato.
+
+Lo smoke:
+
+- usa uno scenario positivo fino a `READY_TO_PUBLISH`;
+- usa uno scenario negativo fail-closed da `IMPLEMENTED`;
+- produce evidence pack JSON/Markdown;
+- puo' scrivere Bridge solo con `--write-bridge`;
+- non esegue Phase B, Phase C, commit, push, PR, merge, deploy, GitHub operativo o API esterne.
+
+### Motivazione
+
+Il MVP Motore deve dimostrare integrazione reale tra componenti prima di aggiungere hook automatici al runner.
+
+### Conseguenze
+
+- Workflow Health Check riconosce script, test e runbook 0700 senza eseguire lo smoke.
+- I test usano directory temporanee e non Dropbox reale.
+- Il prossimo step consigliato e':
+
+```text
+0710) Motor Run Manifest and Evidence Pack
+```
+
+---
+
 ## DEC-082 - State Machine Integration with Publish Config Generator fail-closed
 
 **Data:** 2026-06-07

@@ -46,14 +46,14 @@ Le eccezioni ammesse sono solo correzioni bloccanti emerse dai test o dalla revi
 ## 4. Sequenza operativa prevista
 
 ```text
-0570 docs -> 0580 dry-run loop -> 0590 stable publish runner -> 0600 risk gate -> 0610 risk integration -> 0620 gate decision packet -> 0630 verification profiles -> 0640 selector integration with publish runner -> 0650 publish config generator -> 0660 bridge output integration -> 0670 state machine -> 0680 state bridge -> 0690 generator integration -> 0700 end-to-end smoke
+0570 docs -> 0580 dry-run loop -> 0590 stable publish runner -> 0600 risk gate -> 0610 risk integration -> 0620 gate decision packet -> 0630 verification profiles -> 0640 selector integration with publish runner -> 0650 publish config generator -> 0660 bridge output integration -> 0670 state machine -> 0680 state bridge -> 0690 generator integration -> 0700 end-to-end smoke -> 0710 run manifest
 ```
 
 Il criterio di maturita' minima non e' "il runner esiste". Il criterio e': un loop completo produce evidence leggibile, classifica rischio, esegue test disponibili, passa review indipendente e ferma correttamente il flusso quando un gate non passa.
 
 ---
 
-## 5. Ambiti ancora congelati dopo 0690
+## 5. Ambiti ancora congelati dopo 0700
 
 - Retry live OpenAI, salvo step separato e autorizzato da Alberto.
 - Nuove integrazioni MCP operative.
@@ -230,4 +230,31 @@ Il prossimo step consigliato e':
 
 ```text
 0700) End-to-End MVP Smoke Scenario
+```
+
+## 13. Stato dopo STEP 0700
+
+Lo STEP 0700 aggiunge uno smoke end-to-end locale:
+
+```text
+docs/motor/0700_END_TO_END_MVP_SMOKE_SCENARIO.md
+scripts/asf_e2e_mvp_smoke.py
+tests/unit/test_asf_e2e_mvp_smoke.py
+```
+
+Il percorso positivo attraversa classifier, dry-run runner, gate decision report, verification profile selector, publish config generator e state machine fino a `READY_TO_PUBLISH`.
+
+Il percorso negativo parte da `IMPLEMENTED`, richiede una config pronta con state integration e fallisce chiuso senza produrre `publish_config.json`.
+
+Restano manuali e human-gated:
+
+- review della config;
+- Phase B;
+- Phase C;
+- commit, push, PR, merge e verifica finale su `main`.
+
+Prossimo step consigliato:
+
+```text
+0710) Motor Run Manifest and Evidence Pack
 ```

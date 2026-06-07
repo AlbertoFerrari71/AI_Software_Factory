@@ -4,6 +4,34 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.70.0] - 2026-06-07
+
+### Added
+
+- STEP 0700 - End-to-End MVP Smoke Scenario.
+- Script `scripts/asf_e2e_mvp_smoke.py` con scenari `code-unit-to-ready-to-publish` e `invalid-state-to-publish-config`.
+- Evidence pack locale sotto `tmp/e2e_mvp_smoke` con risk report, dry-run report, gate decision packet, verification profile, publish config, state before/after e summary JSON/Markdown.
+- Output Bridge opzionale con artifact progressivi `0700-II-Evidence_*` e `LAST-Evidence_*`, solo se `--write-bridge` e' richiesto.
+- Runbook `docs/motor/0700_END_TO_END_MVP_SMOKE_SCENARIO.md`.
+- Test `tests/unit/test_asf_e2e_mvp_smoke.py`.
+
+### Changed
+
+- Workflow Health Check, README, roadmap, decision log e Project Workflow Index riconoscono lo STEP 0700.
+- Lo stato MVP Motore passa dal collegamento generator/state machine a uno smoke locale end-to-end fino a `READY_TO_PUBLISH`.
+
+### Guardrails
+
+- Lo smoke non esegue Phase B, Phase C, commit, push, PR, merge, deploy, GitHub operativo o API esterne.
+- Il caso negativo resta fail-closed se lo stato e' `IMPLEMENTED` e viene richiesta una config pronta.
+- I test usano Bridge temporanei e non richiedono Dropbox reale.
+
+### Next
+
+- Prossimo step consigliato: `0710) Motor Run Manifest and Evidence Pack`.
+
+---
+
 ## [0.69.0] - 2026-06-07
 
 ### Added
