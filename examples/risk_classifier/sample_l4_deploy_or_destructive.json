@@ -1,0 +1,7 @@
+{
+  "description": "Deploy to production and delete obsolete generated data after merge.",
+  "commands": [
+    "deploy production",
+    "delete generated data"
+  ]
+}

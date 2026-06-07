@@ -1,7 +1,7 @@
 # AI Software Factory
 
 **Metodo interno:** Codex Alchemy Method
-**Stato:** STEP 0590 - Stable PowerShell Publish Runner
+**Stato:** STEP 0600 - Risk Classifier + Gate Policy
 **Data bootstrap:** 2026-05-25
 **Strategia:** local-first personale, progettato per evoluzione SaaS
 
@@ -28,7 +28,7 @@ Il metodo interno si chiama **Codex Alchemy Method**: l'idea grezza viene trasfo
 
 ## 2. Stato repository
 
-Questo repository e' nello stato **STEP 0590 - Stable PowerShell Publish Runner**.
+Questo repository e' nello stato **STEP 0600 - Risk Classifier + Gate Policy**.
 
 Sono presenti:
 
@@ -60,6 +60,7 @@ Sono presenti:
 - ADR e roadmap per autonomia supervisionata a gate, MVP Motore, loop a gate e nodo revisione indipendente.
 - Dry-run Loop Runner locale che legge richiesta simulata, genera o legge piano dry-run, produce artifact strutturati e ferma il ciclo su gate supervisionato.
 - Stable PowerShell Publish Runner versionato per sostituire i mega-blocchi PowerShell copiati in chat con comando corto, config JSON, gate espliciti e output Bridge.
+- Risk Classifier + Gate Policy deterministico, rule-based e fail-closed per assegnare livelli L0-L4 e gate richiesti.
 
 Non sono ancora presenti:
 
@@ -341,6 +342,7 @@ docs/motor/0570_GATE_LOOP_SPEC.md
 docs/motor/0570_INDEPENDENT_REVIEW_NODE.md
 docs/motor/0580_DRY_RUN_LOOP_RUNNER.md
 docs/motor/0590_STABLE_POWERSHELL_PUBLISH_RUNNER.md
+docs/motor/0600_RISK_CLASSIFIER_GATE_POLICY.md
 ```
 
 ---
@@ -399,7 +401,7 @@ policies/path_policy.v0.json
 ## 11. Prossimo step
 
 ```text
-0600) Risk Classifier + Gate Policy
+0610) Risk Classifier Integration with Dry-run Loop Runner
 ```
 
-Obiettivo: estrarre e irrigidire la classificazione L0-L4 e la gate policy del runner, con casi golden minimi e comportamento fail-closed, senza introdurre live run, write automatico o pubblicazione Git.
+Obiettivo: collegare il nuovo classificatore al checkpoint `RISK_CLASSIFY` del Dry-run Loop Runner, mantenendo fail-closed, nessun write automatico, nessuna live run e nessuna pubblicazione Git.

@@ -1,0 +1,8 @@
+{
+  "description": "Update documentation only for an accepted decision.",
+  "files_changed": [
+    "docs/motor/0600_RISK_CLASSIFIER_GATE_POLICY.md",
+    "README.md",
+    "CHANGELOG.md"
+  ]
+}

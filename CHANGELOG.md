@@ -4,6 +4,38 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.60.0] - 2026-06-07
+
+### Added
+
+- STEP 0600 - Risk Classifier + Gate Policy.
+- Script `scripts/asf_risk_classifier.py`.
+- Runbook `docs/motor/0600_RISK_CLASSIFIER_GATE_POLICY.md`.
+- Esempi JSON in `examples/risk_classifier/`.
+- Test `tests/unit/test_asf_risk_classifier.py`.
+
+### Changed
+
+- Aggiornati README, roadmap, decision log, Project Workflow Index e Workflow Health Check con il nuovo classificatore.
+- Il prossimo step consigliato diventa `0610) Risk Classifier Integration with Dry-run Loop Runner`.
+
+### Guardrails
+
+- Classificazione rule-based, standard library only e fail-closed.
+- Nessuna chiamata provider live.
+- Nessun secret/API key letto o stampato.
+- Nessuna modifica al Dry-run Loop Runner 0580 o al Publish Runner 0590.
+- Nessun commit, push, PR, merge o deploy eseguito da Codex durante lo STEP 0600.
+
+### Not included
+
+- Nessuna integrazione diretta nel runner 0580.
+- Nessun Independent Review Node separato.
+- Nessun Controlled Codex Executor.
+- Nessuna automazione di pubblicazione o merge.
+
+---
+
 ## [0.59.0] - 2026-06-07
 
 ### Added

@@ -86,12 +86,14 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/0560-03-Diagnostic_OpenAI_Provider_HTTP_Error_And_Rate_Limit.md",
         "docs/motor/0580_DRY_RUN_LOOP_RUNNER.md",
         "docs/motor/0590_STABLE_POWERSHELL_PUBLISH_RUNNER.md",
+        "docs/motor/0600_RISK_CLASSIFIER_GATE_POLICY.md",
         "config/asf_project_profiles.json",
         "scripts/asf_openai_api_adapter.py",
         "scripts/asf_openai_controlled_live_execution_pack.py",
         "scripts/asf_openai_first_authorized_live_run.py",
         "scripts/asf_dry_run_loop_runner.py",
         "scripts/asf_publish_step.ps1",
+        "scripts/asf_risk_classifier.py",
         "scripts/install_pwsh_command_pack_skill.py",
         "scripts/migrate_artifact_names_4digit.py",
         "scripts/asf_codex_invocation_dry_run.py",
@@ -138,6 +140,10 @@ def check_files(root: Path) -> list[HealthIssue]:
         "examples/dry_run_loop/step_0580_simulated_request.json",
         "examples/dry_run_loop/step_0580_execution_plan.json",
         "examples/publish_step/0590_publish_config.example.json",
+        "examples/risk_classifier/sample_l0_docs_only.json",
+        "examples/risk_classifier/sample_l2_code_change.json",
+        "examples/risk_classifier/sample_l3_publish.json",
+        "examples/risk_classifier/sample_l4_deploy_or_destructive.json",
     ]
 
     issues: list[HealthIssue] = []
@@ -259,6 +265,7 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             ),
             ("ASF Dry-run Loop Runner", ["ASF Dry-run Loop Runner"]),
             ("ASF Stable PowerShell Publish Runner", ["ASF Stable PowerShell Publish Runner"]),
+            ("ASF Risk Classifier Gate Policy", ["ASF Risk Classifier + Gate Policy"]),
             ("generate task packet script", ["scripts/generate_task_packet.py"]),
             ("task packet validator script", ["scripts/validate_task_packet.py"]),
             ("ASF Next Step Runner script", ["scripts/asf_next_step.py"]),
@@ -287,6 +294,10 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             (
                 "ASF Stable PowerShell Publish Runner script",
                 ["scripts/asf_publish_step.ps1"],
+            ),
+            (
+                "ASF Risk Classifier script",
+                ["scripts/asf_risk_classifier.py"],
             ),
             (
                 "artifact naming migration script",
@@ -490,6 +501,10 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                 "ASF Stable PowerShell Publish Runner config",
                 ["examples/publish_step/0590_publish_config.example.json"],
             ),
+            (
+                "ASF Risk Classifier examples",
+                ["examples/risk_classifier/"],
+            ),
         ],
     )
 
@@ -580,6 +595,7 @@ def check_script_safety(root: Path) -> list[HealthIssue]:
         "scripts/asf_openai_controlled_live_execution_pack.py",
         "scripts/asf_dry_run_loop_runner.py",
         "scripts/asf_publish_step.ps1",
+        "scripts/asf_risk_classifier.py",
         "scripts/migrate_artifact_names_4digit.py",
     ]
     patterns = forbidden_script_patterns()

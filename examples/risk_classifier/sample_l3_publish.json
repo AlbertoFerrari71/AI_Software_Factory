@@ -1,0 +1,8 @@
+{
+  "description": "Publish the verified step by creating a commit, pushing a branch and opening a pull request.",
+  "commands": [
+    "commit changes",
+    "push branch",
+    "open PR"
+  ]
+}

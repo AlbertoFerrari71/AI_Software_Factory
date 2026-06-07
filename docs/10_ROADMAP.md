@@ -87,12 +87,14 @@ Esempio:
 | 550 | LAST Deprecation and 4-Digit Artifact Naming Standard | Deprecare `LAST-*` e standardizzare artefatti progressivi `NNNN-II-Tipo_Nome.ext` | Documento standard, utility migrazione dry-run/apply, template e test aggiornati | MVP personale | Completato |
 | 560 | OpenAI API Adapter First Authorized Live Run | Eseguire una prima live reale futura solo con autorizzazione esplicita di Alberto | Wrapper autorizzato, report provider-side `BLOCKED_BY_RATE_LIMIT_OR_QUOTA`, diagnostic pack 0560-03, nessuna evidence positiva | SaaS-ready | Bloccato da provider |
 | 570 | ASF Supervised Gate Autonomy ADR and MVP Motor Roadmap | Formalizzare autonomia supervisionata a gate, roadmap MVP Motore, loop spec e nodo review indipendente | ADR, roadmap motore, loop spec, independent review node | MVP Motore | Completato |
-| 580 | Dry-run Loop Runner | Creare il primo runner che attraversa il loop senza modificare target repository | Runner dry-run, state log, gate summary sotto `tmp/` | MVP Motore | Da fare |
-| 590 | Risk Classifier + Gate Policy | Rendere deterministica la classificazione L0-L4 e la decisione fail-closed | Risk classifier, gate policy, test L0-L4 | MVP Motore | Da fare |
-| 600 | Independent Review Node | Separare produzione del lavoro e revisione critica con output JSON | Review node, schema JSON, fixture PASS/FAIL/NEEDS_HUMAN | MVP Motore | Da fare |
-| 610 | Controlled Codex Executor | Preparare executor Codex preview/dry-run/read-only-first con gate espliciti | Executor controllato, output capture, no default write | MVP Motore | Da fare |
-| 620 | First End-to-End Dry Run | Eseguire un giro completo dry-run con evidence, tests, review e gate decision | Report end-to-end dry-run e target clean | MVP Motore | Da fare |
-| 630 | First Controlled Write Pilot | Provare una modifica minima e reversibile lasciata in working tree per review umana | Pilot write controllato, diff scoped, no commit/push/PR/merge | MVP Motore | Da fare |
+| 580 | Dry-run Loop Runner | Creare il primo runner che attraversa il loop senza modificare target repository | Runner dry-run, state log, gate summary sotto `tmp/` | MVP Motore | Completato |
+| 590 | Stable PowerShell Publish Runner | Stabilizzare pubblicazione step con runner PowerShell versionato e gate espliciti | Runner publish FASE A/B/C, config JSON, output Bridge | MVP Motore | Completato |
+| 600 | Risk Classifier + Gate Policy | Rendere deterministica la classificazione L0-L4 e la decisione fail-closed | Risk classifier, gate policy, test L0-L4, esempi JSON | MVP Motore | Completato |
+| 610 | Risk Classifier Integration with Dry-run Loop Runner | Collegare il classifier al checkpoint RISK_CLASSIFY del runner 0580 | Integrazione leggera, risk report stabile, test regressione runner | MVP Motore | Da fare |
+| 620 | Independent Review Node | Separare produzione del lavoro e revisione critica con output JSON | Review node, schema JSON, fixture PASS/FAIL/NEEDS_HUMAN | MVP Motore | Da fare |
+| 630 | Controlled Codex Executor | Preparare executor Codex preview/dry-run/read-only-first con gate espliciti | Executor controllato, output capture, no default write | MVP Motore | Da fare |
+| 640 | First End-to-End Dry Run | Eseguire un giro completo dry-run con evidence, tests, review e gate decision | Report end-to-end dry-run e target clean | MVP Motore | Da fare |
+| 650 | First Controlled Write Pilot | Provare una modifica minima e reversibile lasciata in working tree per review umana | Pilot write controllato, diff scoped, no commit/push/PR/merge | MVP Motore | Da fare |
 
 ---
 
@@ -1388,3 +1390,31 @@ Sostituire i mega-blocchi PowerShell copiati in chat con un runner stabile, vers
 ### Prossimo step consigliato
 
 0600) Risk Classifier + Gate Policy
+
+---
+
+## 67. STEP 600 - Risk Classifier + Gate Policy
+
+### Obiettivo
+
+Rendere stabile, testabile e riusabile la classificazione L0-L4 e la gate policy fail-closed per il futuro motore ASF.
+
+### Output realizzati
+
+- script `scripts/asf_risk_classifier.py`;
+- documento `docs/motor/0600_RISK_CLASSIFIER_GATE_POLICY.md`;
+- esempi JSON in `examples/risk_classifier/`;
+- test automatici `tests/unit/test_asf_risk_classifier.py`;
+- aggiornamento README, changelog, roadmap, decision log e Project Workflow Index.
+
+### Guardrail
+
+- classificazione rule-based, standard library only;
+- input vuoto o non riconosciuto fail-closed;
+- L3/L4 non allowed senza gate espliciti;
+- nessuna chiamata live, nessun secret, nessuna pubblicazione Git;
+- nessuna modifica al runner 0580 o al publish runner 0590.
+
+### Prossimo step consigliato
+
+0610) Risk Classifier Integration with Dry-run Loop Runner
