@@ -171,10 +171,10 @@ Restano human-gated:
 - Phase C;
 - commit, push, PR, merge e verifica finale su `main`.
 
-Per chiudere il MVP Motore serve ancora un runbook d'uso/closure che dica come usare insieme smoke, manifest, runner standard e report finale senza aggiungere pubblicazione automatica.
+Lo STEP 0720 aggiunge il runbook d'uso operativo che collega smoke, manifest, state machine, publish config, review umana e runner Phase B/C senza aggiungere pubblicazione automatica.
 
 ## 10. Prossimo step consigliato
 
-0720) MVP Usage Runbook
+0730) End-to-End MVP Closure Pack
 
-Motivo: prima di aggiungere hook automatici al runner, conviene rendere chiaro il percorso manuale completo e human-gated dal run locale fino alla pubblicazione controllata.
+Motivo: dopo il runbook 0720, conviene chiudere formalmente il MVP Motore con un closure pack end-to-end prima di aggiungere hook automatici al runner.

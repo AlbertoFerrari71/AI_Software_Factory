@@ -2282,6 +2282,51 @@ Il prossimo step consigliato resta:
 
 ---
 
+## DEC-085 - MVP Usage Runbook come procedura operativa human-gated
+
+**Data:** 2026-06-07
+**Stato:** Accettata
+
+### Contesto
+
+Dopo STEP 0710 il Motore ASF dispone di smoke locale, manifest di run,
+state machine, generator di config e publish runner, ma l'uso end-to-end
+richiedeva ancora di ricostruire la sequenza da piu' documenti.
+
+### Decisione
+
+Lo STEP 0720 introduce `docs/motor/0720_MVP_USAGE_RUNBOOK.md`.
+
+Il runbook documenta:
+
+- scopo e limiti del Motore ASF MVP;
+- directory Bridge operative;
+- ruolo dei componenti principali;
+- flusso prompt Codex -> implementazione -> smoke -> manifest -> review -> config -> Phase B -> Phase C;
+- comandi esempio realistici e sicuri;
+- lettura di `LAST-*`;
+- fail-closed e recovery;
+- checklist decisionale per Alberto.
+
+### Motivazione
+
+Prima di chiudere formalmente il MVP o aggiungere hook automatici al runner,
+serve una procedura unica che renda il sistema usabile senza perdere i gate
+umani.
+
+### Conseguenze
+
+- Workflow Health Check riconosce il runbook 0720 senza eseguire smoke,
+  manifest, Bridge reale o fasi publish.
+- Phase B e Phase C restano esplicite e human-gated.
+- Il prossimo step consigliato e':
+
+```text
+0730) End-to-End MVP Closure Pack
+```
+
+---
+
 ## DEC-084 - Motor Run Manifest and Evidence Pack
 
 **Data:** 2026-06-07

@@ -41,13 +41,14 @@ Le eccezioni ammesse sono solo correzioni bloccanti emerse dai test o dalla revi
 | 0690 | State Machine Integration with Publish Config Generator | L2/L3 integration locale | generator, state machine, docs, tests | Config draft e stato iniziale coerenti senza avviare publish | pytest mirati, workflow health, verify gate | Generator che esegue runner, stato implicito, recovery non dichiarata |
 | 0700 | End-to-End MVP Smoke Scenario | L2/L3 smoke locale | generator, state machine, Bridge temporaneo, docs, tests | Un percorso locale end-to-end produce evidence senza pubblicare | pytest mirati, workflow health, verify gate | Smoke che maschera publish reale, Bridge reale richiesto |
 | 0710 | Motor Run Manifest and Evidence Pack | L2 evidence locale | manifest, evidence pack, docs, tests | Una run Motore produce manifest JSON e summary Markdown auditabili | pytest mirati, workflow health, verify gate | READY_TO_PUBLISH senza artifact richiesti, Bridge reale richiesto |
+| 0720 | MVP Usage Runbook | L0/L1 docs operative | docs/motor, README, changelog, roadmap, decision log, workflow index, health check | Procedura operativa MVP end-to-end documentata e human-gated | workflow health, pytest, verify gate, diff check | Runbook che sembra autorizzare publish automatico o saltare Phase C |
 
 ---
 
 ## 4. Sequenza operativa prevista
 
 ```text
-0570 docs -> 0580 dry-run loop -> 0590 stable publish runner -> 0600 risk gate -> 0610 risk integration -> 0620 gate decision packet -> 0630 verification profiles -> 0640 selector integration with publish runner -> 0650 publish config generator -> 0660 bridge output integration -> 0670 state machine -> 0680 state bridge -> 0690 generator integration -> 0700 end-to-end smoke -> 0710 run manifest -> 0720 usage runbook
+0570 docs -> 0580 dry-run loop -> 0590 stable publish runner -> 0600 risk gate -> 0610 risk integration -> 0620 gate decision packet -> 0630 verification profiles -> 0640 selector integration with publish runner -> 0650 publish config generator -> 0660 bridge output integration -> 0670 state machine -> 0680 state bridge -> 0690 generator integration -> 0700 end-to-end smoke -> 0710 run manifest -> 0720 usage runbook -> 0730 closure pack
 ```
 
 Il criterio di maturita' minima non e' "il runner esiste". Il criterio e': un loop completo produce evidence leggibile, classifica rischio, esegue test disponibili, passa review indipendente e ferma correttamente il flusso quando un gate non passa.
@@ -285,5 +286,37 @@ Restano manuali e human-gated:
 Prossimo step consigliato:
 
 ```text
-0720) MVP Usage Runbook
+0730) End-to-End MVP Closure Pack
+```
+
+## 15. Stato dopo STEP 0720
+
+Lo STEP 0720 aggiunge il runbook operativo del Motore MVP:
+
+```text
+docs/motor/0720_MVP_USAGE_RUNBOOK.md
+```
+
+Il runbook collega in una procedura unica prompt Codex, state machine, smoke
+0700, manifest 0710, review umana, publish config generator, runner Phase B,
+runner Phase C e recovery.
+
+Restano human-gated:
+
+- review del report Codex;
+- review di manifest e config;
+- Phase B con `-ApprovePublish`;
+- Phase C con `-ApproveMerge`;
+- chiusura finale su `main`.
+
+Restano non automatici:
+
+- hook runner -> state machine;
+- pilota reale su step applicativo non sintetico;
+- dichiarazione formale di chiusura MVP.
+
+Prossimo step consigliato:
+
+```text
+0730) End-to-End MVP Closure Pack
 ```
