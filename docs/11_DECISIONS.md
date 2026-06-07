@@ -2333,6 +2333,48 @@ Il prossimo step consigliato e':
 
 ---
 
+## DEC-075 - Risk classifier integrated into dry-run loop
+
+**Data:** 2026-06-07
+**Stato:** Accettata
+
+### Contesto
+
+Lo STEP 0600 ha introdotto un classifier L0-L4 locale, deterministico e fail-closed, ma il Dry-run Loop Runner 0580 usava ancora una classificazione minima interna.
+
+Per trasformare il classifier nel primo nodo operativo del motore ASF serve collegarlo al checkpoint `RISK_CLASSIFY`, senza trasformare il runner dry-run in un executor di write, publish o live run.
+
+### Decisione
+
+Integrare `scripts/asf_risk_classifier.py` dentro `scripts/asf_dry_run_loop_runner.py`.
+
+Il runner:
+
+- costruisce un `ClassifierInput` da title, objective, allowed scope, checks e azioni/comandi del piano;
+- non considera `forbidden_actions` come intento operativo;
+- importa il classifier reale e non copia le regole L0-L4;
+- scrive `risk_report.json` con blocchi `risk`, `gate`, `dry_run` e `plan_blockers`;
+- fallisce chiuso se il classifier manca, restituisce schema non valido, l'input e' ambiguo, il piano non e' dry-run o L4 non ha gate elevato dichiarato;
+- resta inertizzato e non esegue gate reali.
+
+### Motivazione
+
+Il risk classifier deve essere riusabile e testabile come fonte unica della policy. Il Dry-run Loop Runner deve consumarne l'output come evidence, non reinterpretare le regole o promuovere autorizzazioni operative.
+
+Separare `risk.allowed` da autorizzazione operativa evita un errore pericoloso: un gate dichiarato nel JSON non equivale a commit, push, PR, merge, deploy o write permessi dal runner.
+
+### Conseguenze
+
+Il checkpoint `RISK_CLASSIFY` diventa il primo nodo operativo del motore ASF.
+
+Il prossimo step consigliato e':
+
+```text
+0620) Gate Decision Report and Human Approval Packet
+```
+
+---
+
 ## DEC-074 - Risk Classifier and Gate Policy fail-closed
 
 **Data:** 2026-06-07
@@ -2466,10 +2508,11 @@ La roadmap prioritaria diventa:
 0580 Dry-run Loop Runner
 0590 Stable PowerShell Publish Runner
 0600 Risk Classifier + Gate Policy
-0610 Independent Review Node
-0620 Controlled Codex Executor
-0630 First End-to-End Dry Run
-0640 First Controlled Write Pilot
+0610 Risk Classifier Integration with Dry-run Loop Runner
+0620 Gate Decision Report and Human Approval Packet
+0630 Controlled Codex Executor
+0640 First End-to-End Dry Run
+0650 First Controlled Write Pilot
 ```
 
 Nuovi step di meta-processo, naming, packaging, validazioni strict o guardrail isolati restano congelati finche' il motore non completa almeno un giro end-to-end dry-run.

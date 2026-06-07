@@ -168,11 +168,18 @@ Nel fail-closed per input vuoto o non riconosciuto il livello restituito e' L4, 
 
 ---
 
-## 7. Relazione con runner 0580 e publish runner 0590
+## 7. Relazione con runner 0580, integrazione 0610 e publish runner 0590
 
-Lo STEP 0600 non modifica `scripts/asf_dry_run_loop_runner.py`.
+Lo STEP 0600 ha introdotto il classifier come componente separato.
 
-Il runner 0580 mantiene la propria classificazione minima interna. L'integrazione diretta con `scripts/asf_risk_classifier.py` resta lo step successivo consigliato, per evitare di cambiare il comportamento del loop dry-run mentre si introduce la policy stabile.
+Lo STEP 0610 collega `scripts/asf_risk_classifier.py` al checkpoint `RISK_CLASSIFY` di `scripts/asf_dry_run_loop_runner.py`.
+
+Il runner:
+
+- importa il classifier reale;
+- non duplica le regole L0-L4;
+- scrive `risk_report.json` con blocco `risk`, gate richiesto e stato fail-closed dry-run;
+- resta inertizzato e non esegue gate reali.
 
 Lo STEP 0600 non modifica `scripts/asf_publish_step.ps1`.
 
@@ -205,14 +212,14 @@ git status --short
 - Il classificatore e' rule-based: non capisce intenzioni complesse non espresse nel testo.
 - Le parole pericolose presenti anche in un contesto descrittivo possono alzare il livello.
 - `allowed` indica solo la coerenza con i gate dichiarati, non esegue test o approval.
-- L'integrazione con il dry-run loop runner resta separata.
+- L'integrazione 0610 riusa l'output del classifier, ma non trasforma `allowed` in autorizzazione operativa.
 
 ---
 
 ## 10. Prossimo step
 
 ```text
-0610) Risk Classifier Integration with Dry-run Loop Runner
+0620) Gate Decision Report and Human Approval Packet
 ```
 
-Lo step dovrebbe collegare il nuovo classificatore al checkpoint `RISK_CLASSIFY` del runner 0580 mantenendo comportamento fail-closed e senza introdurre write, publish o live run.
+Lo step dovrebbe rendere piu' esplicito il pacchetto di decisione umana usando il risk report 0610 come input stabile.

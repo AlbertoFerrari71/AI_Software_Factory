@@ -160,11 +160,13 @@ def test_files_docs_and_examples_exist() -> None:
         assert (EXAMPLES / name).exists()
 
 
-def test_dry_run_runner_0580_remains_separate() -> None:
+def test_dry_run_runner_uses_classifier_without_copying_rules() -> None:
     content = DRY_RUN_RUNNER.read_text(encoding="utf-8")
 
-    assert "def classify_risk" in content
-    assert "asf_risk_classifier" not in content
+    assert "from asf_risk_classifier import ClassifierInput, classify" in content
+    assert "def classify_risk" not in content
+    assert "RiskRule(" not in content
+    assert "l4_destructive_action" not in content
 
 
 def test_no_runtime_dependency_was_added() -> None:

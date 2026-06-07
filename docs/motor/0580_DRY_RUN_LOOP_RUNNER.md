@@ -9,6 +9,7 @@ Il runner dimostra un ciclo end-to-end supervisionato a gate, ma resta inertizza
 - legge una richiesta/step simulato in JSON;
 - genera oppure legge un piano di esecuzione `dry-run`;
 - attraversa gli stati definiti nello STEP 0570;
+- usa il Risk Classifier 0600 nel checkpoint `RISK_CLASSIFY`;
 - produce log e report strutturati;
 - ferma il flusso su `NEEDS_HUMAN` oppure `FAIL`;
 - non chiama provider esterni;
@@ -131,14 +132,24 @@ Il runner usa `FAIL` quando rileva:
 
 Una working tree target sporca produce `NEEDS_HUMAN` di default. Con `--fail-on-dirty` diventa `FAIL`.
 
+Il checkpoint `RISK_CLASSIFY` produce `risk_report.json` con:
+
+- `checkpoint: RISK_CLASSIFY`;
+- `status`;
+- blocco `risk` restituito da `scripts/asf_risk_classifier.py`;
+- blocco `gate` con gate richiesto, gate dichiarati e indicazione se risultano soddisfatti nell'input;
+- blocco `dry_run` con conferma che il runner non esegue live call, write target o pubblicazione Git.
+
+Il runner non esegue i gate reali. L2 e L3 senza gate dichiarato restano evidence di pianificazione e portano comunque a hold umano. L4 senza gate elevato dichiarato blocca il dry-run con `FAIL`.
+
 ---
 
 ## 7. Limiti intenzionali
 
-- Il nodo di risk classifier e' ancora minimo e locale; lo STEP 0590 dovra' estrarlo in policy piu' stabile.
-- La review indipendente e' deterministica nello stesso script; lo STEP 0600 dovra' separarla come nodo dedicato.
+- La review indipendente e' deterministica nello stesso script; lo STEP 0620 dovra' renderla un pacchetto di decisione piu' esplicito.
 - Il checkpoint `RUN_TESTS` registra i comandi richiesti, ma non esegue test del repository target.
-- Non esiste ancora Controlled Codex Executor; lo STEP 0610 resta separato.
+- Non esiste ancora Gate Decision Report separato.
+- Non esiste ancora Controlled Codex Executor.
 - Non c'e' passaggio automatico a write anche quando il dry-run passa.
 
 ---
@@ -166,9 +177,9 @@ git --no-pager status --short
 ## 9. Evoluzione successiva
 
 ```text
-0600) Risk Classifier + Gate Policy
+0620) Gate Decision Report and Human Approval Packet
 ```
 
-Lo STEP 0590 ha introdotto prima il publish runner stabile.
+Lo STEP 0600 ha estratto la classificazione L0-L4.
 
-Lo STEP 0600 estrae e irrigidisce la classificazione L0-L4, la gate policy e i casi golden minimi, mantenendo il runner 0580 separato e senza chiamate live.
+Lo STEP 0610 collega `scripts/asf_risk_classifier.py` al checkpoint `RISK_CLASSIFY` del runner, mantenendo il loop dry-run senza write, live run o pubblicazione Git.

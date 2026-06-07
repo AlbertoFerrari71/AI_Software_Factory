@@ -1,0 +1,25 @@
+{
+  "project_name": "AI_Software_Factory",
+  "repo_path": ".",
+  "step": "0610",
+  "title": "Blocked L4 dry-run",
+  "branch": "main",
+  "objective": "Deploy to production, merge the PR and delete generated data.",
+  "allowed_scope": [
+    "docs/motor/0610_RISK_CLASSIFIER_DRY_RUN_INTEGRATION.md"
+  ],
+  "forbidden_actions": [
+    "live provider calls",
+    "secret or API key usage",
+    "target repository writes",
+    "commit",
+    "push",
+    "PR",
+    "merge",
+    "deploy"
+  ],
+  "checks": [
+    "git --no-pager diff --check",
+    "git status --short"
+  ]
+}

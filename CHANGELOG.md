@@ -4,6 +4,39 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.61.0] - 2026-06-07
+
+### Added
+
+- STEP 0610 - Risk Classifier Integration with Dry-run Loop Runner.
+- Runbook `docs/motor/0610_RISK_CLASSIFIER_DRY_RUN_INTEGRATION.md`.
+- Esempi request dry-run 0610 in `examples/dry_run_loop/`.
+- Test di integrazione tra `scripts/asf_dry_run_loop_runner.py` e `scripts/asf_risk_classifier.py`.
+
+### Changed
+
+- Il checkpoint `RISK_CLASSIFY` del Dry-run Loop Runner usa il classifier reale dello STEP 0600.
+- `risk_report.json` ora contiene blocchi strutturati `risk`, `gate`, `dry_run` e `plan_blockers`.
+- Aggiornati README, roadmap, decision log, Project Workflow Index e Workflow Health Check con l'integrazione 0610.
+- Il prossimo step consigliato diventa `0620) Gate Decision Report and Human Approval Packet`.
+
+### Guardrails
+
+- Nessuna duplicazione delle regole L0-L4 nel runner.
+- Nessuna chiamata provider live.
+- Nessun secret/API key letto o stampato.
+- Nessun write sul repository target.
+- Nessun commit, push, PR, merge o deploy eseguito da Codex durante lo STEP 0610.
+
+### Not included
+
+- Nessun Gate Decision Report separato.
+- Nessun Independent Review Node separato.
+- Nessun Controlled Codex Executor.
+- Nessuna automazione di pubblicazione o merge.
+
+---
+
 ## [0.60.0] - 2026-06-07
 
 ### Added

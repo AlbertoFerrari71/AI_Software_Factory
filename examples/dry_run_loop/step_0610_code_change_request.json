@@ -1,0 +1,29 @@
+{
+  "project_name": "AI_Software_Factory",
+  "repo_path": ".",
+  "step": "0610",
+  "title": "Risk classifier dry-run integration",
+  "branch": "main",
+  "objective": "Implement local Python code and unit tests with standard-library-only local execution.",
+  "allowed_scope": [
+    "scripts/asf_dry_run_loop_runner.py",
+    "tests/unit/test_asf_dry_run_loop_runner.py"
+  ],
+  "forbidden_actions": [
+    "live provider calls",
+    "secret or API key usage",
+    "target repository writes",
+    "commit",
+    "push",
+    "PR",
+    "merge",
+    "deploy"
+  ],
+  "checks": [
+    "python -m pytest tests/unit/test_asf_dry_run_loop_runner.py",
+    "python -m pytest tests/unit/test_asf_risk_classifier.py"
+  ],
+  "provided_gates": [
+    "local_verification"
+  ]
+}

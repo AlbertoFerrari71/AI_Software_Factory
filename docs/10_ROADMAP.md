@@ -90,8 +90,8 @@ Esempio:
 | 580 | Dry-run Loop Runner | Creare il primo runner che attraversa il loop senza modificare target repository | Runner dry-run, state log, gate summary sotto `tmp/` | MVP Motore | Completato |
 | 590 | Stable PowerShell Publish Runner | Stabilizzare pubblicazione step con runner PowerShell versionato e gate espliciti | Runner publish FASE A/B/C, config JSON, output Bridge | MVP Motore | Completato |
 | 600 | Risk Classifier + Gate Policy | Rendere deterministica la classificazione L0-L4 e la decisione fail-closed | Risk classifier, gate policy, test L0-L4, esempi JSON | MVP Motore | Completato |
-| 610 | Risk Classifier Integration with Dry-run Loop Runner | Collegare il classifier al checkpoint RISK_CLASSIFY del runner 0580 | Integrazione leggera, risk report stabile, test regressione runner | MVP Motore | Da fare |
-| 620 | Independent Review Node | Separare produzione del lavoro e revisione critica con output JSON | Review node, schema JSON, fixture PASS/FAIL/NEEDS_HUMAN | MVP Motore | Da fare |
+| 610 | Risk Classifier Integration with Dry-run Loop Runner | Collegare il classifier al checkpoint RISK_CLASSIFY del runner 0580 | Integrazione leggera, risk report stabile, test regressione runner | MVP Motore | Completato |
+| 620 | Gate Decision Report and Human Approval Packet | Rendere esplicito il pacchetto di decisione umana usando risk report e review dry-run | Report gate, schema human approval, fixture PASS/FAIL/NEEDS_HUMAN | MVP Motore | Da fare |
 | 630 | Controlled Codex Executor | Preparare executor Codex preview/dry-run/read-only-first con gate espliciti | Executor controllato, output capture, no default write | MVP Motore | Da fare |
 | 640 | First End-to-End Dry Run | Eseguire un giro completo dry-run con evidence, tests, review e gate decision | Report end-to-end dry-run e target clean | MVP Motore | Da fare |
 | 650 | First Controlled Write Pilot | Provare una modifica minima e reversibile lasciata in working tree per review umana | Pilot write controllato, diff scoped, no commit/push/PR/merge | MVP Motore | Da fare |
@@ -1319,11 +1319,13 @@ Correggere la rotta strategica di ASF da autonomia fire-and-forget ad autonomia 
 
 - 0570 - ADR + MVP Motor Roadmap;
 - 0580 - Dry-run Loop Runner;
-- 0590 - Risk Classifier + Gate Policy;
-- 0600 - Independent Review Node;
-- 0610 - Controlled Codex Executor;
-- 0620 - First End-to-End Dry Run;
-- 0630 - First Controlled Write Pilot.
+- 0590 - Stable PowerShell Publish Runner;
+- 0600 - Risk Classifier + Gate Policy;
+- 0610 - Risk Classifier Integration with Dry-run Loop Runner;
+- 0620 - Gate Decision Report and Human Approval Packet;
+- 0630 - Controlled Codex Executor;
+- 0640 - First End-to-End Dry Run;
+- 0650 - First Controlled Write Pilot.
 
 ### Prossimo step consigliato
 
@@ -1418,3 +1420,31 @@ Rendere stabile, testabile e riusabile la classificazione L0-L4 e la gate policy
 ### Prossimo step consigliato
 
 0610) Risk Classifier Integration with Dry-run Loop Runner
+
+---
+
+## 68. STEP 610 - Risk Classifier Integration with Dry-run Loop Runner
+
+### Obiettivo
+
+Collegare il Risk Classifier + Gate Policy dello STEP 0600 al checkpoint `RISK_CLASSIFY` del Dry-run Loop Runner dello STEP 0580.
+
+### Output realizzati
+
+- integrazione in `scripts/asf_dry_run_loop_runner.py`;
+- risk report strutturato con blocchi `risk`, `gate`, `dry_run` e `plan_blockers`;
+- esempi request dry-run 0610 in `examples/dry_run_loop/`;
+- documento `docs/motor/0610_RISK_CLASSIFIER_DRY_RUN_INTEGRATION.md`;
+- test automatici di integrazione e regressione.
+
+### Guardrail
+
+- classifier 0600 come fonte unica delle regole L0-L4;
+- nessuna duplicazione delle regole nel runner;
+- fail-closed su input ambiguo, classifier non valido, piano non dry-run o L4 senza gate elevato dichiarato;
+- nessuna chiamata live, nessun secret, nessun write target, nessuna pubblicazione Git;
+- nessuna modifica al publish runner 0590.
+
+### Prossimo step consigliato
+
+0620) Gate Decision Report and Human Approval Packet

@@ -12,8 +12,15 @@ import pytest
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPT = ROOT / "scripts" / "asf_dry_run_loop_runner.py"
 DOC = ROOT / "docs" / "motor" / "0580_DRY_RUN_LOOP_RUNNER.md"
+INTEGRATION_DOC = ROOT / "docs" / "motor" / "0610_RISK_CLASSIFIER_DRY_RUN_INTEGRATION.md"
 REQUEST_EXAMPLE = ROOT / "examples" / "dry_run_loop" / "step_0580_simulated_request.json"
 PLAN_EXAMPLE = ROOT / "examples" / "dry_run_loop" / "step_0580_execution_plan.json"
+INTEGRATION_EXAMPLES = [
+    ROOT / "examples" / "dry_run_loop" / "step_0610_docs_only_request.json",
+    ROOT / "examples" / "dry_run_loop" / "step_0610_code_change_request.json",
+    ROOT / "examples" / "dry_run_loop" / "step_0610_publish_intent_request.json",
+    ROOT / "examples" / "dry_run_loop" / "step_0610_l4_blocked_request.json",
+]
 
 
 FORBIDDEN_PATTERNS = [
@@ -85,7 +92,12 @@ def make_git_repo(tmp_path: Path, branch: str = "step-0580-dry-run-loop-runner")
     return repo
 
 
-def write_request(tmp_path: Path, repo: Path, branch: str = "step-0580-dry-run-loop-runner") -> Path:
+def write_request(
+    tmp_path: Path,
+    repo: Path,
+    branch: str = "step-0580-dry-run-loop-runner",
+    **overrides: object,
+) -> Path:
     request = {
         "allowed_scope": [
             "scripts/asf_dry_run_loop_runner.py",
@@ -114,6 +126,7 @@ def write_request(tmp_path: Path, repo: Path, branch: str = "step-0580-dry-run-l
         "step": "0580",
         "title": "Dry-run Loop Runner",
     }
+    request.update(overrides)
     path = tmp_path / "request.json"
     write_json(path, request)
     return path
@@ -186,8 +199,12 @@ def test_dry_run_loop_generates_full_artifacts_with_generated_plan(tmp_path: Pat
 
     assert gate["decision"] == "NEEDS_HUMAN"
     assert review["verdict"] == "PASS"
-    assert risk["max_level"] == "L2"
     assert risk["status"] == "PASS"
+    assert risk["checkpoint"] == "RISK_CLASSIFY"
+    assert risk["risk"]["risk_level"] == "L2"
+    assert risk["risk"]["required_gate"] == "local_verification"
+    assert risk["gate"]["declared_satisfied"] is False
+    assert risk["dry_run"]["fail_closed"] is False
     assert len(events) == 8
     assert "Dry-run Loop Runner Final Report" in read(step_dir / "final_report.md")
     assert run_git(repo, "status", "--short").stdout.strip() == ""
@@ -220,6 +237,7 @@ def test_dry_run_loop_fail_closes_on_live_provider_plan(tmp_path: Path) -> None:
     step_dir = tmp_path / "out" / "Temp_Project" / "step_0580"
     assert read_json(step_dir / "gate_decision.json")["decision"] == "FAIL"
     assert read_json(step_dir / "risk_report.json")["status"] == "FAIL"
+    assert read_json(step_dir / "risk_report.json")["dry_run"]["fail_closed"] is True
     assert "external provider calls" in read(step_dir / "independent_review.json")
 
 
@@ -236,11 +254,146 @@ def test_dry_run_loop_dirty_target_requires_human_by_default(tmp_path: Path) -> 
     assert "dirty" in json.dumps(review).casefold()
 
 
+def test_dry_run_loop_invokes_real_risk_classifier_for_docs_only_low_risk(tmp_path: Path) -> None:
+    repo = make_git_repo(tmp_path)
+    request = write_request(
+        tmp_path,
+        repo,
+        title="Documentation update",
+        objective="Update docs only and inspect README.md.",
+        allowed_scope=["README.md", "docs/motor/0610_RISK_CLASSIFIER_DRY_RUN_INTEGRATION.md"],
+        checks=["git --no-pager diff --check"],
+    )
+
+    result = run_script("--request-json", request, "--output-dir", tmp_path / "out")
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    risk = read_json(tmp_path / "out" / "Temp_Project" / "step_0580" / "risk_report.json")
+    assert risk["risk"]["risk_level"] in {"L0", "L1"}
+    assert risk["risk"]["fail_closed"] is False
+    assert any(match["rule_id"].startswith("l0_") for match in risk["risk"]["matched_rules"])
+
+
+def test_dry_run_loop_code_change_uses_l2_gate_policy(tmp_path: Path) -> None:
+    repo = make_git_repo(tmp_path)
+    request = write_request(
+        tmp_path,
+        repo,
+        objective="Implement local Python code and tests with standard-library-only local execution.",
+        allowed_scope=["scripts/asf_dry_run_loop_runner.py", "tests/unit/test_asf_dry_run_loop_runner.py"],
+        checks=["python -m pytest tests/unit/test_asf_dry_run_loop_runner.py"],
+    )
+
+    result = run_script("--request-json", request, "--output-dir", tmp_path / "out")
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    risk = read_json(tmp_path / "out" / "Temp_Project" / "step_0580" / "risk_report.json")
+    assert risk["risk"]["risk_level"] == "L2"
+    assert risk["risk"]["required_gate"] == "local_verification"
+    assert risk["gate"]["runner_executes_gate"] is False
+
+
+def test_dry_run_loop_publish_intent_is_l3_without_publication(tmp_path: Path) -> None:
+    repo = make_git_repo(tmp_path)
+    request = write_request(
+        tmp_path,
+        repo,
+        objective="Prepare commit, push branch and open PR after human approval.",
+        allowed_scope=["docs/motor/0610_RISK_CLASSIFIER_DRY_RUN_INTEGRATION.md"],
+        checks=["git --no-pager diff --check"],
+    )
+
+    result = run_script("--request-json", request, "--output-dir", tmp_path / "out")
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    step_dir = tmp_path / "out" / "Temp_Project" / "step_0580"
+    risk = read_json(step_dir / "risk_report.json")
+    gate = read_json(step_dir / "gate_decision.json")
+    assert risk["status"] == "PASS"
+    assert risk["risk"]["risk_level"] == "L3"
+    assert risk["risk"]["required_gate"] == "explicit_publish_approval"
+    assert risk["gate"]["declared_satisfied"] is False
+    assert gate["decision"] == "NEEDS_HUMAN"
+    assert run_git(repo, "status", "--short").stdout.strip() == ""
+
+
+def test_dry_run_loop_plan_publish_signal_is_classified_l3(tmp_path: Path) -> None:
+    repo = make_git_repo(tmp_path)
+    request = write_request(
+        tmp_path,
+        repo,
+        title="Documentation update",
+        objective="Update docs only and inspect README.md.",
+        allowed_scope=["README.md"],
+        checks=["git --no-pager diff --check"],
+    )
+    plan = valid_plan()
+    for state in plan["states"]:  # type: ignore[index]
+        if isinstance(state, dict) and state.get("state") == "RUN_TESTS":
+            state["checks"] = ["git push"]
+    plan_path = tmp_path / "plan.json"
+    write_json(plan_path, plan)
+
+    result = run_script("--request-json", request, "--plan-json", plan_path, "--output-dir", tmp_path / "out")
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    risk = read_json(tmp_path / "out" / "Temp_Project" / "step_0580" / "risk_report.json")
+    assert risk["risk"]["risk_level"] == "L3"
+    assert risk["risk"]["required_gate"] == "explicit_publish_approval"
+    assert risk["gate"]["runner_executes_gate"] is False
+    assert run_git(repo, "status", "--short").stdout.strip() == ""
+
+
+def test_dry_run_loop_l4_without_gate_fails_closed(tmp_path: Path) -> None:
+    repo = make_git_repo(tmp_path)
+    request = write_request(
+        tmp_path,
+        repo,
+        objective="Deploy to production, merge the PR and delete generated data.",
+        allowed_scope=["docs/motor/0610_RISK_CLASSIFIER_DRY_RUN_INTEGRATION.md"],
+        checks=["git --no-pager diff --check"],
+    )
+
+    result = run_script("--request-json", request, "--output-dir", tmp_path / "out")
+
+    assert result.returncode == 3, result.stdout + result.stderr
+    step_dir = tmp_path / "out" / "Temp_Project" / "step_0580"
+    risk = read_json(step_dir / "risk_report.json")
+    assert risk["status"] == "FAIL"
+    assert risk["risk"]["risk_level"] == "L4"
+    assert risk["dry_run"]["fail_closed"] is True
+    assert read_json(step_dir / "gate_decision.json")["decision"] == "FAIL"
+    assert run_git(repo, "status", "--short").stdout.strip() == ""
+
+
+def test_dry_run_loop_ambiguous_request_fails_closed(tmp_path: Path) -> None:
+    repo = make_git_repo(tmp_path)
+    request = write_request(
+        tmp_path,
+        repo,
+        title="Ambiguous step",
+        objective="Handle the thing.",
+        allowed_scope=[],
+        checks=[],
+    )
+
+    result = run_script("--request-json", request, "--output-dir", tmp_path / "out")
+
+    assert result.returncode == 3, result.stdout + result.stderr
+    risk = read_json(tmp_path / "out" / "Temp_Project" / "step_0580" / "risk_report.json")
+    assert risk["status"] == "FAIL"
+    assert risk["risk"]["fail_closed"] is True
+    assert risk["risk"]["risk_level"] == "L4"
+
+
 def test_dry_run_loop_files_docs_and_examples_exist() -> None:
     assert SCRIPT.exists()
     assert DOC.exists()
+    assert INTEGRATION_DOC.exists()
     assert REQUEST_EXAMPLE.exists()
     assert PLAN_EXAMPLE.exists()
+    for path in INTEGRATION_EXAMPLES:
+        assert path.exists()
 
     doc = read(DOC)
     for fragment in [
@@ -248,6 +401,7 @@ def test_dry_run_loop_files_docs_and_examples_exist() -> None:
         "BUILD_TASK_PACKET",
         "RISK_CLASSIFY",
         "NEEDS_HUMAN",
+        "asf_risk_classifier.py",
         "tmp/asf_dry_run_loop",
     ]:
         assert fragment in doc
@@ -260,3 +414,6 @@ def test_dry_run_loop_script_avoids_operational_forbidden_patterns() -> None:
         assert pattern not in content
 
     assert "shell=True" not in content
+    assert "from asf_risk_classifier import ClassifierInput, classify" in content
+    assert "def classify_risk" not in content
+    assert "RiskRule(" not in content
