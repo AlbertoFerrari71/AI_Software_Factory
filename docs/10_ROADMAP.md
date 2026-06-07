@@ -99,7 +99,8 @@ Esempio:
 | 670 | Step Execution State Machine | Modellare stati, transizioni, stop condition e ripresa controllata del ciclo step | State machine locale, stati auditabili, nessuna pubblicazione automatica | MVP Motore | Completato |
 | 680 | State Machine Bridge Integration | Salvare stato e report della state machine nel Bridge senza eseguire pubblicazione | Bridge `state_machine`, LAST state/event/output, test temporanei | MVP Motore | Completato |
 | 690 | State Machine Integration with Publish Config Generator | Collegare stato step e bozze config senza eseguire pubblicazione | Integrazione generator/state machine, riferimenti Bridge, test | MVP Motore | Completato |
-| 700 | End-to-End MVP Smoke Scenario | Validare un percorso locale end-to-end del MVP Motore senza pubblicare | Smoke scenario con generator, state machine, Bridge temporaneo e report evidenze | MVP Motore | Da fare |
+| 700 | End-to-End MVP Smoke Scenario | Validare un percorso locale end-to-end del MVP Motore senza pubblicare | Smoke scenario con generator, state machine, Bridge temporaneo e report evidenze | MVP Motore | Completato |
+| 710 | Motor Run Manifest and Evidence Pack | Normalizzare manifest run ed evidence pack dello smoke MVP | Manifest unico, riferimenti artifact e criteri riuso | MVP Motore | Da fare |
 
 ---
 
@@ -1688,3 +1689,33 @@ Collegare la Step Execution State Machine al Publish Config Generator, senza ese
 ### Prossimo step consigliato
 
 0700) End-to-End MVP Smoke Scenario
+
+---
+
+## 77. STEP 700 - End-to-End MVP Smoke Scenario
+
+### Obiettivo
+
+Validare un percorso locale end-to-end del MVP Motore senza eseguire pubblicazione.
+
+### Output realizzati
+
+- script `scripts/asf_e2e_mvp_smoke.py`;
+- scenario positivo `code-unit-to-ready-to-publish`;
+- scenario negativo `invalid-state-to-publish-config`;
+- evidence pack locale sotto `tmp/e2e_mvp_smoke`;
+- output Bridge opzionale con root configurabile;
+- runbook `docs/motor/0700_END_TO_END_MVP_SMOKE_SCENARIO.md`;
+- test `tests/unit/test_asf_e2e_mvp_smoke.py`;
+- aggiornamento workflow health, README, changelog, decision log e Project Workflow Index.
+
+### Guardrail
+
+- nessuna Phase B, Phase C, commit, push, PR, merge o deploy eseguiti dallo smoke;
+- nessuna chiamata OpenAI/API esterna;
+- test Bridge solo su directory temporanee;
+- caso negativo fail-closed se lo stato `IMPLEMENTED` tenta di produrre config pronta.
+
+### Prossimo step consigliato
+
+0710) Motor Run Manifest and Evidence Pack

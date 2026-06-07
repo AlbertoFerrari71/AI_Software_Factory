@@ -47,6 +47,7 @@ TARGET_TESTS = {
     "scripts/asf_risk_classifier.py": "tests/unit/test_asf_risk_classifier.py",
     "scripts/asf_publish_step.ps1": "tests/unit/test_asf_publish_step_runner.py",
     "scripts/asf_step_state_machine.py": "tests/unit/test_asf_step_state_machine.py",
+    "scripts/asf_e2e_mvp_smoke.py": "tests/unit/test_asf_e2e_mvp_smoke.py",
     "scripts/check_workflow_health.py": "tests/unit/test_workflow_health_check.py",
     "scripts/show_workflow_status.py": "tests/unit/test_workflow_status_dashboard.py",
 }
@@ -56,6 +57,7 @@ LINKED_MOTOR_CORE_TESTS = (
     "tests/unit/test_asf_verification_profile_selector.py",
     "tests/unit/test_asf_publish_step_runner.py",
     "tests/unit/test_asf_step_state_machine.py",
+    "tests/unit/test_asf_e2e_mvp_smoke.py",
 )
 
 INDEXED_DOCS = {
@@ -74,6 +76,7 @@ INDEXED_DOCS = {
     "docs/motor/0670_STEP_EXECUTION_STATE_MACHINE.md",
     "docs/motor/0680_STATE_MACHINE_BRIDGE_INTEGRATION.md",
     "docs/motor/0690_STATE_MACHINE_INTEGRATION_WITH_PUBLISH_CONFIG_GENERATOR.md",
+    "docs/motor/0700_END_TO_END_MVP_SMOKE_SCENARIO.md",
 }
 
 CONFIG_DRAFT_INTENT_PATTERNS = (

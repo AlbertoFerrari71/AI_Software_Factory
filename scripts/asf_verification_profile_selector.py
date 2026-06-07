@@ -22,6 +22,7 @@ MOTOR_CORE_FILES = {
     "scripts/asf_gate_decision_report.py",
     "scripts/asf_verification_profile_selector.py",
     "scripts/asf_step_state_machine.py",
+    "scripts/asf_e2e_mvp_smoke.py",
     "scripts/check_workflow_health.py",
 }
 
@@ -33,6 +34,7 @@ SCRIPT_TESTS = {
     "scripts/asf_gate_decision_report.py": "python -m pytest tests/unit/test_asf_gate_decision_report.py -q",
     "scripts/asf_verification_profile_selector.py": "python -m pytest tests/unit/test_asf_verification_profile_selector.py -q",
     "scripts/asf_step_state_machine.py": "python -m pytest tests/unit/test_asf_step_state_machine.py -q",
+    "scripts/asf_e2e_mvp_smoke.py": "python -m pytest tests/unit/test_asf_e2e_mvp_smoke.py -q",
     "scripts/check_workflow_health.py": "python -m pytest tests/unit/test_workflow_health_check.py -q",
 }
 
@@ -52,6 +54,7 @@ INDEXED_DOC_PATHS = {
     "docs/motor/0670_STEP_EXECUTION_STATE_MACHINE.md",
     "docs/motor/0680_STATE_MACHINE_BRIDGE_INTEGRATION.md",
     "docs/motor/0690_STATE_MACHINE_INTEGRATION_WITH_PUBLISH_CONFIG_GENERATOR.md",
+    "docs/motor/0700_END_TO_END_MVP_SMOKE_SCENARIO.md",
 }
 
 PUBLISH_INTENT_KEYWORDS = (

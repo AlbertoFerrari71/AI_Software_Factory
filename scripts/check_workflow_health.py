@@ -97,6 +97,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/motor/0670_STEP_EXECUTION_STATE_MACHINE.md",
         "docs/motor/0680_STATE_MACHINE_BRIDGE_INTEGRATION.md",
         "docs/motor/0690_STATE_MACHINE_INTEGRATION_WITH_PUBLISH_CONFIG_GENERATOR.md",
+        "docs/motor/0700_END_TO_END_MVP_SMOKE_SCENARIO.md",
         "config/asf_project_profiles.json",
         "scripts/asf_openai_api_adapter.py",
         "scripts/asf_openai_controlled_live_execution_pack.py",
@@ -108,6 +109,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "scripts/asf_gate_decision_report.py",
         "scripts/asf_verification_profile_selector.py",
         "scripts/asf_step_state_machine.py",
+        "scripts/asf_e2e_mvp_smoke.py",
         "scripts/install_pwsh_command_pack_skill.py",
         "scripts/migrate_artifact_names_4digit.py",
         "scripts/asf_codex_invocation_dry_run.py",
@@ -195,6 +197,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "tests/unit/test_asf_publish_step_runner.py",
         "tests/unit/test_asf_publish_config_generator.py",
         "tests/unit/test_asf_step_state_machine.py",
+        "tests/unit/test_asf_e2e_mvp_smoke.py",
     ]
 
     issues: list[HealthIssue] = []
@@ -402,6 +405,10 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                 ["docs/motor/0690_STATE_MACHINE_INTEGRATION_WITH_PUBLISH_CONFIG_GENERATOR.md"],
             ),
             (
+                "ASF End-to-End MVP Smoke Scenario document",
+                ["docs/motor/0700_END_TO_END_MVP_SMOKE_SCENARIO.md"],
+            ),
+            (
                 "ASF State Machine Bridge Integration pointers",
                 ["LAST-State.json", "LAST-Output_Compatto.md", "state_machine"],
             ),
@@ -410,12 +417,20 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                 ["LAST-Publish_Config.json", "LAST-State.json", "--update-state"],
             ),
             (
+                "ASF End-to-End MVP Smoke Scenario pointers",
+                ["tmp/e2e_mvp_smoke", "negative_fail_closed.json", "READY_TO_PUBLISH"],
+            ),
+            (
                 "ASF Publish Config Generator script",
                 ["scripts/asf_publish_config_generator.py"],
             ),
             (
                 "ASF Step Execution State Machine script",
                 ["scripts/asf_step_state_machine.py"],
+            ),
+            (
+                "ASF End-to-End MVP Smoke Scenario script",
+                ["scripts/asf_e2e_mvp_smoke.py"],
             ),
             (
                 "ASF Publish Config Generator examples",
@@ -750,6 +765,7 @@ def check_script_safety(root: Path) -> list[HealthIssue]:
         "scripts/asf_gate_decision_report.py",
         "scripts/asf_verification_profile_selector.py",
         "scripts/asf_step_state_machine.py",
+        "scripts/asf_e2e_mvp_smoke.py",
         "scripts/migrate_artifact_names_4digit.py",
     ]
     patterns = forbidden_script_patterns()

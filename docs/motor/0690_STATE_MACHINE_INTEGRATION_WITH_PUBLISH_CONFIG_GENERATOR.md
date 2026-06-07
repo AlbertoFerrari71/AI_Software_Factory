@@ -131,3 +131,15 @@ Restano manuali:
 0700) End-to-End MVP Smoke Scenario
 
 Motivo: ora generator e state machine dialogano senza pubblicare. Il passo piu' utile e' validare un percorso end-to-end locale e smoke, con Bridge temporaneo, senza ancora aggiungere hook automatici al runner.
+
+## 11. Aggiornamento dopo STEP 0700
+
+Lo STEP 0700 ha aggiunto lo smoke locale `scripts/asf_e2e_mvp_smoke.py`.
+
+Lo smoke usa l'integrazione dello STEP 0690 per applicare `publish_config_generated` e portare lo stato a `READY_TO_PUBLISH` nel caso positivo.
+
+Il prossimo step consigliato dopo 0700 e':
+
+```text
+0710) Motor Run Manifest and Evidence Pack
+```
