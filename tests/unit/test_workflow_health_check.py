@@ -11,6 +11,7 @@ DOC = ROOT / "docs" / "35_WORKFLOW_HEALTH_CHECK.md"
 INDEX = ROOT / "docs" / "34_PROJECT_WORKFLOW_INDEX.md"
 CLOSURE_PACK = ROOT / "docs" / "motor" / "0730_END_TO_END_MVP_CLOSURE_PACK.md"
 PILOT_NOTES = ROOT / "docs" / "motor" / "0740_MVP_REAL_STEP_PILOT.md"
+HOOK_DOC = ROOT / "docs" / "motor" / "0750_STATE_MACHINE_PUBLISH_RUNNER_EVENT_HOOKS.md"
 
 
 def read(path: Path) -> str:
@@ -22,6 +23,7 @@ def test_workflow_health_check_files_exist() -> None:
     assert DOC.exists()
     assert CLOSURE_PACK.exists()
     assert PILOT_NOTES.exists()
+    assert HOOK_DOC.exists()
 
 
 def test_workflow_health_check_script_runs_successfully() -> None:
@@ -133,3 +135,40 @@ def test_workflow_health_tracks_mvp_real_step_pilot() -> None:
 
     for fragment in pilot_fragments:
         assert fragment in pilot_notes
+
+
+def test_workflow_health_tracks_state_machine_publish_runner_event_hooks() -> None:
+    script = read(SCRIPT)
+    doc = read(DOC)
+    index = read(INDEX)
+    hook_doc = read(HOOK_DOC)
+
+    indexed_fragments = [
+        "docs/motor/0750_STATE_MACHINE_PUBLISH_RUNNER_EVENT_HOOKS.md",
+        "state_machine_enabled",
+        "phase_b_started",
+        "phase_c_started",
+        "main_verified",
+        "examples/publish_step/0750_publish_config_state_hooks.example.json",
+        "-ApprovePublish",
+        "-ApproveMerge",
+    ]
+
+    for fragment in indexed_fragments:
+        assert fragment in script
+        assert fragment in doc
+        assert fragment in index
+
+    hook_fragments = [
+        "state_machine_enabled",
+        "phase_b_started",
+        "phase_b_failed",
+        "phase_c_started",
+        "phase_c_failed",
+        "main_verified",
+        "state_close_on_phase_c_success",
+        "0760) MVP Real Step Pilot 2 with State Hooks",
+    ]
+
+    for fragment in hook_fragments:
+        assert fragment in hook_doc

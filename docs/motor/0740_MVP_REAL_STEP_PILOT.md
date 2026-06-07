@@ -207,11 +207,29 @@ Lezioni operative:
 Prossimo step consigliato:
 
 ```text
-0750) State Machine Publish Runner Event Hooks
+0760) MVP Real Step Pilot 2 with State Hooks
 ```
 
-Motivo: il primo pilot reale conferma che il punto piu' scomodo non e' la
-mancanza di documenti, ma la necessita' di aggiornare stato e readiness con
-passaggi manuali separati. Il prossimo hardening dovrebbe aggiungere hook
-prudenziali e human-gated tra publish runner e state machine, senza ridurre i
-gate Phase B/Phase C.
+Motivo: lo STEP 0750 ha aggiunto hook prudenziali e human-gated tra publish
+runner e state machine. Serve ora validarli su un secondo step reale piccolo,
+senza ridurre i gate Phase B/Phase C.
+
+## 12. Aggiornamento STEP 0750
+
+Lo STEP 0750 ha introdotto:
+
+```text
+0750) State Machine Publish Runner Event Hooks
+docs/motor/0750_STATE_MACHINE_PUBLISH_RUNNER_EVENT_HOOKS.md
+```
+
+La frizione principale osservata nel pilot 0740 viene mitigata: il publish
+runner puo' registrare eventi Phase B/C nella state machine quando la config
+abilita `state_machine_enabled`.
+
+Restano invariati:
+
+- Phase B richiede `-ApprovePublish`;
+- Phase C richiede `-ApproveMerge`;
+- config legacy senza hook restano valide;
+- gli hook non eseguono publish automatico extra.

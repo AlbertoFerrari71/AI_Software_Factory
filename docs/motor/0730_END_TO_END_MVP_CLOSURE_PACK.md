@@ -385,6 +385,28 @@ Il prossimo step consigliato dopo il pilot e':
 0750) State Machine Publish Runner Event Hooks
 ```
 
+## 20.2 Aggiornamento STEP 0750
+
+Lo STEP 0750 aggiunge hook opzionali del publish runner verso la state machine:
+
+```text
+docs/motor/0750_STATE_MACHINE_PUBLISH_RUNNER_EVENT_HOOKS.md
+```
+
+La frizione manuale emersa dal pilot 0740 viene ridotta per Phase B e Phase C:
+il runner puo' registrare eventi di start, success, PR created, main verified e
+failure quando la config abilita `state_machine_enabled`.
+
+La decisione MVP resta prudente: gli hook non autorizzano pubblicazione
+automatica, non sostituiscono review umana e non rimuovono i gate
+`-ApprovePublish` e `-ApproveMerge`.
+
+Prossimo step consigliato:
+
+```text
+0760) MVP Real Step Pilot 2 with State Hooks
+```
+
 ## 21. Sintesi di chiusura
 
 Il Motore ASF MVP e' chiuso come baseline usabile, locale, human-gated e

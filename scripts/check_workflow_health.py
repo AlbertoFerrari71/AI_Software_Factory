@@ -102,6 +102,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/motor/0720_MVP_USAGE_RUNBOOK.md",
         "docs/motor/0730_END_TO_END_MVP_CLOSURE_PACK.md",
         "docs/motor/0740_MVP_REAL_STEP_PILOT.md",
+        "docs/motor/0750_STATE_MACHINE_PUBLISH_RUNNER_EVENT_HOOKS.md",
         "config/asf_project_profiles.json",
         "scripts/asf_openai_api_adapter.py",
         "scripts/asf_openai_controlled_live_execution_pack.py",
@@ -168,6 +169,9 @@ def check_files(root: Path) -> list[HealthIssue]:
         "examples/publish_step/0640_publish_config_motor_core.example.json",
         "examples/publish_step/0640_publish_config_docs_only.example.json",
         "examples/publish_step/0640_publish_config_profile_mismatch_fail_closed.example.json",
+        "examples/publish_step/0750_publish_config_state_hooks.example.json",
+        "examples/publish_step/0750_publish_config_state_hooks_close_step.example.json",
+        "examples/publish_step/0750_publish_config_state_hooks_mismatch_fail_closed.example.json",
         "examples/risk_classifier/sample_l0_docs_only.json",
         "examples/risk_classifier/sample_l2_code_change.json",
         "examples/risk_classifier/sample_l3_publish.json",
@@ -434,6 +438,10 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                 ["docs/motor/0740_MVP_REAL_STEP_PILOT.md"],
             ),
             (
+                "ASF State Machine Publish Runner Event Hooks document",
+                ["docs/motor/0750_STATE_MACHINE_PUBLISH_RUNNER_EVENT_HOOKS.md"],
+            ),
+            (
                 "ASF State Machine Bridge Integration pointers",
                 ["LAST-State.json", "LAST-Output_Compatto.md", "state_machine"],
             ),
@@ -480,6 +488,18 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                 ],
             ),
             (
+                "ASF State Machine Publish Runner Event Hooks pointers",
+                [
+                    "state_machine_enabled",
+                    "phase_b_started",
+                    "phase_c_started",
+                    "main_verified",
+                    "examples/publish_step/0750_publish_config_state_hooks.example.json",
+                    "-ApprovePublish",
+                    "-ApproveMerge",
+                ],
+            ),
+            (
                 "ASF Publish Config Generator script",
                 ["scripts/asf_publish_config_generator.py"],
             ),
@@ -498,6 +518,14 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             (
                 "ASF Publish Config Generator examples",
                 ["examples/publish_config_generator/"],
+            ),
+            (
+                "ASF State Machine Publish Runner Event Hooks examples",
+                [
+                    "examples/publish_step/0750_publish_config_state_hooks.example.json",
+                    "examples/publish_step/0750_publish_config_state_hooks_close_step.example.json",
+                    "examples/publish_step/0750_publish_config_state_hooks_mismatch_fail_closed.example.json",
+                ],
             ),
             (
                 "ASF Publish Config Generator State Machine integration example",

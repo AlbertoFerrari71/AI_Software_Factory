@@ -1,0 +1,40 @@
+{
+  "step": "0750",
+  "name": "State_Hooks_Close_Step_Example",
+  "repo_path": ".",
+  "bridge_root": "tmp/0750_publish_runner_bridge",
+  "branch": "step-0750-state-machine-publish-runner-event-hooks",
+  "commit_message": "0750 add state machine publish runner event hooks",
+  "pr_title": "0750 add state machine publish runner event hooks",
+  "pr_body": "Example config: Phase C emits close_step after main_verified.",
+  "next_step": "0760) MVP Real Step Pilot 2 with State Hooks",
+  "expected_files": [
+    "scripts/asf_publish_step.ps1",
+    "tests/unit/test_asf_publish_step_runner.py",
+    "docs/motor/0750_STATE_MACHINE_PUBLISH_RUNNER_EVENT_HOOKS.md"
+  ],
+  "phase_a_checks": [
+    {
+      "name": "Publish runner tests",
+      "argv": ["python", "-m", "pytest", "tests/unit/test_asf_publish_step_runner.py", "-q"]
+    }
+  ],
+  "phase_c_checks": [
+    {
+      "name": "Workflow health",
+      "argv": ["python", "scripts/check_workflow_health.py"]
+    }
+  ],
+  "allow_no_github_checks_reported": true,
+  "log_max_count": 8,
+  "state_machine_enabled": true,
+  "state_file": "tmp/0750_state_hooks/0750_state.json",
+  "state_step": "0750",
+  "state_write_bridge": true,
+  "state_bridge_root": "tmp/0750_state_hooks/state_bridge",
+  "state_fail_on_hook_error": true,
+  "state_expected_before_phase_b": "READY_TO_PUBLISH",
+  "state_expected_before_phase_c": "PR_CREATED",
+  "state_emit_main_verified": true,
+  "state_close_on_phase_c_success": true
+}
