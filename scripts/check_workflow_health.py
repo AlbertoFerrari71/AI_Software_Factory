@@ -100,6 +100,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/motor/0700_END_TO_END_MVP_SMOKE_SCENARIO.md",
         "docs/motor/0710_MOTOR_RUN_MANIFEST_AND_EVIDENCE_PACK.md",
         "docs/motor/0720_MVP_USAGE_RUNBOOK.md",
+        "docs/motor/0730_END_TO_END_MVP_CLOSURE_PACK.md",
         "config/asf_project_profiles.json",
         "scripts/asf_openai_api_adapter.py",
         "scripts/asf_openai_controlled_live_execution_pack.py",
@@ -424,6 +425,10 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                 ["docs/motor/0720_MVP_USAGE_RUNBOOK.md"],
             ),
             (
+                "ASF End-to-End MVP Closure Pack document",
+                ["docs/motor/0730_END_TO_END_MVP_CLOSURE_PACK.md"],
+            ),
+            (
                 "ASF State Machine Bridge Integration pointers",
                 ["LAST-State.json", "LAST-Output_Compatto.md", "state_machine"],
             ),
@@ -451,6 +456,14 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                     "-ApprovePublish",
                     "-ApproveMerge",
                     "READY_TO_PUBLISH",
+                ],
+            ),
+            (
+                "ASF End-to-End MVP Closure Pack pointers",
+                [
+                    "MVP STATUS: GO WITH WARNINGS",
+                    "GO/WARNING/NO-GO",
+                    "0740) MVP Real Step Pilot",
                 ],
             ),
             (

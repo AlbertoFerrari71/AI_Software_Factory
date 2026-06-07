@@ -77,6 +77,7 @@ L'indice orienta il lavoro. Non sostituisce i documenti specifici, il Verificati
 | Eseguire ASF End-to-End MVP Smoke Scenario | `docs/motor/0700_END_TO_END_MVP_SMOKE_SCENARIO.md` | `scripts/asf_e2e_mvp_smoke.py --scenario code-unit-to-ready-to-publish`, `scripts/asf_e2e_mvp_smoke.py --scenario invalid-state-to-publish-config` | Quando serve validare localmente il percorso Motore fino a `READY_TO_PUBLISH` | Scrive evidence sotto `tmp/e2e_mvp_smoke`, produce `negative_fail_closed.json`; nessuna Phase B/C o pubblicazione |
 | Generare ASF Motor Run Manifest | `docs/motor/0710_MOTOR_RUN_MANIFEST_AND_EVIDENCE_PACK.md` | `scripts/asf_motor_run_manifest.py`, `examples/motor_run_manifest/` | Quando serve normalizzare una run Motore in manifest JSON e summary Markdown | Produce `motor_run_manifest.json`, `motor_run_summary.md` e Bridge opzionale `LAST-Run_Manifest.json`; nessuna Phase B/C |
 | Usare il Motore ASF MVP end-to-end | `docs/motor/0720_MVP_USAGE_RUNBOOK.md` | `scripts/asf_e2e_mvp_smoke.py`, `scripts/asf_motor_run_manifest.py`, `scripts/asf_publish_config_generator.py`, `scripts/asf_publish_step.ps1`; Bridge `codex_command`, `publish_config`, `state_machine`, `motor_run` | Quando serve seguire il percorso operativo completo prompt -> smoke -> manifest -> review -> config -> Phase B -> Phase C fino a `READY_TO_PUBLISH` | Human-gated; Phase B richiede `-ApprovePublish`, Phase C richiede `-ApproveMerge`; nessuna pubblicazione automatica |
+| Chiudere il Motore ASF MVP | `docs/motor/0730_END_TO_END_MVP_CLOSURE_PACK.md` | `scripts/check_workflow_health.py`, `scripts/asf_e2e_mvp_smoke.py`, `scripts/asf_motor_run_manifest.py`, `scripts/asf_publish_step.ps1` | Quando serve dichiarare perimetro, evidenze, criteri GO/WARNING/NO-GO e handoff post-MVP | `MVP STATUS: GO WITH WARNINGS`; prossimo passo `0740) MVP Real Step Pilot`; nessuna nuova automazione, Phase B/C restano human-gated |
 | Controllare Documentation Sync | `docs/21_DOCUMENTATION_SYNC.md` | Nessuno | Ogni step documentale o operativo | Valuta changelog, roadmap, decisions e documenti specifici |
 | Controllare Soft Protection Guardrails | `docs/24_SOFT_PROTECTION_GUARDRAILS.md` | `scripts/git/check_soft_guardrails.ps1` | Prima del commit o come controllo locale | Read-only; non installa hook |
 | Eseguire Workflow Health Check | `docs/35_WORKFLOW_HEALTH_CHECK.md` | `scripts/check_workflow_health.py` | Quando workflow docs, script o riferimenti centrali cambiano | Read-only; non sostituisce Verification Gate |
@@ -177,7 +178,7 @@ Regole operative:
 - `docs/0560-01-Report_OpenAI_API_Adapter_First_Authorized_Live_Run.md`: report sanitizzato STEP 0560, attualmente `BLOCKED_BY_RATE_LIMIT_OR_QUOTA` per HTTP 429 `insufficient_quota`.
 - `docs/0560-03-Diagnostic_OpenAI_Provider_HTTP_Error_And_Rate_Limit.md`: diagnostic pack provider-side STEP 0560-E, senza live call e senza evidence positiva inventata.
 - `docs/adr/0570_SUPERVISED_GATE_AUTONOMY.md`: decisione strategica per autonomia supervisionata a gate.
-- `docs/motor/0570_MVP_MOTOR_ROADMAP.md`: roadmap 0570-0710 per MVP Motore.
+- `docs/motor/0570_MVP_MOTOR_ROADMAP.md`: roadmap 0570-0730 per MVP Motore.
 - `docs/motor/0570_GATE_LOOP_SPEC.md`: stati formali del loop a gate, STOP condition ed evidence.
 - `docs/motor/0570_INDEPENDENT_REVIEW_NODE.md`: contratto input/output JSON e criteri PASS/FAIL/NEEDS_HUMAN del nodo review.
 - `docs/motor/0580_DRY_RUN_LOOP_RUNNER.md`: primo runner locale dry-run del loop supervisionato a gate.
@@ -196,6 +197,7 @@ Regole operative:
 - `docs/motor/0700_END_TO_END_MVP_SMOKE_SCENARIO.md`: smoke end-to-end locale del Motore ASF, con scenario positivo fino a `READY_TO_PUBLISH` e negativo fail-closed.
 - `docs/motor/0710_MOTOR_RUN_MANIFEST_AND_EVIDENCE_PACK.md`: manifest unico di run Motore con artifact, checksum, check, decisione e Bridge opzionale.
 - `docs/motor/0720_MVP_USAGE_RUNBOOK.md`: procedura operativa MVP con Bridge, state machine, smoke, manifest, publish config, review, Phase B/C e recovery.
+- `docs/motor/0730_END_TO_END_MVP_CLOSURE_PACK.md`: chiusura formale del MVP Motore con perimetro, evidenze, criteri GO/WARNING/NO-GO, warning residui e prossimo passo post-MVP.
 
 ---
 

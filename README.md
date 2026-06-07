@@ -1,7 +1,7 @@
 # AI Software Factory
 
 **Metodo interno:** Codex Alchemy Method
-**Stato:** STEP 0720 - MVP Usage Runbook
+**Stato:** STEP 0730 - End-to-End MVP Closure Pack
 **Data bootstrap:** 2026-05-25
 **Strategia:** local-first personale, progettato per evoluzione SaaS
 
@@ -28,7 +28,7 @@ Il metodo interno si chiama **Codex Alchemy Method**: l'idea grezza viene trasfo
 
 ## 2. Stato repository
 
-Questo repository e' nello stato **STEP 0720 - MVP Usage Runbook**.
+Questo repository e' nello stato **STEP 0730 - End-to-End MVP Closure Pack**.
 
 Sono presenti:
 
@@ -73,6 +73,7 @@ Sono presenti:
 - End-to-End MVP Smoke Scenario locale, con scenario positivo fino a `READY_TO_PUBLISH`, scenario negativo fail-closed, evidence pack sotto `tmp/e2e_mvp_smoke` e Bridge opzionale solo su richiesta.
 - Motor Run Manifest and Evidence Pack, con manifest unico `motor_run_manifest.json`, summary Markdown, checksum artifact, decisione prudente e Bridge opzionale sotto `motor_run`.
 - MVP Usage Runbook, con procedura operativa smoke -> manifest -> review -> publish config -> Phase B -> Phase C, directory Bridge, checklist Alberto, recovery e limiti MVP.
+- End-to-End MVP Closure Pack, con perimetro MVP, evidenze, criteri GO/WARNING/NO-GO, stato gate/test/Bridge/state machine/manifest e decisione prudente `MVP STATUS: GO WITH WARNINGS`.
 
 Non sono ancora presenti:
 
@@ -368,6 +369,7 @@ docs/motor/0690_STATE_MACHINE_INTEGRATION_WITH_PUBLISH_CONFIG_GENERATOR.md
 docs/motor/0700_END_TO_END_MVP_SMOKE_SCENARIO.md
 docs/motor/0710_MOTOR_RUN_MANIFEST_AND_EVIDENCE_PACK.md
 docs/motor/0720_MVP_USAGE_RUNBOOK.md
+docs/motor/0730_END_TO_END_MVP_CLOSURE_PACK.md
 ```
 
 ---
@@ -426,7 +428,7 @@ policies/path_policy.v0.json
 ## 11. Prossimo step
 
 ```text
-0730) End-to-End MVP Closure Pack
+0740) MVP Real Step Pilot
 ```
 
-Obiettivo: chiudere formalmente il MVP Motore con un closure pack che verifichi documenti, evidence, manifest, state machine, publish config, runner e criteri di handoff senza aggiungere pubblicazione automatica.
+Obiettivo: applicare la baseline MVP Motore a uno step reale piccolo e non sintetico, documentando frizioni operative prima di aggiungere hook automatici al runner.

@@ -336,3 +336,21 @@ Motivo: dopo questo runbook il Motore MVP ha componenti e procedura d'uso.
 Prima di aggiungere hook automatici al runner, conviene creare un closure pack
 che verifichi end-to-end documenti, evidence, manifest, state machine, config,
 runner e criteri di chiusura formale del MVP.
+
+## 12. Aggiornamento STEP 0730
+
+Lo STEP 0730 ha creato il closure pack formale:
+
+```text
+docs/motor/0730_END_TO_END_MVP_CLOSURE_PACK.md
+```
+
+Il MVP Motore viene chiuso come baseline `GO WITH WARNINGS`: usabile,
+human-gated e verificabile, ma ancora con smoke sintetico, hook manuali e pilot
+reale non eseguito.
+
+Prossimo step post-MVP consigliato:
+
+```text
+0740) MVP Real Step Pilot
+```

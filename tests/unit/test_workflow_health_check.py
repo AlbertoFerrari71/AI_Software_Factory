@@ -9,6 +9,7 @@ ROOT = Path(__file__).resolve().parents[2]
 SCRIPT = ROOT / "scripts" / "check_workflow_health.py"
 DOC = ROOT / "docs" / "35_WORKFLOW_HEALTH_CHECK.md"
 INDEX = ROOT / "docs" / "34_PROJECT_WORKFLOW_INDEX.md"
+CLOSURE_PACK = ROOT / "docs" / "motor" / "0730_END_TO_END_MVP_CLOSURE_PACK.md"
 
 
 def read(path: Path) -> str:
@@ -18,6 +19,7 @@ def read(path: Path) -> str:
 def test_workflow_health_check_files_exist() -> None:
     assert SCRIPT.exists()
     assert DOC.exists()
+    assert CLOSURE_PACK.exists()
 
 
 def test_workflow_health_check_script_runs_successfully() -> None:
@@ -73,3 +75,31 @@ def test_project_workflow_index_mentions_health_check() -> None:
 
     assert "docs/35_WORKFLOW_HEALTH_CHECK.md" in content
     assert "scripts/check_workflow_health.py" in content
+
+
+def test_workflow_health_tracks_mvp_closure_pack() -> None:
+    script = read(SCRIPT)
+    doc = read(DOC)
+    index = read(INDEX)
+    closure_pack = read(CLOSURE_PACK)
+
+    indexed_fragments = [
+        "docs/motor/0730_END_TO_END_MVP_CLOSURE_PACK.md",
+        "MVP STATUS: GO WITH WARNINGS",
+        "GO/WARNING/NO-GO",
+        "0740) MVP Real Step Pilot",
+    ]
+
+    for fragment in indexed_fragments:
+        assert fragment in script
+        assert fragment in doc
+        assert fragment in index
+
+    closure_fragments = [
+        "MVP STATUS: GO WITH WARNINGS",
+        "GO/WARNING/NO-GO",
+        "0740) MVP Real Step Pilot",
+    ]
+
+    for fragment in closure_fragments:
+        assert fragment in closure_pack

@@ -42,6 +42,7 @@ Le eccezioni ammesse sono solo correzioni bloccanti emerse dai test o dalla revi
 | 0700 | End-to-End MVP Smoke Scenario | L2/L3 smoke locale | generator, state machine, Bridge temporaneo, docs, tests | Un percorso locale end-to-end produce evidence senza pubblicare | pytest mirati, workflow health, verify gate | Smoke che maschera publish reale, Bridge reale richiesto |
 | 0710 | Motor Run Manifest and Evidence Pack | L2 evidence locale | manifest, evidence pack, docs, tests | Una run Motore produce manifest JSON e summary Markdown auditabili | pytest mirati, workflow health, verify gate | READY_TO_PUBLISH senza artifact richiesti, Bridge reale richiesto |
 | 0720 | MVP Usage Runbook | L0/L1 docs operative | docs/motor, README, changelog, roadmap, decision log, workflow index, health check | Procedura operativa MVP end-to-end documentata e human-gated | workflow health, pytest, verify gate, diff check | Runbook che sembra autorizzare publish automatico o saltare Phase C |
+| 0730 | End-to-End MVP Closure Pack | L0/L1 docs operative | docs/motor, README, changelog, roadmap, decision log, workflow index, health check | MVP Motore chiuso formalmente con criteri GO/WARNING/NO-GO e warning residui | workflow health, pytest, verify gate, diff check | Closure pack che dichiara successo pieno ignorando smoke sintetico, hook manuali o pilot reale assente |
 
 ---
 
@@ -55,7 +56,7 @@ Il criterio di maturita' minima non e' "il runner esiste". Il criterio e': un lo
 
 ---
 
-## 5. Ambiti ancora congelati dopo 0710
+## 5. Ambiti ancora congelati dopo 0730
 
 - Retry live OpenAI, salvo step separato e autorizzato da Alberto.
 - Nuove integrazioni MCP operative.
@@ -319,4 +320,35 @@ Prossimo step consigliato:
 
 ```text
 0730) End-to-End MVP Closure Pack
+```
+
+## 16. Stato dopo STEP 0730
+
+Lo STEP 0730 aggiunge il closure pack formale del Motore MVP:
+
+```text
+docs/motor/0730_END_TO_END_MVP_CLOSURE_PACK.md
+```
+
+Il closure pack dichiara perimetro, componenti inclusi/esclusi, evidenze,
+criteri GO/WARNING/NO-GO, stato di gate/test/Bridge/state machine/manifest,
+limiti noti, rischi residui e decisione:
+
+```text
+MVP STATUS: GO WITH WARNINGS
+```
+
+Restano fuori dal MVP:
+
+- esecuzione autonoma fire-and-forget;
+- publish/merge/deploy automatici;
+- GitHub come fonte automatica di stato;
+- hook completi runner -> state machine;
+- pilot reale non sintetico;
+- UI grafica e orchestrazione multi-modello.
+
+Prossimo step consigliato:
+
+```text
+0740) MVP Real Step Pilot
 ```
