@@ -233,3 +233,16 @@ Restano invariati:
 - Phase C richiede `-ApproveMerge`;
 - config legacy senza hook restano valide;
 - gli hook non eseguono publish automatico extra.
+
+## 13. Aggiornamento STEP 0760
+
+Lo STEP 0760 ha eseguito il secondo pilot reale post-MVP con hook:
+
+```text
+0760) MVP Real Step Pilot 2 with State Hooks
+docs/motor/0760_MVP_REAL_STEP_PILOT_2_WITH_STATE_HOOKS.md
+```
+
+Il pilot prepara uno state file `READY_TO_PUBLISH`, una config publish con
+`state_machine_enabled=true` e una validazione `Phase Plan` hook-aware. Phase B
+e Phase C restano fuori da Codex e richiedono ancora approval esplicita.

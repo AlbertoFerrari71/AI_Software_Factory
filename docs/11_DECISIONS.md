@@ -2379,6 +2379,50 @@ transizioni e recovery.
 
 ---
 
+## DEC-089 - MVP Real Step Pilot 2 con State Hooks
+
+**Data:** 2026-06-07
+**Stato:** Accettata
+
+### Contesto
+
+Dopo STEP 0750 il publish runner puo' emettere eventi state machine durante
+Phase B e Phase C, ma il collegamento doveva essere preparato su un secondo
+step reale piccolo prima di usarlo come pratica ordinaria.
+
+### Decisione
+
+Lo STEP 0760 introduce
+`docs/motor/0760_MVP_REAL_STEP_PILOT_2_WITH_STATE_HOOKS.md`.
+
+Il pilot:
+
+- prepara uno state file locale in `READY_TO_PUBLISH`;
+- genera una config publish e una variante hook-aware sotto `tmp/`;
+- valida la config hook-aware solo con `scripts/asf_publish_step.ps1 -Phase Plan`;
+- documenta gli eventi attesi `phase_b_started`, `phase_b_passed`,
+  `pr_created`, `phase_c_started`, `phase_c_passed` e `main_verified`;
+- conclude con decisione prudente `PILOT STATUS: GO WITH WARNINGS`.
+
+### Motivazione
+
+La prova mantiene basso il rischio e rende verificabile l'handoff verso la
+pubblicazione reale. Gli hook vengono preparati e validati a livello config, ma
+la pubblicazione resta human-gated e fuori da Codex.
+
+### Conseguenze
+
+- Gli hook sembrano pronti per uso ordinario controllato su step piccoli.
+- La validazione completa resta da fare durante Phase B/C reale.
+- `READY_TO_PUBLISH` non sostituisce approval umana.
+- Il prossimo step consigliato e':
+
+```text
+0770) Runner Hook Evidence Manifest Integration
+```
+
+---
+
 ## DEC-086 - End-to-End MVP Closure Pack con GO WITH WARNINGS
 
 **Data:** 2026-06-07

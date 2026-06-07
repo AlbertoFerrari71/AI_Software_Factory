@@ -45,13 +45,14 @@ Le eccezioni ammesse sono solo correzioni bloccanti emerse dai test o dalla revi
 | 0730 | End-to-End MVP Closure Pack | L0/L1 docs operative | docs/motor, README, changelog, roadmap, decision log, workflow index, health check | MVP Motore chiuso formalmente con criteri GO/WARNING/NO-GO e warning residui | workflow health, pytest, verify gate, diff check | Closure pack che dichiara successo pieno ignorando smoke sintetico, hook manuali o pilot reale assente |
 | 0740 | MVP Real Step Pilot | L1/L2 docs/tooling locale | docs/motor, README, changelog, roadmap, decision log, workflow index, health check, tests | Baseline MVP usata su modifica reale piccola con evidence e decisione prudente | workflow health, pytest, verify gate, diff check | Pilot trattato come prova produttiva, Phase B/C eseguite da Codex, warning manuali ignorati |
 | 0750 | State Machine Publish Runner Event Hooks | L2/L3 runner integration human-gated | `scripts/asf_publish_step.ps1`, state machine, docs, tests, examples | Runner emette eventi state machine opzionali durante Phase B/C senza ridurre gate | pytest runner/state machine/generator/selector, workflow health, verify gate, diff check | Hook che pubblicano senza approval, shell execution, config legacy rotte, Dropbox/GitHub reali nei test |
+| 0760 | MVP Real Step Pilot 2 with State Hooks | L1/L2 docs/tooling locale | docs/motor, README, changelog, roadmap, decision log, workflow index, health check, tests, tmp evidence | Secondo pilot reale prepara state file `READY_TO_PUBLISH` e config hook-aware validata in `Phase Plan` | workflow health, pytest, verify gate, diff check, Phase Plan hook-aware | Pilot trattato come validazione finale degli hook, Phase B/C eseguite da Codex, warning manuali ignorati |
 
 ---
 
 ## 4. Sequenza operativa prevista
 
 ```text
-0570 docs -> 0580 dry-run loop -> 0590 stable publish runner -> 0600 risk gate -> 0610 risk integration -> 0620 gate decision packet -> 0630 verification profiles -> 0640 selector integration with publish runner -> 0650 publish config generator -> 0660 bridge output integration -> 0670 state machine -> 0680 state bridge -> 0690 generator integration -> 0700 end-to-end smoke -> 0710 run manifest -> 0720 usage runbook -> 0730 closure pack -> 0740 real step pilot -> 0750 publish runner state hooks
+0570 docs -> 0580 dry-run loop -> 0590 stable publish runner -> 0600 risk gate -> 0610 risk integration -> 0620 gate decision packet -> 0630 verification profiles -> 0640 selector integration with publish runner -> 0650 publish config generator -> 0660 bridge output integration -> 0670 state machine -> 0680 state bridge -> 0690 generator integration -> 0700 end-to-end smoke -> 0710 run manifest -> 0720 usage runbook -> 0730 closure pack -> 0740 real step pilot -> 0750 publish runner state hooks -> 0760 real pilot with state hooks
 ```
 
 Il criterio di maturita' minima non e' "il runner esiste". Il criterio e': un loop completo produce evidence leggibile, classifica rischio, esegue test disponibili, passa review indipendente e ferma correttamente il flusso quando un gate non passa.
@@ -409,4 +410,35 @@ Prossimo step consigliato:
 
 ```text
 0760) MVP Real Step Pilot 2 with State Hooks
+```
+
+## 19. Stato dopo STEP 0760
+
+Lo STEP 0760 aggiunge il secondo pilot reale post-MVP:
+
+```text
+docs/motor/0760_MVP_REAL_STEP_PILOT_2_WITH_STATE_HOOKS.md
+```
+
+Il pilot prepara uno state file locale in `READY_TO_PUBLISH`, una config
+hook-aware con `state_machine_enabled=true` e una validazione `Phase Plan`
+senza eseguire Phase B, Phase C, commit, push, PR, merge o deploy.
+
+Decisione prudente:
+
+```text
+PILOT STATUS: GO WITH WARNINGS
+```
+
+Restano da validare durante la pubblicazione reale:
+
+- eventi Phase B `phase_b_started`, `phase_b_passed`, `pr_created`;
+- eventi Phase C `phase_c_started`, `phase_c_passed`, `main_verified`;
+- output Bridge `LAST-State.json` e `LAST-Event.json`;
+- collegamento tra hook e manifest/evidence pack.
+
+Prossimo step consigliato:
+
+```text
+0770) Runner Hook Evidence Manifest Integration
 ```

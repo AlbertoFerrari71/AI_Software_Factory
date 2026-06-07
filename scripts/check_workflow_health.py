@@ -103,6 +103,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/motor/0730_END_TO_END_MVP_CLOSURE_PACK.md",
         "docs/motor/0740_MVP_REAL_STEP_PILOT.md",
         "docs/motor/0750_STATE_MACHINE_PUBLISH_RUNNER_EVENT_HOOKS.md",
+        "docs/motor/0760_MVP_REAL_STEP_PILOT_2_WITH_STATE_HOOKS.md",
         "config/asf_project_profiles.json",
         "scripts/asf_openai_api_adapter.py",
         "scripts/asf_openai_controlled_live_execution_pack.py",
@@ -442,6 +443,10 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                 ["docs/motor/0750_STATE_MACHINE_PUBLISH_RUNNER_EVENT_HOOKS.md"],
             ),
             (
+                "ASF MVP Real Step Pilot 2 with State Hooks document",
+                ["docs/motor/0760_MVP_REAL_STEP_PILOT_2_WITH_STATE_HOOKS.md"],
+            ),
+            (
                 "ASF State Machine Bridge Integration pointers",
                 ["LAST-State.json", "LAST-Output_Compatto.md", "state_machine"],
             ),
@@ -497,6 +502,17 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                     "examples/publish_step/0750_publish_config_state_hooks.example.json",
                     "-ApprovePublish",
                     "-ApproveMerge",
+                ],
+            ),
+            (
+                "ASF MVP Real Step Pilot 2 with State Hooks pointers",
+                [
+                    "PILOT STATUS: GO WITH WARNINGS",
+                    "tmp/0760_mvp_real_step_pilot_2_state_hooks",
+                    "READY_TO_PUBLISH",
+                    "Phase Plan",
+                    "LAST-State.json",
+                    "0770) Runner Hook Evidence Manifest Integration",
                 ],
             ),
             (

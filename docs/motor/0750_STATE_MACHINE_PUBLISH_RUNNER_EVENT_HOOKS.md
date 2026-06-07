@@ -159,8 +159,23 @@ Restano manuali:
 ## 9. Prossimo step consigliato
 
 ```text
-0760) MVP Real Step Pilot 2 with State Hooks
+0770) Runner Hook Evidence Manifest Integration
 ```
 
-Motivo: validare il nuovo collegamento runner/state machine su un altro step
-reale piccolo prima di integrare gli hook nel manifest/evidence pack.
+Motivo: lo STEP 0760 ha preparato un secondo pilot reale con state file
+`READY_TO_PUBLISH` e config hook-aware validata in `Phase Plan`. Ora serve
+collegare eventi runner/state machine a manifest ed evidence pack.
+
+## 10. Aggiornamento STEP 0760
+
+Lo STEP 0760 ha introdotto:
+
+```text
+0760) MVP Real Step Pilot 2 with State Hooks
+docs/motor/0760_MVP_REAL_STEP_PILOT_2_WITH_STATE_HOOKS.md
+```
+
+Il pilot conferma che una config con `state_machine_enabled=true` puo' essere
+preparata e validata in `Phase Plan` su uno step reale piccolo. La validazione
+completa resta demandata alla pubblicazione reale con `-ApprovePublish` e
+`-ApproveMerge`.

@@ -1,7 +1,7 @@
 # AI Software Factory
 
 **Metodo interno:** Codex Alchemy Method
-**Stato:** STEP 0750 - State Machine Publish Runner Event Hooks
+**Stato:** STEP 0760 - MVP Real Step Pilot 2 with State Hooks
 **Data bootstrap:** 2026-05-25
 **Strategia:** local-first personale, progettato per evoluzione SaaS
 
@@ -28,7 +28,7 @@ Il metodo interno si chiama **Codex Alchemy Method**: l'idea grezza viene trasfo
 
 ## 2. Stato repository
 
-Questo repository e' nello stato **STEP 0750 - State Machine Publish Runner Event Hooks**.
+Questo repository e' nello stato **STEP 0760 - MVP Real Step Pilot 2 with State Hooks**.
 
 Sono presenti:
 
@@ -76,6 +76,7 @@ Sono presenti:
 - End-to-End MVP Closure Pack, con perimetro MVP, evidenze, criteri GO/WARNING/NO-GO, stato gate/test/Bridge/state machine/manifest e decisione prudente `MVP STATUS: GO WITH WARNINGS`.
 - MVP Real Step Pilot, con modifica reale piccola, state machine locale, evidence temporanee, manifest documentale e decisione `PILOT STATUS: GO WITH WARNINGS`.
 - State Machine Publish Runner Event Hooks, con hook opzionali del publish runner verso la state machine per Phase B/Phase C, fail-closed su mismatch e gate `-ApprovePublish`/`-ApproveMerge` invariati.
+- MVP Real Step Pilot 2 with State Hooks, con stato iniziale `READY_TO_PUBLISH`, config hook-aware validata in `Phase Plan`, evidence temporanee sotto `tmp/` e decisione `PILOT STATUS: GO WITH WARNINGS`.
 
 Non sono ancora presenti:
 
@@ -374,6 +375,7 @@ docs/motor/0720_MVP_USAGE_RUNBOOK.md
 docs/motor/0730_END_TO_END_MVP_CLOSURE_PACK.md
 docs/motor/0740_MVP_REAL_STEP_PILOT.md
 docs/motor/0750_STATE_MACHINE_PUBLISH_RUNNER_EVENT_HOOKS.md
+docs/motor/0760_MVP_REAL_STEP_PILOT_2_WITH_STATE_HOOKS.md
 ```
 
 ---
@@ -432,7 +434,7 @@ policies/path_policy.v0.json
 ## 11. Prossimo step
 
 ```text
-0760) MVP Real Step Pilot 2 with State Hooks
+0770) Runner Hook Evidence Manifest Integration
 ```
 
-Obiettivo: validare i nuovi hook state machine del publish runner su un altro step reale piccolo, mantenendo Phase B/Phase C human-gated.
+Obiettivo: collegare gli eventi Phase B/C del publish runner hook-aware al manifest/evidence pack, mantenendo Phase B/Phase C human-gated.
