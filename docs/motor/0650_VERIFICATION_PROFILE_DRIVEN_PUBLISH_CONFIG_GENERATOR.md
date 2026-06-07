@@ -317,3 +317,17 @@ git status --short --untracked-files=all
 ```
 
 Motivo: con STEP 0660 il generator produce anche artifact Bridge auditabili. Il passo successivo naturale e' modellare stati, transizioni e stop condition dello step loop prima di aumentare l'automazione operativa.
+
+---
+
+## 14. Aggiornamento dopo STEP 0690
+
+Dopo STEP 0690 il comportamento legacy del generator resta invariato senza opzioni state machine.
+
+Quando vengono usati `--require-state` o `--update-state`, il generator consulta `scripts/asf_step_state_machine.py`, richiede uno stato coerente e puo' applicare `publish_config_generated` per portare lo step da `LOCAL_VERIFIED` a `READY_TO_PUBLISH`.
+
+Il runbook operativo aggiornato e':
+
+```text
+docs/motor/0690_STATE_MACHINE_INTEGRATION_WITH_PUBLISH_CONFIG_GENERATOR.md
+```

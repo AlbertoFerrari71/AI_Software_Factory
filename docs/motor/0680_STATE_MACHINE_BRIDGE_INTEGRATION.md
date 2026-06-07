@@ -223,3 +223,18 @@ Prossimo step consigliato:
 ```
 
 Motivo: dopo STEP 0680 lo stato e' persistente nel Bridge. Il passo successivo piu' utile e' far dialogare generator e state machine, senza ancora aggiungere hook automatici al publish runner.
+
+---
+
+## 11. Aggiornamento dopo STEP 0690
+
+Dopo STEP 0690 il generator puo' usare `--write-state-bridge` per produrre gli stessi artifact Bridge definiti qui:
+
+```text
+LAST-State.json
+LAST-Event.json
+LAST-Output_Compatto.md
+LAST-Output_Completo.txt
+```
+
+Il generator non modifica a mano questi JSON: applica l'evento tramite `scripts/asf_step_state_machine.py` e poi riusa il writer Bridge della state machine.

@@ -98,7 +98,8 @@ Esempio:
 | 660 | Publish Config Generator Bridge Output Integration | Salvare output generator e riepiloghi in un flusso Bridge/audit dedicato senza pubblicare | Bridge output per config generator, audit trail, LAST config e test | MVP Motore | Completato |
 | 670 | Step Execution State Machine | Modellare stati, transizioni, stop condition e ripresa controllata del ciclo step | State machine locale, stati auditabili, nessuna pubblicazione automatica | MVP Motore | Completato |
 | 680 | State Machine Bridge Integration | Salvare stato e report della state machine nel Bridge senza eseguire pubblicazione | Bridge `state_machine`, LAST state/event/output, test temporanei | MVP Motore | Completato |
-| 690 | State Machine Integration with Publish Config Generator | Collegare stato step e bozze config senza eseguire pubblicazione | Integrazione generator/state machine, riferimenti Bridge, test | MVP Motore | Da fare |
+| 690 | State Machine Integration with Publish Config Generator | Collegare stato step e bozze config senza eseguire pubblicazione | Integrazione generator/state machine, riferimenti Bridge, test | MVP Motore | Completato |
+| 700 | End-to-End MVP Smoke Scenario | Validare un percorso locale end-to-end del MVP Motore senza pubblicare | Smoke scenario con generator, state machine, Bridge temporaneo e report evidenze | MVP Motore | Da fare |
 
 ---
 
@@ -1655,3 +1656,35 @@ Salvare stato corrente, ultimo evento, output compatto e output completo della S
 ### Prossimo step consigliato
 
 0690) State Machine Integration with Publish Config Generator
+
+---
+
+## 76. STEP 690 - State Machine Integration with Publish Config Generator
+
+### Obiettivo
+
+Collegare la Step Execution State Machine al Publish Config Generator, senza eseguire pubblicazione.
+
+### Output realizzati
+
+- opzioni state machine in `scripts/asf_publish_config_generator.py`;
+- lettura di state file o `LAST-State.json` da Bridge state machine;
+- validazione fail-closed di stato, step, recovery e target dopo evento;
+- applicazione opzionale dell'evento `publish_config_generated`;
+- output Bridge generator con riferimenti a `LAST-Publish_Config.json` e `LAST-State.json`;
+- output Bridge state machine opzionale con `--write-state-bridge`;
+- runbook `docs/motor/0690_STATE_MACHINE_INTEGRATION_WITH_PUBLISH_CONFIG_GENERATOR.md`;
+- esempi `sample_state_machine_integration_input.json` e `sample_local_verified_state.json`;
+- aggiornamento workflow health, README, changelog, decision log e Project Workflow Index.
+
+### Guardrail
+
+- comportamento legacy invariato senza opzioni state machine;
+- `IMPLEMENTED` non basta per config pronta alla pubblicazione;
+- recovery o step combinato richiedono `--state-allow-recovery`;
+- nessuna Phase B, Phase C, commit, push, PR, merge o deploy eseguiti dal generator;
+- test solo su directory temporanee, non sul Bridge reale.
+
+### Prossimo step consigliato
+
+0700) End-to-End MVP Smoke Scenario

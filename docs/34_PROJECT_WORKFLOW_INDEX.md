@@ -73,6 +73,7 @@ L'indice orienta il lavoro. Non sostituisce i documenti specifici, il Verificati
 | Salvare config publish nel Bridge dedicato | `docs/motor/0660_PUBLISH_CONFIG_GENERATOR_BRIDGE_OUTPUT_INTEGRATION.md` | `scripts/asf_publish_config_generator.py --write-bridge`, `examples/publish_config_generator/sample_bridge_output_input.json` | Quando serve un pacchetto audit generator con `LAST-Publish_Config.json` | Bridge `publish_config` separato da `pwsh_command`; `--validate-plan` usa solo Phase Plan |
 | Usare ASF Step Execution State Machine | `docs/motor/0670_STEP_EXECUTION_STATE_MACHINE.md` | `scripts/asf_step_state_machine.py`, `examples/state_machine/` | Quando serve sapere lo stato corrente di uno step, validare il prossimo evento o ripartire dopo recovery | Persistenza JSON sotto `tmp/`; fail-closed su transizioni incoerenti; non esegue Phase B/C o GitHub |
 | Salvare stato state machine nel Bridge | `docs/motor/0680_STATE_MACHINE_BRIDGE_INTEGRATION.md` | `scripts/asf_step_state_machine.py --write-bridge` | Quando serve recuperare lo stato tra ChatGPT, Codex e PowerShell | Bridge `state_machine`; `LAST-State.json`, `LAST-Event.json`, `LAST-Output_Compatto.md`; test solo su root temporanee |
+| Generare config publish coerenti con state machine | `docs/motor/0690_STATE_MACHINE_INTEGRATION_WITH_PUBLISH_CONFIG_GENERATOR.md` | `scripts/asf_publish_config_generator.py --require-state --update-state`, `examples/publish_config_generator/sample_state_machine_integration_input.json`, `examples/state_machine/sample_local_verified_state.json` | Quando serve produrre `LAST-Publish_Config.json` solo se lo step e' in stato coerente | Applica `publish_config_generated`; collega `LAST-Publish_Config.json` e `LAST-State.json`; nessuna Phase B/C |
 | Controllare Documentation Sync | `docs/21_DOCUMENTATION_SYNC.md` | Nessuno | Ogni step documentale o operativo | Valuta changelog, roadmap, decisions e documenti specifici |
 | Controllare Soft Protection Guardrails | `docs/24_SOFT_PROTECTION_GUARDRAILS.md` | `scripts/git/check_soft_guardrails.ps1` | Prima del commit o come controllo locale | Read-only; non installa hook |
 | Eseguire Workflow Health Check | `docs/35_WORKFLOW_HEALTH_CHECK.md` | `scripts/check_workflow_health.py` | Quando workflow docs, script o riferimenti centrali cambiano | Read-only; non sostituisce Verification Gate |
@@ -173,7 +174,7 @@ Regole operative:
 - `docs/0560-01-Report_OpenAI_API_Adapter_First_Authorized_Live_Run.md`: report sanitizzato STEP 0560, attualmente `BLOCKED_BY_RATE_LIMIT_OR_QUOTA` per HTTP 429 `insufficient_quota`.
 - `docs/0560-03-Diagnostic_OpenAI_Provider_HTTP_Error_And_Rate_Limit.md`: diagnostic pack provider-side STEP 0560-E, senza live call e senza evidence positiva inventata.
 - `docs/adr/0570_SUPERVISED_GATE_AUTONOMY.md`: decisione strategica per autonomia supervisionata a gate.
-- `docs/motor/0570_MVP_MOTOR_ROADMAP.md`: roadmap 0570-0690 per MVP Motore.
+- `docs/motor/0570_MVP_MOTOR_ROADMAP.md`: roadmap 0570-0700 per MVP Motore.
 - `docs/motor/0570_GATE_LOOP_SPEC.md`: stati formali del loop a gate, STOP condition ed evidence.
 - `docs/motor/0570_INDEPENDENT_REVIEW_NODE.md`: contratto input/output JSON e criteri PASS/FAIL/NEEDS_HUMAN del nodo review.
 - `docs/motor/0580_DRY_RUN_LOOP_RUNNER.md`: primo runner locale dry-run del loop supervisionato a gate.
@@ -188,6 +189,7 @@ Regole operative:
 - `docs/motor/0650_VERIFICATION_PROFILE_DRIVEN_PUBLISH_CONFIG_GENERATOR.md`: generatore prudente di bozze config publish guidate dal verification profile.
 - `docs/motor/0670_STEP_EXECUTION_STATE_MACHINE.md`: macchina a stati locale per modellare avanzamento step, recovery e transizioni fail-closed.
 - `docs/motor/0680_STATE_MACHINE_BRIDGE_INTEGRATION.md`: output Bridge della state machine con `LAST-State.json`, `LAST-Event.json`, output compatto e output completo.
+- `docs/motor/0690_STATE_MACHINE_INTEGRATION_WITH_PUBLISH_CONFIG_GENERATOR.md`: integrazione fail-closed tra generator e state machine, con riferimenti incrociati `LAST-Publish_Config.json` e `LAST-State.json`.
 
 ---
 
@@ -216,11 +218,11 @@ Regole operative:
 - `scripts/asf_openai_first_authorized_live_run.py`: wrapper STEP 0560 per un solo tentativo live autorizzato, sempre tramite adapter e con report/evidence sanitizzati.
 - `scripts/asf_dry_run_loop_runner.py`: runner locale STEP 0580/0610 che attraversa richiesta, piano, classifier reale, risk report, review e gate decision in dry-run.
 - `scripts/asf_publish_step.ps1`: runner STEP 0590/0640 per FASE A/B/C di pubblicazione step con comando corto, config JSON, Bridge output, flag espliciti e validazione opzionale del verification profile.
-- `scripts/asf_publish_config_generator.py`: generator STEP 0650 che produce config JSON/Markdown per il publish runner usando il selector 0630 senza eseguire azioni operative.
+- `scripts/asf_publish_config_generator.py`: generator STEP 0650/0660/0690 che produce config JSON/Markdown per il publish runner usando il selector 0630 e, opzionalmente, la state machine senza eseguire azioni operative.
 - `scripts/asf_risk_classifier.py`: classifier STEP 0600 per testo/JSON, livelli L0-L4 e gate policy strutturata.
 - `scripts/asf_gate_decision_report.py`: report STEP 0620 che produce Approval Packet JSON/Markdown/testo da evidence dry-run/risk.
 - `scripts/asf_verification_profile_selector.py`: selector STEP 0630 che raccomanda profili di verifica e costo test senza eseguire check.
-- `scripts/asf_step_state_machine.py`: state machine STEP 0670/0680 che valida eventi, persiste stato JSON, produce JSON/Markdown/testo e puo' scrivere output Bridge con `--write-bridge` senza eseguire publish.
+- `scripts/asf_step_state_machine.py`: state machine STEP 0670/0680/0690 che valida eventi, persiste stato JSON, produce JSON/Markdown/testo e puo' scrivere output Bridge con `--write-bridge` senza eseguire publish.
 
 Questi script non devono essere usati per automatizzare commit, push, PR o merge salvo `scripts/asf_publish_step.ps1`, che lo consente solo nelle fasi esplicite `-ApprovePublish` e `-ApproveMerge`.
 

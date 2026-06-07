@@ -266,6 +266,7 @@ examples/state_machine/sample_normal_flow_events.json
 examples/state_machine/sample_phase_c_failed_recovery.json
 examples/state_machine/sample_combined_recovery_step.json
 examples/state_machine/sample_invalid_transition_fail_closed.json
+examples/state_machine/sample_local_verified_state.json
 ```
 
 ---
@@ -302,3 +303,17 @@ Prossimo step consigliato:
 ```
 
 Motivo: dopo STEP 0680 lo stato e' modellato e persistente nel Bridge. Il passo successivo piu' utile e' far generare al Publish Config Generator riferimenti coerenti alla state machine, senza ancora automatizzare Phase B o Phase C.
+
+---
+
+## 15. Aggiornamento dopo STEP 0690
+
+Dopo STEP 0690 il Publish Config Generator puo' chiamare la state machine come libreria locale per applicare eventi ammessi.
+
+La transizione standard usata dal generator e':
+
+```text
+LOCAL_VERIFIED + publish_config_generated -> READY_TO_PUBLISH
+```
+
+La state machine resta non operativa: valida eventi e scrive stato/report, ma non avvia Phase B, Phase C, GitHub, commit, push, PR, merge o deploy.

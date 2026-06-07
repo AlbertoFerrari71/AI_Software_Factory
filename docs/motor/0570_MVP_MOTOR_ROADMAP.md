@@ -39,20 +39,21 @@ Le eccezioni ammesse sono solo correzioni bloccanti emerse dai test o dalla revi
 | 0670 | Step Execution State Machine | L2/L3 orchestration design locale | generator, runner, docs, tests | Stati e transizioni dello step loop espliciti, auditabili e fail-closed | pytest mirati, workflow health, verify gate | Automazione publish implicita, stati ambigui, ripresa senza gate umano |
 | 0680 | State Machine Bridge Integration | L2 output/audit trail locale | state machine, Bridge, docs, tests | Stato corrente e report state machine salvabili nel Bridge senza avviare publish | pytest mirati, workflow health, verify gate | Bridge reale richiesto dai test, stato implicito, recovery non dichiarata |
 | 0690 | State Machine Integration with Publish Config Generator | L2/L3 integration locale | generator, state machine, docs, tests | Config draft e stato iniziale coerenti senza avviare publish | pytest mirati, workflow health, verify gate | Generator che esegue runner, stato implicito, recovery non dichiarata |
+| 0700 | End-to-End MVP Smoke Scenario | L2/L3 smoke locale | generator, state machine, Bridge temporaneo, docs, tests | Un percorso locale end-to-end produce evidence senza pubblicare | pytest mirati, workflow health, verify gate | Smoke che maschera publish reale, Bridge reale richiesto |
 
 ---
 
 ## 4. Sequenza operativa prevista
 
 ```text
-0570 docs -> 0580 dry-run loop -> 0590 stable publish runner -> 0600 risk gate -> 0610 risk integration -> 0620 gate decision packet -> 0630 verification profiles -> 0640 selector integration with publish runner -> 0650 publish config generator -> 0660 bridge output integration -> 0670 state machine -> 0680 state bridge -> 0690 generator integration
+0570 docs -> 0580 dry-run loop -> 0590 stable publish runner -> 0600 risk gate -> 0610 risk integration -> 0620 gate decision packet -> 0630 verification profiles -> 0640 selector integration with publish runner -> 0650 publish config generator -> 0660 bridge output integration -> 0670 state machine -> 0680 state bridge -> 0690 generator integration -> 0700 end-to-end smoke
 ```
 
 Il criterio di maturita' minima non e' "il runner esiste". Il criterio e': un loop completo produce evidence leggibile, classifica rischio, esegue test disponibili, passa review indipendente e ferma correttamente il flusso quando un gate non passa.
 
 ---
 
-## 5. Ambiti ancora congelati dopo 0680
+## 5. Ambiti ancora congelati dopo 0690
 
 - Retry live OpenAI, salvo step separato e autorizzato da Alberto.
 - Nuove integrazioni MCP operative.
@@ -209,4 +210,24 @@ Il prossimo step consigliato e':
 
 ```text
 0690) State Machine Integration with Publish Config Generator
+```
+
+## 12. Stato dopo STEP 0690
+
+Lo STEP 0690 collega il Publish Config Generator alla state machine:
+
+```text
+docs/motor/0690_STATE_MACHINE_INTEGRATION_WITH_PUBLISH_CONFIG_GENERATOR.md
+```
+
+Il generator puo' leggere uno state file esistente, verificare `LOCAL_VERIFIED` o `READY_TO_PUBLISH`, applicare `publish_config_generated` con `--update-state` e scrivere riferimenti incrociati tra `LAST-Publish_Config.json` e `LAST-State.json`.
+
+Recovery e step combinati richiedono `--state-allow-recovery`; altrimenti il generator fallisce chiuso.
+
+Non esegue Phase B, Phase C, commit, push, PR, merge o deploy.
+
+Il prossimo step consigliato e':
+
+```text
+0700) End-to-End MVP Smoke Scenario
 ```

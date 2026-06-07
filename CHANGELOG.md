@@ -4,6 +4,35 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.69.0] - 2026-06-07
+
+### Added
+
+- STEP 0690 - State Machine Integration with Publish Config Generator.
+- Opzioni state machine in `scripts/asf_publish_config_generator.py`: `--state-file`, `--state-event`, `--state-bridge-root`, `--update-state`, `--require-state`, `--state-expected-current`, `--state-target-after`, `--write-state-bridge` e `--state-allow-recovery`.
+- Runbook `docs/motor/0690_STATE_MACHINE_INTEGRATION_WITH_PUBLISH_CONFIG_GENERATOR.md`.
+- Esempi `examples/publish_config_generator/sample_state_machine_integration_input.json` e `examples/state_machine/sample_local_verified_state.json`.
+- Test fail-closed per stato mancante, corrotto, incoerente, mismatch step, update evento e Bridge incrociato.
+
+### Changed
+
+- Il generator puo' leggere uno state file esistente e, se `--update-state` e' attivo, applicare `publish_config_generated` tramite `scripts/asf_step_state_machine.py`.
+- L'output Bridge del generator include riferimenti incrociati a `LAST-Publish_Config.json` e `LAST-State.json` quando l'integrazione e' attiva.
+- Workflow Health Check, README, roadmap, decision log e Project Workflow Index riconoscono lo STEP 0690.
+
+### Guardrails
+
+- Modalita' legacy invariata senza opzioni state machine.
+- Fail-closed se lo stato richiesto manca, e' corrotto, non e' ammesso o non puo' avanzare a `READY_TO_PUBLISH`.
+- Nessuna Phase B, Phase C, commit, push, PR, merge o deploy eseguiti dal generator.
+- Nessuna dipendenza esterna aggiunta.
+
+### Next
+
+- Prossimo step consigliato: `0700) End-to-End MVP Smoke Scenario`.
+
+---
+
 ## [0.68.0] - 2026-06-07
 
 ### Added

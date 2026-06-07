@@ -206,3 +206,18 @@ Prossimo step consigliato dopo 0680:
 ```
 
 Motivo: dopo STEP 0660 il generator lascia un pacchetto Bridge ordinato e riusabile, e dopo STEP 0680 lo stato step e' persistente nel Bridge. Il prossimo collo di bottiglia e' collegare i due componenti senza rendere automatica la pubblicazione.
+
+---
+
+## 11. Aggiornamento dopo STEP 0690
+
+Dopo STEP 0690, quando il generator viene usato con state machine e Bridge, `LAST-Output_Compatto.md` include anche:
+
+- state file usato;
+- stato prima e dopo evento;
+- evento applicato;
+- riferimento a `LAST-State.json`;
+- riferimento a `LAST-Publish_Config.json`;
+- prossima azione consigliata dalla state machine.
+
+Il Bridge `publish_config` resta separato dal Bridge `state_machine`.
