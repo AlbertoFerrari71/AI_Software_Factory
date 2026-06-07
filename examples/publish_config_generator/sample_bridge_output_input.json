@@ -1,0 +1,41 @@
+{
+  "allow_no_github_checks_reported": true,
+  "allow_profile_check_reduction": false,
+  "branch": "step-0660-publish-config-generator-bridge-output-integration",
+  "bridge_root": "D:\\FG-SAB Dropbox\\Alberto Ferrari\\ChatGPT_Bridge\\AI_Software_Factory\\pwsh_command",
+  "changed_files": [
+    "scripts/asf_publish_config_generator.py",
+    "tests/unit/test_asf_publish_config_generator.py",
+    "scripts/check_workflow_health.py"
+  ],
+  "checks_already_run": [],
+  "commit_message": "0660 integrate publish config generator bridge output",
+  "expected_files": [
+    "scripts/asf_publish_config_generator.py",
+    "tests/unit/test_asf_publish_config_generator.py",
+    "docs/motor/0660_PUBLISH_CONFIG_GENERATOR_BRIDGE_OUTPUT_INTEGRATION.md",
+    "docs/motor/0650_VERIFICATION_PROFILE_DRIVEN_PUBLISH_CONFIG_GENERATOR.md",
+    "examples/publish_config_generator/sample_bridge_output_input.json",
+    "scripts/check_workflow_health.py",
+    "README.md",
+    "CHANGELOG.md",
+    "docs/10_ROADMAP.md",
+    "docs/11_DECISIONS.md",
+    "docs/34_PROJECT_WORKFLOW_INDEX.md",
+    "docs/35_WORKFLOW_HEALTH_CHECK.md",
+    "docs/motor/0570_MVP_MOTOR_ROADMAP.md"
+  ],
+  "intent": [
+    "generate publish config bridge audit output"
+  ],
+  "log_max_count": 12,
+  "name": "Publish_Config_Generator_Bridge_Output_Integration",
+  "next_step": "0670) Step Execution State Machine",
+  "pr_body": "Implements STEP 0660. The generator writes a dedicated Bridge audit packet and keeps publish runner approvals separate.",
+  "pr_title": "0660 integrate publish config generator bridge output",
+  "provided_gates": [],
+  "repo_path": ".",
+  "risk_level": "L2",
+  "step": "0660",
+  "verification_phase": "local"
+}

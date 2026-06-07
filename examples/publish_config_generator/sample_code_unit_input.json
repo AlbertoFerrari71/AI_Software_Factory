@@ -1,0 +1,29 @@
+{
+  "allow_no_github_checks_reported": true,
+  "allow_profile_check_reduction": true,
+  "branch": "step-0650-code-unit-publish-config-generator",
+  "bridge_root": "D:\\FG-SAB Dropbox\\Alberto Ferrari\\ChatGPT_Bridge\\AI_Software_Factory\\pwsh_command",
+  "changed_files": [
+    "scripts/show_workflow_status.py",
+    "tests/unit/test_workflow_status_dashboard.py"
+  ],
+  "checks_already_run": [],
+  "commit_message": "0650 demonstrate code unit publish config input",
+  "expected_files": [
+    "scripts/show_workflow_status.py",
+    "tests/unit/test_workflow_status_dashboard.py"
+  ],
+  "intent": [
+    "local code update"
+  ],
+  "log_max_count": 12,
+  "name": "Publish_Config_Generator_Code_Unit",
+  "next_step": "0660) Publish Config Generator Bridge Output Integration",
+  "pr_body": "Example input for a scoped code-unit publish config draft.",
+  "pr_title": "0650 code-unit publish config generator example",
+  "provided_gates": [],
+  "repo_path": ".",
+  "risk_level": "L2",
+  "step": "0650",
+  "verification_phase": "local"
+}

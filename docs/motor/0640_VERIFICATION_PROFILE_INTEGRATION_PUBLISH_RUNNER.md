@@ -168,10 +168,35 @@ git status --short --untracked-files=all
 
 ---
 
-## 9. Prossimo step
+## 9. Stato dopo STEP 0650
+
+Lo STEP 0650 ha aggiunto un generator che produce bozze config compatibili con questo runner:
 
 ```text
-0650) Verification Profile Driven Publish Config Generator
+scripts/asf_publish_config_generator.py
+examples/publish_config_generator/
+docs/motor/0650_VERIFICATION_PROFILE_DRIVEN_PUBLISH_CONFIG_GENERATOR.md
 ```
 
-Motivo: ora il runner sa validare un profilo, ma la config resta scritta manualmente. Il prossimo miglioramento utile e' generare una bozza config coerente con rischio, file modificati e profilo raccomandato, mantenendo review umana e pubblicazione separata.
+Il runner resta l'unico componente operativo per Phase A/B/C. Il generator prepara la config, ma non esegue il runner e non sostituisce `-ApprovePublish` o `-ApproveMerge`.
+
+## 10. Prossimo step
+
+## 10. Stato dopo STEP 0660
+
+Lo STEP 0660 ha aggiunto un Bridge dedicato al generator:
+
+```text
+docs/motor/0660_PUBLISH_CONFIG_GENERATOR_BRIDGE_OUTPUT_INTEGRATION.md
+examples/publish_config_generator/sample_bridge_output_input.json
+```
+
+Il runner resta l'unico componente operativo per Phase A/B/C.
+
+`LAST-Publish_Config.json` del generator puo' essere usato come input del runner, ma non sostituisce review umana, `-ApprovePublish`, numero PR o `-ApproveMerge`.
+
+Il prossimo step consigliato e':
+
+```text
+0670) Step Execution State Machine
+```

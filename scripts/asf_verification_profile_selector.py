@@ -16,6 +16,7 @@ PROFILES = {"docs-only", "code-unit", "motor-core", "publish", "final-main", "hi
 
 MOTOR_CORE_FILES = {
     "scripts/asf_publish_step.ps1",
+    "scripts/asf_publish_config_generator.py",
     "scripts/asf_dry_run_loop_runner.py",
     "scripts/asf_risk_classifier.py",
     "scripts/asf_gate_decision_report.py",
@@ -25,6 +26,7 @@ MOTOR_CORE_FILES = {
 
 SCRIPT_TESTS = {
     "scripts/asf_publish_step.ps1": "python -m pytest tests/unit/test_asf_publish_step_runner.py -q",
+    "scripts/asf_publish_config_generator.py": "python -m pytest tests/unit/test_asf_publish_config_generator.py -q",
     "scripts/asf_dry_run_loop_runner.py": "python -m pytest tests/unit/test_asf_dry_run_loop_runner.py -q",
     "scripts/asf_risk_classifier.py": "python -m pytest tests/unit/test_asf_risk_classifier.py -q",
     "scripts/asf_gate_decision_report.py": "python -m pytest tests/unit/test_asf_gate_decision_report.py -q",
@@ -43,6 +45,8 @@ INDEXED_DOC_PATHS = {
     "docs/motor/0620_GATE_DECISION_REPORT_HUMAN_APPROVAL_PACKET.md",
     "docs/motor/0620_VERIFICATION_BALANCE_NOTES.md",
     "docs/motor/0630_VERIFICATION_PROFILE_SELECTOR_TEST_COST_POLICY.md",
+    "docs/motor/0650_VERIFICATION_PROFILE_DRIVEN_PUBLISH_CONFIG_GENERATOR.md",
+    "docs/motor/0660_PUBLISH_CONFIG_GENERATOR_BRIDGE_OUTPUT_INTEGRATION.md",
 }
 
 PUBLISH_INTENT_KEYWORDS = (

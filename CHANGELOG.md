@@ -4,6 +4,67 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.66.0] - 2026-06-07
+
+### Added
+
+- STEP 0660 - Publish Config Generator Bridge Output Integration.
+- Opzioni `--write-bridge`, `--validate-plan`, `--runner-bridge-root` e `--copy-compact-to-clipboard` in `scripts/asf_publish_config_generator.py`.
+- Bridge audit dedicato `publish_config` con file progressivi `step-II` e `LAST-Publish_Config.json`.
+- Runbook `docs/motor/0660_PUBLISH_CONFIG_GENERATOR_BRIDGE_OUTPUT_INTEGRATION.md`.
+- Esempio `examples/publish_config_generator/sample_bridge_output_input.json`.
+
+### Changed
+
+- `--out-dir` resta compatibile; il Bridge viene scritto solo con `--write-bridge`.
+- `--validate-plan` invoca solo `scripts/asf_publish_step.ps1 -Phase Plan` e rende non-zero il fallimento Plan.
+- Workflow Health Check riconosce doc, esempio e riferimenti 0660 senza usare Dropbox reale.
+- Aggiornati README, roadmap, decision log, Project Workflow Index e runbook 0650.
+
+### Guardrails
+
+- Il generator non esegue Phase B, Phase C, commit, push, PR, merge o deploy.
+- Phase B resta manuale con `-ApprovePublish`.
+- Phase C resta manuale con `-ApproveMerge`.
+- Nessuna dipendenza esterna aggiunta.
+
+### Next
+
+- Prossimo step consigliato: `0670) Step Execution State Machine`.
+
+---
+
+## [0.65.0] - 2026-06-07
+
+### Added
+
+- STEP 0650 - Verification Profile Driven Publish Config Generator.
+- Script `scripts/asf_publish_config_generator.py`.
+- Runbook `docs/motor/0650_VERIFICATION_PROFILE_DRIVEN_PUBLISH_CONFIG_GENERATOR.md`.
+- Esempi input in `examples/publish_config_generator/`.
+- Test `tests/unit/test_asf_publish_config_generator.py`.
+
+### Changed
+
+- Il selector 0630 considera `scripts/asf_publish_config_generator.py` come file `motor-core`.
+- Aggiornati README, roadmap, decision log, Project Workflow Index, Workflow Health Check e note 0620/0630/0640 con il generatore 0650.
+- Il prossimo step consigliato diventa `0660) Publish Config Generator Bridge Output Integration`.
+
+### Guardrails
+
+- Il generator produce solo JSON/Markdown e non esegue il publish runner.
+- Input essenziale mancante, selector fail-closed, L4, `high-risk` e `final-main` non producono config ordinaria.
+- Phase C resta robusta con full pytest, workflow health e verify gate.
+- Nessun commit, push, PR, merge o deploy eseguito da Codex durante lo STEP 0650.
+
+### Not included
+
+- Nessuna integrazione Bridge dedicata del generator.
+- Nessuna state machine di esecuzione step.
+- Nessuna pubblicazione automatica.
+
+---
+
 ## [0.64.0] - 2026-06-07
 
 ### Added

@@ -92,12 +92,15 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/motor/0620_VERIFICATION_BALANCE_NOTES.md",
         "docs/motor/0630_VERIFICATION_PROFILE_SELECTOR_TEST_COST_POLICY.md",
         "docs/motor/0640_VERIFICATION_PROFILE_INTEGRATION_PUBLISH_RUNNER.md",
+        "docs/motor/0650_VERIFICATION_PROFILE_DRIVEN_PUBLISH_CONFIG_GENERATOR.md",
+        "docs/motor/0660_PUBLISH_CONFIG_GENERATOR_BRIDGE_OUTPUT_INTEGRATION.md",
         "config/asf_project_profiles.json",
         "scripts/asf_openai_api_adapter.py",
         "scripts/asf_openai_controlled_live_execution_pack.py",
         "scripts/asf_openai_first_authorized_live_run.py",
         "scripts/asf_dry_run_loop_runner.py",
         "scripts/asf_publish_step.ps1",
+        "scripts/asf_publish_config_generator.py",
         "scripts/asf_risk_classifier.py",
         "scripts/asf_gate_decision_report.py",
         "scripts/asf_verification_profile_selector.py",
@@ -171,8 +174,16 @@ def check_files(root: Path) -> list[HealthIssue]:
         "examples/verification_profiles/sample_final_main.json",
         "examples/verification_profiles/sample_high_risk.json",
         "examples/verification_profiles/sample_ambiguous_fail_closed.json",
+        "examples/publish_config_generator/sample_docs_only_input.json",
+        "examples/publish_config_generator/sample_code_unit_input.json",
+        "examples/publish_config_generator/sample_motor_core_input.json",
+        "examples/publish_config_generator/sample_publish_runner_input.json",
+        "examples/publish_config_generator/sample_bridge_output_input.json",
+        "examples/publish_config_generator/sample_high_risk_fail_closed_input.json",
+        "examples/publish_config_generator/sample_missing_required_fields_fail_closed_input.json",
         "tests/unit/test_asf_verification_profile_selector.py",
         "tests/unit/test_asf_publish_step_runner.py",
+        "tests/unit/test_asf_publish_config_generator.py",
     ]
 
     issues: list[HealthIssue] = []
@@ -358,6 +369,22 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             (
                 "ASF Verification Profile Publish Runner Integration document",
                 ["docs/motor/0640_VERIFICATION_PROFILE_INTEGRATION_PUBLISH_RUNNER.md"],
+            ),
+            (
+                "ASF Publish Config Generator document",
+                ["docs/motor/0650_VERIFICATION_PROFILE_DRIVEN_PUBLISH_CONFIG_GENERATOR.md"],
+            ),
+            (
+                "ASF Publish Config Generator Bridge Output Integration document",
+                ["docs/motor/0660_PUBLISH_CONFIG_GENERATOR_BRIDGE_OUTPUT_INTEGRATION.md"],
+            ),
+            (
+                "ASF Publish Config Generator script",
+                ["scripts/asf_publish_config_generator.py"],
+            ),
+            (
+                "ASF Publish Config Generator examples",
+                ["examples/publish_config_generator/"],
             ),
             (
                 "artifact naming migration script",
@@ -577,6 +604,10 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                 "ASF Verification Profile Selector examples",
                 ["examples/verification_profiles/"],
             ),
+            (
+                "ASF Publish Config Generator examples",
+                ["examples/publish_config_generator/"],
+            ),
         ],
     )
 
@@ -667,6 +698,7 @@ def check_script_safety(root: Path) -> list[HealthIssue]:
         "scripts/asf_openai_controlled_live_execution_pack.py",
         "scripts/asf_dry_run_loop_runner.py",
         "scripts/asf_publish_step.ps1",
+        "scripts/asf_publish_config_generator.py",
         "scripts/asf_risk_classifier.py",
         "scripts/asf_gate_decision_report.py",
         "scripts/asf_verification_profile_selector.py",

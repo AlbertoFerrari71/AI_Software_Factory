@@ -94,8 +94,9 @@ Esempio:
 | 620 | Gate Decision Report and Human Approval Packet | Rendere esplicito il pacchetto di decisione umana usando risk report e review dry-run | Report gate, schema human approval, fixture PASS/FAIL/NEEDS_HUMAN | MVP Motore | Completato |
 | 630 | Verification Profile Selector + Test Cost Policy | Definire profili di verifica per ridurre ridondanze senza ridurre sicurezza | Selector CLI, matrice profili, policy costi test, esempi JSON e test | MVP Motore | Completato |
 | 640 | Verification Profile Integration with Publish Runner | Integrare il selector nel runner 0590 senza ridurre gate o safety | Uso profili in Phase B/C, dedup check prudente, fail-closed | MVP Motore | Completato |
-| 650 | Verification Profile Driven Publish Config Generator | Generare bozze config publish coerenti con profilo, rischio e file modificati | Config generator dry-run, esempi e test | MVP Motore | Da fare |
-| 660 | First Controlled Write Pilot | Provare una modifica minima e reversibile lasciata in working tree per review umana | Pilot write controllato, diff scoped, no commit/push/PR/merge | MVP Motore | Da fare |
+| 650 | Verification Profile Driven Publish Config Generator | Generare bozze config publish coerenti con profilo, rischio e file modificati | Config generator dry-run, esempi e test | MVP Motore | Completato |
+| 660 | Publish Config Generator Bridge Output Integration | Salvare output generator e riepiloghi in un flusso Bridge/audit dedicato senza pubblicare | Bridge output per config generator, audit trail, LAST config e test | MVP Motore | Completato |
+| 670 | Step Execution State Machine | Modellare stati, transizioni, stop condition e ripresa controllata del ciclo step | State machine locale, stati auditabili, nessuna pubblicazione automatica | MVP Motore | Da fare |
 
 ---
 
@@ -1326,8 +1327,8 @@ Correggere la rotta strategica di ASF da autonomia fire-and-forget ad autonomia 
 - 0620 - Gate Decision Report and Human Approval Packet;
 - 0630 - Verification Profile Selector + Test Cost Policy;
 - 0640 - Verification Profile Integration with Publish Runner;
-- 0650 - First End-to-End Dry Run;
-- 0660 - First Controlled Write Pilot.
+- 0650 - Verification Profile Driven Publish Config Generator;
+- 0660 - Publish Config Generator Bridge Output Integration.
 
 ### Prossimo step consigliato
 
@@ -1538,3 +1539,32 @@ Integrare il Verification Profile Selector dello STEP 0630 nel Publish Runner de
 ### Prossimo step consigliato
 
 0650) Verification Profile Driven Publish Config Generator
+
+---
+
+## 72. STEP 650 - Verification Profile Driven Publish Config Generator
+
+### Obiettivo
+
+Generare bozze config JSON per `scripts/asf_publish_step.ps1` usando il Verification Profile Selector, riducendo errori manuali senza eseguire pubblicazione.
+
+### Output realizzati
+
+- script `scripts/asf_publish_config_generator.py`;
+- documento `docs/motor/0650_VERIFICATION_PROFILE_DRIVEN_PUBLISH_CONFIG_GENERATOR.md`;
+- esempi input in `examples/publish_config_generator/`;
+- test automatici `tests/unit/test_asf_publish_config_generator.py`;
+- classificazione del generator come `motor-core` nel selector 0630;
+- integrazione in workflow health e Project Workflow Index.
+
+### Guardrail
+
+- generator locale, deterministico e standard-library only;
+- input essenziale mancante, selector fail-closed, L4, `high-risk` e `final-main` bloccano la config ordinaria;
+- Phase C resta completa con full pytest, workflow health e verify gate;
+- il generator non esegue il publish runner;
+- nessuna chiamata live, nessun secret, nessun commit, push, PR, merge o deploy.
+
+### Prossimo step consigliato
+
+0660) Publish Config Generator Bridge Output Integration

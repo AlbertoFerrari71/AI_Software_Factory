@@ -87,15 +87,40 @@ La riduzione resta prudente:
 - `allow_profile_check_reduction` default `false`;
 - Phase C resta robusta e non ridotta nello STEP 0640.
 
-## 7. Step successivo consigliato
+---
+
+## 7. Aggiornamento dopo STEP 0650
+
+Il generator 0650 produce bozze config publish usando il selector 0630 e i campi supportati dal runner 0640.
+
+La riduzione resta limitata alla preparazione della config:
+
+- i check Phase A sono scelti dal profilo e dai test mirati dedotti;
+- Phase C resta completa con full pytest, workflow health e verify gate;
+- input mancanti, selector fail-closed, `high-risk`, `final-main` e L4 non producono config ordinaria;
+- il generator non esegue il runner e non sostituisce approval umana.
+
+## 8. Step successivo consigliato
 
 ```text
-0650) Verification Profile Driven Publish Config Generator
+0660) Publish Config Generator Bridge Output Integration
 ```
 
 Deliverable proposto:
 
-- generare bozze config publish coerenti con selector, rischio e file modificati;
-- mantenere review umana prima di usare Phase B;
-- mantenere Phase C finale robusta;
-- evitare configurazioni ripetitive senza aggiungere publish automatico.
+- salvare output generator e riepiloghi in Bridge con audit trail dedicato;
+- mantenere separati config draft, review umana e publish runner;
+- evitare di introdurre una state machine operativa prima di aver chiuso l'evidenza del generator.
+
+---
+
+## 8. Aggiornamento dopo STEP 0660
+
+Il generator ora puo' scrivere un pacchetto Bridge dedicato sotto `publish_config`, incluso `LAST-Publish_Config.json`.
+
+La riduzione riguarda il copia/incolla e la recuperabilita' dell'input runner, non i gate:
+
+- Phase B resta manuale con `-ApprovePublish`;
+- Phase C resta manuale con `-ApproveMerge`;
+- `--validate-plan` esegue solo Phase Plan;
+- la state machine resta lo step successivo, non un comportamento implicito del generator.

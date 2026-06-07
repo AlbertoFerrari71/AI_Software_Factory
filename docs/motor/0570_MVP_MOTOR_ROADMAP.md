@@ -35,21 +35,22 @@ Le eccezioni ammesse sono solo correzioni bloccanti emerse dai test o dalla revi
 | 0630 | Definire Verification Profile Selector + Test Cost Policy | L2 documentazione/codice locale | `scripts/`, `docs/motor/`, `tests/`, `examples/` | Profili docs-only, code-unit, motor-core, publish, final-main e high-risk documentati e suggeribili senza publish | pytest mirati, workflow health, verify gate | Shortcut che riduce sicurezza su motor-core, publish, final-main o high-risk |
 | 0640 | Integrare Verification Profile Selector nel Publish Runner | L3 runner/Git automation human-gated | `scripts/asf_publish_step.ps1`, selector 0630, docs, tests | Runner usa profili per dedup prudente di check e mantiene Phase B/C human-gated | pytest runner/selector, workflow health, verify gate | Publish senza flag, Phase C saltata, riduzione check su motor-core/high-risk |
 | 0650 | Verification Profile Driven Publish Config Generator | L2/L3 config generation human-reviewed | `scripts/`, `examples/publish_step/`, docs, tests | Generatore produce bozze config publish coerenti con selector e scope, senza pubblicare | pytest mirati, workflow health, verify gate | Config che autorizza publish/merge, profilo ambiguo, Phase C indebolita |
-| 0660 | First Controlled Write Pilot su modifica minima e reversibile | L3 write controllato; L4 se deploy/costi/live/merge automatici | target pilota esplicito, runner, review, tests, docs result | Una modifica minima resta in working tree per review umana, senza commit/push/PR/merge automatico | test target, diff review, gate decision, status scoped | L4 richiesto, target non clean, scope ambiguo, rollback non chiaro, gate non PASS |
+| 0660 | Publish Config Generator Bridge Output Integration | L2 output/audit trail locale | generator 0650, Bridge, docs, tests | Output generator salvabili con audit trail dedicato senza eseguire publish | pytest mirati, workflow health, verify gate | Bridge fragile, output ambiguo, confusione tra config draft e publish approval |
+| 0670 | Step Execution State Machine | L2/L3 orchestration design locale | generator, runner, docs, tests | Stati e transizioni dello step loop espliciti, auditabili e fail-closed | pytest mirati, workflow health, verify gate | Automazione publish implicita, stati ambigui, ripresa senza gate umano |
 
 ---
 
 ## 4. Sequenza operativa prevista
 
 ```text
-0570 docs -> 0580 dry-run loop -> 0590 stable publish runner -> 0600 risk gate -> 0610 risk integration -> 0620 gate decision packet -> 0630 verification profiles -> 0640 selector integration with publish runner -> 0650 publish config generator -> 0660 controlled write pilot
+0570 docs -> 0580 dry-run loop -> 0590 stable publish runner -> 0600 risk gate -> 0610 risk integration -> 0620 gate decision packet -> 0630 verification profiles -> 0640 selector integration with publish runner -> 0650 publish config generator -> 0660 bridge output integration -> 0670 state machine
 ```
 
 Il criterio di maturita' minima non e' "il runner esiste". Il criterio e': un loop completo produce evidence leggibile, classifica rischio, esegue test disponibili, passa review indipendente e ferma correttamente il flusso quando un gate non passa.
 
 ---
 
-## 5. Ambiti congelati fino a 0640
+## 5. Ambiti ancora congelati dopo 0660
 
 - Retry live OpenAI, salvo step separato e autorizzato da Alberto.
 - Nuove integrazioni MCP operative.
@@ -127,4 +128,42 @@ Il prossimo step consigliato e':
 
 ```text
 0650) Verification Profile Driven Publish Config Generator
+```
+
+## 8. Stato dopo STEP 0650
+
+Lo STEP 0650 aggiunge un generator locale per bozze config publish:
+
+```text
+scripts/asf_publish_config_generator.py
+docs/motor/0650_VERIFICATION_PROFILE_DRIVEN_PUBLISH_CONFIG_GENERATOR.md
+examples/publish_config_generator/
+tests/unit/test_asf_publish_config_generator.py
+```
+
+Il generator usa il selector 0630, produce JSON/Markdown, deduce test mirati e blocca input mancanti, L4, high-risk, final-main e selector fail-closed. Non esegue il publish runner e non autorizza commit, push, PR, merge o deploy.
+
+Il prossimo step consigliato e':
+
+```text
+0670) Step Execution State Machine
+```
+
+## 9. Stato dopo STEP 0660
+
+Lo STEP 0660 aggiunge output Bridge dedicato al generator:
+
+```text
+docs/motor/0660_PUBLISH_CONFIG_GENERATOR_BRIDGE_OUTPUT_INTEGRATION.md
+examples/publish_config_generator/sample_bridge_output_input.json
+```
+
+Il generator puo' produrre artifact progressivi e `LAST-*` sotto `publish_config`, incluso `LAST-Publish_Config.json`.
+
+La validazione `--validate-plan` invoca solo `scripts/asf_publish_step.ps1 -Phase Plan`; Phase B e Phase C restano manuali e human-gated.
+
+Il prossimo step consigliato e':
+
+```text
+0670) Step Execution State Machine
 ```

@@ -46,6 +46,8 @@ The script `scripts/check_workflow_health.py` checks:
 - `docs/69_ASF_OPENAI_API_ADAPTER_CONTROLLED_LIVE_EXECUTION_PACK.md`, `scripts/asf_openai_controlled_live_execution_pack.py` and `templates/pwsh_command_pack/step_540_openai_controlled_live_execution_pack_template.ps1` are present and linked from the Project Workflow Index;
 - `docs/motor/0630_VERIFICATION_PROFILE_SELECTOR_TEST_COST_POLICY.md`, `scripts/asf_verification_profile_selector.py`, `tests/unit/test_asf_verification_profile_selector.py` and `examples/verification_profiles/` are present and linked from the Project Workflow Index;
 - `docs/motor/0640_VERIFICATION_PROFILE_INTEGRATION_PUBLISH_RUNNER.md`, `tests/unit/test_asf_publish_step_runner.py` and `examples/publish_step/0640_publish_config_*.example.json` are present and linked from the Project Workflow Index;
+- `docs/motor/0650_VERIFICATION_PROFILE_DRIVEN_PUBLISH_CONFIG_GENERATOR.md`, `scripts/asf_publish_config_generator.py`, `tests/unit/test_asf_publish_config_generator.py` and `examples/publish_config_generator/` are present and linked from the Project Workflow Index;
+- `docs/motor/0660_PUBLISH_CONFIG_GENERATOR_BRIDGE_OUTPUT_INTEGRATION.md` and `examples/publish_config_generator/sample_bridge_output_input.json` are present and linked from the Project Workflow Index;
 - operational scripts do not contain dangerous Git/GitHub command patterns.
 
 The covered areas include:
@@ -93,6 +95,8 @@ The covered areas include:
 - OpenAI Provider HTTP Error and Rate Limit Diagnostic;
 - ASF Verification Profile Selector;
 - ASF Verification Profile Integration with Publish Runner;
+- ASF Publish Config Generator;
+- ASF Publish Config Generator Bridge Output Integration;
 - Project Workflow Index.
 
 ---
