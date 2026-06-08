@@ -1,0 +1,25 @@
+{
+  "step": "0870",
+  "name": "Codex_Skills_First_Controlled_Write_Pilot",
+  "status": "controlled_write_completed_or_blocked",
+  "external_repo": "Codex_Skills",
+  "external_repo_path": "C:\\Users\\alberto.ferrari\\.agents\\skills",
+  "external_repo_branch": "main",
+  "external_repo_status_before": "clean",
+  "external_repo_status_after": "?? docs/asf_external_pilot/",
+  "external_repo_write_performed": true,
+  "external_repo_commit_performed": false,
+  "external_repo_push_performed": false,
+  "external_repo_pr_performed": false,
+  "external_repo_merge_performed": false,
+  "external_repo_deploy_performed": false,
+  "external_repo_tag_performed": false,
+  "skill_sync_performed": false,
+  "human_gate_required_for_next_step": true,
+  "created_or_modified_files": [
+    "docs/asf_external_pilot/0870_CONTROLLED_WRITE_PILOT.md"
+  ],
+  "rollback_plan": "docs/motor/0870_CODEX_SKILLS_ROLLBACK_PLAN.md",
+  "result_report": "docs/motor/0870_CODEX_SKILLS_CONTROLLED_WRITE_RESULT.md",
+  "next_step": "0880) Codex_Skills Controlled Write Review and Rollback/Commit Decision"
+}

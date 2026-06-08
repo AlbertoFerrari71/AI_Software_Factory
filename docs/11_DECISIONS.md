@@ -3718,3 +3718,43 @@ Il prossimo step consigliato e':
 ```text
 0870) Codex_Skills First Controlled Write Pilot
 ```
+
+---
+
+## DEC-101 - Codex_Skills first controlled write pilot local-only
+
+**Data:** 2026-06-08
+**Stato:** Accettata
+
+### Contesto
+
+Dopo lo STEP 0860, `Codex_Skills` aveva readiness positiva in read-only/dry-run:
+path accessibile, branch `main`, working tree pulito, remote coerente e human
+gate verso una prima modifica minima.
+
+### Decisione
+
+Lo STEP 0870 introduce il primo controlled write pilot esterno:
+
+- documento operativo 0870;
+- result report con branch/status/remote/status finale;
+- rollback plan manuale;
+- evidence manifest JSON;
+- test automatico dedicato;
+- micro-modifica documentale locale in
+  `docs/asf_external_pilot/0870_CONTROLLED_WRITE_PILOT.md`.
+
+Il write resta locale, non funzionale e non pubblicante. Codex non esegue
+commit, push, PR, merge, deploy, tag, sync skill o installazioni skill.
+
+### Conseguenze
+
+ASF ha dimostrato una micro-scrittura esterna controllata senza trasformarla in
+publish. La repo esterna resta con un file locale untracked fino alla review
+umana.
+
+Il prossimo step consigliato e':
+
+```text
+0880) Codex_Skills Controlled Write Review and Rollback/Commit Decision
+```

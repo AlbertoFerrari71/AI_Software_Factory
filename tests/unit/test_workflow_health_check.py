@@ -37,6 +37,15 @@ BRIDGE_OUTPUT_RETRY_DOC = (
     / "motor"
     / "0820_BRIDGE_OUTPUT_RETRY_FALLBACK_AND_LAST_VALIDATION.md"
 )
+CODEX_SKILLS_WRITE_DOC = (
+    ROOT / "docs" / "motor" / "0870_CODEX_SKILLS_FIRST_CONTROLLED_WRITE_PILOT.md"
+)
+CODEX_SKILLS_WRITE_RESULT = (
+    ROOT / "docs" / "motor" / "0870_CODEX_SKILLS_CONTROLLED_WRITE_RESULT.md"
+)
+CODEX_SKILLS_WRITE_ROLLBACK = (
+    ROOT / "docs" / "motor" / "0870_CODEX_SKILLS_ROLLBACK_PLAN.md"
+)
 
 
 def read(path: Path) -> str:
@@ -57,6 +66,9 @@ def test_workflow_health_check_files_exist() -> None:
     assert PWSH_PUBLISH_SKILL_SYNC_DOC.exists()
     assert PUBLISH_SCOPE_DISCOVERY_DOC.exists()
     assert BRIDGE_OUTPUT_RETRY_DOC.exists()
+    assert CODEX_SKILLS_WRITE_DOC.exists()
+    assert CODEX_SKILLS_WRITE_RESULT.exists()
+    assert CODEX_SKILLS_WRITE_ROLLBACK.exists()
 
 
 def test_workflow_health_check_script_runs_successfully() -> None:
@@ -315,6 +327,56 @@ def test_workflow_health_tracks_powershell_native_command_guardrail_hardening() 
 
     for fragment in native_fragments:
         assert fragment in native_doc
+
+
+def test_workflow_health_tracks_codex_skills_first_controlled_write_pilot() -> None:
+    script = read(SCRIPT)
+    doc = read(DOC)
+    index = read(INDEX)
+    write_doc = read(CODEX_SKILLS_WRITE_DOC)
+    result = read(CODEX_SKILLS_WRITE_RESULT)
+    rollback = read(CODEX_SKILLS_WRITE_ROLLBACK)
+
+    indexed_fragments = [
+        "docs/motor/0870_CODEX_SKILLS_FIRST_CONTROLLED_WRITE_PILOT.md",
+        "docs/motor/0870_CODEX_SKILLS_CONTROLLED_WRITE_RESULT.md",
+        "docs/motor/0870_CODEX_SKILLS_ROLLBACK_PLAN.md",
+        "examples/publish_runner/0870_codex_skills_controlled_write_evidence.example.json",
+        "local-only controlled write",
+        "rollback plan",
+        "human gate",
+        "external_repo_write_performed",
+        "external_repo_commit_performed=false",
+        "0880) Codex_Skills Controlled Write Review and Rollback/Commit Decision",
+    ]
+
+    for fragment in indexed_fragments:
+        assert fragment in script
+        assert fragment in doc
+        assert fragment in index
+
+    for fragment in [
+        "GO_FOR_LOCAL_CONTROLLED_WRITE",
+        "nessun commit/push/PR/merge",
+        "rollback plan",
+        "human gate",
+        "0880) Codex_Skills Controlled Write Review and Rollback/Commit Decision",
+    ]:
+        assert fragment in write_doc
+
+    for fragment in [
+        "Write eseguito: `si`",
+        "Write bloccato: `no`",
+        "nessun commit/push/PR/merge",
+    ]:
+        assert fragment in result
+
+    for fragment in [
+        "Remove-Item -Path",
+        "solo dopo review umana",
+        "Non usare comandi di cleanup ampio",
+    ]:
+        assert fragment in rollback
 
 
 def test_workflow_health_tracks_powershell_publish_skill_sync() -> None:

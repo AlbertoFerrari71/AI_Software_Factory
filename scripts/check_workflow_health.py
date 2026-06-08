@@ -118,6 +118,9 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/motor/0860_CODEX_SKILLS_READINESS_REPORT.md",
         "docs/motor/0860_CODEX_SKILLS_CHANGED_FILES_PREVIEW.md",
         "docs/motor/0860_CODEX_SKILLS_HUMAN_APPROVAL_GATE.md",
+        "docs/motor/0870_CODEX_SKILLS_FIRST_CONTROLLED_WRITE_PILOT.md",
+        "docs/motor/0870_CODEX_SKILLS_CONTROLLED_WRITE_RESULT.md",
+        "docs/motor/0870_CODEX_SKILLS_ROLLBACK_PLAN.md",
         "config/asf_project_profiles.json",
         "scripts/asf_openai_api_adapter.py",
         "scripts/asf_openai_controlled_live_execution_pack.py",
@@ -192,6 +195,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "examples/publish_runner/0850_external_workflow_pilot_plan.example.json",
         "examples/publish_runner/0860_codex_skills_external_dry_run_plan.example.json",
         "examples/publish_runner/0860_codex_skills_dry_run_evidence_manifest.example.json",
+        "examples/publish_runner/0870_codex_skills_controlled_write_evidence.example.json",
         "examples/risk_classifier/sample_l0_docs_only.json",
         "examples/risk_classifier/sample_l2_code_change.json",
         "examples/risk_classifier/sample_l3_publish.json",
@@ -613,6 +617,21 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                 ],
             ),
             (
+                "ASF Codex_Skills First Controlled Write Pilot pointers",
+                [
+                    "docs/motor/0870_CODEX_SKILLS_FIRST_CONTROLLED_WRITE_PILOT.md",
+                    "docs/motor/0870_CODEX_SKILLS_CONTROLLED_WRITE_RESULT.md",
+                    "docs/motor/0870_CODEX_SKILLS_ROLLBACK_PLAN.md",
+                    "examples/publish_runner/0870_codex_skills_controlled_write_evidence.example.json",
+                    "local-only controlled write",
+                    "rollback plan",
+                    "human gate",
+                    "external_repo_write_performed",
+                    "external_repo_commit_performed=false",
+                    "0880) Codex_Skills Controlled Write Review and Rollback/Commit Decision",
+                ],
+            ),
+            (
                 "ASF State Machine Bridge Integration pointers",
                 ["LAST-State.json", "LAST-Output_Compatto.md", "state_machine"],
             ),
@@ -994,6 +1013,10 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             (
                 "ASF Codex_Skills External Workflow Dry-Run Pilot evidence example",
                 ["examples/publish_runner/0860_codex_skills_dry_run_evidence_manifest.example.json"],
+            ),
+            (
+                "ASF Codex_Skills First Controlled Write Pilot evidence example",
+                ["examples/publish_runner/0870_codex_skills_controlled_write_evidence.example.json"],
             ),
             (
                 "ASF Risk Classifier examples",

@@ -1381,6 +1381,10 @@ evidence manifest come input del gate umano. Il futuro 0870 puo' proporre una
 modifica minima solo dopo review: il cookbook non autorizza scritture esterne,
 sync skill, commit, push, PR, merge o deploy automatici.
 
+Dopo STEP 0870, il write esterno ammesso resta solo locale, documentale e
+non committato. Il comando di rollback va eseguito solo dopo review umana; il
+prossimo step 0880 deve decidere rollback o eventuale pubblicazione separata.
+
 ### Comandi
 
 PREPARE CONFIG, bozza scope da review:
@@ -1458,7 +1462,7 @@ Evitare in particolare:
 
 I warning LF/CRLF non sono bloccanti se test, verify, health check e `git --no-pager diff --check` passano. DOCX resta best-effort; il Markdown e' l'output principale. Se DOCX fallisce dopo gate finali passati, lo stato e' `COMPLETATO CON WARNING NON BLOCCANTE`, non `BLOCCATO`.
 
-Documenti: `docs/motor/0590_STABLE_POWERSHELL_PUBLISH_RUNNER.md`, `docs/motor/0805_POWERSHELL_PUBLISH_SKILL_SYNC_WITH_PROVEN_RUNNER_FLOW.md`, `docs/motor/0810_PUBLISH_RUNNER_SCOPE_DISCOVERY_RECOVERY_UX_AND_NO_FALSE_COMPLETED_GUARD.md`, `docs/motor/0830_MVP_REAL_STEP_PILOT_4_SLIGHTLY_MORE_OPERATIONAL.md`, `docs/motor/0840_RUNNER_HOOK_EVIDENCE_MANIFEST_POST_PUBLISH_PACK.md`, `docs/motor/0850_FIRST_REAL_EXTERNAL_WORKFLOW_PILOT.md`, `docs/motor/0860_CODEX_SKILLS_EXTERNAL_WORKFLOW_DRY_RUN_PILOT.md`.
+Documenti: `docs/motor/0590_STABLE_POWERSHELL_PUBLISH_RUNNER.md`, `docs/motor/0805_POWERSHELL_PUBLISH_SKILL_SYNC_WITH_PROVEN_RUNNER_FLOW.md`, `docs/motor/0810_PUBLISH_RUNNER_SCOPE_DISCOVERY_RECOVERY_UX_AND_NO_FALSE_COMPLETED_GUARD.md`, `docs/motor/0830_MVP_REAL_STEP_PILOT_4_SLIGHTLY_MORE_OPERATIONAL.md`, `docs/motor/0840_RUNNER_HOOK_EVIDENCE_MANIFEST_POST_PUBLISH_PACK.md`, `docs/motor/0850_FIRST_REAL_EXTERNAL_WORKFLOW_PILOT.md`, `docs/motor/0860_CODEX_SKILLS_EXTERNAL_WORKFLOW_DRY_RUN_PILOT.md`, `docs/motor/0870_CODEX_SKILLS_FIRST_CONTROLLED_WRITE_PILOT.md`.
 
 ---
 
