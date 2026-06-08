@@ -4,6 +4,36 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.81.0] - 2026-06-08
+
+### Added
+
+- STEP 0810 - Publish Runner Scope Discovery, Recovery UX and No-False-Completed Guard.
+- Phase `PrepareConfig` in `scripts/asf_publish_step.ps1` per generare una bozza config JSON da changed files reali.
+- Recovery report e suggested config per blocchi out-of-scope.
+- Documento `docs/motor/0810_PUBLISH_RUNNER_SCOPE_DISCOVERY_RECOVERY_UX_AND_NO_FALSE_COMPLETED_GUARD.md`.
+- Test `tests/unit/test_asf_publish_step_scope_discovery.py`.
+
+### Changed
+
+- Scope check del publish runner basato su stdout-only `git diff --name-only`, `git diff --cached --name-only` e `git ls-files --others --exclude-standard`.
+- Template/skill PowerShell aggiornati con PrepareConfig, review umana dello scope, recovery report e DOCX/accessori best-effort.
+- Report Bridge del runner aggiornato per distinguere `COMPLETATO`, `BLOCCATO` e `COMPLETATO CON WARNING NON BLOCCANTE`.
+
+### Guardrails
+
+- Out-of-scope resta bloccante.
+- Suggested config non pubblica automaticamente.
+- Warning LF/CRLF non sono trattati come path.
+- DOCX/accessori non invalidano un publish gia' verificato dai gate finali.
+- Nessuna Phase B, Phase C, commit, push, PR, merge o deploy eseguiti da Codex.
+
+### Next
+
+- Prossimo step consigliato: `0820) Bridge Output Consistency and LAST Validation`.
+
+---
+
 ## [0.80.5] - 2026-06-08
 
 ### Added

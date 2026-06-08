@@ -1354,13 +1354,19 @@ Non scrivere "chiuso" se mancano merge, pull `main` o verifiche finali.
 
 Quando uno step ASF e' pronto per verifica locale o pubblicazione presidiata e si vuole evitare un mega-blocco PowerShell copiato in chat.
 
-Per pubblicazioni ASF, il comando raccomandato dopo STEP 0805 e':
+Per pubblicazioni ASF, il comando raccomandato dopo STEP 0810 e':
 
 ```text
-config JSON esplicito -> scripts/asf_publish_step.ps1 -> Phase B -> recupero PR -> Phase C -> verifiche finali
+PrepareConfig/scope discovery -> review umana scope -> config JSON esplicito -> scripts/asf_publish_step.ps1 -> Phase B -> recupero PR -> Phase C -> verifiche finali
 ```
 
 ### Comandi
+
+PREPARE CONFIG, bozza scope da review:
+
+```powershell
+pwsh -NoProfile -ExecutionPolicy Bypass -File scripts\asf_publish_step.ps1 -Phase PrepareConfig -StepNumber 0810 -StepName "Name" -BranchName "step-0810-name" -CommitMessage "0810 name" -PrTitle "0810 name" -NextStep "0820) Bridge Output Consistency and LAST Validation"
+```
 
 FASE A, verifica locale:
 
@@ -1406,13 +1412,13 @@ Get-Content -Path "D:\FG-SAB Dropbox\Alberto Ferrari\ChatGPT_Bridge\AI_Software_
 
 ### Esito atteso
 
-Il runner usa config JSON, comandi `argv`, scope check su `expected_files`, output Bridge numerati e `LAST-*` di compatibilita', gate espliciti per publish e merge, e blocco fail-closed se il PR number manca o non e' numerico.
+Il runner usa config JSON, comandi `argv`, scope discovery stdout-only, scope check su `expected_files`, output Bridge numerati e `LAST-*` di compatibilita', gate espliciti per publish e merge, e blocco fail-closed se il PR number manca o non e' numerico.
 
 Il config JSON deve dichiarare almeno `step`, `name`, `repo_path`, `bridge_root`, `branch`, `commit_message`, `pr_title`, `pr_body`, `next_step`, `expected_files`, `changed_files`, `verification_profile`, `risk_level`, `verification_phase`, `profile_selector_expected_profile`, `intent`, `provided_gates`, `phase_a_checks`, `phase_c_checks`, `allow_no_github_checks_reported` e `log_max_count`.
 
 ### Se qualcosa va storto
 
-Leggere `NNNN-Output_Completo_<nome>.txt` nel Bridge e correggere config, scope o check falliti. Non aggirare `-ApprovePublish` o `-ApproveMerge`.
+Leggere `NNNN-Output_Completo_<nome>.txt` nel Bridge e correggere config, scope o check falliti. Se il runner segnala out-of-scope, leggere recovery report e suggested config; aggiungere file allo scope solo dopo review umana. Non aggirare `-ApprovePublish` o `-ApproveMerge`.
 
 ### Cosa non fare
 
@@ -1423,14 +1429,15 @@ Evitare in particolare:
 - mega-wrapper PowerShell che tenta di dedurre tutto;
 - parsing fragile di `git status --short` per determinare i file;
 - cattura `2>&1` di comandi Git usata come lista file, perche' puo' includere warning LF/CRLF;
+- trattamento dei warning LF/CRLF come file fuori scope;
 - introspezione `Get-Command -Path` o AST parsing non necessario;
 - stampa di `COMPLETATO` prima dei gate finali;
 - `Set-Clipboard -Path`;
-- DOCX/Word COM come dipendenza bloccante.
+- DOCX/Word COM o altri output accessori come dipendenza bloccante.
 
-I warning LF/CRLF non sono bloccanti se test, verify, health check e `git --no-pager diff --check` passano. DOCX resta best-effort; il Markdown e' l'output principale.
+I warning LF/CRLF non sono bloccanti se test, verify, health check e `git --no-pager diff --check` passano. DOCX resta best-effort; il Markdown e' l'output principale. Se DOCX fallisce dopo gate finali passati, lo stato e' `COMPLETATO CON WARNING NON BLOCCANTE`, non `BLOCCATO`.
 
-Documenti: `docs/motor/0590_STABLE_POWERSHELL_PUBLISH_RUNNER.md`, `docs/motor/0805_POWERSHELL_PUBLISH_SKILL_SYNC_WITH_PROVEN_RUNNER_FLOW.md`.
+Documenti: `docs/motor/0590_STABLE_POWERSHELL_PUBLISH_RUNNER.md`, `docs/motor/0805_POWERSHELL_PUBLISH_SKILL_SYNC_WITH_PROVEN_RUNNER_FLOW.md`, `docs/motor/0810_PUBLISH_RUNNER_SCOPE_DISCOVERY_RECOVERY_UX_AND_NO_FALSE_COMPLETED_GUARD.md`.
 
 ---
 

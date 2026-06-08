@@ -38,6 +38,9 @@ def test_asf_publish_flow_documents_config_json_and_runner() -> None:
     combined = combined_template_text()
 
     required_fragments = [
+        "PrepareConfig",
+        "scope discovery",
+        "human review",
         "config JSON esplicito",
         "explicit config JSON",
         "scripts/asf_publish_step.ps1",
@@ -52,6 +55,24 @@ def test_asf_publish_flow_documents_config_json_and_runner() -> None:
         "-ApproveMerge",
     ]
     for fragment in required_fragments:
+        assert fragment in combined
+
+
+def test_asf_publish_flow_documents_prepare_config_and_recovery_scope_review() -> None:
+    combined = combined_template_text()
+
+    for fragment in [
+        "scripts/asf_publish_step.ps1 -Phase PrepareConfig",
+        "human review of `expected_files` and `changed_files`",
+        "recovery report",
+        "suggested config",
+        "add files to scope only after human review",
+        "do not approve publication",
+        "do not force scope automatically",
+        "LF/CRLF warnings are not out-of-scope files",
+        "DOCX/accessory outputs are best-effort",
+        "must not invalidate a publish already verified",
+    ]:
         assert fragment in combined
 
 

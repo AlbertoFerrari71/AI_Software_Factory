@@ -25,6 +25,12 @@ PWSH_PUBLISH_SKILL_SYNC_DOC = (
     / "motor"
     / "0805_POWERSHELL_PUBLISH_SKILL_SYNC_WITH_PROVEN_RUNNER_FLOW.md"
 )
+PUBLISH_SCOPE_DISCOVERY_DOC = (
+    ROOT
+    / "docs"
+    / "motor"
+    / "0810_PUBLISH_RUNNER_SCOPE_DISCOVERY_RECOVERY_UX_AND_NO_FALSE_COMPLETED_GUARD.md"
+)
 
 
 def read(path: Path) -> str:
@@ -43,6 +49,7 @@ def test_workflow_health_check_files_exist() -> None:
     assert POST_MVP_ROADMAP_DOC.exists()
     assert PWSH_NATIVE_GUARDRAILS_DOC.exists()
     assert PWSH_PUBLISH_SKILL_SYNC_DOC.exists()
+    assert PUBLISH_SCOPE_DISCOVERY_DOC.exists()
 
 
 def test_workflow_health_check_script_runs_successfully() -> None:
@@ -339,6 +346,47 @@ def test_workflow_health_tracks_powershell_publish_skill_sync() -> None:
 
     for fragment in sync_fragments:
         assert fragment in sync_doc
+
+
+def test_workflow_health_tracks_publish_runner_scope_discovery_recovery_ux() -> None:
+    script = read(SCRIPT)
+    doc = read(DOC)
+    index = read(INDEX)
+    scope_doc = read(PUBLISH_SCOPE_DISCOVERY_DOC)
+
+    indexed_fragments = [
+        "docs/motor/0810_PUBLISH_RUNNER_SCOPE_DISCOVERY_RECOVERY_UX_AND_NO_FALSE_COMPLETED_GUARD.md",
+        "PrepareConfig",
+        "Get-RepositoryChangedFiles",
+        "Recovery_Out_Of_Scope",
+        "COMPLETATO CON WARNING NON BLOCCANTE",
+        "DOCX",
+        "best-effort",
+        "0820) Bridge Output Consistency and LAST Validation",
+    ]
+
+    for fragment in indexed_fragments:
+        assert fragment in script
+        assert fragment in doc
+        assert fragment in index
+
+    scope_fragments = [
+        "0800",
+        "0805",
+        "expected_files",
+        "changed_files",
+        "fail-closed",
+        "git --no-pager diff --name-only",
+        "git --no-pager diff --cached --name-only",
+        "git ls-files --others --exclude-standard",
+        "warning LF/CRLF",
+        "DOCX",
+        "best-effort",
+        "COMPLETATO CON WARNING NON BLOCCANTE",
+    ]
+
+    for fragment in scope_fragments:
+        assert fragment in scope_doc
 
 
 def test_workflow_health_tracks_runner_hook_evidence_manifest_integration() -> None:

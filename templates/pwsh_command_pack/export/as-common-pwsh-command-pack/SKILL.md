@@ -204,18 +204,19 @@ Do not push `main` directly. Create a publish branch from local `main`, push tha
 ## ASF Publish Runner Flow
 
 For ASF step publication command packs, default to the proven runner flow from
-STEP 0790 and STEP 0800:
+STEP 0790, STEP 0800, and STEP 0810:
 
-1. create an explicit config JSON in the Bridge;
-2. call `scripts/asf_publish_step.ps1` with `-Config`;
-3. run Phase B with `-ApprovePublish`;
-4. recover the PR number with `gh pr list --head $BranchName --json number --jq ".[0].number"`;
-5. stop if `$PrNumber` is empty;
-6. stop if `$PrNumber` is not numeric;
-7. run Phase C with `-PrNumber $PrNumber -ApproveMerge`;
-8. run final checks;
-9. keep the runner Bridge output numbered and `LAST-*` compatibility files;
-10. copy `LAST-Output_Compatto.md` with `Get-Content -Path <file> -Raw | Set-Clipboard`.
+1. run `scripts/asf_publish_step.ps1 -Phase PrepareConfig` for scope discovery, or use an equivalent reviewed config draft;
+2. perform human review of `expected_files` and `changed_files`;
+3. call `scripts/asf_publish_step.ps1` with the reviewed config JSON and `-Config`;
+4. run Phase B with `-ApprovePublish`;
+5. recover the PR number with `gh pr list --head $BranchName --json number --jq ".[0].number"`;
+6. stop if `$PrNumber` is empty;
+7. stop if `$PrNumber` is not numeric;
+8. run Phase C with `-PrNumber $PrNumber -ApproveMerge`;
+9. run final checks;
+10. keep the runner Bridge output numbered and `LAST-*` compatibility files;
+11. copy `LAST-Output_Compatto.md` with `Get-Content -Path <file> -Raw | Set-Clipboard`.
 
 Use this flow only when Alberto has explicitly authorized publication of an ASF
 step after local review/intake. Do not use it for clean Codex prompts,
@@ -248,8 +249,12 @@ allow_no_github_checks_reported
 log_max_count
 ```
 
-`expected_files` and `changed_files` are explicit scope declarations. Do not
-recover scope by parsing Git output when the expected scope is already known.
+`expected_files` and `changed_files` are explicit scope declarations.
+`PrepareConfig` and scope discovery can propose them, but do not approve publication.
+If the runner reports out-of-scope changes, stop, read the recovery
+report or suggested config, and add files to scope only after human review. Do
+not recover scope by parsing Git output when the expected scope is already
+known. Do not infer scope by parsing git status --short.
 
 Phase B publishes branch/PR after local gates. Phase C merges and runs final
 verification after a valid PR number is available. Do not run Phase C without a
@@ -264,12 +269,16 @@ Avoid these ASF publish anti-patterns:
 - mega-wrapper PowerShell that tries to infer everything;
 - fragile parsing of `git status --short` to determine publish scope;
 - using Git `2>&1` output as a file list, because LF/CRLF warnings can pollute it;
+- treating LF/CRLF warnings as out-of-scope files when tests, workflow health,
+  verify gate, and `git --no-pager diff --check` pass;
 - `Get-Command -Path` introspection on `.ps1` scripts;
 - AST parsing to infer runner parameters, except for exceptional diagnostics;
 - casual scope expansion;
 - printing `COMPLETATO` before final gates pass;
 - `Set-Clipboard -Path`;
-- blocking publication only because Word COM or DOCX generation failed.
+- blocking publication only because Word COM or DOCX generation failed;
+- making a verified publish look failed only because a DOCX/accessory output
+  failed after the final gates.
 
 ## LF/CRLF
 
