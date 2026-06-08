@@ -4,6 +4,30 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.79.0] - 2026-06-08
+
+### Added
+
+- STEP 0790 - Post-MVP Roadmap and Hardening Plan.
+- Documento `docs/motor/0790_POST_MVP_ROADMAP_AND_HARDENING_PLAN.md` con stato post-MVP, warning residui, recovery lessons, criteri pilot, criteri automazione e roadmap 0800-0860.
+
+### Changed
+
+- README, roadmap, decision log, Project Workflow Index, Workflow Health Check e documenti motore riconoscono lo STEP 0790.
+- La decisione post-MVP e' `HARDENING FIRST`: consolidare PowerShell, recovery, Bridge/evidence e manifest post-publish prima di aumentare l'autonomia.
+
+### Guardrails
+
+- Nessuna nuova automazione introdotta.
+- Nessuna modifica al publish runner.
+- Nessuna Phase B, Phase C, commit, push, PR, merge o deploy eseguiti da Codex.
+
+### Next
+
+- Prossimo step consigliato: `0800) PowerShell Native Command Guardrail Hardening`.
+
+---
+
 ## [0.78.0] - 2026-06-07
 
 ### Added

@@ -290,3 +290,23 @@ human-gated successiva.
 Motivo: dopo tre pilot reali e l'integrazione hook/manifest, il valore maggiore
 e' consolidare warning, recovery drill, standard di evidence e criteri per
 rendere il flusso ordinario senza aggiungere automazione pericolosa.
+
+## 17.1 Aggiornamento dopo STEP 0790
+
+Lo STEP 0790 ha consolidato la fase successiva in:
+
+```text
+docs/motor/0790_POST_MVP_ROADMAP_AND_HARDENING_PLAN.md
+```
+
+Decisione post-MVP:
+
+```text
+POST-MVP DECISION: HARDENING FIRST
+```
+
+Il prossimo step consigliato dopo la pianificazione post-MVP e':
+
+```text
+0800) PowerShell Native Command Guardrail Hardening
+```

@@ -105,6 +105,8 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/motor/0750_STATE_MACHINE_PUBLISH_RUNNER_EVENT_HOOKS.md",
         "docs/motor/0760_MVP_REAL_STEP_PILOT_2_WITH_STATE_HOOKS.md",
         "docs/motor/0770_RUNNER_HOOK_EVIDENCE_MANIFEST_INTEGRATION.md",
+        "docs/motor/0780_MVP_REAL_STEP_PILOT_3_WITH_MANIFEST_HOOKS.md",
+        "docs/motor/0790_POST_MVP_ROADMAP_AND_HARDENING_PLAN.md",
         "config/asf_project_profiles.json",
         "scripts/asf_openai_api_adapter.py",
         "scripts/asf_openai_controlled_live_execution_pack.py",
@@ -460,6 +462,10 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                 ["docs/motor/0780_MVP_REAL_STEP_PILOT_3_WITH_MANIFEST_HOOKS.md"],
             ),
             (
+                "ASF Post-MVP Roadmap and Hardening Plan document",
+                ["docs/motor/0790_POST_MVP_ROADMAP_AND_HARDENING_PLAN.md"],
+            ),
+            (
                 "ASF State Machine Bridge Integration pointers",
                 ["LAST-State.json", "LAST-Output_Compatto.md", "state_machine"],
             ),
@@ -549,6 +555,15 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                     "--include-runner-hooks",
                     "--expected-final-state",
                     "0790) Post-MVP Roadmap and Hardening Plan",
+                ],
+            ),
+            (
+                "ASF Post-MVP Roadmap and Hardening Plan pointers",
+                [
+                    "POST-MVP DECISION: HARDENING FIRST",
+                    "PowerShell Native Command Guardrail Hardening",
+                    "Bridge Output Consistency and LAST Validation",
+                    "0800) PowerShell Native Command Guardrail Hardening",
                 ],
             ),
             (

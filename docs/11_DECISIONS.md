@@ -2423,6 +2423,64 @@ la pubblicazione resta human-gated e fuori da Codex.
 
 ---
 
+## DEC-092 - Post-MVP Hardening prima di nuova automazione
+
+**Data:** 2026-06-08
+**Stato:** Accettata
+
+### Contesto
+
+Dopo STEP 0730 il Motore ASF MVP e' stato chiuso come `GO WITH WARNINGS`.
+Dopo gli STEP 0740, 0760 e 0780 sono stati eseguiti tre pilot reali piccoli,
+con runner, state machine, generator, manifest e Bridge collegati in modo piu'
+significativo.
+
+I recovery recenti hanno pero' evidenziato frizioni operative: PowerShell non
+ferma automaticamente i comandi nativi con `$ErrorActionPreference = "Stop"`,
+gli exit code devono essere controllati, gli argomenti vuoti nei wrapper sono
+pericolosi e `COMPLETATO` non deve essere stampato prima dei gate finali.
+
+### Decisione
+
+Lo STEP 0790 introduce
+`docs/motor/0790_POST_MVP_ROADMAP_AND_HARDENING_PLAN.md`.
+
+La fase post-MVP viene orientata a:
+
+- hardening PowerShell e command safety;
+- recovery UX del publish runner;
+- consistenza Bridge e validazione `LAST-*`;
+- integrazione post-publish tra state machine, runner hooks e manifest;
+- tuning dei verification profile;
+- pilot reali piu' operativi solo dopo i guardrail principali.
+
+La decisione sintetica e':
+
+```text
+POST-MVP DECISION: HARDENING FIRST
+```
+
+### Motivazione
+
+Il Motore ASF e' utilizzabile come baseline locale human-gated, ma non e'
+ancora pronto per un modello "fire-and-forget". Prima di aumentare autonomia o
+ampiezza dei pilot, serve rendere fail-closed la parte piu' fragile emersa nei
+recovery: wrapper PowerShell, comandi nativi, exit code, output Bridge e
+riconciliazione delle evidence.
+
+### Conseguenze
+
+- Il MVP resta `GO WITH WARNINGS`.
+- Publish, merge e deploy restano human-gated.
+- Gli hook e il manifest migliorano audit trail, ma non sostituiscono review.
+- La roadmap proposta e' 0800-0860, con primo passo:
+
+```text
+0800) PowerShell Native Command Guardrail Hardening
+```
+
+---
+
 ## DEC-091 - MVP Real Step Pilot 3 con Manifest Hooks
 
 **Data:** 2026-06-07

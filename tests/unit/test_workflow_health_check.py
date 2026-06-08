@@ -15,6 +15,7 @@ HOOK_DOC = ROOT / "docs" / "motor" / "0750_STATE_MACHINE_PUBLISH_RUNNER_EVENT_HO
 HOOK_PILOT_DOC = ROOT / "docs" / "motor" / "0760_MVP_REAL_STEP_PILOT_2_WITH_STATE_HOOKS.md"
 RUNNER_HOOK_MANIFEST_DOC = ROOT / "docs" / "motor" / "0770_RUNNER_HOOK_EVIDENCE_MANIFEST_INTEGRATION.md"
 MANIFEST_HOOKS_PILOT_DOC = ROOT / "docs" / "motor" / "0780_MVP_REAL_STEP_PILOT_3_WITH_MANIFEST_HOOKS.md"
+POST_MVP_ROADMAP_DOC = ROOT / "docs" / "motor" / "0790_POST_MVP_ROADMAP_AND_HARDENING_PLAN.md"
 
 
 def read(path: Path) -> str:
@@ -30,6 +31,7 @@ def test_workflow_health_check_files_exist() -> None:
     assert HOOK_PILOT_DOC.exists()
     assert RUNNER_HOOK_MANIFEST_DOC.exists()
     assert MANIFEST_HOOKS_PILOT_DOC.exists()
+    assert POST_MVP_ROADMAP_DOC.exists()
 
 
 def test_workflow_health_check_script_runs_successfully() -> None:
@@ -217,6 +219,42 @@ def test_workflow_health_tracks_mvp_real_step_pilot_2_with_state_hooks() -> None
 
     for fragment in pilot_fragments:
         assert fragment in pilot_doc
+
+
+def test_workflow_health_tracks_post_mvp_roadmap_and_hardening_plan() -> None:
+    script = read(SCRIPT)
+    doc = read(DOC)
+    index = read(INDEX)
+    post_mvp_doc = read(POST_MVP_ROADMAP_DOC)
+
+    indexed_fragments = [
+        "docs/motor/0790_POST_MVP_ROADMAP_AND_HARDENING_PLAN.md",
+        "POST-MVP DECISION: HARDENING FIRST",
+        "PowerShell Native Command Guardrail Hardening",
+        "Bridge Output Consistency and LAST Validation",
+        "0800) PowerShell Native Command Guardrail Hardening",
+    ]
+
+    for fragment in indexed_fragments:
+        assert fragment in script
+        assert fragment in doc
+        assert fragment in index
+
+    post_mvp_fragments = [
+        "MVP STATUS: GO WITH WARNINGS",
+        "non e' ancora \"fire-and-forget\"",
+        "Phase B contiene la verifica equivalente alla Phase A",
+        "$LASTEXITCODE",
+        "gli argomenti vuoti nei wrapper PowerShell sono pericolosi",
+        "recovery delicati devono essere racchiusi in blocchi `& { ... }`",
+        "merge senza `-ApproveMerge`",
+        "publish senza `-ApprovePublish`",
+        "Verification Profile Cost Tuning",
+        "NEXT STEP: 0800) PowerShell Native Command Guardrail Hardening",
+    ]
+
+    for fragment in post_mvp_fragments:
+        assert fragment in post_mvp_doc
 
 
 def test_workflow_health_tracks_runner_hook_evidence_manifest_integration() -> None:
