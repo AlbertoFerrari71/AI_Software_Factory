@@ -28,7 +28,8 @@
         "Iteration: $Iteration",
         "Generated: $(Get-Date -Format o)",
         "Rule: short bootstrap, generated script, parse check, then pwsh -File.",
-        "Artifact rule: NNNN-II-Tipo_Nome.ext; no LAST artifacts."
+        "Artifact rule: NNNN-II-Tipo_Nome.ext; no LAST artifacts.",
+        "Wrapper log rule: do not Start-Transcript to an Output_Completo file owned by the ASF publish runner."
     )
     Set-Content -LiteralPath $RequestFile -Value $RequestLines -Encoding utf8
 

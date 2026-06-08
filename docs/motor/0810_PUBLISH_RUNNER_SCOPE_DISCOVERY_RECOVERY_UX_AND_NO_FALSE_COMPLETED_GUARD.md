@@ -81,7 +81,7 @@ pwsh -NoProfile -ExecutionPolicy Bypass -File scripts\asf_publish_step.ps1 `
   -BranchName "step-0810-publish-runner-scope-discovery-recovery-ux" `
   -CommitMessage "0810 add publish runner scope discovery and recovery UX" `
   -PrTitle "0810 add publish runner scope discovery and recovery UX" `
-  -NextStep "0820) Bridge Output Consistency and LAST Validation" `
+  -NextStep "0820) Bridge Output Retry, Fallback and LAST Validation" `
   -RiskLevel L1
 ```
 
@@ -227,5 +227,5 @@ Lo STEP 0810 non introduce:
 Prossimo step consigliato:
 
 ```text
-0820) Bridge Output Consistency and LAST Validation
+0820) Bridge Output Retry, Fallback and LAST Validation
 ```

@@ -72,6 +72,10 @@ def test_asf_publish_flow_documents_prepare_config_and_recovery_scope_review() -
         "LF/CRLF warnings are not out-of-scope files",
         "DOCX/accessory outputs are best-effort",
         "must not invalidate a publish already verified",
+        "Bridge/LAST primary-path locks",
+        "timestamped fallback",
+        "single writer ownership",
+        "NNNN-Wrapper_Log_*.txt",
     ]:
         assert fragment in combined
 
@@ -143,6 +147,8 @@ def test_asf_publish_flow_documents_lf_crlf_and_docx_as_non_blocking() -> None:
         "DOCX is best-effort",
         "DOCX/Word COM resta best-effort",
         "Markdown",
+        "compact Markdown is mandatory",
+        "COMPLETATO CON WARNING NON BLOCCANTE",
     ]:
         assert fragment in combined
 
@@ -172,3 +178,14 @@ def test_asf_publish_flow_does_not_declare_completed_before_final_gates() -> Non
     assert final_status < completed
     assert 'Write-Host "COMPLETATO"' not in script
     assert "printing `COMPLETATO` before final gates pass" in combined_template_text()
+
+
+def test_asf_publish_flow_documents_single_writer_transcript_rule() -> None:
+    script = read(SCRIPT_TEMPLATE)
+    combined = combined_template_text()
+
+    assert "Start-Transcript" in combined
+    assert "Output_Completo" in combined
+    assert "NNNN-Wrapper_Log_*.txt" in combined
+    assert "single writer ownership" in combined
+    assert "Start-Transcript" in script

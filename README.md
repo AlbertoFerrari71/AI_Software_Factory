@@ -1,7 +1,7 @@
 # AI Software Factory
 
 **Metodo interno:** Codex Alchemy Method
-**Stato:** STEP 0810 - Publish Runner Scope Discovery, Recovery UX and No-False-Completed Guard
+**Stato:** STEP 0820 - Bridge Output Retry, Fallback and LAST Validation
 **Data bootstrap:** 2026-05-25
 **Strategia:** local-first personale, progettato per evoluzione SaaS
 
@@ -28,7 +28,7 @@ Il metodo interno si chiama **Codex Alchemy Method**: l'idea grezza viene trasfo
 
 ## 2. Stato repository
 
-Questo repository e' nello stato **STEP 0810 - Publish Runner Scope Discovery, Recovery UX and No-False-Completed Guard**.
+Questo repository e' nello stato **STEP 0820 - Bridge Output Retry, Fallback and LAST Validation**.
 
 Sono presenti:
 
@@ -83,6 +83,7 @@ Sono presenti:
 - Post-MVP Roadmap and Hardening Plan, con decisione `HARDENING FIRST`, warning residui consolidati, priorita' PowerShell/recovery/evidence/Bridge e roadmap 0800-0860.
 - PowerShell Native Command Guardrail Hardening, con `Invoke-NativeChecked` nel publish runner, blocco Phase C senza `PrNumber`, validazione `expected_files`/file fuori scope e template command-pack fail-closed.
 - PowerShell Publish Skill Sync With Proven ASF Runner Flow, con skill/template command-pack allineati al flusso config JSON esplicito + `scripts/asf_publish_step.ps1` + Phase B -> recupero PR -> Phase C.
+- Bridge Output Retry, Fallback and LAST Validation, con retry controllato su output Bridge/LAST, fallback timestampato, compatto Markdown obbligatorio, DOCX best-effort e single writer ownership per gli output standard del runner.
 
 Non sono ancora presenti:
 
@@ -388,6 +389,7 @@ docs/motor/0790_POST_MVP_ROADMAP_AND_HARDENING_PLAN.md
 docs/motor/0800_POWERSHELL_NATIVE_COMMAND_GUARDRAIL_HARDENING.md
 docs/motor/0805_POWERSHELL_PUBLISH_SKILL_SYNC_WITH_PROVEN_RUNNER_FLOW.md
 docs/motor/0810_PUBLISH_RUNNER_SCOPE_DISCOVERY_RECOVERY_UX_AND_NO_FALSE_COMPLETED_GUARD.md
+docs/motor/0820_BRIDGE_OUTPUT_RETRY_FALLBACK_AND_LAST_VALIDATION.md
 ```
 
 ---
@@ -446,7 +448,7 @@ policies/path_policy.v0.json
 ## 11. Prossimo step
 
 ```text
-0820) Bridge Output Consistency and LAST Validation
+0830) MVP Real Step Pilot 4 - Slightly More Operational
 ```
 
-Obiettivo: consolidare la coerenza tra output Bridge, artifact `LAST-*`, report compatti e recovery post-publish dopo lo scope discovery dello STEP 0810.
+Obiettivo: provare il Motore ASF su uno step reale piccolo ma piu' operativo, mantenendo evidence locali, gate espliciti e pubblicazione human-gated.

@@ -4,6 +4,34 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.82.0] - 2026-06-08
+
+### Added
+
+- STEP 0820 - Bridge Output Retry, Fallback and LAST Validation.
+- Retry/fallback controllato in `scripts/asf_publish_step.ps1` per output Bridge e `LAST-*`.
+- Documento `docs/motor/0820_BRIDGE_OUTPUT_RETRY_FALLBACK_AND_LAST_VALIDATION.md`.
+- Test `tests/unit/test_asf_publish_step_bridge_outputs.py`.
+
+### Changed
+
+- Il compatto Markdown del publish runner e' obbligatorio: se il path primario resta bloccato dopo retry, viene usato un fallback timestampato.
+- DOCX resta best-effort e non blocca un publish gia' verificato dai gate.
+- Template/skill PowerShell aggiornati con single writer ownership: wrapper esterni non devono usare `Start-Transcript` sullo stesso `Output_Completo` del runner.
+
+### Guardrails
+
+- Gate Git/PR/test/verify/diff-check restano bloccanti.
+- Un output Bridge/LAST primario bloccato dopo gate passati produce warning non bloccante con fallback, non falso fallimento.
+- `LAST-Output_Compatto.md` si copia con `Get-Content -Path ... -Raw | Set-Clipboard`; `Set-Clipboard -Path` resta vietato.
+- Nessuna Phase B, Phase C, commit, push, PR, merge o deploy eseguiti da Codex.
+
+### Next
+
+- Prossimo step consigliato: `0830) MVP Real Step Pilot 4 - Slightly More Operational`.
+
+---
+
 ## [0.81.0] - 2026-06-08
 
 ### Added
@@ -30,7 +58,7 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ### Next
 
-- Prossimo step consigliato: `0820) Bridge Output Consistency and LAST Validation`.
+- Prossimo step consigliato: `0820) Bridge Output Retry, Fallback and LAST Validation`.
 
 ---
 
