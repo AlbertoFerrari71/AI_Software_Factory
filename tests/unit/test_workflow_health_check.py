@@ -14,6 +14,7 @@ PILOT_NOTES = ROOT / "docs" / "motor" / "0740_MVP_REAL_STEP_PILOT.md"
 HOOK_DOC = ROOT / "docs" / "motor" / "0750_STATE_MACHINE_PUBLISH_RUNNER_EVENT_HOOKS.md"
 HOOK_PILOT_DOC = ROOT / "docs" / "motor" / "0760_MVP_REAL_STEP_PILOT_2_WITH_STATE_HOOKS.md"
 RUNNER_HOOK_MANIFEST_DOC = ROOT / "docs" / "motor" / "0770_RUNNER_HOOK_EVIDENCE_MANIFEST_INTEGRATION.md"
+MANIFEST_HOOKS_PILOT_DOC = ROOT / "docs" / "motor" / "0780_MVP_REAL_STEP_PILOT_3_WITH_MANIFEST_HOOKS.md"
 
 
 def read(path: Path) -> str:
@@ -28,6 +29,7 @@ def test_workflow_health_check_files_exist() -> None:
     assert HOOK_DOC.exists()
     assert HOOK_PILOT_DOC.exists()
     assert RUNNER_HOOK_MANIFEST_DOC.exists()
+    assert MANIFEST_HOOKS_PILOT_DOC.exists()
 
 
 def test_workflow_health_check_script_runs_successfully() -> None:
@@ -257,3 +259,50 @@ def test_workflow_health_tracks_runner_hook_evidence_manifest_integration() -> N
 
     for fragment in manifest_fragments:
         assert fragment in manifest_doc
+
+
+def test_workflow_health_tracks_mvp_real_step_pilot_3_with_manifest_hooks() -> None:
+    script = read(SCRIPT)
+    doc = read(DOC)
+    index = read(INDEX)
+    pilot_doc = read(MANIFEST_HOOKS_PILOT_DOC)
+
+    indexed_fragments = [
+        "docs/motor/0780_MVP_REAL_STEP_PILOT_3_WITH_MANIFEST_HOOKS.md",
+        "PILOT STATUS: GO WITH WARNINGS",
+        "tmp/0780_mvp_real_step_pilot_3_manifest_hooks",
+        "READY_TO_PUBLISH",
+        "Phase Plan",
+        "--include-runner-hooks",
+        "--expected-final-state",
+        "0790) Post-MVP Roadmap and Hardening Plan",
+    ]
+
+    for fragment in indexed_fragments:
+        assert fragment in script
+        assert fragment in doc
+        assert fragment in index
+
+    pilot_fragments = [
+        "state_machine_enabled",
+        "state_expected_before_phase_b",
+        "state_expected_before_phase_c",
+        "phase_b_started",
+        "phase_b_passed",
+        "pr_created",
+        "phase_c_started",
+        "phase_c_passed",
+        "main_verified",
+        "close_step",
+        "--include-runner-hooks",
+        "--state-file",
+        "--expected-step",
+        "--expected-final-state CLOSED",
+        "--expected-events",
+        "LAST-State.json",
+        "LAST-Run_Manifest.json",
+        "PILOT STATUS: GO WITH WARNINGS",
+    ]
+
+    for fragment in pilot_fragments:
+        assert fragment in pilot_doc

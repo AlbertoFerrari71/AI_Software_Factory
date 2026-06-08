@@ -1,7 +1,7 @@
 # AI Software Factory
 
 **Metodo interno:** Codex Alchemy Method
-**Stato:** STEP 0770 - Runner Hook Evidence Manifest Integration
+**Stato:** STEP 0780 - MVP Real Step Pilot 3 with Manifest Hooks
 **Data bootstrap:** 2026-05-25
 **Strategia:** local-first personale, progettato per evoluzione SaaS
 
@@ -28,7 +28,7 @@ Il metodo interno si chiama **Codex Alchemy Method**: l'idea grezza viene trasfo
 
 ## 2. Stato repository
 
-Questo repository e' nello stato **STEP 0770 - Runner Hook Evidence Manifest Integration**.
+Questo repository e' nello stato **STEP 0780 - MVP Real Step Pilot 3 with Manifest Hooks**.
 
 Sono presenti:
 
@@ -78,6 +78,7 @@ Sono presenti:
 - State Machine Publish Runner Event Hooks, con hook opzionali del publish runner verso la state machine per Phase B/Phase C, fail-closed su mismatch e gate `-ApprovePublish`/`-ApproveMerge` invariati.
 - MVP Real Step Pilot 2 with State Hooks, con stato iniziale `READY_TO_PUBLISH`, config hook-aware validata in `Phase Plan`, evidence temporanee sotto `tmp/` e decisione `PILOT STATUS: GO WITH WARNINGS`.
 - Runner Hook Evidence Manifest Integration, con sezione `runner_hooks` nel manifest, lettura read-only dello state file prodotto dal runner, validazione eventi/final state e Bridge output temporaneo nei test.
+- MVP Real Step Pilot 3 with Manifest Hooks, con modifica reale documentale, state file iniziale, config hook-aware, `Phase Plan` locale e manifest sintetico per preparare la validazione post-publish runner -> state machine -> manifest.
 
 Non sono ancora presenti:
 
@@ -378,6 +379,7 @@ docs/motor/0740_MVP_REAL_STEP_PILOT.md
 docs/motor/0750_STATE_MACHINE_PUBLISH_RUNNER_EVENT_HOOKS.md
 docs/motor/0760_MVP_REAL_STEP_PILOT_2_WITH_STATE_HOOKS.md
 docs/motor/0770_RUNNER_HOOK_EVIDENCE_MANIFEST_INTEGRATION.md
+docs/motor/0780_MVP_REAL_STEP_PILOT_3_WITH_MANIFEST_HOOKS.md
 ```
 
 ---
@@ -436,7 +438,7 @@ policies/path_policy.v0.json
 ## 11. Prossimo step
 
 ```text
-0770) Runner Hook Evidence Manifest Integration
+0790) Post-MVP Roadmap and Hardening Plan
 ```
 
-Obiettivo: collegare gli eventi Phase B/C del publish runner hook-aware al manifest/evidence pack, mantenendo Phase B/Phase C human-gated.
+Obiettivo: consolidare warning, recovery drill, evidence standard e hardening del Motore ASF dopo i pilot reali con hook e manifest.
