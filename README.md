@@ -1,7 +1,7 @@
 # AI Software Factory
 
 **Metodo interno:** Codex Alchemy Method
-**Stato:** STEP 0830 - MVP Real Step Pilot 4 - Slightly More Operational
+**Stato:** STEP 0840 - Runner Hook Evidence Manifest Post-Publish Pack
 **Data bootstrap:** 2026-05-25
 **Strategia:** local-first personale, progettato per evoluzione SaaS
 
@@ -28,7 +28,7 @@ Il metodo interno si chiama **Codex Alchemy Method**: l'idea grezza viene trasfo
 
 ## 2. Stato repository
 
-Questo repository e' nello stato **STEP 0830 - MVP Real Step Pilot 4 - Slightly More Operational**.
+Questo repository e' nello stato **STEP 0840 - Runner Hook Evidence Manifest Post-Publish Pack**.
 
 Sono presenti:
 
@@ -84,7 +84,8 @@ Sono presenti:
 - PowerShell Native Command Guardrail Hardening, con `Invoke-NativeChecked` nel publish runner, blocco Phase C senza `PrNumber`, validazione `expected_files`/file fuori scope e template command-pack fail-closed.
 - PowerShell Publish Skill Sync With Proven ASF Runner Flow, con skill/template command-pack allineati al flusso config JSON esplicito + `scripts/asf_publish_step.ps1` + Phase B -> recupero PR -> Phase C.
 - Bridge Output Retry, Fallback and LAST Validation, con retry controllato su output Bridge/LAST, fallback timestampato, compatto Markdown obbligatorio, DOCX best-effort e single writer ownership per gli output standard del runner.
-- MVP Real Step Pilot 4 - Slightly More Operational, con documento operativo 0830, manifest JSON di esempio, test dedicato e prova `PrepareConfig` non pubblicante per validare scope discovery, recovery UX e Bridge/LAST validation post-0820.
+- STEP 0830 - MVP Real Step Pilot 4 - Slightly More Operational, con documento operativo 0830, manifest JSON di esempio, test dedicato e prova `PrepareConfig` non pubblicante per validare scope discovery, recovery UX e Bridge/LAST validation post-0820.
+- Runner Hook Evidence Manifest Post-Publish Pack, con documento operativo 0840, manifest JSON esempio post-publish, test dedicato e riferimenti a PR, merge commit, checks finali, Bridge outputs, LAST files, warning accettati e prossimo step.
 
 Non sono ancora presenti:
 
@@ -392,6 +393,7 @@ docs/motor/0805_POWERSHELL_PUBLISH_SKILL_SYNC_WITH_PROVEN_RUNNER_FLOW.md
 docs/motor/0810_PUBLISH_RUNNER_SCOPE_DISCOVERY_RECOVERY_UX_AND_NO_FALSE_COMPLETED_GUARD.md
 docs/motor/0820_BRIDGE_OUTPUT_RETRY_FALLBACK_AND_LAST_VALIDATION.md
 docs/motor/0830_MVP_REAL_STEP_PILOT_4_SLIGHTLY_MORE_OPERATIONAL.md
+docs/motor/0840_RUNNER_HOOK_EVIDENCE_MANIFEST_POST_PUBLISH_PACK.md
 ```
 
 ---
@@ -450,7 +452,7 @@ policies/path_policy.v0.json
 ## 11. Prossimo step
 
 ```text
-0840) Runner Hook Evidence Manifest Post-Publish Pack
+0850) Verification Profile Cost Tuning
 ```
 
-Obiettivo: consolidare il pack post-publish che collega runner, state machine, manifest ed evidence dopo una pubblicazione reale human-gated.
+Obiettivo: ottimizzare costo e profilo dei check senza ridurre i gate fail-closed, dopo avere consolidato la tracciabilita' post-publish.

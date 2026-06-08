@@ -235,6 +235,7 @@ function Invoke-AsfPublishConfigRunnerFlow {
     Write-Log "LF/CRLF warnings are not out-of-scope files when tests, workflow health check, verify gate, and git --no-pager diff --check pass."
     Write-Log "DOCX/accessory outputs are best-effort and must not invalidate a publish already verified by final gates."
     Write-Log "Bridge/LAST primary-path locks use retry, then timestamped fallback, then COMPLETATO CON WARNING NON BLOCCANTE after required gates pass."
+    Write-Log "After a successful human-gated publish, include or point to a post-publish evidence pack with PR, merge commit, checks, Bridge outputs, LAST files, accepted warnings and next step; do not turn the pack into commit/push/merge automation."
     Write-Log "The ASF publish runner owns its standard Bridge outputs; external wrappers must not Start-Transcript to the runner Output_Completo file."
     Write-Log "If an external transcript is needed, use a distinct NNNN-Wrapper_Log_*.txt file."
     Write-Log "Do not use Get-Command -Path or AST parsing to infer publish runner parameters."

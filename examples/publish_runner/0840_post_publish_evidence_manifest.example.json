@@ -1,0 +1,64 @@
+{
+  "schema": "asf-post-publish-evidence-manifest.example.v1",
+  "is_example": true,
+  "not_live_evidence": true,
+  "not_for_automatic_publish": true,
+  "example_source": "Derived from the STEP 0830 post-publish summary provided for STEP 0840. Not generated automatically by the publish runner.",
+  "step": "0830",
+  "step_title": "MVP Real Step Pilot 4 - Slightly More Operational",
+  "status": "published",
+  "pr_number": 76,
+  "pr": {
+    "number": 76,
+    "state": "merged",
+    "source": "example from STEP 0830 publication summary"
+  },
+  "merge_commit": "a759546",
+  "branch": "main",
+  "remote": "origin/main",
+  "checks": {
+    "pytest": "637 passed",
+    "workflow_health": "PASS",
+    "verification_gate": "PASS",
+    "diff_check": "PASS",
+    "working_tree": "clean"
+  },
+  "bridge_outputs": {
+    "compact_output": "Output Bridge compatto generated in STEP 0830 summary; exact path intentionally omitted in this example.",
+    "full_output": "Output Bridge completo generated in STEP 0830 summary; exact path intentionally omitted in this example.",
+    "last_compact": "LAST-Output_Compatto.md copied to clipboard in STEP 0830 summary.",
+    "last_full": "LAST-Output_Completo.txt",
+    "authority_note": "Bridge is operational storage. Git, merged PR, final commit and versioned files remain authoritative."
+  },
+  "last_files": [
+    {
+      "name": "LAST-Output_Compatto.md",
+      "status": "updated",
+      "role": "operator handoff"
+    },
+    {
+      "name": "LAST-Output_Completo.txt",
+      "status": "updated",
+      "role": "operator handoff"
+    }
+  ],
+  "warnings": [
+    "gh pr checks no checks reported accepted by config, if applicable",
+    "LF/CRLF warnings are accepted only when diff check, tests, workflow health and verification gate pass, if applicable"
+  ],
+  "evidence": {
+    "post_publish_pack_document": "docs/motor/0840_RUNNER_HOOK_EVIDENCE_MANIFEST_POST_PUBLISH_PACK.md",
+    "example_manifest": "examples/publish_runner/0840_post_publish_evidence_manifest.example.json",
+    "source_note": "Example only. It documents the expected post-publish evidence shape and is not a live runner output."
+  },
+  "next_step": "0840) Runner Hook Evidence Manifest Post-Publish Pack",
+  "safety": {
+    "automatic_commit_allowed": false,
+    "automatic_push_allowed": false,
+    "automatic_pr_allowed": false,
+    "automatic_merge_allowed": false,
+    "automatic_deploy_allowed": false,
+    "automatic_tag_allowed": false
+  },
+  "notes": "Example only. Not generated from a live publish run."
+}

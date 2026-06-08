@@ -4,6 +4,32 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.84.0] - 2026-06-08
+
+### Added
+
+- STEP 0840 - Runner Hook Evidence Manifest Post-Publish Pack.
+- Documento `docs/motor/0840_RUNNER_HOOK_EVIDENCE_MANIFEST_POST_PUBLISH_PACK.md`.
+- Manifest esempio `examples/publish_runner/0840_post_publish_evidence_manifest.example.json`.
+- Test `tests/unit/test_runner_hook_evidence_manifest_post_publish_pack.py`.
+
+### Changed
+
+- README, roadmap, decision log, Project Workflow Index, Workflow Health Check, Quick Reference, Command Cookbook e template/skill PowerShell repository-local riconoscono il pack 0840.
+- Il pack distingue gate bloccanti, warning accettati, output accessori ed evidence post-publish.
+
+### Guardrails
+
+- Il manifest 0840 e' marcato come esempio derivato dal riepilogo 0830, non come evidence live generata automaticamente dal runner.
+- Nessuna nuova automazione publish/merge introdotta.
+- Nessuna Phase B, Phase C, commit, push, PR, merge, deploy o tag eseguiti da Codex.
+
+### Next
+
+- Prossimo step consigliato: `0850) Verification Profile Cost Tuning`.
+
+---
+
 ## [0.83.0] - 2026-06-08
 
 ### Added
