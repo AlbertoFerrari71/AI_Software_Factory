@@ -118,7 +118,8 @@ Esempio:
 | 850 | First Real External Workflow Pilot | Preparare il primo pilot esterno controllato senza modificare repo esterne | Documento pilot, matrice candidati, manifest planning-only, test e safety boundaries | Post-MVP Pilot | Completato |
 | 860 | Codex_Skills External Workflow Dry-Run Pilot | Provare ASF su Codex_Skills in read-only/dry-run con human gate | Repo readiness report, dry-run plan, changed-files preview, evidence manifest e human gate | Post-MVP Pilot | Completato |
 | 870 | Codex_Skills First Controlled Write Pilot | Eseguire una micro-modifica documentale locale su Codex_Skills dopo guardrail | Result report, rollback plan, evidence manifest e test, senza pubblicazione Git | Post-MVP Pilot | Completato |
-| 880 | Codex_Skills Controlled Write Review and Rollback/Commit Decision | Decidere con review umana se fare rollback o preparare pubblicazione separata | Decision report, eventuale rollback o publish plan human-gated | Post-MVP Pilot | Proposto |
+| 880 | Codex_Skills Controlled Write Review and Rollback/Commit Decision | Decidere con review umana se fare rollback o preparare pubblicazione separata | Decision report, state report, matrix, comandi non eseguiti e evidence JSON | Post-MVP Pilot | Completato |
+| 890 | Codex_Skills Rollback or Controlled Commit Execution | Eseguire solo l'opzione approvata, rollback o commit controllato separato | Rollback puntuale oppure commit locale controllato con gate esplicito | Post-MVP Pilot | Proposto |
 
 ---
 
@@ -127,6 +128,16 @@ Prossimo step consigliato dopo 0870:
 ```text
 0880) Codex_Skills Controlled Write Review and Rollback/Commit Decision
 ```
+
+---
+
+Prossimo step consigliato dopo 0880:
+
+```text
+0890) Codex_Skills Rollback or Controlled Commit Execution
+```
+
+---
 
 ## 3. STEP 010 — Visione e contesto
 
