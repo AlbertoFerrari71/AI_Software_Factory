@@ -115,8 +115,8 @@ Esempio:
 | 820 | Bridge Output Retry, Fallback and LAST Validation | Gestire lock temporanei su Bridge e `LAST-*` senza indebolire i gate veri | Retry controllato, fallback timestampato, compatto Markdown obbligatorio, DOCX best-effort e single writer ownership | Post-MVP Hardening | Completato |
 | 830 | MVP Real Step Pilot 4 - Slightly More Operational | Provare il Motore su uno step reale piccolo ma piu' operativo | Operational pilot pack con doc, manifest JSON, test e PrepareConfig non pubblicante | Post-MVP Pilot | Completato con warning |
 | 840 | Runner Hook Evidence Manifest Post-Publish Pack | Consolidare manifest hook-aware dopo pubblicazione reale human-gated | Documento pack post-publish, manifest JSON esempio, test e riferimenti Bridge/LAST/checks | Post-MVP Hardening | Completato |
-| 850 | Verification Profile Cost Tuning | Ottimizzare costo dei check senza ridurre fail-closed e Phase C | Tuning profili verifica e regole di riduzione sicure | Post-MVP Hardening | Proposto |
-| 860 | Post-MVP Hardening Closure | Chiudere il blocco hardening con decisione GO/WARNING/NO-GO | Closure pack post-MVP hardening e prossimo ciclo deciso | Post-MVP Hardening | Proposto |
+| 850 | First Real External Workflow Pilot | Preparare il primo pilot esterno controllato senza modificare repo esterne | Documento pilot, matrice candidati, manifest planning-only, test e safety boundaries | Post-MVP Pilot | Completato |
+| 860 | Codex_Skills External Workflow Dry-Run Pilot | Provare ASF su Codex_Skills in read-only/dry-run con human gate | Repo readiness report, dry-run plan, risk assessment e proposta locale non pubblicante | Post-MVP Pilot | Proposto |
 
 ---
 

@@ -274,7 +274,7 @@ def test_workflow_health_tracks_post_mvp_roadmap_and_hardening_plan() -> None:
         "recovery delicati devono essere racchiusi in blocchi `& { ... }`",
         "merge senza `-ApproveMerge`",
         "publish senza `-ApprovePublish`",
-        "Verification Profile Cost Tuning",
+        "First Real External Workflow Pilot",
         "NEXT STEP: 0800) PowerShell Native Command Guardrail Hardening",
     ]
 

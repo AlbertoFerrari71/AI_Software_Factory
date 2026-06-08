@@ -1,0 +1,73 @@
+{
+  "is_example": true,
+  "not_live_evidence": true,
+  "not_for_automatic_publish": true,
+  "step": "0850",
+  "name": "First_Real_External_Workflow_Pilot",
+  "pack_type": "external_workflow_pilot_plan_example",
+  "status": "planning_only",
+  "recommended_external_repo": "Codex_Skills",
+  "external_repo_path_candidate": "C:\\Users\\alberto.ferrari\\.agents\\skills",
+  "external_repo_remote_candidate": "AlbertoFerrari71/Codex_Skills",
+  "risk_level": "L1",
+  "human_gate_required": true,
+  "automatic_commit_push_pr_merge_deploy": false,
+  "automatic_git_publication_allowed": false,
+  "external_repo_write_allowed": false,
+  "allowed_actions_in_next_step": [
+    "inspect external repo",
+    "generate dry-run plan",
+    "run read-only checks",
+    "prepare local-only proposal"
+  ],
+  "forbidden_actions": [
+    "commit",
+    "push",
+    "open_pr",
+    "merge",
+    "deploy",
+    "tag",
+    "destructive_cleanup"
+  ],
+  "candidate_repos": [
+    {
+      "name": "Codex_Skills",
+      "role": "recommended first external pilot",
+      "risk": "L1",
+      "recommended": true
+    },
+    {
+      "name": "Family_Photo_Organizer",
+      "role": "future candidate after a lower-risk dry-run succeeds",
+      "risk": "L2",
+      "recommended": false
+    },
+    {
+      "name": "AI_Software_Factory",
+      "role": "quasi-external fallback only",
+      "risk": "L1",
+      "recommended": false
+    },
+    {
+      "name": "Mansionario_Vivo",
+      "role": "excluded as first pilot because risk is too operational",
+      "risk": "L3",
+      "recommended": false
+    }
+  ],
+  "expected_evidence": [
+    "repo readiness report",
+    "dry-run plan",
+    "changed-files preview",
+    "risk assessment",
+    "human approval gate"
+  ],
+  "safety_boundaries": [
+    "planning only in step 0850",
+    "no external repository modification",
+    "no automatic publication",
+    "human gate before any future write",
+    "no dependency on local external paths in tests"
+  ],
+  "next_step": "0860) Codex_Skills External Workflow Dry-Run Pilot"
+}

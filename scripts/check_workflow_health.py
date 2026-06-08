@@ -113,6 +113,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/motor/0820_BRIDGE_OUTPUT_RETRY_FALLBACK_AND_LAST_VALIDATION.md",
         "docs/motor/0830_MVP_REAL_STEP_PILOT_4_SLIGHTLY_MORE_OPERATIONAL.md",
         "docs/motor/0840_RUNNER_HOOK_EVIDENCE_MANIFEST_POST_PUBLISH_PACK.md",
+        "docs/motor/0850_FIRST_REAL_EXTERNAL_WORKFLOW_PILOT.md",
         "config/asf_project_profiles.json",
         "scripts/asf_openai_api_adapter.py",
         "scripts/asf_openai_controlled_live_execution_pack.py",
@@ -568,7 +569,21 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                     "Bridge outputs",
                     "LAST files",
                     "warning accettati",
-                    "0850) Verification Profile Cost Tuning",
+                    "0850) First Real External Workflow Pilot",
+                ],
+            ),
+            (
+                "ASF First Real External Workflow Pilot pointers",
+                [
+                    "docs/motor/0850_FIRST_REAL_EXTERNAL_WORKFLOW_PILOT.md",
+                    "examples/publish_runner/0850_external_workflow_pilot_plan.example.json",
+                    "Codex_Skills",
+                    "Family_Photo_Organizer",
+                    "Mansionario_Vivo",
+                    "safety boundaries",
+                    "human gate",
+                    "planning_only",
+                    "0860) Codex_Skills External Workflow Dry-Run Pilot",
                 ],
             ),
             (
@@ -941,6 +956,10 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             (
                 "ASF Runner Hook Evidence Manifest Post-Publish Pack example",
                 ["examples/publish_runner/0840_post_publish_evidence_manifest.example.json"],
+            ),
+            (
+                "ASF First Real External Workflow Pilot example",
+                ["examples/publish_runner/0850_external_workflow_pilot_plan.example.json"],
             ),
             (
                 "ASF Risk Classifier examples",

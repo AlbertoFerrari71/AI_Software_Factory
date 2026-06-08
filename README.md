@@ -1,7 +1,7 @@
 # AI Software Factory
 
 **Metodo interno:** Codex Alchemy Method
-**Stato:** STEP 0840 - Runner Hook Evidence Manifest Post-Publish Pack
+**Stato:** STEP 0850 - First Real External Workflow Pilot
 **Data bootstrap:** 2026-05-25
 **Strategia:** local-first personale, progettato per evoluzione SaaS
 
@@ -28,7 +28,7 @@ Il metodo interno si chiama **Codex Alchemy Method**: l'idea grezza viene trasfo
 
 ## 2. Stato repository
 
-Questo repository e' nello stato **STEP 0840 - Runner Hook Evidence Manifest Post-Publish Pack**.
+Questo repository e' nello stato **STEP 0850 - First Real External Workflow Pilot**.
 
 Sono presenti:
 
@@ -85,7 +85,8 @@ Sono presenti:
 - PowerShell Publish Skill Sync With Proven ASF Runner Flow, con skill/template command-pack allineati al flusso config JSON esplicito + `scripts/asf_publish_step.ps1` + Phase B -> recupero PR -> Phase C.
 - Bridge Output Retry, Fallback and LAST Validation, con retry controllato su output Bridge/LAST, fallback timestampato, compatto Markdown obbligatorio, DOCX best-effort e single writer ownership per gli output standard del runner.
 - STEP 0830 - MVP Real Step Pilot 4 - Slightly More Operational, con documento operativo 0830, manifest JSON di esempio, test dedicato e prova `PrepareConfig` non pubblicante per validare scope discovery, recovery UX e Bridge/LAST validation post-0820.
-- Runner Hook Evidence Manifest Post-Publish Pack, con documento operativo 0840, manifest JSON esempio post-publish, test dedicato e riferimenti a PR, merge commit, checks finali, Bridge outputs, LAST files, warning accettati e prossimo step.
+- STEP 0840 - Runner Hook Evidence Manifest Post-Publish Pack, con documento operativo 0840, manifest JSON esempio post-publish, test dedicato e riferimenti a PR, merge commit, checks finali, Bridge outputs, LAST files, warning accettati e prossimo step.
+- STEP 0850 - First Real External Workflow Pilot, con pack preparatorio per scegliere `Codex_Skills` come primo pilot esterno controllato, safety boundaries, human gate, manifest JSON planning-only e handoff verso 0860.
 
 Non sono ancora presenti:
 
@@ -394,6 +395,7 @@ docs/motor/0810_PUBLISH_RUNNER_SCOPE_DISCOVERY_RECOVERY_UX_AND_NO_FALSE_COMPLETE
 docs/motor/0820_BRIDGE_OUTPUT_RETRY_FALLBACK_AND_LAST_VALIDATION.md
 docs/motor/0830_MVP_REAL_STEP_PILOT_4_SLIGHTLY_MORE_OPERATIONAL.md
 docs/motor/0840_RUNNER_HOOK_EVIDENCE_MANIFEST_POST_PUBLISH_PACK.md
+docs/motor/0850_FIRST_REAL_EXTERNAL_WORKFLOW_PILOT.md
 ```
 
 ---
@@ -452,7 +454,7 @@ policies/path_policy.v0.json
 ## 11. Prossimo step
 
 ```text
-0850) Verification Profile Cost Tuning
+0860) Codex_Skills External Workflow Dry-Run Pilot
 ```
 
-Obiettivo: ottimizzare costo e profilo dei check senza ridurre i gate fail-closed, dopo avere consolidato la tracciabilita' post-publish.
+Obiettivo: eseguire il primo pilot esterno controllato su `Codex_Skills` in modalita' read-only/dry-run, senza commit, push, PR, merge o deploy.

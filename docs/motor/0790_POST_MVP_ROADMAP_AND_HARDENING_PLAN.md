@@ -185,8 +185,8 @@ Roadmap consigliata:
 0820) Bridge Output Retry, Fallback and LAST Validation
 0830) MVP Real Step Pilot 4 - Slightly More Operational
 0840) Runner Hook Evidence Manifest Post-Publish Pack
-0850) Verification Profile Cost Tuning
-0860) Post-MVP Hardening Closure
+0850) First Real External Workflow Pilot
+0860) Codex_Skills External Workflow Dry-Run Pilot
 ```
 
 Sequenza motivata:
@@ -197,8 +197,8 @@ Sequenza motivata:
 - 0820 rende piu' robusta la lettura degli output Bridge;
 - 0830 prova il flusso su un pilot reale leggermente piu' operativo;
 - 0840 completa la catena post-publish runner -> state machine -> manifest;
-- 0850 ottimizza il costo test solo dopo aver reso sicuri wrapper e recovery;
-- 0860 chiude il blocco hardening con decisione GO/WARNING/NO-GO.
+- 0850 prepara il primo pilot esterno controllato senza modificare repo esterne;
+- 0860 esegue un dry-run pilot su `Codex_Skills` solo dopo human gate.
 
 ## 11. Criteri per nuovi pilot reali
 
