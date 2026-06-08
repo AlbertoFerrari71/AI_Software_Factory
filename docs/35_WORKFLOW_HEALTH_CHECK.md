@@ -59,6 +59,7 @@ The script `scripts/check_workflow_health.py` checks:
 - `docs/motor/0750_STATE_MACHINE_PUBLISH_RUNNER_EVENT_HOOKS.md`, `state_machine_enabled`, `phase_b_started`, `phase_c_started`, `main_verified`, `examples/publish_step/0750_publish_config_state_hooks.example.json`, the 0750 example configs and the Project Workflow Index hook pointer are referenced without executing hooks, Phase B/C, publish, merge or requiring Dropbox real paths;
 - `docs/motor/0760_MVP_REAL_STEP_PILOT_2_WITH_STATE_HOOKS.md`, `tmp/0760_mvp_real_step_pilot_2_state_hooks`, `READY_TO_PUBLISH`, `Phase Plan`, `LAST-State.json` and the Project Workflow Index pilot pointer are referenced without executing hooks, Phase B/C, publish, merge or requiring Dropbox real paths;
 - `docs/motor/0770_RUNNER_HOOK_EVIDENCE_MANIFEST_INTEGRATION.md`, `runner_hooks`, `--include-runner-hooks`, `--expected-events`, `sample_manifest_input_runner_hooks_closed.json`, `sample_closed_with_runner_hooks_state.json` and `0780) MVP Real Step Pilot 3 with Manifest Hooks` are referenced without executing hooks, Phase B/C, publish, merge or requiring Dropbox real paths;
+- `docs/motor/0780_MVP_REAL_STEP_PILOT_3_WITH_MANIFEST_HOOKS.md`, `tmp/0780_mvp_real_step_pilot_3_manifest_hooks`, `READY_TO_PUBLISH`, `Phase Plan`, `--include-runner-hooks`, `--expected-final-state` and `0790) Post-MVP Roadmap and Hardening Plan` are referenced without executing hooks, Phase B/C, publish, merge or requiring Dropbox real paths;
 - operational scripts do not contain dangerous Git/GitHub command patterns.
 
 The covered areas include:
@@ -118,6 +119,7 @@ The covered areas include:
 - ASF State Machine Publish Runner Event Hooks;
 - ASF MVP Real Step Pilot 2 with State Hooks;
 - ASF Runner Hook Evidence Manifest Integration;
+- ASF MVP Real Step Pilot 3 with Manifest Hooks;
 - Project Workflow Index.
 
 ---
@@ -307,3 +309,5 @@ After STEP 0750, it also treats `docs/motor/0750_STATE_MACHINE_PUBLISH_RUNNER_EV
 After STEP 0760, it also treats `docs/motor/0760_MVP_REAL_STEP_PILOT_2_WITH_STATE_HOOKS.md` and the Project Workflow Index pointers to `tmp/0760_mvp_real_step_pilot_2_state_hooks`, `READY_TO_PUBLISH`, `Phase Plan`, `LAST-State.json` and `0770) Runner Hook Evidence Manifest Integration` as core workflow references. The check remains read-only: it does not run state hooks, does not call GitHub, does not require Dropbox, and does not execute Phase B, Phase C, publish, merge or deploy.
 
 After STEP 0770, it also treats `docs/motor/0770_RUNNER_HOOK_EVIDENCE_MANIFEST_INTEGRATION.md` and the Project Workflow Index pointers to `runner_hooks`, `--include-runner-hooks`, `--expected-events`, `sample_manifest_input_runner_hooks_closed.json`, `sample_closed_with_runner_hooks_state.json` and `0780) MVP Real Step Pilot 3 with Manifest Hooks` as core workflow references. The check remains read-only: it does not run state hooks, does not call GitHub, does not require Dropbox, and does not execute Phase B, Phase C, publish, merge or deploy.
+
+After STEP 0780, it also treats `docs/motor/0780_MVP_REAL_STEP_PILOT_3_WITH_MANIFEST_HOOKS.md` and the Project Workflow Index pointers to `tmp/0780_mvp_real_step_pilot_3_manifest_hooks`, `READY_TO_PUBLISH`, `Phase Plan`, `--include-runner-hooks`, `--expected-final-state` and `0790) Post-MVP Roadmap and Hardening Plan` as core workflow references. The check remains read-only: it does not run state hooks, does not call GitHub, does not require Dropbox, and does not execute Phase B, Phase C, publish, merge or deploy.

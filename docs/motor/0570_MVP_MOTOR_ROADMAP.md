@@ -476,3 +476,38 @@ Prossimo step consigliato:
 ```text
 0780) MVP Real Step Pilot 3 with Manifest Hooks
 ```
+
+## 21. Stato dopo STEP 0780
+
+Lo STEP 0780 prepara il terzo pilot reale post-MVP con manifest hooks:
+
+```text
+docs/motor/0780_MVP_REAL_STEP_PILOT_3_WITH_MANIFEST_HOOKS.md
+```
+
+Il pilot collega una modifica documentale reale a:
+
+- state file iniziale `READY_TO_PUBLISH`;
+- config publish con `state_machine_enabled: true`;
+- validazione locale `Phase Plan`;
+- manifest hook-aware sintetico con final state atteso `CLOSED`;
+- evidence locale sotto `tmp/0780_mvp_real_step_pilot_3_manifest_hooks`.
+
+Decisione prudente:
+
+```text
+PILOT STATUS: GO WITH WARNINGS
+```
+
+Restano manuali:
+
+- approval Phase B;
+- approval Phase C;
+- commit, push, PR, merge e verifica finale su `main`;
+- generazione del manifest reale post-publish con `--include-runner-hooks`.
+
+Prossimo step consigliato:
+
+```text
+0790) Post-MVP Roadmap and Hardening Plan
+```

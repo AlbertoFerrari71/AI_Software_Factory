@@ -4,6 +4,31 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.78.0] - 2026-06-07
+
+### Added
+
+- STEP 0780 - MVP Real Step Pilot 3 with Manifest Hooks.
+- Documento `docs/motor/0780_MVP_REAL_STEP_PILOT_3_WITH_MANIFEST_HOOKS.md` con scopo, stato iniziale, config hook-aware attesa, flussi Phase B/C attesi, manifest post-publish ed evidence summary.
+- Evidence temporanee previste sotto `tmp/0780_mvp_real_step_pilot_3_manifest_hooks/` per state file, config hook-aware, `Phase Plan` e manifest sintetico.
+
+### Changed
+
+- README, roadmap, decision log, Project Workflow Index, Workflow Health Check e documenti motore riconoscono lo STEP 0780.
+- Il pilot 0780 collega il ciclo reale piccolo alla validazione hook-aware del manifest introdotta nello STEP 0770, senza eseguire pubblicazione reale da Codex.
+
+### Guardrails
+
+- Nessuna modifica al publish runner.
+- Nessuna Phase B, Phase C, commit, push, PR, merge o deploy eseguiti da Codex.
+- Evidence solo locale sotto `tmp/`; nessun GitHub reale e nessun Dropbox reale nei test.
+
+### Next
+
+- Prossimo step consigliato: `0790) Post-MVP Roadmap and Hardening Plan`.
+
+---
+
 ## [0.77.0] - 2026-06-07
 
 ### Added

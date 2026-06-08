@@ -303,3 +303,17 @@ state file, state Bridge root, publish runner output e publish config.
 
 Resta invariato che Codex non esegue Phase B, Phase C, commit, push, PR, merge
 o deploy.
+
+## 17. Aggiornamento STEP 0780
+
+Lo STEP 0780 usa il collegamento introdotto dal 0770 per preparare un terzo
+pilot reale con manifest hooks:
+
+```text
+docs/motor/0780_MVP_REAL_STEP_PILOT_3_WITH_MANIFEST_HOOKS.md
+```
+
+Il pilot 0780 mantiene la stessa prudenza del 0760: state file iniziale
+`READY_TO_PUBLISH`, config hook-aware, validazione `Phase Plan`, nessuna Phase
+B/C da Codex. La differenza e' che il manifest post-publish deve ora verificare
+anche final state `CLOSED` ed eventi runner completi.

@@ -456,6 +456,10 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                 ["docs/motor/0770_RUNNER_HOOK_EVIDENCE_MANIFEST_INTEGRATION.md"],
             ),
             (
+                "ASF MVP Real Step Pilot 3 with Manifest Hooks document",
+                ["docs/motor/0780_MVP_REAL_STEP_PILOT_3_WITH_MANIFEST_HOOKS.md"],
+            ),
+            (
                 "ASF State Machine Bridge Integration pointers",
                 ["LAST-State.json", "LAST-Output_Compatto.md", "state_machine"],
             ),
@@ -533,6 +537,18 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                     "sample_manifest_input_runner_hooks_closed.json",
                     "sample_closed_with_runner_hooks_state.json",
                     "0780) MVP Real Step Pilot 3 with Manifest Hooks",
+                ],
+            ),
+            (
+                "ASF MVP Real Step Pilot 3 with Manifest Hooks pointers",
+                [
+                    "PILOT STATUS: GO WITH WARNINGS",
+                    "tmp/0780_mvp_real_step_pilot_3_manifest_hooks",
+                    "READY_TO_PUBLISH",
+                    "Phase Plan",
+                    "--include-runner-hooks",
+                    "--expected-final-state",
+                    "0790) Post-MVP Roadmap and Hardening Plan",
                 ],
             ),
             (

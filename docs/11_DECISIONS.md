@@ -2423,6 +2423,57 @@ la pubblicazione resta human-gated e fuori da Codex.
 
 ---
 
+## DEC-091 - MVP Real Step Pilot 3 con Manifest Hooks
+
+**Data:** 2026-06-07
+**Stato:** Accettata
+
+### Contesto
+
+Dopo STEP 0770 il manifest puo' leggere gli output state machine prodotti dagli
+hook del publish runner. Mancava un pilot reale piccolo che predisponesse una
+modifica versionabile e una traccia evidence pronta per verificare runner ->
+state machine -> manifest dopo pubblicazione human-gated.
+
+### Decisione
+
+Lo STEP 0780 introduce
+`docs/motor/0780_MVP_REAL_STEP_PILOT_3_WITH_MANIFEST_HOOKS.md`.
+
+Il pilot:
+
+- resta documentale e a basso rischio;
+- prepara stato iniziale `READY_TO_PUBLISH`;
+- descrive la config publish con `state_machine_enabled: true`;
+- richiede eventi `phase_b_started`, `phase_b_passed`, `pr_created`,
+  `phase_c_started`, `phase_c_passed`, `main_verified` e `close_step`;
+- definisce il manifest post-publish con `--include-runner-hooks`,
+  `--state-file`, `--expected-step`, `--expected-final-state CLOSED` e
+  `--expected-events`;
+- mantiene Phase B, Phase C, commit, push, PR, merge e deploy fuori dallo
+  scope Codex.
+
+### Motivazione
+
+Il valore operativo e' provare il collegamento hook/manifest su uno step reale
+piccolo prima di renderlo prassi ordinaria. Il pilot non deve accelerare la
+pubblicazione: deve rendere piu' chiara l'audit trail successiva.
+
+### Conseguenze
+
+- Decisione prudente del pilot: `PILOT STATUS: GO WITH WARNINGS`.
+- La validazione completa resta da fare durante pubblicazione reale e manifest
+  post-publish.
+- Lo state file iniziale e la config hook-aware sono evidence locali, non
+  approval.
+- Il prossimo step consigliato e':
+
+```text
+0790) Post-MVP Roadmap and Hardening Plan
+```
+
+---
+
 ## DEC-090 - Runner Hook Evidence Manifest Integration
 
 **Data:** 2026-06-07

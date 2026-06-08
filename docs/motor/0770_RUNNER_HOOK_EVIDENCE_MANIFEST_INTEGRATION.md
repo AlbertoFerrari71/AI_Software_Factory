@@ -223,3 +223,28 @@ verifica finale su `main` e decisione umana.
 
 Motivo: ora che il manifest puo' leggere gli hook, conviene provarlo su una
 pubblicazione reale piccola e human-gated, senza aggiungere nuove automazioni.
+
+## 11. Aggiornamento STEP 0780
+
+Lo STEP 0780 prepara il pilot consigliato:
+
+```text
+docs/motor/0780_MVP_REAL_STEP_PILOT_3_WITH_MANIFEST_HOOKS.md
+```
+
+Il pilot documenta state file iniziale `READY_TO_PUBLISH`, config publish con
+hook state machine, eventi attesi fino a `close_step` e manifest post-publish
+con `--include-runner-hooks`, `--expected-final-state CLOSED` e
+`--expected-events`.
+
+La decisione prudente resta:
+
+```text
+PILOT STATUS: GO WITH WARNINGS
+```
+
+Il prossimo passo consigliato diventa:
+
+```text
+0790) Post-MVP Roadmap and Hardening Plan
+```
