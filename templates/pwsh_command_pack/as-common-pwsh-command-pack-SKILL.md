@@ -224,6 +224,7 @@ STEP 0790, STEP 0800, STEP 0810, and STEP 0820:
 12. let `scripts/asf_publish_step.ps1` own its standard Bridge outputs;
 13. do not open `Start-Transcript` on the runner `Output_Completo` path; use `NNNN-Wrapper_Log_*.txt` for any external wrapper log;
 14. treat Bridge/LAST primary-path locks as retry, timestamped fallback, then `COMPLETATO CON WARNING NON BLOCCANTE` only after required gates passed.
+15. after a successful human-gated publish, include or point to a post-publish evidence pack with PR, merge commit, checks, Bridge outputs, LAST files, accepted warnings and next step; do not turn the pack into commit/push/merge automation.
 
 Use this flow only when Alberto has explicitly authorized publication of an ASF
 step after local review/intake. Do not use it for clean Codex prompts,
@@ -274,6 +275,7 @@ Bridge output policy for the ASF publish runner:
 - DOCX/Word COM is best-effort and a DOCX failure is a non-blocking warning;
 - `LAST-*` compatibility files are updated with retry/fallback by the runner only;
 - single writer ownership: external wrappers must not write or transcript to the same runner `Output_Completo` file.
+- the final report should include or point to a post-publish evidence pack with PR, merge commit, checks, Bridge outputs, LAST files, accepted warnings and next step.
 
 For short ASF publish packs, use a simple `Run` helper: reject empty command
 names and arguments, execute the native command, read `$LASTEXITCODE`

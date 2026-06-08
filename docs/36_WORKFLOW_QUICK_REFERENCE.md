@@ -145,6 +145,11 @@ Dopo STEP 0830, il pilot operativo di riferimento per provare questo flusso e'
 `docs/motor/0830_MVP_REAL_STEP_PILOT_4_SLIGHTLY_MORE_OPERATIONAL.md`, con
 manifest esempio `examples/publish_runner/0830_prepare_config_pilot.json`.
 
+Dopo STEP 0840, una pubblicazione ASF riuscita dovrebbe includere o puntare a
+un post-publish evidence pack. Il pack deve indicare PR, merge commit, checks
+finali, Bridge outputs, LAST files, warning accettati, manifest/evidence e
+prossimo step. Non autorizza commit, push, PR, merge o deploy automatici.
+
 Se `main...origin/main [ahead N]` contiene merge locali gia' verificati, non fare push diretto a `main`: creare un publish branch da `main`, pushare quel branch, aprire PR, mergiare, riallineare `main` e verificare.
 
 Template:
@@ -161,6 +166,7 @@ docs/71_ASF_PWSH_COMMAND_PACK_SKILL_EXPORT_INSTALL.md
 docs/motor/0805_POWERSHELL_PUBLISH_SKILL_SYNC_WITH_PROVEN_RUNNER_FLOW.md
 docs/motor/0810_PUBLISH_RUNNER_SCOPE_DISCOVERY_RECOVERY_UX_AND_NO_FALSE_COMPLETED_GUARD.md
 docs/motor/0830_MVP_REAL_STEP_PILOT_4_SLIGHTLY_MORE_OPERATIONAL.md
+docs/motor/0840_RUNNER_HOOK_EVIDENCE_MANIFEST_POST_PUBLISH_PACK.md
 ```
 
 ---

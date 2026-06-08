@@ -3595,3 +3595,44 @@ Il prossimo step consigliato e':
 ```text
 0840) Runner Hook Evidence Manifest Post-Publish Pack
 ```
+
+---
+
+## DEC-098 - Post-publish evidence pack leggibile e non automatico
+
+**Data:** 2026-06-08
+**Stato:** Accettata
+
+### Contesto
+
+Dopo gli step 0800-0830 il publish runner ASF e' piu' robusto su comandi
+nativi, scope discovery, recovery UX, Bridge retry/fallback, LAST validation e
+pilot operativo. Dopo una pubblicazione riuscita restano pero' evidenze sparse:
+PR, merge commit, checks finali, output Bridge, `LAST-*`, warning accettati e
+manifest/evidence.
+
+### Decisione
+
+Lo STEP 0840 introduce un post-publish evidence pack documentale:
+
+- documento operativo 0840;
+- manifest JSON esempio non live;
+- test automatico dedicato;
+- riferimenti minimi in README, changelog, roadmap, index, health, quick
+  reference, cookbook e template/skill PowerShell repository-local.
+
+Il pack deve indicare PR, merge commit, checks finali, Bridge outputs, `LAST-*`,
+warning accettati, manifest/evidence disponibili e prossimo step consigliato.
+
+### Conseguenze
+
+Il pack non autorizza commit, push, PR, merge, deploy o tag. Non introduce una
+nuova fase runner obbligatoria e non modifica la skill installata fuori
+repository. Git, PR mergiata, commit finale e file versionati restano le fonti
+autorevoli; Bridge e `LAST-*` restano supporti operativi.
+
+Il prossimo step consigliato e':
+
+```text
+0850) Verification Profile Cost Tuning
+```

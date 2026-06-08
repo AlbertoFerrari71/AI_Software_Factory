@@ -1366,6 +1366,12 @@ Dopo STEP 0820 il runner possiede i propri output Bridge standard. Non usare
 fa retry, poi fallback timestampato e warning non bloccante se i gate sono gia'
 passati. Il compatto Markdown resta obbligatorio; DOCX resta best-effort.
 
+Dopo STEP 0840, il report finale di una pubblicazione ASF riuscita dovrebbe
+includere o puntare a un post-publish evidence pack con PR, merge commit, checks
+finali, Bridge outputs, LAST files, warning accettati, manifest/evidence e
+prossimo step. Il pack e' evidence di audit, non automazione di commit, push,
+PR, merge o deploy.
+
 ### Comandi
 
 PREPARE CONFIG, bozza scope da review:
@@ -1443,7 +1449,7 @@ Evitare in particolare:
 
 I warning LF/CRLF non sono bloccanti se test, verify, health check e `git --no-pager diff --check` passano. DOCX resta best-effort; il Markdown e' l'output principale. Se DOCX fallisce dopo gate finali passati, lo stato e' `COMPLETATO CON WARNING NON BLOCCANTE`, non `BLOCCATO`.
 
-Documenti: `docs/motor/0590_STABLE_POWERSHELL_PUBLISH_RUNNER.md`, `docs/motor/0805_POWERSHELL_PUBLISH_SKILL_SYNC_WITH_PROVEN_RUNNER_FLOW.md`, `docs/motor/0810_PUBLISH_RUNNER_SCOPE_DISCOVERY_RECOVERY_UX_AND_NO_FALSE_COMPLETED_GUARD.md`, `docs/motor/0830_MVP_REAL_STEP_PILOT_4_SLIGHTLY_MORE_OPERATIONAL.md`.
+Documenti: `docs/motor/0590_STABLE_POWERSHELL_PUBLISH_RUNNER.md`, `docs/motor/0805_POWERSHELL_PUBLISH_SKILL_SYNC_WITH_PROVEN_RUNNER_FLOW.md`, `docs/motor/0810_PUBLISH_RUNNER_SCOPE_DISCOVERY_RECOVERY_UX_AND_NO_FALSE_COMPLETED_GUARD.md`, `docs/motor/0830_MVP_REAL_STEP_PILOT_4_SLIGHTLY_MORE_OPERATIONAL.md`, `docs/motor/0840_RUNNER_HOOK_EVIDENCE_MANIFEST_POST_PUBLISH_PACK.md`.
 
 ---
 

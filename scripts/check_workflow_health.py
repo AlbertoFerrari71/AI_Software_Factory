@@ -112,6 +112,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/motor/0810_PUBLISH_RUNNER_SCOPE_DISCOVERY_RECOVERY_UX_AND_NO_FALSE_COMPLETED_GUARD.md",
         "docs/motor/0820_BRIDGE_OUTPUT_RETRY_FALLBACK_AND_LAST_VALIDATION.md",
         "docs/motor/0830_MVP_REAL_STEP_PILOT_4_SLIGHTLY_MORE_OPERATIONAL.md",
+        "docs/motor/0840_RUNNER_HOOK_EVIDENCE_MANIFEST_POST_PUBLISH_PACK.md",
         "config/asf_project_profiles.json",
         "scripts/asf_openai_api_adapter.py",
         "scripts/asf_openai_controlled_live_execution_pack.py",
@@ -182,6 +183,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "examples/publish_step/0750_publish_config_state_hooks_close_step.example.json",
         "examples/publish_step/0750_publish_config_state_hooks_mismatch_fail_closed.example.json",
         "examples/publish_runner/0830_prepare_config_pilot.json",
+        "examples/publish_runner/0840_post_publish_evidence_manifest.example.json",
         "examples/risk_classifier/sample_l0_docs_only.json",
         "examples/risk_classifier/sample_l2_code_change.json",
         "examples/risk_classifier/sample_l3_publish.json",
@@ -225,6 +227,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "tests/unit/test_asf_step_state_machine.py",
         "tests/unit/test_asf_e2e_mvp_smoke.py",
         "tests/unit/test_asf_motor_run_manifest.py",
+        "tests/unit/test_runner_hook_evidence_manifest_post_publish_pack.py",
     ]
 
     issues: list[HealthIssue] = []
@@ -548,6 +551,24 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                     "gate bloccanti",
                     "warning non bloccanti",
                     "0840) Runner Hook Evidence Manifest Post-Publish Pack",
+                ],
+            ),
+            (
+                "ASF Runner Hook Evidence Manifest Post-Publish Pack document",
+                ["docs/motor/0840_RUNNER_HOOK_EVIDENCE_MANIFEST_POST_PUBLISH_PACK.md"],
+            ),
+            (
+                "ASF Runner Hook Evidence Manifest Post-Publish Pack pointers",
+                [
+                    "examples/publish_runner/0840_post_publish_evidence_manifest.example.json",
+                    "post-publish evidence pack",
+                    "PR",
+                    "merge commit",
+                    "checks finali",
+                    "Bridge outputs",
+                    "LAST files",
+                    "warning accettati",
+                    "0850) Verification Profile Cost Tuning",
                 ],
             ),
             (
@@ -916,6 +937,10 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             (
                 "ASF MVP Real Step Pilot 4 example manifest",
                 ["examples/publish_runner/0830_prepare_config_pilot.json"],
+            ),
+            (
+                "ASF Runner Hook Evidence Manifest Post-Publish Pack example",
+                ["examples/publish_runner/0840_post_publish_evidence_manifest.example.json"],
             ),
             (
                 "ASF Risk Classifier examples",
