@@ -1,0 +1,38 @@
+{
+  "is_example": true,
+  "not_live_publication": true,
+  "step": "0860",
+  "status": "dry_run_completed",
+  "external_repo": "Codex_Skills",
+  "external_repo_path_candidate": "C:\\Users\\alberto.ferrari\\.agents\\skills",
+  "external_repo_write_performed": false,
+  "git_write_actions_performed": false,
+  "read_only_checks": {
+    "path_exists": true,
+    "git_status_checked": true,
+    "branch_checked": true,
+    "remote_checked": true,
+    "log_checked": true,
+    "directory_listing_checked": true,
+    "readme_checked": true
+  },
+  "observed_state": {
+    "branch": "main",
+    "git_status_short": "",
+    "remote_origin": "https://github.com/AlbertoFerrari71/Codex_Skills.git",
+    "head_short": "36b065d",
+    "head_subject": "150) Add installed skills sync checker",
+    "skill_directories_present": true,
+    "skill_md_present": true,
+    "validators_present": true
+  },
+  "outputs": {
+    "dry_run_pilot": "docs/motor/0860_CODEX_SKILLS_EXTERNAL_WORKFLOW_DRY_RUN_PILOT.md",
+    "readiness_report": "docs/motor/0860_CODEX_SKILLS_READINESS_REPORT.md",
+    "dry_run_plan": "examples/publish_runner/0860_codex_skills_external_dry_run_plan.example.json",
+    "changed_files_preview": "docs/motor/0860_CODEX_SKILLS_CHANGED_FILES_PREVIEW.md",
+    "human_approval_gate": "docs/motor/0860_CODEX_SKILLS_HUMAN_APPROVAL_GATE.md"
+  },
+  "human_gate_required_for_next_step": true,
+  "next_step": "0870) Codex_Skills First Controlled Write Pilot"
+}

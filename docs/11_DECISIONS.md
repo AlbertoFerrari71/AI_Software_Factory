@@ -3675,3 +3675,46 @@ Il prossimo step consigliato e':
 ```text
 0860) Codex_Skills External Workflow Dry-Run Pilot
 ```
+
+---
+
+## DEC-100 - Codex_Skills external dry-run read-only
+
+**Data:** 2026-06-08
+**Stato:** Accettata
+
+### Contesto
+
+Dopo lo STEP 0850, `Codex_Skills` e' la candidata principale per il primo pilot
+esterno ASF perche' reale, vicina a skill/template e meno rischiosa di un
+progetto applicativo operativo. Lo step successivo deve dimostrare readiness,
+dry-run, preview, risk assessment ed evidence senza modificare la repo esterna.
+
+### Decisione
+
+Lo STEP 0860 introduce un dry-run pack esterno controllato:
+
+- documento operativo 0860;
+- readiness report su `Codex_Skills`;
+- dry-run plan JSON non pubblicante;
+- changed-files preview ipotetica;
+- human approval gate per il futuro 0870;
+- evidence manifest di dry-run;
+- test automatico dedicato.
+
+L'accesso alla repo esterna resta read-only. Il pack non autorizza scritture,
+sincronizzazioni skill, installazioni skill, commit, push, PR, merge, deploy o
+tag su repository esterne.
+
+### Conseguenze
+
+ASF puo' preparare un workflow esterno tracciabile e human-gated senza toccare
+il target. Il futuro 0870 potra' proporre una prima modifica minima solo dopo
+review umana del readiness report, del dry-run plan e della changed-files
+preview.
+
+Il prossimo step consigliato e':
+
+```text
+0870) Codex_Skills First Controlled Write Pilot
+```

@@ -116,7 +116,8 @@ Esempio:
 | 830 | MVP Real Step Pilot 4 - Slightly More Operational | Provare il Motore su uno step reale piccolo ma piu' operativo | Operational pilot pack con doc, manifest JSON, test e PrepareConfig non pubblicante | Post-MVP Pilot | Completato con warning |
 | 840 | Runner Hook Evidence Manifest Post-Publish Pack | Consolidare manifest hook-aware dopo pubblicazione reale human-gated | Documento pack post-publish, manifest JSON esempio, test e riferimenti Bridge/LAST/checks | Post-MVP Hardening | Completato |
 | 850 | First Real External Workflow Pilot | Preparare il primo pilot esterno controllato senza modificare repo esterne | Documento pilot, matrice candidati, manifest planning-only, test e safety boundaries | Post-MVP Pilot | Completato |
-| 860 | Codex_Skills External Workflow Dry-Run Pilot | Provare ASF su Codex_Skills in read-only/dry-run con human gate | Repo readiness report, dry-run plan, risk assessment e proposta locale non pubblicante | Post-MVP Pilot | Proposto |
+| 860 | Codex_Skills External Workflow Dry-Run Pilot | Provare ASF su Codex_Skills in read-only/dry-run con human gate | Repo readiness report, dry-run plan, changed-files preview, evidence manifest e human gate | Post-MVP Pilot | Completato |
+| 870 | Codex_Skills First Controlled Write Pilot | Proporre una prima modifica minima su Codex_Skills solo dopo gate umano | Candidate change pack, safety gate, verifica locale e pubblicazione manuale separata | Post-MVP Pilot | Proposto |
 
 ---
 
