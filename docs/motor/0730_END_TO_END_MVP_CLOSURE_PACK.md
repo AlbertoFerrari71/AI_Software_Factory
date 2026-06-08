@@ -407,11 +407,41 @@ Prossimo step consigliato:
 0760) MVP Real Step Pilot 2 with State Hooks
 ```
 
+## 20.3 Aggiornamento STEP 0790
+
+Dopo i pilot reali 0740, 0760 e 0780, lo STEP 0790 consolida la fase
+post-MVP:
+
+```text
+docs/motor/0790_POST_MVP_ROADMAP_AND_HARDENING_PLAN.md
+```
+
+La decisione resta prudente:
+
+```text
+MVP STATUS: GO WITH WARNINGS
+POST-MVP DECISION: HARDENING FIRST
+```
+
+La prossima fase non e' nuova automazione autonoma. Prima vanno consolidati:
+
+- PowerShell native command guardrails;
+- recovery UX e no-false-completed guard;
+- consistenza Bridge e validazione `LAST-*`;
+- manifest/evidence post-publish con runner hooks;
+- profili di verifica e playbook per pilot reali.
+
+Prossimo step consigliato:
+
+```text
+0800) PowerShell Native Command Guardrail Hardening
+```
+
 ## 21. Sintesi di chiusura
 
 Il Motore ASF MVP e' chiuso come baseline usabile, locale, human-gated e
 verificabile.
 
-La chiusura non autorizza automazione cieca. La fase post-MVP deve partire da un
-pilot reale controllato, mantenendo fail-closed, review umana e pubblicazione
-via `scripts/asf_publish_step.ps1`.
+La chiusura non autorizza automazione cieca. Dopo i pilot reali post-MVP, la
+fase successiva deve consolidare hardening, recovery ed evidence mantenendo
+fail-closed, review umana e pubblicazione via `scripts/asf_publish_step.ps1`.

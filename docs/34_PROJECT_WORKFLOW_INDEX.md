@@ -83,6 +83,7 @@ L'indice orienta il lavoro. Non sostituisce i documenti specifici, il Verificati
 | Eseguire MVP Real Step Pilot 2 with State Hooks | `docs/motor/0760_MVP_REAL_STEP_PILOT_2_WITH_STATE_HOOKS.md` | `scripts/asf_step_state_machine.py`, `scripts/asf_publish_config_generator.py`, `scripts/asf_publish_step.ps1 -Phase Plan` | Quando serve preparare uno step reale piccolo con hook runner/state machine prima della pubblicazione human-gated | `PILOT STATUS: GO WITH WARNINGS`; state file `READY_TO_PUBLISH`; config hook-aware; evidence sotto `tmp/0760_mvp_real_step_pilot_2_state_hooks`; prossimo passo `0770) Runner Hook Evidence Manifest Integration`; nessuna Phase B/C da Codex |
 | Generare manifest con runner_hooks | `docs/motor/0770_RUNNER_HOOK_EVIDENCE_MANIFEST_INTEGRATION.md` | `scripts/asf_motor_run_manifest.py --include-runner-hooks`, `examples/motor_run_manifest/sample_manifest_input_runner_hooks_closed.json`, `examples/state_machine/sample_closed_with_runner_hooks_state.json` | Quando serve auditare una pubblicazione reale human-gated collegando eventi runner/state machine al manifest | Sezione `runner_hooks`; usa `--expected-events`; evento mancante -> `INCOMPLETE`; mismatch -> `FAIL_CLOSED`; prossimo passo `0780) MVP Real Step Pilot 3 with Manifest Hooks`; no Phase B/C da Codex |
 | Eseguire MVP Real Step Pilot 3 with Manifest Hooks | `docs/motor/0780_MVP_REAL_STEP_PILOT_3_WITH_MANIFEST_HOOKS.md` | `scripts/asf_step_state_machine.py`, `scripts/asf_publish_config_generator.py`, `scripts/asf_publish_step.ps1 -Phase Plan`, `scripts/asf_motor_run_manifest.py --include-runner-hooks` | Quando serve preparare uno step reale piccolo con state hooks e manifest hook-aware prima della pubblicazione human-gated | `PILOT STATUS: GO WITH WARNINGS`; state file `READY_TO_PUBLISH`; config hook-aware; manifest sintetico `CLOSED` con `--expected-final-state`; evidence sotto `tmp/0780_mvp_real_step_pilot_3_manifest_hooks`; prossimo passo `0790) Post-MVP Roadmap and Hardening Plan`; nessuna Phase B/C da Codex |
+| Pianificare hardening post-MVP | `docs/motor/0790_POST_MVP_ROADMAP_AND_HARDENING_PLAN.md` | `scripts/asf_publish_step.ps1`, `scripts/asf_step_state_machine.py`, `scripts/asf_motor_run_manifest.py`, `scripts/check_workflow_health.py` | Dopo MVP e tre pilot reali, quando serve decidere cosa consolidare prima di nuova automazione | `POST-MVP DECISION: HARDENING FIRST`; `Bridge Output Consistency and LAST Validation`; roadmap 0800-0860; prossimo passo `0800) PowerShell Native Command Guardrail Hardening`; nessuna nuova automazione |
 | Controllare Documentation Sync | `docs/21_DOCUMENTATION_SYNC.md` | Nessuno | Ogni step documentale o operativo | Valuta changelog, roadmap, decisions e documenti specifici |
 | Controllare Soft Protection Guardrails | `docs/24_SOFT_PROTECTION_GUARDRAILS.md` | `scripts/git/check_soft_guardrails.ps1` | Prima del commit o come controllo locale | Read-only; non installa hook |
 | Eseguire Workflow Health Check | `docs/35_WORKFLOW_HEALTH_CHECK.md` | `scripts/check_workflow_health.py` | Quando workflow docs, script o riferimenti centrali cambiano | Read-only; non sostituisce Verification Gate |
@@ -183,7 +184,7 @@ Regole operative:
 - `docs/0560-01-Report_OpenAI_API_Adapter_First_Authorized_Live_Run.md`: report sanitizzato STEP 0560, attualmente `BLOCKED_BY_RATE_LIMIT_OR_QUOTA` per HTTP 429 `insufficient_quota`.
 - `docs/0560-03-Diagnostic_OpenAI_Provider_HTTP_Error_And_Rate_Limit.md`: diagnostic pack provider-side STEP 0560-E, senza live call e senza evidence positiva inventata.
 - `docs/adr/0570_SUPERVISED_GATE_AUTONOMY.md`: decisione strategica per autonomia supervisionata a gate.
-- `docs/motor/0570_MVP_MOTOR_ROADMAP.md`: roadmap 0570-0780 per MVP Motore.
+- `docs/motor/0570_MVP_MOTOR_ROADMAP.md`: roadmap 0570-0790 per MVP Motore.
 - `docs/motor/0570_GATE_LOOP_SPEC.md`: stati formali del loop a gate, STOP condition ed evidence.
 - `docs/motor/0570_INDEPENDENT_REVIEW_NODE.md`: contratto input/output JSON e criteri PASS/FAIL/NEEDS_HUMAN del nodo review.
 - `docs/motor/0580_DRY_RUN_LOOP_RUNNER.md`: primo runner locale dry-run del loop supervisionato a gate.
@@ -208,6 +209,7 @@ Regole operative:
 - `docs/motor/0760_MVP_REAL_STEP_PILOT_2_WITH_STATE_HOOKS.md`: secondo pilot reale post-MVP con state file `READY_TO_PUBLISH`, config hook-aware e validazione `Phase Plan` senza pubblicazione.
 - `docs/motor/0770_RUNNER_HOOK_EVIDENCE_MANIFEST_INTEGRATION.md`: integrazione `runner_hooks` nel manifest per auditare eventi runner/state machine, final state e Bridge pointers.
 - `docs/motor/0780_MVP_REAL_STEP_PILOT_3_WITH_MANIFEST_HOOKS.md`: terzo pilot reale post-MVP con state hooks, config hook-aware, manifest hook-aware sintetico e handoff verso validazione post-publish.
+- `docs/motor/0790_POST_MVP_ROADMAP_AND_HARDENING_PLAN.md`: piano post-MVP con decisione hardening first, warning residui, recovery lessons e roadmap 0800-0860.
 
 ---
 
