@@ -103,6 +103,7 @@ Regole rapide:
 - niente here-string annidate;
 - niente `finally` fragile nel wrapper esterno;
 - usare `ArgList`, non `$Args`, per parametri wrapper nativi;
+- rifiutare `ArgList` nulli o vuoti, usare `AllowedExitCodes` e `ProcessStartInfo.ArgumentList`, e dichiarare successo solo dopo exit code ammesso;
 - usare `git status --porcelain=v1 --untracked-files=all` per parser/scope guard;
 - artefatti progressivi `NNNN-II-Tipo_Nome.ext` restano obbligatori;
 - per trovare l'ultimo artefatto di un tipo per uno step, usare `max(II)` per `(step, tipo)`;

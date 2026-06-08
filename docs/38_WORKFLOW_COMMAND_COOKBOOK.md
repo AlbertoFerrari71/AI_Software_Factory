@@ -210,6 +210,11 @@ I wrapper nativi devono usare `ArgList`, non `$Args`. I parser Git di scope devo
 git status --porcelain=v1 --untracked-files=all
 ```
 
+I wrapper nativi devono anche rifiutare `ArgList` nulli o vuoti, usare
+`AllowedExitCodes` e `ProcessStartInfo.ArgumentList`, e dichiarare successo solo
+dopo exit code ammesso. Non stampare `COMPLETATO` o equivalenti prima dei gate
+finali.
+
 Questo evita di perdere il primo carattere dei path, espande directory untracked in singoli file e rende piu' sicuro `git add -- @AllowedPaths`.
 
 ### Pubblicazione PR-first

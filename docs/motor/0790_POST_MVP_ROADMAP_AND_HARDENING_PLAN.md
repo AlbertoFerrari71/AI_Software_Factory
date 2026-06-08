@@ -248,3 +248,18 @@ rischio operativo troppo alto.
 
 Il Motore ASF puo' proseguire, ma la fase corretta e' hardening controllato,
 non aumento immediato dell'autonomia.
+
+## 13.1 Aggiornamento dopo STEP 0800
+
+Lo STEP 0800 ha consolidato lo standard PowerShell per comandi nativi nel
+publish runner e nei template command-pack repository-local in:
+
+```text
+docs/motor/0800_POWERSHELL_NATIVE_COMMAND_GUARDRAIL_HARDENING.md
+```
+
+Il prossimo step consigliato dopo il guardrail hardening e':
+
+```text
+0810) Publish Runner Recovery UX and No-False-Completed Guard
+```

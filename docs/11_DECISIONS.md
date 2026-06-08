@@ -2481,6 +2481,57 @@ riconciliazione delle evidence.
 
 ---
 
+## DEC-093 - Guardrail PowerShell per comandi nativi
+
+**Data:** 2026-06-08
+**Stato:** Accettata
+
+### Contesto
+
+Lo STEP 0790 ha indicato l'hardening PowerShell come primo passo post-MVP. Il
+rischio pratico era che wrapper e command pack potessero proseguire dopo errori
+di `git`, `gh`, `python` o `pwsh`, oppure dichiarare successo prima dei gate
+finali.
+
+### Decisione
+
+Lo STEP 0800 introduce
+`docs/motor/0800_POWERSHELL_NATIVE_COMMAND_GUARDRAIL_HARDENING.md`.
+
+Il publish runner e lo standard command-pack vengono rafforzati con:
+
+- wrapper `Invoke-NativeChecked` per comandi nativi critici;
+- validazione fail-closed di comando, label, argomenti e `AllowedExitCodes`;
+- rifiuto di argomenti nulli, vuoti o solo whitespace;
+- lettura immediata di `$LASTEXITCODE`;
+- blocco di Phase C senza `-PrNumber` o config `pr_number`;
+- validazione di `expected_files` e file fuori scope;
+- classificazione basata su exit code esplicitamente ammessi;
+- stderr registrato come evidence da interpretare con contesto;
+- successo dichiarato solo dopo i gate finali realmente passati.
+
+### Motivazione
+
+La sicurezza dei comandi nativi e' prerequisito per recovery piu' chiari e per
+pilot futuri piu' operativi. Prima di migliorare UX o aumentare automazione,
+serve che i wrapper falliscano chiusi sugli input ambigui e non trasformino
+warning o exit code non ammessi in successo.
+
+### Conseguenze
+
+- `scripts/asf_publish_step.ps1` recepisce il wrapper nativo, la validazione
+  PR number e gli scope guardrail.
+- I template PowerShell e la skill export repository-local recepiscono lo
+  stesso standard.
+- Le skill esterne installate non vengono modificate dallo step.
+- Il prossimo step consigliato e':
+
+```text
+0810) Publish Runner Recovery UX and No-False-Completed Guard
+```
+
+---
+
 ## DEC-091 - MVP Real Step Pilot 3 con Manifest Hooks
 
 **Data:** 2026-06-07
