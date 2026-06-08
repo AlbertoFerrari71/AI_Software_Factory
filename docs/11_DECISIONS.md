@@ -3555,3 +3555,43 @@ Il prossimo step consigliato e':
 ```text
 0830) MVP Real Step Pilot 4 - Slightly More Operational
 ```
+
+---
+
+## DEC-097 - Pilot operativo post-0820 senza pubblicazione automatica
+
+**Data:** 2026-06-08
+**Stato:** Accettata
+
+### Contesto
+
+Dopo gli hardening 0800-0820 il Motore ASF dispone di guardrail nativi
+PowerShell, flusso runner allineato, scope discovery, recovery out-of-scope,
+retry/fallback Bridge e LAST validation. Serve un pilot reale piu' operativo
+dei precedenti, ma ancora piccolo e non pubblicante da Codex.
+
+### Decisione
+
+Lo STEP 0830 introduce un operational pilot pack con:
+
+- documento operativo 0830;
+- manifest JSON di esempio non operativo;
+- test automatico dedicato;
+- aggiornamento degli indici minimi;
+- prova `PrepareConfig` non pubblicante quando ci sono changed files
+  intenzionali.
+
+Il pilot deve dimostrare `PrepareConfig`, review umana dello scope, suggested
+config/recovery report, Phase B, recupero PR, Phase C, Bridge/LAST validation,
+LF/CRLF come warning controllati e DOCX/output accessori best-effort.
+
+### Conseguenze
+
+Il pilot non autorizza Phase B, Phase C, commit, push, PR, merge, deploy o tag
+da Codex. La pubblicazione resta human-gated e separata.
+
+Il prossimo step consigliato e':
+
+```text
+0840) Runner Hook Evidence Manifest Post-Publish Pack
+```

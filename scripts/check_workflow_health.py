@@ -111,6 +111,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/motor/0805_POWERSHELL_PUBLISH_SKILL_SYNC_WITH_PROVEN_RUNNER_FLOW.md",
         "docs/motor/0810_PUBLISH_RUNNER_SCOPE_DISCOVERY_RECOVERY_UX_AND_NO_FALSE_COMPLETED_GUARD.md",
         "docs/motor/0820_BRIDGE_OUTPUT_RETRY_FALLBACK_AND_LAST_VALIDATION.md",
+        "docs/motor/0830_MVP_REAL_STEP_PILOT_4_SLIGHTLY_MORE_OPERATIONAL.md",
         "config/asf_project_profiles.json",
         "scripts/asf_openai_api_adapter.py",
         "scripts/asf_openai_controlled_live_execution_pack.py",
@@ -180,6 +181,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "examples/publish_step/0750_publish_config_state_hooks.example.json",
         "examples/publish_step/0750_publish_config_state_hooks_close_step.example.json",
         "examples/publish_step/0750_publish_config_state_hooks_mismatch_fail_closed.example.json",
+        "examples/publish_runner/0830_prepare_config_pilot.json",
         "examples/risk_classifier/sample_l0_docs_only.json",
         "examples/risk_classifier/sample_l2_code_change.json",
         "examples/risk_classifier/sample_l3_publish.json",
@@ -530,6 +532,22 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                     "fallback",
                     "single writer ownership",
                     "0830) MVP Real Step Pilot 4 - Slightly More Operational",
+                ],
+            ),
+            (
+                "ASF MVP Real Step Pilot 4 document",
+                ["docs/motor/0830_MVP_REAL_STEP_PILOT_4_SLIGHTLY_MORE_OPERATIONAL.md"],
+            ),
+            (
+                "ASF MVP Real Step Pilot 4 pointers",
+                [
+                    "examples/publish_runner/0830_prepare_config_pilot.json",
+                    "PrepareConfig",
+                    "review umana dello scope",
+                    "Bridge/LAST validation",
+                    "gate bloccanti",
+                    "warning non bloccanti",
+                    "0840) Runner Hook Evidence Manifest Post-Publish Pack",
                 ],
             ),
             (
@@ -894,6 +912,10 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             (
                 "ASF Stable PowerShell Publish Runner config",
                 ["examples/publish_step/0590_publish_config.example.json"],
+            ),
+            (
+                "ASF MVP Real Step Pilot 4 example manifest",
+                ["examples/publish_runner/0830_prepare_config_pilot.json"],
             ),
             (
                 "ASF Risk Classifier examples",
