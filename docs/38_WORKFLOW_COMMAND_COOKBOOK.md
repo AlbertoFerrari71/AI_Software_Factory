@@ -1354,18 +1354,24 @@ Non scrivere "chiuso" se mancano merge, pull `main` o verifiche finali.
 
 Quando uno step ASF e' pronto per verifica locale o pubblicazione presidiata e si vuole evitare un mega-blocco PowerShell copiato in chat.
 
-Per pubblicazioni ASF, il comando raccomandato dopo STEP 0810 e':
+Per pubblicazioni ASF, il comando raccomandato dopo STEP 0820 e':
 
 ```text
 PrepareConfig/scope discovery -> review umana scope -> config JSON esplicito -> scripts/asf_publish_step.ps1 -> Phase B -> recupero PR -> Phase C -> verifiche finali
 ```
+
+Dopo STEP 0820 il runner possiede i propri output Bridge standard. Non usare
+`Start-Transcript` sullo stesso `Output_Completo`; per un wrapper esterno usare
+`NNNN-Wrapper_Log_*.txt`. Se un output Bridge o `LAST-*` e' bloccato, il runner
+fa retry, poi fallback timestampato e warning non bloccante se i gate sono gia'
+passati. Il compatto Markdown resta obbligatorio; DOCX resta best-effort.
 
 ### Comandi
 
 PREPARE CONFIG, bozza scope da review:
 
 ```powershell
-pwsh -NoProfile -ExecutionPolicy Bypass -File scripts\asf_publish_step.ps1 -Phase PrepareConfig -StepNumber 0810 -StepName "Name" -BranchName "step-0810-name" -CommitMessage "0810 name" -PrTitle "0810 name" -NextStep "0820) Bridge Output Consistency and LAST Validation"
+pwsh -NoProfile -ExecutionPolicy Bypass -File scripts\asf_publish_step.ps1 -Phase PrepareConfig -StepNumber 0810 -StepName "Name" -BranchName "step-0810-name" -CommitMessage "0810 name" -PrTitle "0810 name" -NextStep "0820) Bridge Output Retry, Fallback and LAST Validation"
 ```
 
 FASE A, verifica locale:

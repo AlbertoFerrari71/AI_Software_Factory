@@ -135,6 +135,12 @@ copia con `Get-Content -Path <file> -Raw | Set-Clipboard`, mai con
 `Set-Clipboard -Path`. DOCX/Word COM resta best-effort; output accessori restano
 best-effort e non invalidano un publish gia' verificato.
 
+Dopo STEP 0820, se un output Bridge o `LAST-*` primario resta bloccato, il
+runner fa retry e poi usa un fallback timestampato con warning chiaro. Il
+compatto Markdown resta obbligatorio nel path primario o fallback. Wrapper
+esterni non devono usare `Start-Transcript` sullo stesso `Output_Completo` del
+runner; usare un file separato `NNNN-Wrapper_Log_*.txt`.
+
 Se `main...origin/main [ahead N]` contiene merge locali gia' verificati, non fare push diretto a `main`: creare un publish branch da `main`, pushare quel branch, aprire PR, mergiare, riallineare `main` e verificare.
 
 Template:

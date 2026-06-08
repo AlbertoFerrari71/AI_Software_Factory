@@ -173,8 +173,12 @@ NNNN-II-Output_Compatto_<name>.md
 NNNN-II-Output_Compatto_<name>.docx
 ```
 
-Do not generate `LAST-*` files. Do not read `LAST-*` files as input. To find
-the latest artifact of one type for one step, use `max(II)` for `(step, type)`.
+Do not generate `LAST-*` files in generic command packs. Do not read `LAST-*`
+files as input. To find the latest artifact of one type for one step, use
+`max(II)` for `(step, type)`.
+Exception: the ASF publish runner may maintain `LAST-*` compatibility files for
+operator handoff, with retry/fallback and explicit warning when a primary LAST
+path is locked.
 The Bridge is operational storage; Git and versioned files are authoritative.
 
 DOCX is best-effort. Produce full TXT and compact Markdown first. If DOCX fails, write a non-blocking warning and a `.docx.failed.txt` or placeholder where useful.
@@ -204,7 +208,7 @@ Do not push `main` directly. Create a publish branch from local `main`, push tha
 ## ASF Publish Runner Flow
 
 For ASF step publication command packs, default to the proven runner flow from
-STEP 0790, STEP 0800, and STEP 0810:
+STEP 0790, STEP 0800, STEP 0810, and STEP 0820:
 
 1. run `scripts/asf_publish_step.ps1 -Phase PrepareConfig` for scope discovery, or use an equivalent reviewed config draft;
 2. perform human review of `expected_files` and `changed_files`;
@@ -217,6 +221,9 @@ STEP 0790, STEP 0800, and STEP 0810:
 9. run final checks;
 10. keep the runner Bridge output numbered and `LAST-*` compatibility files;
 11. copy `LAST-Output_Compatto.md` with `Get-Content -Path <file> -Raw | Set-Clipboard`.
+12. let `scripts/asf_publish_step.ps1` own its standard Bridge outputs;
+13. do not open `Start-Transcript` on the runner `Output_Completo` path; use `NNNN-Wrapper_Log_*.txt` for any external wrapper log;
+14. treat Bridge/LAST primary-path locks as retry, timestamped fallback, then `COMPLETATO CON WARNING NON BLOCCANTE` only after required gates passed.
 
 Use this flow only when Alberto has explicitly authorized publication of an ASF
 step after local review/intake. Do not use it for clean Codex prompts,
@@ -260,6 +267,14 @@ Phase B publishes branch/PR after local gates. Phase C merges and runs final
 verification after a valid PR number is available. Do not run Phase C without a
 non-empty numeric PR number.
 
+Bridge output policy for the ASF publish runner:
+
+- mandatory gates remain fail-closed: failed Git, PR, tests, verify gate or diff-check means `BLOCCATO`;
+- compact Markdown is mandatory and must be written to the primary path or a timestamped fallback;
+- DOCX/Word COM is best-effort and a DOCX failure is a non-blocking warning;
+- `LAST-*` compatibility files are updated with retry/fallback by the runner only;
+- single writer ownership: external wrappers must not write or transcript to the same runner `Output_Completo` file.
+
 For short ASF publish packs, use a simple `Run` helper: reject empty command
 names and arguments, execute the native command, read `$LASTEXITCODE`
 immediately, and `throw` on non-zero exit code.
@@ -275,10 +290,12 @@ Avoid these ASF publish anti-patterns:
 - AST parsing to infer runner parameters, except for exceptional diagnostics;
 - casual scope expansion;
 - printing `COMPLETATO` before final gates pass;
+- using `Start-Transcript` on the same `Output_Completo` file owned by the runner;
 - `Set-Clipboard -Path`;
 - blocking publication only because Word COM or DOCX generation failed;
 - making a verified publish look failed only because a DOCX/accessory output
-  failed after the final gates.
+  failed after the final gates;
+- treating a Bridge/LAST primary-path lock as a failed gate after gates already passed.
 
 ## LF/CRLF
 

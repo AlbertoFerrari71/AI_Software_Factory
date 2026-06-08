@@ -31,6 +31,12 @@ PUBLISH_SCOPE_DISCOVERY_DOC = (
     / "motor"
     / "0810_PUBLISH_RUNNER_SCOPE_DISCOVERY_RECOVERY_UX_AND_NO_FALSE_COMPLETED_GUARD.md"
 )
+BRIDGE_OUTPUT_RETRY_DOC = (
+    ROOT
+    / "docs"
+    / "motor"
+    / "0820_BRIDGE_OUTPUT_RETRY_FALLBACK_AND_LAST_VALIDATION.md"
+)
 
 
 def read(path: Path) -> str:
@@ -50,6 +56,7 @@ def test_workflow_health_check_files_exist() -> None:
     assert PWSH_NATIVE_GUARDRAILS_DOC.exists()
     assert PWSH_PUBLISH_SKILL_SYNC_DOC.exists()
     assert PUBLISH_SCOPE_DISCOVERY_DOC.exists()
+    assert BRIDGE_OUTPUT_RETRY_DOC.exists()
 
 
 def test_workflow_health_check_script_runs_successfully() -> None:
@@ -249,7 +256,7 @@ def test_workflow_health_tracks_post_mvp_roadmap_and_hardening_plan() -> None:
         "docs/motor/0790_POST_MVP_ROADMAP_AND_HARDENING_PLAN.md",
         "POST-MVP DECISION: HARDENING FIRST",
         "PowerShell Native Command Guardrail Hardening",
-        "Bridge Output Consistency and LAST Validation",
+        "Bridge Output Retry, Fallback and LAST Validation",
         "0800) PowerShell Native Command Guardrail Hardening",
     ]
 
@@ -362,7 +369,7 @@ def test_workflow_health_tracks_publish_runner_scope_discovery_recovery_ux() -> 
         "COMPLETATO CON WARNING NON BLOCCANTE",
         "DOCX",
         "best-effort",
-        "0820) Bridge Output Consistency and LAST Validation",
+        "0820) Bridge Output Retry, Fallback and LAST Validation",
     ]
 
     for fragment in indexed_fragments:
@@ -387,6 +394,49 @@ def test_workflow_health_tracks_publish_runner_scope_discovery_recovery_ux() -> 
 
     for fragment in scope_fragments:
         assert fragment in scope_doc
+
+
+def test_workflow_health_tracks_bridge_output_retry_fallback_last_validation() -> None:
+    script = read(SCRIPT)
+    doc = read(DOC)
+    index = read(INDEX)
+    bridge_doc = read(BRIDGE_OUTPUT_RETRY_DOC)
+
+    indexed_fragments = [
+        "docs/motor/0820_BRIDGE_OUTPUT_RETRY_FALLBACK_AND_LAST_VALIDATION.md",
+        "Set-ContentWithRetry",
+        "Write-BridgeFileWithRetry",
+        "Update-LastFileWithRetry",
+        "Validate-BridgeLastOutputs",
+        "fallback",
+        "single writer ownership",
+        "0830) MVP Real Step Pilot 4 - Slightly More Operational",
+    ]
+
+    for fragment in indexed_fragments:
+        assert fragment in script
+        assert fragment in doc
+        assert fragment in index
+
+    bridge_fragments = [
+        "0800",
+        "0805",
+        "0810",
+        "The process cannot access the file because it is being used by another process",
+        "BLOCCATO",
+        "retry",
+        "fallback",
+        "Compact Markdown is mandatory",
+        "DOCX remains best-effort",
+        "LAST-Output_Compatto.md",
+        "single writer ownership",
+        "Start-Transcript",
+        "NNNN-Wrapper_Log_*.txt",
+        "Set-Clipboard -Path",
+    ]
+
+    for fragment in bridge_fragments:
+        assert fragment in bridge_doc
 
 
 def test_workflow_health_tracks_runner_hook_evidence_manifest_integration() -> None:

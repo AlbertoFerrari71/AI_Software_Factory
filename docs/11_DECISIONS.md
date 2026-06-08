@@ -3507,5 +3507,51 @@ La skill/template PowerShell deve raccomandare:
 Il prossimo step consigliato e':
 
 ```text
-0820) Bridge Output Consistency and LAST Validation
+0820) Bridge Output Retry, Fallback and LAST Validation
+```
+
+---
+
+## DEC-096 - Retry/fallback Bridge e LAST senza falsi fallimenti
+
+**Data:** 2026-06-08
+**Stato:** Accettata
+
+### Contesto
+
+Durante la pubblicazione dello STEP 0810, Phase B era completata ma il runner
+ha fallito nella scrittura di un file Bridge `Output_Completo` perche' il file
+era bloccato da un altro processo. Le cause probabili includono Dropbox sync,
+preview/editor, antivirus/indexing o un wrapper esterno con transcript sullo
+stesso file.
+
+### Decisione
+
+Il publish runner deve trattare i gate veri e gli output accessori come superfici
+diverse:
+
+- gate Git, PR, test, Workflow Health Check, Verification Gate e diff-check
+  falliti restano `BLOCCATO`;
+- output Bridge/LAST primario bloccato dopo gate passati usa retry controllato;
+- se il primario resta bloccato, viene scritto un fallback timestampato nella
+  stessa cartella Bridge;
+- il compatto Markdown e' obbligatorio nel path primario o fallback;
+- DOCX resta best-effort;
+- i `LAST-*` sono aggiornati con retry/fallback e warning esplicito;
+- il runner e' single writer owner dei propri output standard.
+
+### Conseguenze
+
+Wrapper esterni non devono usare `Start-Transcript` sullo stesso
+`Output_Completo` del runner. Se serve un log wrapper, usare un nome separato
+come `NNNN-Wrapper_Log_*.txt`.
+
+Un Bridge/LAST lock dopo gate passati produce `COMPLETATO CON WARNING NON
+BLOCCANTE`, non falso fallimento. Un gate vero fallito resta sempre
+`BLOCCATO`.
+
+Il prossimo step consigliato e':
+
+```text
+0830) MVP Real Step Pilot 4 - Slightly More Operational
 ```

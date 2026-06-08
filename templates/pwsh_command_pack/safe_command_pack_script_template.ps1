@@ -234,6 +234,9 @@ function Invoke-AsfPublishConfigRunnerFlow {
     Write-Log "ASF publish config must declare expected_files and changed_files explicitly; do not infer scope by parsing git status --short."
     Write-Log "LF/CRLF warnings are not out-of-scope files when tests, workflow health check, verify gate, and git --no-pager diff --check pass."
     Write-Log "DOCX/accessory outputs are best-effort and must not invalidate a publish already verified by final gates."
+    Write-Log "Bridge/LAST primary-path locks use retry, then timestamped fallback, then COMPLETATO CON WARNING NON BLOCCANTE after required gates pass."
+    Write-Log "The ASF publish runner owns its standard Bridge outputs; external wrappers must not Start-Transcript to the runner Output_Completo file."
+    Write-Log "If an external transcript is needed, use a distinct NNNN-Wrapper_Log_*.txt file."
     Write-Log "Do not use Get-Command -Path or AST parsing to infer publish runner parameters."
 
     Run -FileName "pwsh" -ArgList @(
@@ -491,6 +494,7 @@ try {
     Write-Log "Native command guardrail: reject empty FileName, empty Label, null ArgList, empty ArgList entries and empty AllowedExitCodes before execution."
     Write-Log "Native command guardrail: success means exit code is explicitly listed in AllowedExitCodes; stderr is logged and classified with context."
     Write-Log "Do not write COMPLETATO until every native command and verification gate has passed with exit code 0 or an explicit allowed exit code."
+    Write-Log "Do not use Start-Transcript on an Output_Completo path owned by scripts/asf_publish_step.ps1; use NNNN-Wrapper_Log_*.txt for wrapper logs."
 
     [void] (Invoke-NativeCommand -FileName "git" -ArgList @("--no-pager", "status", "--short", "--branch") -AllowedExitCodes @(0) -Label "git status")
     [void] (Test-GitScope -AllowedPathList $AllowedPaths)

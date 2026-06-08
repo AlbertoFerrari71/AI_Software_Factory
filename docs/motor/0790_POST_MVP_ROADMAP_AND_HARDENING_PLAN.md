@@ -182,7 +182,7 @@ Roadmap consigliata:
 ```text
 0800) PowerShell Native Command Guardrail Hardening
 0810) Publish Runner Recovery UX and No-False-Completed Guard
-0820) Bridge Output Consistency and LAST Validation
+0820) Bridge Output Retry, Fallback and LAST Validation
 0830) MVP Real Step Pilot 4 - Slightly More Operational
 0840) Runner Hook Evidence Manifest Post-Publish Pack
 0850) Verification Profile Cost Tuning

@@ -1766,6 +1766,292 @@ function Get-BridgeStatusLabel {
     return $Status
 }
 
+function Add-UniqueWarningLine {
+    param([string]$Message)
+    if (-not $script:WarningLines.Contains($Message)) {
+        Add-WarningLine $Message
+    }
+}
+
+function New-BridgeFileOperationResult {
+    param(
+        [string]$Label,
+        [string]$Path,
+        [bool]$Success,
+        [int]$Attempts,
+        [string]$ErrorMessage = "",
+        [bool]$FallbackUsed = $false,
+        [string]$FallbackPath = "",
+        [string]$EffectivePath = ""
+    )
+
+    if ([string]::IsNullOrWhiteSpace($EffectivePath)) {
+        $EffectivePath = if ($FallbackUsed) { $FallbackPath } else { $Path }
+    }
+
+    return [pscustomobject]@{
+        Label = $Label
+        Path = $Path
+        Success = $Success
+        Attempts = $Attempts
+        ErrorMessage = $ErrorMessage
+        FallbackUsed = $FallbackUsed
+        FallbackPath = $FallbackPath
+        EffectivePath = $EffectivePath
+    }
+}
+
+function Invoke-BridgeFileOperationWithRetry {
+    param(
+        [string]$Label,
+        [scriptblock]$Operation,
+        [int]$MaxAttempts = 5,
+        [int]$DelayMilliseconds = 500
+    )
+
+    if ($MaxAttempts -lt 1) {
+        throw "MaxAttempts must be at least 1."
+    }
+    if ($DelayMilliseconds -lt 0) {
+        throw "DelayMilliseconds cannot be negative."
+    }
+
+    $lastError = ""
+    for ($attempt = 1; $attempt -le $MaxAttempts; $attempt++) {
+        try {
+            & $Operation
+            return [pscustomobject]@{
+                Success = $true
+                Attempts = $attempt
+                ErrorMessage = ""
+            }
+        } catch {
+            $lastError = $_.Exception.Message
+            if ($attempt -lt $MaxAttempts) {
+                Write-Log ("Bridge file retry {0}/{1} for {2}: {3}" -f $attempt, $MaxAttempts, $Label, $lastError)
+                Start-Sleep -Milliseconds $DelayMilliseconds
+            }
+        }
+    }
+
+    return [pscustomobject]@{
+        Success = $false
+        Attempts = $MaxAttempts
+        ErrorMessage = $lastError
+    }
+}
+
+function Set-ContentWithRetry {
+    param(
+        [string]$Path,
+        [string]$Value,
+        [int]$MaxAttempts = 5,
+        [int]$DelayMilliseconds = 500
+    )
+
+    return Invoke-BridgeFileOperationWithRetry -Label ("write {0}" -f $Path) -MaxAttempts $MaxAttempts -DelayMilliseconds $DelayMilliseconds -Operation {
+        Set-Content -LiteralPath $Path -Value $Value -Encoding UTF8 -ErrorAction Stop
+    }
+}
+
+function Copy-ItemWithRetry {
+    param(
+        [string]$Path,
+        [string]$Destination,
+        [int]$MaxAttempts = 5,
+        [int]$DelayMilliseconds = 500
+    )
+
+    return Invoke-BridgeFileOperationWithRetry -Label ("copy {0} to {1}" -f $Path, $Destination) -MaxAttempts $MaxAttempts -DelayMilliseconds $DelayMilliseconds -Operation {
+        if (Test-Path -LiteralPath $Destination -PathType Container) {
+            throw ("Destination is a directory, not a file: {0}" -f $Destination)
+        }
+        Copy-Item -LiteralPath $Path -Destination $Destination -Force -ErrorAction Stop
+    }
+}
+
+function Move-ItemWithRetry {
+    param(
+        [string]$Path,
+        [string]$Destination,
+        [int]$MaxAttempts = 5,
+        [int]$DelayMilliseconds = 500
+    )
+
+    return Invoke-BridgeFileOperationWithRetry -Label ("move {0} to {1}" -f $Path, $Destination) -MaxAttempts $MaxAttempts -DelayMilliseconds $DelayMilliseconds -Operation {
+        if (Test-Path -LiteralPath $Destination -PathType Container) {
+            throw ("Destination is a directory, not a file: {0}" -f $Destination)
+        }
+        Move-Item -LiteralPath $Path -Destination $Destination -Force -ErrorAction Stop
+    }
+}
+
+function New-FallbackBridgePath {
+    param(
+        [string]$Path,
+        [datetime]$Stamp = (Get-Date)
+    )
+
+    $directory = Split-Path -Parent $Path
+    $leaf = Split-Path -Leaf $Path
+    $baseName = [System.IO.Path]::GetFileNameWithoutExtension($leaf)
+    $extension = [System.IO.Path]::GetExtension($leaf)
+    $stampText = $Stamp.ToString("yyyyMMdd_HHmmss")
+    return (Join-Path $directory ("{0}_fallback_{1}{2}" -f $baseName, $stampText, $extension))
+}
+
+function Write-BridgeFileWithRetry {
+    param(
+        [string]$Label,
+        [string]$Path,
+        [string]$Value,
+        [int]$MaxAttempts = 5,
+        [int]$DelayMilliseconds = 500,
+        [datetime]$FallbackStamp = (Get-Date)
+    )
+
+    $directory = Split-Path -Parent $Path
+    [void][System.IO.Directory]::CreateDirectory($directory)
+    $leaf = Split-Path -Leaf $Path
+    $tempPath = Join-Path $directory (".{0}.{1}.tmp" -f $leaf, ([guid]::NewGuid().ToString("N")))
+
+    $tempResult = Set-ContentWithRetry -Path $tempPath -Value $Value -MaxAttempts $MaxAttempts -DelayMilliseconds $DelayMilliseconds
+    if (-not $tempResult.Success) {
+        return New-BridgeFileOperationResult -Label $Label -Path $Path -Success $false -Attempts $tempResult.Attempts -ErrorMessage $tempResult.ErrorMessage -EffectivePath ""
+    }
+
+    $moveResult = Move-ItemWithRetry -Path $tempPath -Destination $Path -MaxAttempts $MaxAttempts -DelayMilliseconds $DelayMilliseconds
+    if ($moveResult.Success) {
+        return New-BridgeFileOperationResult -Label $Label -Path $Path -Success $true -Attempts $moveResult.Attempts
+    }
+
+    $fallbackPath = New-FallbackBridgePath -Path $Path -Stamp $FallbackStamp
+    $fallbackResult = Move-ItemWithRetry -Path $tempPath -Destination $fallbackPath -MaxAttempts $MaxAttempts -DelayMilliseconds $DelayMilliseconds
+    if ($fallbackResult.Success) {
+        return New-BridgeFileOperationResult -Label $Label -Path $Path -Success $true -Attempts $moveResult.Attempts -ErrorMessage $moveResult.ErrorMessage -FallbackUsed $true -FallbackPath $fallbackPath
+    }
+
+    return New-BridgeFileOperationResult -Label $Label -Path $Path -Success $false -Attempts $moveResult.Attempts -ErrorMessage ("primary: {0}; fallback: {1}" -f $moveResult.ErrorMessage, $fallbackResult.ErrorMessage) -FallbackPath $fallbackPath -EffectivePath ""
+}
+
+function Update-LastFileWithRetry {
+    param(
+        [string]$Label,
+        [string]$Source,
+        [string]$LastPath,
+        [int]$MaxAttempts = 5,
+        [int]$DelayMilliseconds = 500,
+        [datetime]$FallbackStamp = (Get-Date)
+    )
+
+    if ([string]::IsNullOrWhiteSpace($Source) -or -not (Test-Path -LiteralPath $Source -PathType Leaf)) {
+        return New-BridgeFileOperationResult -Label $Label -Path $LastPath -Success $false -Attempts 0 -ErrorMessage ("Source file is missing: {0}" -f $Source) -EffectivePath ""
+    }
+
+    $copyResult = Copy-ItemWithRetry -Path $Source -Destination $LastPath -MaxAttempts $MaxAttempts -DelayMilliseconds $DelayMilliseconds
+    if ($copyResult.Success) {
+        return New-BridgeFileOperationResult -Label $Label -Path $LastPath -Success $true -Attempts $copyResult.Attempts
+    }
+
+    $fallbackPath = New-FallbackBridgePath -Path $LastPath -Stamp $FallbackStamp
+    $fallbackResult = Copy-ItemWithRetry -Path $Source -Destination $fallbackPath -MaxAttempts $MaxAttempts -DelayMilliseconds $DelayMilliseconds
+    if ($fallbackResult.Success) {
+        return New-BridgeFileOperationResult -Label $Label -Path $LastPath -Success $true -Attempts $copyResult.Attempts -ErrorMessage $copyResult.ErrorMessage -FallbackUsed $true -FallbackPath $fallbackPath
+    }
+
+    return New-BridgeFileOperationResult -Label $Label -Path $LastPath -Success $false -Attempts $copyResult.Attempts -ErrorMessage ("primary: {0}; fallback: {1}" -f $copyResult.ErrorMessage, $fallbackResult.ErrorMessage) -FallbackPath $fallbackPath -EffectivePath ""
+}
+
+function Format-BridgeOperationSummaryLines {
+    param(
+        [object[]]$Results,
+        [string]$EmptyMessage
+    )
+
+    if ($null -eq $Results -or @($Results).Count -eq 0) {
+        return @($EmptyMessage)
+    }
+
+    $lines = [System.Collections.Generic.List[string]]::new()
+    foreach ($result in @($Results)) {
+        if ($result.Success -and $result.FallbackUsed) {
+            $lines.Add(("- WARNING: {0}: primary blocked after retry; fallback written. Primary: {1}; fallback: {2}" -f $result.Label, $result.Path, $result.FallbackPath))
+        } elseif ($result.Success) {
+            $lines.Add(("- OK: {0}: {1}" -f $result.Label, $result.EffectivePath))
+        } else {
+            $lines.Add(("- FAILED: {0}: {1}; error: {2}" -f $result.Label, $result.Path, $result.ErrorMessage))
+        }
+    }
+    return @($lines)
+}
+
+function Add-BridgeOperationWarnings {
+    param(
+        [object[]]$Results,
+        [string]$Context
+    )
+
+    foreach ($result in @($Results)) {
+        if ($result.Success -and $result.FallbackUsed) {
+            Add-UniqueWarningLine ("{0}: primary path blocked after retry; fallback used for {1}. Primary: {2}; fallback: {3}" -f $Context, $result.Label, $result.Path, $result.FallbackPath)
+        } elseif (-not $result.Success) {
+            Add-UniqueWarningLine ("{0}: failed after retry for {1}. Path: {2}. Error: {3}" -f $Context, $result.Label, $result.Path, $result.ErrorMessage)
+        }
+    }
+}
+
+function Update-BridgeLastOutputs {
+    param(
+        [string]$Root,
+        [hashtable]$SourcePaths,
+        [bool]$DocxWritten,
+        [int]$MaxAttempts = 5,
+        [int]$DelayMilliseconds = 500,
+        [datetime]$FallbackStamp = (Get-Date)
+    )
+
+    $mappings = @(
+        [pscustomobject]@{ Label = "LAST-Richiesta_Generazione.txt"; Source = $SourcePaths["Request"]; LastPath = (Join-Path $Root "LAST-Richiesta_Generazione.txt") },
+        [pscustomobject]@{ Label = "LAST-Comando_Eseguito.ps1"; Source = $SourcePaths["Command"]; LastPath = (Join-Path $Root "LAST-Comando_Eseguito.ps1") },
+        [pscustomobject]@{ Label = "LAST-Output_Completo.txt"; Source = $SourcePaths["Full"]; LastPath = (Join-Path $Root "LAST-Output_Completo.txt") },
+        [pscustomobject]@{ Label = "LAST-Output_Compatto.md"; Source = $SourcePaths["Compact"]; LastPath = (Join-Path $Root "LAST-Output_Compatto.md") }
+    )
+    if ($DocxWritten -and $SourcePaths.ContainsKey("Docx")) {
+        $mappings += [pscustomobject]@{ Label = "LAST-Output_Compatto.docx"; Source = $SourcePaths["Docx"]; LastPath = (Join-Path $Root "LAST-Output_Compatto.docx") }
+    } elseif ($SourcePaths.ContainsKey("DocxFailed")) {
+        $mappings += [pscustomobject]@{ Label = "LAST-Output_Compatto.docx.failed.txt"; Source = $SourcePaths["DocxFailed"]; LastPath = (Join-Path $Root "LAST-Output_Compatto.docx.failed.txt") }
+    }
+
+    $results = [System.Collections.Generic.List[object]]::new()
+    foreach ($mapping in $mappings) {
+        $result = Update-LastFileWithRetry -Label $mapping.Label -Source $mapping.Source -LastPath $mapping.LastPath -MaxAttempts $MaxAttempts -DelayMilliseconds $DelayMilliseconds -FallbackStamp $FallbackStamp
+        $results.Add($result)
+    }
+    return @($results)
+}
+
+function Validate-BridgeLastOutputs {
+    param(
+        [object[]]$LastResults
+    )
+
+    $issues = [System.Collections.Generic.List[string]]::new()
+    foreach ($result in @($LastResults)) {
+        if (-not $result.Success) {
+            $issues.Add(("LAST validation failed for {0}: {1}" -f $result.Label, $result.ErrorMessage))
+        } elseif ($result.FallbackUsed) {
+            $issues.Add(("LAST validation warning for {0}: primary LAST not updated; fallback written to {1}" -f $result.Label, $result.FallbackPath))
+        } elseif (-not (Test-Path -LiteralPath $result.EffectivePath -PathType Leaf)) {
+            $issues.Add(("LAST validation failed for {0}: missing {1}" -f $result.Label, $result.EffectivePath))
+        }
+    }
+
+    if ($issues.Count -eq 0) {
+        return @("LAST validation PASS: primary LAST files updated.")
+    }
+    return @($issues)
+}
+
 function Write-BridgeOutputs {
     param(
         [object]$PublishConfig,
@@ -1791,9 +2077,19 @@ function Write-BridgeOutputs {
         DocxFailed = Join-Path $root ("{0}-Output_Compatto_{1}.docx.failed.txt" -f $prefix, $name)
     }
 
+    $fallbackStamp = Get-Date
+    $bridgeWriteResults = [System.Collections.Generic.List[object]]::new()
+    $lastUpdateResults = @()
+    $lastValidationLines = @("LAST validation pending.")
+    $sourcePaths = @{}
+
     $buildPayload = {
+        $fence = -join @([char]96, [char]96, [char]96)
         $warnings = if ($script:WarningLines.Count -gt 0) { $script:WarningLines -join [Environment]::NewLine } else { "none" }
         $displayStatus = Get-BridgeStatusLabel -Status $Status
+        $bridgeSummaryLines = Format-BridgeOperationSummaryLines -Results ($bridgeWriteResults.ToArray()) -EmptyMessage "Bridge retry/fallback summary: pending."
+        $lastSummaryLines = Format-BridgeOperationSummaryLines -Results @($lastUpdateResults) -EmptyMessage "LAST update summary: pending."
+        $lastValidationText = if (@($lastValidationLines).Count -gt 0) { @($lastValidationLines) -join [Environment]::NewLine } else { "LAST validation pending." }
         $requestText = @(
             "ASF Publish Step Runner",
             "Step: $($PublishConfig.step)",
@@ -1807,7 +2103,13 @@ function Write-BridgeOutputs {
             ($profileSummary -join [Environment]::NewLine),
             "",
             "State machine hooks:",
-            ($stateHookSummary -join [Environment]::NewLine)
+            ($stateHookSummary -join [Environment]::NewLine),
+            "",
+            "Bridge retry/fallback:",
+            ($bridgeSummaryLines -join [Environment]::NewLine),
+            "",
+            "LAST validation:",
+            $lastValidationText
         ) -join [Environment]::NewLine
         $fullText = @(
             "ASF Publish Step Runner - full output",
@@ -1822,6 +2124,15 @@ function Write-BridgeOutputs {
             "",
             "State machine hooks:",
             ($stateHookSummary -join [Environment]::NewLine),
+            "",
+            "Bridge retry/fallback:",
+            ($bridgeSummaryLines -join [Environment]::NewLine),
+            "",
+            "LAST update:",
+            ($lastSummaryLines -join [Environment]::NewLine),
+            "",
+            "LAST validation:",
+            $lastValidationText,
             "",
             "Log:",
             ($script:LogLines -join [Environment]::NewLine)
@@ -1847,13 +2158,25 @@ function Write-BridgeOutputs {
             "",
             "## Output accessory policy",
             "",
-            "TXT and Markdown are primary outputs. DOCX is best-effort; a DOCX failure after required gates is a non-blocking warning.",
+            "TXT and Markdown are primary outputs. Compact Markdown is mandatory and must be written to the primary path or a timestamped fallback. DOCX is best-effort; a DOCX failure after required gates is a non-blocking warning.",
+            "",
+            "Gate failed = BLOCCATO. Git, PR, tests, verify gate or diff-check failed = BLOCCATO. Bridge output primary path blocked after gates passed = retry, timestamped fallback, then COMPLETATO CON WARNING NON BLOCCANTE.",
+            "",
+            "## Retry/fallback Bridge",
+            "",
+            ($bridgeSummaryLines -join [Environment]::NewLine),
+            "",
+            "## LAST validation",
+            "",
+            ($lastSummaryLines -join [Environment]::NewLine),
+            "",
+            $lastValidationText,
             "",
             "## Short command",
             "",
-            "```powershell",
+            ($fence + "powershell"),
             $shortCommand,
-            "```",
+            $fence,
             "",
             "## Warnings",
             "",
@@ -1867,35 +2190,86 @@ function Write-BridgeOutputs {
     }
 
     $payload = & $buildPayload
-    Set-Content -Path $numbered.Request -Value $payload.Request -Encoding UTF8
-    Set-Content -Path $numbered.Command -Value $commandText -Encoding UTF8
-    Set-Content -Path $numbered.Full -Value $payload.Full -Encoding UTF8
-    Set-Content -Path $numbered.Compact -Value $payload.Compact -Encoding UTF8
+    $textOutputs = @(
+        [pscustomobject]@{ Kind = "Request"; Label = "numbered request"; Path = $numbered.Request; Value = $payload.Request; Required = $false },
+        [pscustomobject]@{ Kind = "Command"; Label = "numbered command"; Path = $numbered.Command; Value = $commandText; Required = $false },
+        [pscustomobject]@{ Kind = "Full"; Label = "numbered full output"; Path = $numbered.Full; Value = $payload.Full; Required = $false },
+        [pscustomobject]@{ Kind = "Compact"; Label = "numbered compact Markdown"; Path = $numbered.Compact; Value = $payload.Compact; Required = $true }
+    )
+
+    foreach ($item in $textOutputs) {
+        $result = Write-BridgeFileWithRetry -Label $item.Label -Path $item.Path -Value $item.Value -FallbackStamp $fallbackStamp
+        $bridgeWriteResults.Add($result)
+        if ($result.Success) {
+            $sourcePaths[$item.Kind] = $result.EffectivePath
+        } elseif ($item.Required) {
+            Add-BridgeOperationWarnings -Results @($result) -Context "Bridge output"
+            throw ("Mandatory compact Markdown Bridge output failed after retry and fallback: {0}" -f $result.ErrorMessage)
+        }
+    }
+    Add-BridgeOperationWarnings -Results ($bridgeWriteResults.ToArray()) -Context "Bridge output"
 
     $docxWritten = $false
     try {
         Write-MinimalDocx -Path $numbered.Docx -Text $payload.Compact
         $docxWritten = $true
+        $sourcePaths["Docx"] = $numbered.Docx
     } catch {
         $docxMessage = "DOCX accessory output failed without blocking primary TXT/Markdown outputs: $($_.Exception.Message)"
         Add-WarningLine $docxMessage
-        Set-Content -Path $numbered.DocxFailed -Value $docxMessage -Encoding UTF8
-        $payload = & $buildPayload
-        Set-Content -Path $numbered.Request -Value $payload.Request -Encoding UTF8
-        Set-Content -Path $numbered.Full -Value $payload.Full -Encoding UTF8
-        Set-Content -Path $numbered.Compact -Value $payload.Compact -Encoding UTF8
+        $docxFailedResult = Write-BridgeFileWithRetry -Label "DOCX failure marker" -Path $numbered.DocxFailed -Value $docxMessage -FallbackStamp $fallbackStamp
+        $bridgeWriteResults.Add($docxFailedResult)
+        if ($docxFailedResult.Success) {
+            $sourcePaths["DocxFailed"] = $docxFailedResult.EffectivePath
+        }
+        Add-BridgeOperationWarnings -Results @($docxFailedResult) -Context "Bridge output"
     }
 
-    Copy-Item -Path $numbered.Request -Destination (Join-Path $root "LAST-Richiesta_Generazione.txt") -Force
-    Copy-Item -Path $numbered.Command -Destination (Join-Path $root "LAST-Comando_Eseguito.ps1") -Force
-    Copy-Item -Path $numbered.Full -Destination (Join-Path $root "LAST-Output_Completo.txt") -Force
-    Copy-Item -Path $numbered.Compact -Destination (Join-Path $root "LAST-Output_Compatto.md") -Force
-    if ($docxWritten) {
-        Copy-Item -Path $numbered.Docx -Destination (Join-Path $root "LAST-Output_Compatto.docx") -Force
-    } else {
-        Copy-Item -Path $numbered.DocxFailed -Destination (Join-Path $root "LAST-Output_Compatto.docx.failed.txt") -Force
+    $lastUpdateResults = @(Update-BridgeLastOutputs -Root $root -SourcePaths $sourcePaths -DocxWritten $docxWritten -FallbackStamp $fallbackStamp)
+    Add-BridgeOperationWarnings -Results @($lastUpdateResults) -Context "LAST update"
+    $lastValidationLines = @(Validate-BridgeLastOutputs -LastResults $lastUpdateResults)
+    foreach ($line in $lastValidationLines) {
+        if ($line -notlike "LAST validation PASS*") {
+            Add-UniqueWarningLine $line
+        }
     }
-    Copy-FileToClipboard -File $numbered.Compact
+
+    $payload = & $buildPayload
+    $finalTextOutputs = @(
+        [pscustomobject]@{ Kind = "Request"; Label = "final numbered request"; Path = $numbered.Request; Value = $payload.Request; Required = $false },
+        [pscustomobject]@{ Kind = "Full"; Label = "final numbered full output"; Path = $numbered.Full; Value = $payload.Full; Required = $false },
+        [pscustomobject]@{ Kind = "Compact"; Label = "final numbered compact Markdown"; Path = $numbered.Compact; Value = $payload.Compact; Required = $true }
+    )
+    $finalWriteResults = [System.Collections.Generic.List[object]]::new()
+    foreach ($item in $finalTextOutputs) {
+        $result = Write-BridgeFileWithRetry -Label $item.Label -Path $item.Path -Value $item.Value -FallbackStamp $fallbackStamp
+        $finalWriteResults.Add($result)
+        $bridgeWriteResults.Add($result)
+        if ($result.Success) {
+            $sourcePaths[$item.Kind] = $result.EffectivePath
+        } elseif ($item.Required) {
+            Add-BridgeOperationWarnings -Results @($result) -Context "Bridge output"
+            throw ("Mandatory compact Markdown Bridge output failed after final retry and fallback: {0}" -f $result.ErrorMessage)
+        }
+    }
+    Add-BridgeOperationWarnings -Results ($finalWriteResults.ToArray()) -Context "Bridge output"
+
+    $lastUpdateResults = @(Update-BridgeLastOutputs -Root $root -SourcePaths $sourcePaths -DocxWritten $docxWritten -FallbackStamp $fallbackStamp)
+    Add-BridgeOperationWarnings -Results @($lastUpdateResults) -Context "LAST update"
+    $lastValidationLines = @(Validate-BridgeLastOutputs -LastResults $lastUpdateResults)
+    foreach ($line in $lastValidationLines) {
+        if ($line -notlike "LAST validation PASS*") {
+            Add-UniqueWarningLine $line
+        }
+    }
+
+    $lastCompactPath = $sourcePaths["Compact"]
+    foreach ($result in @($lastUpdateResults)) {
+        if ($result.Label -eq "LAST-Output_Compatto.md" -and $result.Success) {
+            $lastCompactPath = $result.EffectivePath
+        }
+    }
+    Copy-FileToClipboard -File $lastCompactPath
     Write-Log ("Bridge output written to: {0}" -f $root)
 }
 
