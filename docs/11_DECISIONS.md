@@ -3464,3 +3464,48 @@ Il prossimo step consigliato e':
 ```text
 0580) Dry-run Loop Runner
 ```
+
+---
+
+## DEC-095 - Scope discovery assistivo e output accessori non bloccanti
+
+**Data:** 2026-06-08
+**Stato:** Accettata
+
+### Contesto
+
+Dopo gli STEP 0800 e 0805 il publish runner ASF blocca correttamente file fuori
+scope, ma la preparazione manuale di `expected_files` e `changed_files` puo'
+dimenticare file reali. Inoltre un DOCX/accessorio puo' fallire dopo gate finali
+gia' passati, creando un falso segnale di pubblicazione fallita.
+
+### Decisione
+
+Il runner deve offrire scope discovery e `PrepareConfig`, ma solo come supporto
+alla review umana. La lista file viene scoperta da stdout Git dedicato
+(`diff --name-only`, `diff --cached --name-only`, `ls-files --others`) e non da
+parsing fragile di `git status --short` o output `2>&1`.
+
+Out-of-scope resta bloccante. Il recovery report e la suggested config aiutano
+a correggere lo scope, ma non pubblicano automaticamente.
+
+TXT e Markdown restano output primari. DOCX e accessori sono best-effort: dopo
+gate finali passati, un errore DOCX produce `COMPLETATO CON WARNING NON
+BLOCCANTE`, non `BLOCCATO`.
+
+### Conseguenze
+
+La skill/template PowerShell deve raccomandare:
+
+- `PrepareConfig` o scope discovery;
+- review umana dello scope;
+- Phase B/C solo con config JSON revisionato;
+- recovery report/suggested config in caso di out-of-scope;
+- nessun `COMPLETATO` prima dei gate finali;
+- DOCX/accessori non bloccanti dopo pubblicazione verificata.
+
+Il prossimo step consigliato e':
+
+```text
+0820) Bridge Output Consistency and LAST Validation
+```

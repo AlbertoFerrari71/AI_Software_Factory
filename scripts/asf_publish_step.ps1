@@ -1,11 +1,22 @@
 param(
     [string]$Config,
-    [ValidateSet("Plan", "A", "B", "C")]
+    [ValidateSet("Plan", "PrepareConfig", "A", "B", "C")]
     [string]$Phase = "Plan",
     [switch]$ApprovePublish,
     [switch]$ApproveMerge,
     [int]$PrNumber = 0,
     [string]$BridgeRoot,
+    [string]$StepNumber,
+    [string]$StepName,
+    [string]$BranchName,
+    [string]$CommitMessage,
+    [string]$PrTitle,
+    [string]$PrBody,
+    [string]$NextStep,
+    [string]$RiskLevel = "L1",
+    [string]$VerificationProfile = "publish",
+    [string]$VerificationPhase = "local",
+    [string]$ProfileSelectorExpectedProfile,
     [switch]$SelfTest
 )
 
@@ -617,6 +628,9 @@ function Assert-Repo {
 
 function Normalize-GitPath {
     param([string]$PathText)
+    if ([string]::IsNullOrWhiteSpace($PathText)) {
+        return ""
+    }
     $value = $PathText.Trim()
     if ($value.StartsWith('"') -and $value.EndsWith('"')) {
         try {
@@ -630,6 +644,132 @@ function Normalize-GitPath {
         $value = $value.Substring(2)
     }
     return $value
+}
+
+function Invoke-NativeStdoutChecked {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Command,
+
+        [Parameter()]
+        [string[]]$Arguments = @(),
+
+        [Parameter()]
+        [string]$Label = "",
+
+        [Parameter()]
+        [string]$WorkingDirectory = (Get-Location).Path
+    )
+    $commandName = Assert-NonEmptyString -Value $Command -Name "Stdout-only native command"
+    $displayLabel = $Label
+    if ([string]::IsNullOrWhiteSpace($displayLabel)) {
+        $displayLabel = $commandName
+    }
+    $workDir = Assert-NonEmptyString -Value $WorkingDirectory -Name "Stdout-only native command working directory"
+    if (-not (Test-Path -LiteralPath $workDir -PathType Container)) {
+        throw "Stdout-only native command working directory does not exist: $workDir"
+    }
+    if ($null -eq $Arguments) {
+        throw "Stdout-only native command arguments are null for label: $displayLabel"
+    }
+    foreach ($argument in @($Arguments)) {
+        if ($null -eq $argument) {
+            throw "Stdout-only native command argument is null for label: $displayLabel"
+        }
+    }
+
+    $resolvedCommand = $commandName
+    $commandInfo = Get-Command $commandName -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1
+    if ($null -ne $commandInfo -and -not [string]::IsNullOrWhiteSpace([string]$commandInfo.Source)) {
+        $resolvedCommand = [string]$commandInfo.Source
+    }
+
+    Write-Log ("RUN {0}: {1} {2}" -f $displayLabel, $commandName, ($Arguments -join " "))
+    $startInfo = [System.Diagnostics.ProcessStartInfo]::new()
+    $startInfo.FileName = $resolvedCommand
+    $startInfo.WorkingDirectory = $workDir
+    $startInfo.UseShellExecute = $false
+    $startInfo.RedirectStandardOutput = $true
+    $startInfo.RedirectStandardError = $true
+    foreach ($argument in @($Arguments)) {
+        [void]$startInfo.ArgumentList.Add([string]$argument)
+    }
+
+    $process = [System.Diagnostics.Process]::new()
+    $process.StartInfo = $startInfo
+    try {
+        [void]$process.Start()
+        $stdout = $process.StandardOutput.ReadToEnd()
+        $stderr = $process.StandardError.ReadToEnd()
+        $process.WaitForExit()
+        $exitCode = $process.ExitCode
+    } finally {
+        $process.Dispose()
+    }
+
+    Write-Log ("EXIT {0}: {1}" -f $displayLabel, $exitCode)
+    if (-not [string]::IsNullOrWhiteSpace($stderr)) {
+        foreach ($line in ($stderr -split "`r?`n")) {
+            if (-not [string]::IsNullOrWhiteSpace($line)) {
+                Add-WarningLine ("{0} stderr ignored for path discovery: {1}" -f $displayLabel, $line.Trim())
+            }
+        }
+    }
+    if ($exitCode -ne 0) {
+        throw "Stdout-only native command failed. Label=$displayLabel Command=$commandName ExitCode=$exitCode"
+    }
+    return @(($stdout -split "`r?`n") | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
+}
+
+function Test-RepositoryChangedFileCandidate {
+    param([string]$PathText)
+    $path = Normalize-GitPath -PathText $PathText
+    if ([string]::IsNullOrWhiteSpace($path)) {
+        return $false
+    }
+    $lower = $path.ToLowerInvariant()
+    foreach ($prefix in @("warning:", "fatal:", "error:", "hint:")) {
+        if ($lower.StartsWith($prefix)) {
+            return $false
+        }
+    }
+    if ([System.IO.Path]::IsPathRooted($path)) {
+        return $false
+    }
+    if ($path -eq ".." -or $path.StartsWith("../") -or $path.Contains("/../")) {
+        return $false
+    }
+    return $true
+}
+
+function Get-RepositoryChangedFiles {
+    param([string]$RepoPath)
+    Assert-Repo -RepoPath $RepoPath
+    $commands = @(
+        [pscustomobject]@{
+            Label = "Git unstaged changed files"
+            Args = @("--no-pager", "diff", "--name-only", "--")
+        },
+        [pscustomobject]@{
+            Label = "Git staged changed files"
+            Args = @("--no-pager", "diff", "--cached", "--name-only", "--")
+        },
+        [pscustomobject]@{
+            Label = "Git untracked files"
+            Args = @("ls-files", "--others", "--exclude-standard", "--")
+        }
+    )
+
+    $paths = [System.Collections.Generic.List[string]]::new()
+    foreach ($command in $commands) {
+        $lines = @(Invoke-NativeStdoutChecked -Command "git" -Arguments @($command.Args) -Label ([string]$command.Label) -WorkingDirectory $RepoPath)
+        foreach ($line in $lines) {
+            if (Test-RepositoryChangedFileCandidate -PathText $line) {
+                $paths.Add((Normalize-GitPath -PathText $line))
+            }
+        }
+    }
+    return @($paths | Sort-Object -Unique)
 }
 
 function Get-GitStatusPaths {
@@ -679,13 +819,101 @@ function Test-PathExpected {
     return $false
 }
 
+function Copy-PublishConfigWithScope {
+    param(
+        [object]$PublishConfig,
+        [string[]]$ChangedFiles
+    )
+    $copy = [ordered]@{}
+    foreach ($property in $PublishConfig.PSObject.Properties) {
+        $copy[$property.Name] = $property.Value
+    }
+    $copy["expected_files"] = @($ChangedFiles)
+    $copy["changed_files"] = @($ChangedFiles)
+    return [pscustomobject]$copy
+}
+
+function Write-OutOfScopeRecoveryReport {
+    param(
+        [object]$PublishConfig,
+        [string]$RepoPath,
+        [string[]]$ExpectedFiles,
+        [string[]]$ChangedFiles,
+        [string[]]$OutOfScopeFiles
+    )
+    if ($null -eq $PublishConfig) {
+        return $null
+    }
+
+    $root = Get-BridgeRoot -PublishConfig $PublishConfig
+    [void][System.IO.Directory]::CreateDirectory($root)
+    $prefix = [string]$PublishConfig.step
+    $name = Get-SafeName -Value ([string]$PublishConfig.name)
+    $reportPath = Join-Path $root ("{0}-Recovery_Out_Of_Scope_{1}.md" -f $prefix, $name)
+    $suggestedConfigPath = Join-Path $root ("{0}-Recovery_Out_Of_Scope_Suggested_Config_{1}.json" -f $prefix, $name)
+
+    $suggested = Copy-PublishConfigWithScope -PublishConfig $PublishConfig -ChangedFiles @($ChangedFiles)
+    $suggested | ConvertTo-Json -Depth 20 | Set-Content -Path $suggestedConfigPath -Encoding UTF8
+
+    $expectedText = if (@($ExpectedFiles).Count -gt 0) { (@($ExpectedFiles) -join [Environment]::NewLine) } else { "none" }
+    $changedText = if (@($ChangedFiles).Count -gt 0) { (@($ChangedFiles) -join [Environment]::NewLine) } else { "none" }
+    $outsideText = if (@($OutOfScopeFiles).Count -gt 0) { (@($OutOfScopeFiles) -join [Environment]::NewLine) } else { "none" }
+    $report = @(
+        "# ASF publish out-of-scope recovery",
+        "",
+        ("- Step: ``{0}``" -f $PublishConfig.step),
+        ("- Name: ``{0}``" -f $PublishConfig.name),
+        ("- Repo path: ``{0}``" -f $RepoPath),
+        "- Status: ``BLOCCATO``",
+        "",
+        "The runner remains fail-closed. Review the suggested config. If the files are expected, rerun Phase B with the updated config.",
+        "",
+        "## Out-of-scope files",
+        "",
+        "```text",
+        $outsideText,
+        "```",
+        "",
+        "## Config expected_files",
+        "",
+        "```text",
+        $expectedText,
+        "```",
+        "",
+        "## Repository changed files discovered from stdout-only Git commands",
+        "",
+        "```text",
+        $changedText,
+        "```",
+        "",
+        "## Ignored warning/non-file lines",
+        "",
+        'Path discovery reads only stdout from `git --no-pager diff --name-only`, `git --no-pager diff --cached --name-only`, and `git ls-files --others --exclude-standard`. Git stderr warnings such as LF/CRLF are not treated as paths.',
+        "",
+        "## Suggested config",
+        "",
+        ("Suggested JSON: ``{0}``" -f $suggestedConfigPath),
+        "",
+        "No commit, push, PR, merge or deploy was executed by this recovery report."
+    ) -join [Environment]::NewLine
+    Set-Content -Path $reportPath -Value $report -Encoding UTF8
+
+    Write-Log ("Out-of-scope recovery report written: {0}" -f $reportPath)
+    Write-Log ("Out-of-scope suggested config written: {0}" -f $suggestedConfigPath)
+    return [pscustomobject]@{
+        Report = $reportPath
+        SuggestedConfig = $suggestedConfigPath
+    }
+}
+
 function Assert-ExpectedScope {
     param(
         [string]$RepoPath,
-        [string[]]$ExpectedFiles
+        [string[]]$ExpectedFiles,
+        [object]$PublishConfig = $null
     )
     $expected = @(Assert-ExpectedFiles -ExpectedFiles $ExpectedFiles)
-    $changedPaths = @(Get-GitStatusPaths -RepoPath $RepoPath)
+    $changedPaths = @(Get-RepositoryChangedFiles -RepoPath $RepoPath)
     Write-Log ("Changed paths detected: {0}" -f $changedPaths.Count)
     $outside = [System.Collections.Generic.List[string]]::new()
     foreach ($path in $changedPaths) {
@@ -694,6 +922,14 @@ function Assert-ExpectedScope {
         }
     }
     if ($outside.Count -gt 0) {
+        $recovery = Write-OutOfScopeRecoveryReport -PublishConfig $PublishConfig -RepoPath $RepoPath -ExpectedFiles @($expected) -ChangedFiles @($changedPaths) -OutOfScopeFiles @($outside)
+        Write-Log "Out-of-scope changes detected. Publication is blocked until scope is reviewed."
+        Write-Log ("Expected files: {0}" -f (@($expected) -join ", "))
+        Write-Log ("Repository changed files: {0}" -f (@($changedPaths) -join ", "))
+        Write-Log ("Out-of-scope files: {0}" -f (@($outside) -join ", "))
+        if ($null -ne $recovery) {
+            Write-Log ("Review the suggested config. If the files are expected, rerun Phase B with the updated config: {0}" -f $recovery.SuggestedConfig)
+        }
         throw "Out-of-scope changes detected: $($outside -join ', ')"
     }
 }
@@ -701,9 +937,10 @@ function Assert-ExpectedScope {
 function Assert-NoOutOfScopeFiles {
     param(
         [string]$RepoPath,
-        [string[]]$ExpectedFiles
+        [string[]]$ExpectedFiles,
+        [object]$PublishConfig = $null
     )
-    Assert-ExpectedScope -RepoPath $RepoPath -ExpectedFiles $ExpectedFiles
+    Assert-ExpectedScope -RepoPath $RepoPath -ExpectedFiles $ExpectedFiles -PublishConfig $PublishConfig
 }
 
 function Invoke-NativeChecked {
@@ -1051,7 +1288,7 @@ function Invoke-PhaseA {
     $branch = Get-CurrentBranch -RepoPath $RepoPath
     Write-Log ("Current branch: {0}" -f $branch)
     [void](Invoke-Git -RepoPath $RepoPath -ArgList @("status", "--porcelain=v1", "--untracked-files=all") -Name "Git status porcelain")
-    Assert-NoOutOfScopeFiles -RepoPath $RepoPath -ExpectedFiles @($PublishConfig.expected_files)
+    Assert-NoOutOfScopeFiles -RepoPath $RepoPath -ExpectedFiles @($PublishConfig.expected_files) -PublishConfig $PublishConfig
     Invoke-ConfiguredChecks -Checks @($PublishConfig.phase_a_checks) -RepoPath $RepoPath
     [void](Invoke-Git -RepoPath $RepoPath -ArgList @("--no-pager", "diff", "--check") -Name "Diff check")
     Write-Log "PHASE A completed."
@@ -1090,7 +1327,7 @@ function Invoke-PhaseB {
         & {
             Invoke-PhaseA -PublishConfig $PublishConfig -RepoPath $RepoPath
             Ensure-StepBranch -RepoPath $RepoPath -Branch ([string]$PublishConfig.branch)
-            Assert-NoOutOfScopeFiles -RepoPath $RepoPath -ExpectedFiles @($PublishConfig.expected_files)
+            Assert-NoOutOfScopeFiles -RepoPath $RepoPath -ExpectedFiles @($PublishConfig.expected_files) -PublishConfig $PublishConfig
             [void](Invoke-Git -RepoPath $RepoPath -ArgList (@("add", "--") + @($PublishConfig.expected_files)) -Name "Stage expected files")
             [void](Invoke-Git -RepoPath $RepoPath -ArgList @("--no-pager", "diff", "--cached", "--check") -Name "Cached diff check")
             [void](Invoke-Git -RepoPath $RepoPath -ArgList @("commit", "-m", ([string]$PublishConfig.commit_message)) -Name "Create commit")
@@ -1099,16 +1336,19 @@ function Invoke-PhaseB {
             $existing = Invoke-ArgvCommand -Name "Find existing PR" -Argv @("gh", "pr", "list", "--head", ([string]$PublishConfig.branch), "--json", "number", "--jq", ".[0].number") -WorkingDirectory $RepoPath -AllowFailure
             $existingNumber = (($existing.Output) -join "").Trim()
             if ($existing.ExitCode -eq 0 -and -not [string]::IsNullOrWhiteSpace($existingNumber)) {
-                $script:PrNumber = $existingNumber
+                $script:PrNumber = Assert-PrNumberText -Value $existingNumber -Name "Recovered PR number"
                 Write-Log ("Reusing PR #{0}" -f $script:PrNumber)
             } else {
                 $created = Invoke-Gh -RepoPath $RepoPath -ArgList @("pr", "create", "--base", "main", "--head", ([string]$PublishConfig.branch), "--title", ([string]$PublishConfig.pr_title), "--body", ([string]$PublishConfig.pr_body)) -Name "Create PR"
                 $createdText = ($created.Output -join [Environment]::NewLine)
                 $numberMatch = [regex]::Match($createdText, "/pull/(\d+)")
                 if ($numberMatch.Success) {
-                    $script:PrNumber = $numberMatch.Groups[1].Value
+                    $script:PrNumber = Assert-PrNumberText -Value $numberMatch.Groups[1].Value -Name "Created PR number"
                 }
                 Write-Log ("Created PR reference: {0}" -f $createdText)
+            }
+            if ([string]::IsNullOrWhiteSpace([string]$script:PrNumber)) {
+                throw "Phase B did not resolve a non-empty numeric PR number after PR list/create."
             }
         }
     } catch {
@@ -1126,15 +1366,27 @@ function Invoke-PhaseB {
     Write-Log "PHASE B completed. Merge was not performed."
 }
 
+function Assert-PrNumberText {
+    param(
+        [object]$Value,
+        [string]$Name = "PrNumber"
+    )
+    $text = Assert-NonEmptyString -Value $Value -Name $Name
+    if ($text -notmatch "^\d+$") {
+        throw "$Name must be numeric."
+    }
+    return $text
+}
+
 function Get-PrNumber {
     param(
         [object]$PublishConfig
     )
     if ($script:RequestedPrNumber -gt 0) {
-        return Assert-NonEmptyString -Value ([string]$script:RequestedPrNumber) -Name "PrNumber"
+        return Assert-PrNumberText -Value ([string]$script:RequestedPrNumber) -Name "PrNumber"
     }
     if ((Test-HasProperty -Object $PublishConfig -Name "pr_number") -and ([int]$PublishConfig.pr_number -gt 0)) {
-        return Assert-NonEmptyString -Value ([string]$PublishConfig.pr_number) -Name "Config field pr_number"
+        return Assert-PrNumberText -Value ([string]$PublishConfig.pr_number) -Name "Config field pr_number"
     }
     throw "Phase C requires a non-empty -PrNumber or config pr_number before any PR command is executed."
 }
@@ -1187,7 +1439,7 @@ function Invoke-PhaseC {
             [void](Invoke-Git -RepoPath $RepoPath -ArgList @("pull", "--ff-only", "origin", "main") -Name "Pull main")
             Invoke-ConfiguredChecks -Checks @($PublishConfig.phase_c_checks) -RepoPath $RepoPath
             [void](Invoke-Git -RepoPath $RepoPath -ArgList @("--no-pager", "diff", "--check") -Name "Final diff check")
-            $status = @(Get-GitStatusPaths -RepoPath $RepoPath)
+            $status = @(Get-RepositoryChangedFiles -RepoPath $RepoPath)
             if ($status.Count -gt 0) {
                 throw "Working tree is not clean after merge: $($status -join ', ')"
             }
@@ -1326,6 +1578,147 @@ function Copy-FileToClipboard {
     }
 }
 
+function New-DefaultPublishChecks {
+    return @(
+        [pscustomobject]@{
+            name = "Full pytest"
+            argv = @("python", "-m", "pytest")
+        },
+        [pscustomobject]@{
+            name = "Workflow Health Check"
+            argv = @("python", "scripts/check_workflow_health.py")
+        },
+        [pscustomobject]@{
+            name = "Verification Gate"
+            argv = @("pwsh", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "scripts/verify.ps1")
+        }
+    )
+}
+
+function New-DraftPublishConfig {
+    param(
+        [string]$RepoPath,
+        [string[]]$ChangedFiles
+    )
+    $step = Assert-NonEmptyString -Value $StepNumber -Name "StepNumber"
+    $name = Assert-NonEmptyString -Value $StepName -Name "StepName"
+    $branch = Assert-NonEmptyString -Value $BranchName -Name "BranchName"
+    $commit = Assert-NonEmptyString -Value $CommitMessage -Name "CommitMessage"
+    $title = Assert-NonEmptyString -Value $PrTitle -Name "PrTitle"
+    $next = Assert-NonEmptyString -Value $NextStep -Name "NextStep"
+    $profile = Assert-NonEmptyString -Value $VerificationProfile -Name "VerificationProfile"
+    $risk = Assert-NonEmptyString -Value $RiskLevel -Name "RiskLevel"
+    $phase = Assert-NonEmptyString -Value $VerificationPhase -Name "VerificationPhase"
+    $expectedProfile = $ProfileSelectorExpectedProfile
+    if ([string]::IsNullOrWhiteSpace($expectedProfile)) {
+        $expectedProfile = $profile
+    }
+    $body = $PrBody
+    if ([string]::IsNullOrWhiteSpace($body)) {
+        $body = "Implements STEP $step $name. Generated by PrepareConfig as a human-reviewed draft scope; no publish action was executed."
+    }
+    $bridge = $BridgeRoot
+    if ([string]::IsNullOrWhiteSpace($bridge)) {
+        $bridge = $DefaultBridgeRoot
+    }
+
+    return [pscustomobject][ordered]@{
+        step = $step
+        name = $name
+        repo_path = "."
+        bridge_root = $bridge
+        branch = $branch
+        commit_message = $commit
+        pr_title = $title
+        pr_body = $body
+        next_step = $next
+        expected_files = @($ChangedFiles)
+        changed_files = @($ChangedFiles)
+        verification_profile = $profile
+        risk_level = $risk
+        verification_phase = $phase
+        profile_selector_expected_profile = $expectedProfile
+        intent = @("publish_step", "human_gated")
+        provided_gates = @()
+        phase_a_checks = @(New-DefaultPublishChecks)
+        phase_c_checks = @(New-DefaultPublishChecks)
+        allow_no_github_checks_reported = $true
+        log_max_count = 12
+    }
+}
+
+function Write-PrepareConfigOutputs {
+    param(
+        [object]$DraftConfig,
+        [string]$RepoPath,
+        [string[]]$ChangedFiles
+    )
+    $root = Get-BridgeRoot -PublishConfig $DraftConfig
+    [void][System.IO.Directory]::CreateDirectory($root)
+    $name = Get-SafeName -Value ([string]$DraftConfig.name)
+    $prefix = [string]$DraftConfig.step
+    $configPath = Join-Path $root ("{0}-Publish_Config_Draft_{1}.json" -f $prefix, $name)
+    $reviewPath = Join-Path $root ("{0}-PrepareConfig_Review_{1}.md" -f $prefix, $name)
+    $lastConfigPath = Join-Path $root "LAST-Publish_Config_Draft.json"
+    $lastReviewPath = Join-Path $root "LAST-PrepareConfig_Review.md"
+
+    $DraftConfig | ConvertTo-Json -Depth 20 | Set-Content -Path $configPath -Encoding UTF8
+    Copy-Item -Path $configPath -Destination $lastConfigPath -Force
+
+    $changedText = if (@($ChangedFiles).Count -gt 0) { (@($ChangedFiles) -join [Environment]::NewLine) } else { "none" }
+    $review = @(
+        "# ASF publish PrepareConfig review",
+        "",
+        ("- Step: ``{0}``" -f $DraftConfig.step),
+        ("- Name: ``{0}``" -f $DraftConfig.name),
+        ("- Repo path: ``{0}``" -f $RepoPath),
+        "- Status: ``DRAFT_REVIEW_REQUIRED``",
+        "",
+        "PrepareConfig discovered changed files using stdout-only Git commands:",
+        "",
+        '- `git --no-pager diff --name-only --`',
+        '- `git --no-pager diff --cached --name-only --`',
+        '- `git ls-files --others --exclude-standard --`',
+        "",
+        'The generated JSON is a draft. Review `expected_files` and `changed_files` before Phase B. Do not publish automatically from this output.',
+        "",
+        "## Changed files",
+        "",
+        "```text",
+        $changedText,
+        "```",
+        "",
+        "## Draft config",
+        "",
+        ("Config JSON: ``{0}``" -f $configPath),
+        "",
+        "## Recovery policy",
+        "",
+        "If Phase B later reports out-of-scope changes, review the recovery report and suggested config. Add files to scope only after human review.",
+        "",
+        "No commit, push, PR, merge, deploy or tag was executed."
+    ) -join [Environment]::NewLine
+    Set-Content -Path $reviewPath -Value $review -Encoding UTF8
+    Copy-Item -Path $reviewPath -Destination $lastReviewPath -Force
+
+    Write-Log ("PrepareConfig draft config written: {0}" -f $configPath)
+    Write-Log ("PrepareConfig review report written: {0}" -f $reviewPath)
+    Copy-FileToClipboard -File $reviewPath
+}
+
+function Invoke-PrepareConfig {
+    $repoPath = [System.IO.Path]::GetFullPath((Get-Location).Path)
+    Assert-Repo -RepoPath $repoPath
+    $changedFiles = @(Get-RepositoryChangedFiles -RepoPath $repoPath)
+    if ($changedFiles.Count -eq 0) {
+        throw "PrepareConfig found no changed files. Refusing to generate an empty publish scope."
+    }
+    $draft = New-DraftPublishConfig -RepoPath $repoPath -ChangedFiles @($changedFiles)
+    Assert-PublishConfig -PublishConfig $draft
+    Write-PrepareConfigOutputs -DraftConfig $draft -RepoPath $repoPath -ChangedFiles @($changedFiles)
+    Write-Log "PrepareConfig completed. Review the draft config before Phase B."
+}
+
 function Get-ProfileValidationSummaryLines {
     if (-not $script:ProfileValidation.Enabled) {
         return @("Verification profile validation: not configured")
@@ -1359,6 +1752,20 @@ function Get-StateHookSummaryLines {
     )
 }
 
+function Get-BridgeStatusLabel {
+    param([string]$Status)
+    if ([string]::Equals($Status, "PASS", [System.StringComparison]::OrdinalIgnoreCase)) {
+        if ($script:WarningLines.Count -gt 0) {
+            return "COMPLETATO CON WARNING NON BLOCCANTE"
+        }
+        return "COMPLETATO"
+    }
+    if ([string]::Equals($Status, "FAIL", [System.StringComparison]::OrdinalIgnoreCase)) {
+        return "BLOCCATO"
+    }
+    return $Status
+}
+
 function Write-BridgeOutputs {
     param(
         [object]$PublishConfig,
@@ -1370,70 +1777,10 @@ function Write-BridgeOutputs {
     $prefix = [string]$PublishConfig.step
     $name = Get-SafeName -Value ([string]$PublishConfig.name)
     $shortCommand = Get-ShortCommand -PublishConfig $PublishConfig -EffectivePhase $EffectivePhase
-    $warnings = if ($script:WarningLines.Count -gt 0) { $script:WarningLines -join [Environment]::NewLine } else { "none" }
     $prText = if ($null -ne $script:PrNumber) { [string]$script:PrNumber } else { "not available" }
     $profileSummary = Get-ProfileValidationSummaryLines
     $stateHookSummary = Get-StateHookSummaryLines
-
-    $requestText = @(
-        "ASF Publish Step Runner",
-        "Step: $($PublishConfig.step)",
-        "Name: $($PublishConfig.name)",
-        "Phase: $EffectivePhase",
-        "Status: $Status",
-        "Next step: $($PublishConfig.next_step)",
-        "",
-        "Verification profile:",
-        ($profileSummary -join [Environment]::NewLine),
-        "",
-        "State machine hooks:",
-        ($stateHookSummary -join [Environment]::NewLine)
-    ) -join [Environment]::NewLine
     $commandText = $shortCommand + [Environment]::NewLine
-    $fullText = @(
-        "ASF Publish Step Runner - full output",
-        "Status: $Status",
-        "PR number: $prText",
-        "Warnings:",
-        $warnings,
-        "",
-        "Verification profile:",
-        ($profileSummary -join [Environment]::NewLine),
-        "",
-        "State machine hooks:",
-        ($stateHookSummary -join [Environment]::NewLine),
-        "",
-        "Log:",
-        ($script:LogLines -join [Environment]::NewLine)
-    ) -join [Environment]::NewLine
-    $compactText = @(
-        "# ASF Publish Step Runner",
-        "",
-        ("- Step: ``{0}``" -f $PublishConfig.step),
-        ("- Name: ``{0}``" -f $PublishConfig.name),
-        ("- Phase: ``{0}``" -f $EffectivePhase),
-        ("- Status: ``{0}``" -f $Status),
-        ("- PR number: ``{0}``" -f $prText),
-        ("- Next step: ``{0}``" -f $PublishConfig.next_step),
-        "",
-        "## Verification profile",
-        "",
-        ($profileSummary -join [Environment]::NewLine),
-        "",
-        "## State machine hooks",
-        "",
-        ($stateHookSummary -join [Environment]::NewLine),
-        "",
-        "## Short command",
-        "",
-        "```powershell",
-        $shortCommand,
-        "```",
-        "",
-        "## Warnings",
-        "",
-        $warnings
-    ) -join [Environment]::NewLine
 
     $numbered = @{
         Request = Join-Path $root ("{0}-Richiesta_Generazione_{1}.txt" -f $prefix, $name)
@@ -1441,18 +1788,113 @@ function Write-BridgeOutputs {
         Full = Join-Path $root ("{0}-Output_Completo_{1}.txt" -f $prefix, $name)
         Compact = Join-Path $root ("{0}-Output_Compatto_{1}.md" -f $prefix, $name)
         Docx = Join-Path $root ("{0}-Output_Compatto_{1}.docx" -f $prefix, $name)
+        DocxFailed = Join-Path $root ("{0}-Output_Compatto_{1}.docx.failed.txt" -f $prefix, $name)
     }
-    Set-Content -Path $numbered.Request -Value $requestText -Encoding UTF8
+
+    $buildPayload = {
+        $warnings = if ($script:WarningLines.Count -gt 0) { $script:WarningLines -join [Environment]::NewLine } else { "none" }
+        $displayStatus = Get-BridgeStatusLabel -Status $Status
+        $requestText = @(
+            "ASF Publish Step Runner",
+            "Step: $($PublishConfig.step)",
+            "Name: $($PublishConfig.name)",
+            "Phase: $EffectivePhase",
+            "Status: $displayStatus",
+            "Machine status: $Status",
+            "Next step: $($PublishConfig.next_step)",
+            "",
+            "Verification profile:",
+            ($profileSummary -join [Environment]::NewLine),
+            "",
+            "State machine hooks:",
+            ($stateHookSummary -join [Environment]::NewLine)
+        ) -join [Environment]::NewLine
+        $fullText = @(
+            "ASF Publish Step Runner - full output",
+            "Status: $displayStatus",
+            "Machine status: $Status",
+            "PR number: $prText",
+            "Warnings:",
+            $warnings,
+            "",
+            "Verification profile:",
+            ($profileSummary -join [Environment]::NewLine),
+            "",
+            "State machine hooks:",
+            ($stateHookSummary -join [Environment]::NewLine),
+            "",
+            "Log:",
+            ($script:LogLines -join [Environment]::NewLine)
+        ) -join [Environment]::NewLine
+        $compactText = @(
+            "# ASF Publish Step Runner",
+            "",
+            ("- Step: ``{0}``" -f $PublishConfig.step),
+            ("- Name: ``{0}``" -f $PublishConfig.name),
+            ("- Phase: ``{0}``" -f $EffectivePhase),
+            ("- Status: ``{0}``" -f $displayStatus),
+            ("- Machine status: ``{0}``" -f $Status),
+            ("- PR number: ``{0}``" -f $prText),
+            ("- Next step: ``{0}``" -f $PublishConfig.next_step),
+            "",
+            "## Verification profile",
+            "",
+            ($profileSummary -join [Environment]::NewLine),
+            "",
+            "## State machine hooks",
+            "",
+            ($stateHookSummary -join [Environment]::NewLine),
+            "",
+            "## Output accessory policy",
+            "",
+            "TXT and Markdown are primary outputs. DOCX is best-effort; a DOCX failure after required gates is a non-blocking warning.",
+            "",
+            "## Short command",
+            "",
+            "```powershell",
+            $shortCommand,
+            "```",
+            "",
+            "## Warnings",
+            "",
+            $warnings
+        ) -join [Environment]::NewLine
+        return [pscustomobject]@{
+            Request = $requestText
+            Full = $fullText
+            Compact = $compactText
+        }
+    }
+
+    $payload = & $buildPayload
+    Set-Content -Path $numbered.Request -Value $payload.Request -Encoding UTF8
     Set-Content -Path $numbered.Command -Value $commandText -Encoding UTF8
-    Set-Content -Path $numbered.Full -Value $fullText -Encoding UTF8
-    Set-Content -Path $numbered.Compact -Value $compactText -Encoding UTF8
-    Write-MinimalDocx -Path $numbered.Docx -Text $compactText
+    Set-Content -Path $numbered.Full -Value $payload.Full -Encoding UTF8
+    Set-Content -Path $numbered.Compact -Value $payload.Compact -Encoding UTF8
+
+    $docxWritten = $false
+    try {
+        Write-MinimalDocx -Path $numbered.Docx -Text $payload.Compact
+        $docxWritten = $true
+    } catch {
+        $docxMessage = "DOCX accessory output failed without blocking primary TXT/Markdown outputs: $($_.Exception.Message)"
+        Add-WarningLine $docxMessage
+        Set-Content -Path $numbered.DocxFailed -Value $docxMessage -Encoding UTF8
+        $payload = & $buildPayload
+        Set-Content -Path $numbered.Request -Value $payload.Request -Encoding UTF8
+        Set-Content -Path $numbered.Full -Value $payload.Full -Encoding UTF8
+        Set-Content -Path $numbered.Compact -Value $payload.Compact -Encoding UTF8
+    }
 
     Copy-Item -Path $numbered.Request -Destination (Join-Path $root "LAST-Richiesta_Generazione.txt") -Force
     Copy-Item -Path $numbered.Command -Destination (Join-Path $root "LAST-Comando_Eseguito.ps1") -Force
     Copy-Item -Path $numbered.Full -Destination (Join-Path $root "LAST-Output_Completo.txt") -Force
     Copy-Item -Path $numbered.Compact -Destination (Join-Path $root "LAST-Output_Compatto.md") -Force
-    Copy-Item -Path $numbered.Docx -Destination (Join-Path $root "LAST-Output_Compatto.docx") -Force
+    if ($docxWritten) {
+        Copy-Item -Path $numbered.Docx -Destination (Join-Path $root "LAST-Output_Compatto.docx") -Force
+    } else {
+        Copy-Item -Path $numbered.DocxFailed -Destination (Join-Path $root "LAST-Output_Compatto.docx.failed.txt") -Force
+    }
     Copy-FileToClipboard -File $numbered.Compact
     Write-Log ("Bridge output written to: {0}" -f $root)
 }
@@ -1480,6 +1922,11 @@ try {
         Assert-PublishConfig -PublishConfig $selfConfig
         Write-Log "SelfTest running."
         Write-BridgeOutputs -PublishConfig $selfConfig -EffectivePhase "SelfTest" -Status "PASS"
+        exit 0
+    }
+
+    if ($Phase -eq "PrepareConfig") {
+        Invoke-PrepareConfig
         exit 0
     }
 

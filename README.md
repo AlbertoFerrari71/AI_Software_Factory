@@ -1,7 +1,7 @@
 # AI Software Factory
 
 **Metodo interno:** Codex Alchemy Method
-**Stato:** STEP 0805 - PowerShell Publish Skill Sync With Proven ASF Runner Flow
+**Stato:** STEP 0810 - Publish Runner Scope Discovery, Recovery UX and No-False-Completed Guard
 **Data bootstrap:** 2026-05-25
 **Strategia:** local-first personale, progettato per evoluzione SaaS
 
@@ -28,7 +28,7 @@ Il metodo interno si chiama **Codex Alchemy Method**: l'idea grezza viene trasfo
 
 ## 2. Stato repository
 
-Questo repository e' nello stato **STEP 0805 - PowerShell Publish Skill Sync With Proven ASF Runner Flow**.
+Questo repository e' nello stato **STEP 0810 - Publish Runner Scope Discovery, Recovery UX and No-False-Completed Guard**.
 
 Sono presenti:
 
@@ -53,6 +53,7 @@ Sono presenti:
 - standard Safe Bootstrap PowerShell Command Pack con bootstrap corto, parse-check, script `.ps1` completo, artefatti progressivi `NNNN-II-Tipo_Nome.ext`, DOCX non bloccante e pubblicazione PR-first.
 - pacchetto canonico PowerShell Command Pack con README template, skill draft esportabile, parser Git robusto e `ArgList`.
 - export installabile della skill `as-common-pwsh-command-pack` dentro ASF, con installer dry-run/apply e guardrail anti-scrittura esterna non autorizzata.
+- publish runner con `PrepareConfig`, scope discovery stdout-only, recovery report out-of-scope, suggested config revisionabile e DOCX/accessori best-effort.
 - deprecazione degli artefatti `LAST-*`, regola `max(II)` per trovare l'ultimo artefatto e utility prudente di migrazione dry-run/apply.
 - controlled live execution pack OpenAI dry-run-default con doppio consenso futuro, artifact safe sotto `tmp/` e template operatore PowerShell.
 - wrapper STEP 0560 per primo live run autorizzato via adapter, con report versionato `docs/0560-01-Report_OpenAI_API_Adapter_First_Authorized_Live_Run.md`.
@@ -386,6 +387,7 @@ docs/motor/0780_MVP_REAL_STEP_PILOT_3_WITH_MANIFEST_HOOKS.md
 docs/motor/0790_POST_MVP_ROADMAP_AND_HARDENING_PLAN.md
 docs/motor/0800_POWERSHELL_NATIVE_COMMAND_GUARDRAIL_HARDENING.md
 docs/motor/0805_POWERSHELL_PUBLISH_SKILL_SYNC_WITH_PROVEN_RUNNER_FLOW.md
+docs/motor/0810_PUBLISH_RUNNER_SCOPE_DISCOVERY_RECOVERY_UX_AND_NO_FALSE_COMPLETED_GUARD.md
 ```
 
 ---
@@ -444,7 +446,7 @@ policies/path_policy.v0.json
 ## 11. Prossimo step
 
 ```text
-0810) Publish Runner Recovery UX and No-False-Completed Guard
+0820) Bridge Output Consistency and LAST Validation
 ```
 
-Obiettivo: migliorare recovery, stop condition e messaggi finali del publish runner operativo dopo la sincronizzazione skill/template dello STEP 0805.
+Obiettivo: consolidare la coerenza tra output Bridge, artifact `LAST-*`, report compatti e recovery post-publish dopo lo scope discovery dello STEP 0810.

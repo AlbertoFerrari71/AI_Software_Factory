@@ -228,8 +228,12 @@ function Invoke-AsfPublishConfigRunnerFlow {
         throw ("ASF publish runner does not exist: {0}" -f $RunnerPath)
     }
 
-    Write-Log "ASF publish flow: explicit config JSON + scripts/asf_publish_step.ps1 + Phase B -> PR recovery -> Phase C."
+    Write-Log "ASF publish flow: PrepareConfig/scope discovery -> human scope review -> explicit config JSON + scripts/asf_publish_step.ps1 + Phase B -> PR recovery -> Phase C."
+    Write-Log "Recommended preflight: run scripts/asf_publish_step.ps1 -Phase PrepareConfig, review expected_files and changed_files, then use the reviewed config."
+    Write-Log "If the runner reports out-of-scope changes, stop and review the recovery report or suggested config; do not force scope automatically."
     Write-Log "ASF publish config must declare expected_files and changed_files explicitly; do not infer scope by parsing git status --short."
+    Write-Log "LF/CRLF warnings are not out-of-scope files when tests, workflow health check, verify gate, and git --no-pager diff --check pass."
+    Write-Log "DOCX/accessory outputs are best-effort and must not invalidate a publish already verified by final gates."
     Write-Log "Do not use Get-Command -Path or AST parsing to infer publish runner parameters."
 
     Run -FileName "pwsh" -ArgList @(

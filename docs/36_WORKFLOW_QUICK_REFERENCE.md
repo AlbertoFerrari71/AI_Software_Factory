@@ -119,17 +119,21 @@ Per pubblicare verso `main`, default PR-first:
 branch step/publish -> push branch -> gh pr create -> gh pr merge -> riallinea main -> verifica finale
 ```
 
-Per pubblicazioni ASF dopo STEP 0805, usare di default il flusso runner provato:
+Per pubblicazioni ASF dopo STEP 0810, usare di default il flusso runner provato:
 
 ```text
-config JSON esplicito -> scripts/asf_publish_step.ps1 -Phase B -ApprovePublish -> gh pr list --head -> PR number non vuoto e numerico -> Phase C -PrNumber -ApproveMerge -> verifiche finali
+PrepareConfig/scope discovery -> review umana scope -> config JSON esplicito -> scripts/asf_publish_step.ps1 -Phase B -ApprovePublish -> gh pr list --head -> PR number non vuoto e numerico -> Phase C -PrNumber -ApproveMerge -> verifiche finali
 ```
 
 Il config deve dichiarare `expected_files` e `changed_files`; non dedurre lo
-scope da parsing fragile di `git status --short` o da output Git `2>&1`.
+scope da parsing fragile di `git status --short` o da output Git `2>&1`. Se il
+runner segnala out-of-scope, leggere recovery report o suggested config e
+aggiungere file allo scope solo dopo review. Warning LF/CRLF non sono file fuori
+scope.
 `COMPLETATO` puo' essere stampato solo dopo i gate finali. Il compatto finale si
 copia con `Get-Content -Path <file> -Raw | Set-Clipboard`, mai con
-`Set-Clipboard -Path`. DOCX/Word COM resta best-effort.
+`Set-Clipboard -Path`. DOCX/Word COM resta best-effort; output accessori restano
+best-effort e non invalidano un publish gia' verificato.
 
 Se `main...origin/main [ahead N]` contiene merge locali gia' verificati, non fare push diretto a `main`: creare un publish branch da `main`, pushare quel branch, aprire PR, mergiare, riallineare `main` e verificare.
 
@@ -145,6 +149,7 @@ scripts/install_pwsh_command_pack_skill.py
 docs/70_ASF_PWSH_COMMAND_PACK_SKILL_FINALIZATION.md
 docs/71_ASF_PWSH_COMMAND_PACK_SKILL_EXPORT_INSTALL.md
 docs/motor/0805_POWERSHELL_PUBLISH_SKILL_SYNC_WITH_PROVEN_RUNNER_FLOW.md
+docs/motor/0810_PUBLISH_RUNNER_SCOPE_DISCOVERY_RECOVERY_UX_AND_NO_FALSE_COMPLETED_GUARD.md
 ```
 
 ---

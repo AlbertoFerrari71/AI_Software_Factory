@@ -63,6 +63,7 @@ The script `scripts/check_workflow_health.py` checks:
 - `docs/motor/0790_POST_MVP_ROADMAP_AND_HARDENING_PLAN.md`, `POST-MVP DECISION: HARDENING FIRST`, `PowerShell Native Command Guardrail Hardening`, `Bridge Output Consistency and LAST Validation` and `0800) PowerShell Native Command Guardrail Hardening` are referenced without adding automation, executing hooks, Phase B/C, publish, merge or requiring Dropbox real paths;
 - `docs/motor/0800_POWERSHELL_NATIVE_COMMAND_GUARDRAIL_HARDENING.md`, `Invoke-NativeChecked`, `Assert-NoOutOfScopeFiles`, `PrNumber`, `AllowedExitCodes` and `0810) Publish Runner Recovery UX and No-False-Completed Guard` are referenced without executing hooks, Phase B/C, publish, merge or requiring Dropbox real paths;
 - `docs/motor/0805_POWERSHELL_PUBLISH_SKILL_SYNC_WITH_PROVEN_RUNNER_FLOW.md`, `config JSON esplicito`, `scripts/asf_publish_step.ps1`, `gh pr list --head`, `-ApprovePublish`, `-ApproveMerge`, `Set-Clipboard -Path` and `0810) Publish Runner Recovery UX and No-False-Completed Guard` are referenced without executing Phase B/C, publish, merge or requiring Dropbox real paths;
+- `docs/motor/0810_PUBLISH_RUNNER_SCOPE_DISCOVERY_RECOVERY_UX_AND_NO_FALSE_COMPLETED_GUARD.md`, `PrepareConfig`, `Get-RepositoryChangedFiles`, `Recovery_Out_Of_Scope`, `COMPLETATO CON WARNING NON BLOCCANTE`, `DOCX`, `best-effort` and `0820) Bridge Output Consistency and LAST Validation` are referenced without executing Phase B/C, publish, merge or requiring Dropbox real paths;
 - operational scripts do not contain dangerous Git/GitHub command patterns.
 
 The covered areas include:
@@ -124,6 +125,7 @@ The covered areas include:
 - ASF Runner Hook Evidence Manifest Integration;
 - ASF MVP Real Step Pilot 3 with Manifest Hooks;
 - ASF Post-MVP Roadmap and Hardening Plan;
+- ASF Publish Runner Scope Discovery Recovery UX;
 - ASF PowerShell Native Command Guardrail Hardening;
 - ASF PowerShell Publish Skill Sync With Proven ASF Runner Flow;
 - Project Workflow Index.
@@ -323,3 +325,5 @@ After STEP 0790, it also treats `docs/motor/0790_POST_MVP_ROADMAP_AND_HARDENING_
 After STEP 0800, it also treats `docs/motor/0800_POWERSHELL_NATIVE_COMMAND_GUARDRAIL_HARDENING.md` and the Project Workflow Index pointers to `Invoke-NativeChecked`, `Assert-NoOutOfScopeFiles`, `PrNumber`, `AllowedExitCodes` and `0810) Publish Runner Recovery UX and No-False-Completed Guard` as core workflow references. The check remains read-only: it does not run state hooks, does not call GitHub, does not require Dropbox, and does not execute Phase B, Phase C, publish, merge or deploy.
 
 After STEP 0805, it also treats `docs/motor/0805_POWERSHELL_PUBLISH_SKILL_SYNC_WITH_PROVEN_RUNNER_FLOW.md` and the Project Workflow Index pointers to `config JSON esplicito`, `scripts/asf_publish_step.ps1`, `gh pr list --head`, `-ApprovePublish`, `-ApproveMerge`, `Set-Clipboard -Path` and `0810) Publish Runner Recovery UX and No-False-Completed Guard` as core workflow references. The check remains read-only: it does not call GitHub, does not require Dropbox, and does not execute Phase B, Phase C, publish, merge or deploy.
+
+After STEP 0810, it also treats `docs/motor/0810_PUBLISH_RUNNER_SCOPE_DISCOVERY_RECOVERY_UX_AND_NO_FALSE_COMPLETED_GUARD.md` and the Project Workflow Index pointers to `PrepareConfig`, `Get-RepositoryChangedFiles`, `Recovery_Out_Of_Scope`, `COMPLETATO CON WARNING NON BLOCCANTE`, `DOCX`, `best-effort` and `0820) Bridge Output Consistency and LAST Validation` as core workflow references. The check remains read-only: it does not call GitHub, does not require Dropbox, and does not execute Phase B, Phase C, publish, merge or deploy.

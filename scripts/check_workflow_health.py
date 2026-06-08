@@ -109,6 +109,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/motor/0790_POST_MVP_ROADMAP_AND_HARDENING_PLAN.md",
         "docs/motor/0800_POWERSHELL_NATIVE_COMMAND_GUARDRAIL_HARDENING.md",
         "docs/motor/0805_POWERSHELL_PUBLISH_SKILL_SYNC_WITH_PROVEN_RUNNER_FLOW.md",
+        "docs/motor/0810_PUBLISH_RUNNER_SCOPE_DISCOVERY_RECOVERY_UX_AND_NO_FALSE_COMPLETED_GUARD.md",
         "config/asf_project_profiles.json",
         "scripts/asf_openai_api_adapter.py",
         "scripts/asf_openai_controlled_live_execution_pack.py",
@@ -496,6 +497,22 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                     "-ApproveMerge",
                     "Set-Clipboard -Path",
                     "0810) Publish Runner Recovery UX and No-False-Completed Guard",
+                ],
+            ),
+            (
+                "ASF Publish Runner Scope Discovery Recovery UX document",
+                ["docs/motor/0810_PUBLISH_RUNNER_SCOPE_DISCOVERY_RECOVERY_UX_AND_NO_FALSE_COMPLETED_GUARD.md"],
+            ),
+            (
+                "ASF Publish Runner Scope Discovery Recovery UX pointers",
+                [
+                    "PrepareConfig",
+                    "Get-RepositoryChangedFiles",
+                    "Recovery_Out_Of_Scope",
+                    "COMPLETATO CON WARNING NON BLOCCANTE",
+                    "DOCX",
+                    "best-effort",
+                    "0820) Bridge Output Consistency and LAST Validation",
                 ],
             ),
             (
