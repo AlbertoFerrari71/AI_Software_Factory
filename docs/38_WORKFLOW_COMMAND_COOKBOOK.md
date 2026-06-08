@@ -1371,7 +1371,7 @@ passati. Il compatto Markdown resta obbligatorio; DOCX resta best-effort.
 PREPARE CONFIG, bozza scope da review:
 
 ```powershell
-pwsh -NoProfile -ExecutionPolicy Bypass -File scripts\asf_publish_step.ps1 -Phase PrepareConfig -StepNumber 0810 -StepName "Name" -BranchName "step-0810-name" -CommitMessage "0810 name" -PrTitle "0810 name" -NextStep "0820) Bridge Output Retry, Fallback and LAST Validation"
+pwsh -NoProfile -ExecutionPolicy Bypass -File scripts\asf_publish_step.ps1 -Phase PrepareConfig -StepNumber 0830 -StepName "MVP_Real_Step_Pilot_4_Slightly_More_Operational" -BranchName "step-0830-mvp-real-step-pilot-4-slightly-more-operational" -CommitMessage "0830 add MVP real step pilot 4" -PrTitle "0830 add MVP real step pilot 4" -NextStep "0840) Runner Hook Evidence Manifest Post-Publish Pack"
 ```
 
 FASE A, verifica locale:
@@ -1443,7 +1443,7 @@ Evitare in particolare:
 
 I warning LF/CRLF non sono bloccanti se test, verify, health check e `git --no-pager diff --check` passano. DOCX resta best-effort; il Markdown e' l'output principale. Se DOCX fallisce dopo gate finali passati, lo stato e' `COMPLETATO CON WARNING NON BLOCCANTE`, non `BLOCCATO`.
 
-Documenti: `docs/motor/0590_STABLE_POWERSHELL_PUBLISH_RUNNER.md`, `docs/motor/0805_POWERSHELL_PUBLISH_SKILL_SYNC_WITH_PROVEN_RUNNER_FLOW.md`, `docs/motor/0810_PUBLISH_RUNNER_SCOPE_DISCOVERY_RECOVERY_UX_AND_NO_FALSE_COMPLETED_GUARD.md`.
+Documenti: `docs/motor/0590_STABLE_POWERSHELL_PUBLISH_RUNNER.md`, `docs/motor/0805_POWERSHELL_PUBLISH_SKILL_SYNC_WITH_PROVEN_RUNNER_FLOW.md`, `docs/motor/0810_PUBLISH_RUNNER_SCOPE_DISCOVERY_RECOVERY_UX_AND_NO_FALSE_COMPLETED_GUARD.md`, `docs/motor/0830_MVP_REAL_STEP_PILOT_4_SLIGHTLY_MORE_OPERATIONAL.md`.
 
 ---
 

@@ -4,6 +4,32 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.83.0] - 2026-06-08
+
+### Added
+
+- STEP 0830 - MVP Real Step Pilot 4 - Slightly More Operational.
+- Documento `docs/motor/0830_MVP_REAL_STEP_PILOT_4_SLIGHTLY_MORE_OPERATIONAL.md`.
+- Manifest dimostrativo `examples/publish_runner/0830_prepare_config_pilot.json`.
+- Test `tests/unit/test_mvp_real_step_pilot_4.py`.
+
+### Changed
+
+- README, roadmap, decision log, Project Workflow Index, Workflow Health Check, Quick Reference e Command Cookbook riconoscono il pilot 0830.
+- Il pilot documenta il passaggio operativo `PrepareConfig` -> review umana scope -> Phase B -> recupero PR -> Phase C -> Bridge/LAST validation senza eseguire pubblicazione da Codex.
+
+### Guardrails
+
+- Il manifest 0830 e' marcato come esempio e non abilita pubblicazione, merge o deploy automatici.
+- Warning LF/CRLF, fallback Bridge/LAST e DOCX/accessori restano warning non bloccanti solo quando i gate veri passano.
+- Nessuna Phase B, Phase C, commit, push, PR, merge o deploy eseguiti da Codex.
+
+### Next
+
+- Prossimo step consigliato: `0840) Runner Hook Evidence Manifest Post-Publish Pack`.
+
+---
+
 ## [0.82.0] - 2026-06-08
 
 ### Added

@@ -1,0 +1,92 @@
+{
+  "step": "0830",
+  "name": "MVP Real Step Pilot 4 - Slightly More Operational",
+  "is_example": true,
+  "not_for_automatic_publish": true,
+  "branch": "step-0830-mvp-real-step-pilot-4-slightly-more-operational",
+  "intent": [
+    "pilot",
+    "prepare_config_review",
+    "human_gated",
+    "no_auto_publish"
+  ],
+  "risk_level": "L1",
+  "expected_files": [
+    "README.md",
+    "CHANGELOG.md",
+    "docs/10_ROADMAP.md",
+    "docs/11_DECISIONS.md",
+    "docs/34_PROJECT_WORKFLOW_INDEX.md",
+    "docs/35_WORKFLOW_HEALTH_CHECK.md",
+    "docs/36_WORKFLOW_QUICK_REFERENCE.md",
+    "docs/38_WORKFLOW_COMMAND_COOKBOOK.md",
+    "docs/motor/0830_MVP_REAL_STEP_PILOT_4_SLIGHTLY_MORE_OPERATIONAL.md",
+    "examples/publish_runner/0830_prepare_config_pilot.json",
+    "scripts/check_workflow_health.py",
+    "tests/unit/test_mvp_real_step_pilot_4.py"
+  ],
+  "changed_files": [
+    "README.md",
+    "CHANGELOG.md",
+    "docs/10_ROADMAP.md",
+    "docs/11_DECISIONS.md",
+    "docs/34_PROJECT_WORKFLOW_INDEX.md",
+    "docs/35_WORKFLOW_HEALTH_CHECK.md",
+    "docs/36_WORKFLOW_QUICK_REFERENCE.md",
+    "docs/38_WORKFLOW_COMMAND_COOKBOOK.md",
+    "docs/motor/0830_MVP_REAL_STEP_PILOT_4_SLIGHTLY_MORE_OPERATIONAL.md",
+    "examples/publish_runner/0830_prepare_config_pilot.json",
+    "scripts/check_workflow_health.py",
+    "tests/unit/test_mvp_real_step_pilot_4.py"
+  ],
+  "phase_a_checks": [
+    {
+      "name": "pytest",
+      "argv": [
+        "python",
+        "-m",
+        "pytest"
+      ]
+    },
+    {
+      "name": "workflow_health",
+      "argv": [
+        "python",
+        "scripts/check_workflow_health.py"
+      ]
+    }
+  ],
+  "phase_c_checks": [
+    {
+      "name": "verify_gate",
+      "argv": [
+        "pwsh",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "scripts/verify.ps1"
+      ]
+    },
+    {
+      "name": "diff_check",
+      "argv": [
+        "git",
+        "--no-pager",
+        "diff",
+        "--check"
+      ]
+    }
+  ],
+  "allow_no_github_checks_reported": true,
+  "automatic_publish_allowed": false,
+  "automatic_merge_allowed": false,
+  "automatic_deploy_allowed": false,
+  "notes": [
+    "Example pilot manifest only; it is not a ready-to-run publication config.",
+    "PrepareConfig output must be reviewed by a human before Phase B.",
+    "Phase B and Phase C require explicit runner approvals and are not executed by Codex in STEP 0830.",
+    "Bridge/LAST validation, fallback paths and DOCX best-effort warnings must be reported explicitly.",
+    "LF/CRLF warnings are non-blocking only when diff check, tests, health check and verify gate pass."
+  ]
+}

@@ -141,6 +141,10 @@ compatto Markdown resta obbligatorio nel path primario o fallback. Wrapper
 esterni non devono usare `Start-Transcript` sullo stesso `Output_Completo` del
 runner; usare un file separato `NNNN-Wrapper_Log_*.txt`.
 
+Dopo STEP 0830, il pilot operativo di riferimento per provare questo flusso e'
+`docs/motor/0830_MVP_REAL_STEP_PILOT_4_SLIGHTLY_MORE_OPERATIONAL.md`, con
+manifest esempio `examples/publish_runner/0830_prepare_config_pilot.json`.
+
 Se `main...origin/main [ahead N]` contiene merge locali gia' verificati, non fare push diretto a `main`: creare un publish branch da `main`, pushare quel branch, aprire PR, mergiare, riallineare `main` e verificare.
 
 Template:
@@ -156,6 +160,7 @@ docs/70_ASF_PWSH_COMMAND_PACK_SKILL_FINALIZATION.md
 docs/71_ASF_PWSH_COMMAND_PACK_SKILL_EXPORT_INSTALL.md
 docs/motor/0805_POWERSHELL_PUBLISH_SKILL_SYNC_WITH_PROVEN_RUNNER_FLOW.md
 docs/motor/0810_PUBLISH_RUNNER_SCOPE_DISCOVERY_RECOVERY_UX_AND_NO_FALSE_COMPLETED_GUARD.md
+docs/motor/0830_MVP_REAL_STEP_PILOT_4_SLIGHTLY_MORE_OPERATIONAL.md
 ```
 
 ---
