@@ -19,6 +19,12 @@ POST_MVP_ROADMAP_DOC = ROOT / "docs" / "motor" / "0790_POST_MVP_ROADMAP_AND_HARD
 PWSH_NATIVE_GUARDRAILS_DOC = (
     ROOT / "docs" / "motor" / "0800_POWERSHELL_NATIVE_COMMAND_GUARDRAIL_HARDENING.md"
 )
+PWSH_PUBLISH_SKILL_SYNC_DOC = (
+    ROOT
+    / "docs"
+    / "motor"
+    / "0805_POWERSHELL_PUBLISH_SKILL_SYNC_WITH_PROVEN_RUNNER_FLOW.md"
+)
 
 
 def read(path: Path) -> str:
@@ -36,6 +42,7 @@ def test_workflow_health_check_files_exist() -> None:
     assert MANIFEST_HOOKS_PILOT_DOC.exists()
     assert POST_MVP_ROADMAP_DOC.exists()
     assert PWSH_NATIVE_GUARDRAILS_DOC.exists()
+    assert PWSH_PUBLISH_SKILL_SYNC_DOC.exists()
 
 
 def test_workflow_health_check_script_runs_successfully() -> None:
@@ -294,6 +301,44 @@ def test_workflow_health_tracks_powershell_native_command_guardrail_hardening() 
 
     for fragment in native_fragments:
         assert fragment in native_doc
+
+
+def test_workflow_health_tracks_powershell_publish_skill_sync() -> None:
+    script = read(SCRIPT)
+    doc = read(DOC)
+    index = read(INDEX)
+    sync_doc = read(PWSH_PUBLISH_SKILL_SYNC_DOC)
+
+    indexed_fragments = [
+        "docs/motor/0805_POWERSHELL_PUBLISH_SKILL_SYNC_WITH_PROVEN_RUNNER_FLOW.md",
+        "config JSON esplicito",
+        "scripts/asf_publish_step.ps1",
+        "gh pr list --head",
+        "-ApprovePublish",
+        "-ApproveMerge",
+        "Set-Clipboard -Path",
+        "0810) Publish Runner Recovery UX and No-False-Completed Guard",
+    ]
+
+    for fragment in indexed_fragments:
+        assert fragment in script
+        assert fragment in doc
+        assert fragment in index
+
+    sync_fragments = [
+        "STEP 0790",
+        "STEP 0800",
+        "Phase B -> recupero PR -> Phase C",
+        "expected_files",
+        "changed_files",
+        "PR number is not numeric",
+        "DOCX e' best-effort",
+        "COMPLETATO",
+        "0810) Publish Runner Recovery UX and No-False-Completed Guard",
+    ]
+
+    for fragment in sync_fragments:
+        assert fragment in sync_doc
 
 
 def test_workflow_health_tracks_runner_hook_evidence_manifest_integration() -> None:

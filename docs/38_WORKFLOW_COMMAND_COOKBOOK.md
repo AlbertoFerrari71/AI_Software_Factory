@@ -1354,6 +1354,12 @@ Non scrivere "chiuso" se mancano merge, pull `main` o verifiche finali.
 
 Quando uno step ASF e' pronto per verifica locale o pubblicazione presidiata e si vuole evitare un mega-blocco PowerShell copiato in chat.
 
+Per pubblicazioni ASF, il comando raccomandato dopo STEP 0805 e':
+
+```text
+config JSON esplicito -> scripts/asf_publish_step.ps1 -> Phase B -> recupero PR -> Phase C -> verifiche finali
+```
+
 ### Comandi
 
 FASE A, verifica locale:
@@ -1368,15 +1374,41 @@ FASE B, publish branch/PR solo con consenso esplicito:
 pwsh -NoProfile -ExecutionPolicy Bypass -File scripts\asf_publish_step.ps1 -Config path\to\publish.config.json -Phase B -ApprovePublish
 ```
 
-FASE C, merge e verifica finale solo con consenso esplicito:
+Recupero PR dopo Phase B:
 
 ```powershell
-pwsh -NoProfile -ExecutionPolicy Bypass -File scripts\asf_publish_step.ps1 -Config path\to\publish.config.json -Phase C -PrNumber 52 -ApproveMerge
+$PrNumber = gh pr list --head $BranchName --json number --jq ".[0].number"
+if ([string]::IsNullOrWhiteSpace($PrNumber)) { throw "PR number missing." }
+if ($PrNumber -notmatch "^\d+$") { throw "PR number is not numeric." }
+```
+
+FASE C, merge e verifica finale solo con consenso esplicito e PR number valido:
+
+```powershell
+pwsh -NoProfile -ExecutionPolicy Bypass -File scripts\asf_publish_step.ps1 -Config path\to\publish.config.json -Phase C -PrNumber $PrNumber -ApproveMerge
+```
+
+Verifiche finali:
+
+```powershell
+python -m pytest
+python scripts/check_workflow_health.py
+pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1
+git --no-pager diff --check
+git --no-pager status --short
+```
+
+Clipboard del report compatto finale:
+
+```powershell
+Get-Content -Path "D:\FG-SAB Dropbox\Alberto Ferrari\ChatGPT_Bridge\AI_Software_Factory\publish_step\LAST-Output_Compatto.md" -Raw | Set-Clipboard
 ```
 
 ### Esito atteso
 
-Il runner usa config JSON, comandi `argv`, scope check su `expected_files`, output Bridge e gate espliciti per publish e merge.
+Il runner usa config JSON, comandi `argv`, scope check su `expected_files`, output Bridge numerati e `LAST-*` di compatibilita', gate espliciti per publish e merge, e blocco fail-closed se il PR number manca o non e' numerico.
+
+Il config JSON deve dichiarare almeno `step`, `name`, `repo_path`, `bridge_root`, `branch`, `commit_message`, `pr_title`, `pr_body`, `next_step`, `expected_files`, `changed_files`, `verification_profile`, `risk_level`, `verification_phase`, `profile_selector_expected_profile`, `intent`, `provided_gates`, `phase_a_checks`, `phase_c_checks`, `allow_no_github_checks_reported` e `log_max_count`.
 
 ### Se qualcosa va storto
 
@@ -1386,7 +1418,19 @@ Leggere `NNNN-Output_Completo_<nome>.txt` nel Bridge e correggere config, scope 
 
 Non tornare ai mega-blocchi PowerShell lunghi salvo emergenza motivata. Non usare config con scope largo o comandi shell non necessari.
 
-Documento: `docs/motor/0590_STABLE_POWERSHELL_PUBLISH_RUNNER.md`.
+Evitare in particolare:
+
+- mega-wrapper PowerShell che tenta di dedurre tutto;
+- parsing fragile di `git status --short` per determinare i file;
+- cattura `2>&1` di comandi Git usata come lista file, perche' puo' includere warning LF/CRLF;
+- introspezione `Get-Command -Path` o AST parsing non necessario;
+- stampa di `COMPLETATO` prima dei gate finali;
+- `Set-Clipboard -Path`;
+- DOCX/Word COM come dipendenza bloccante.
+
+I warning LF/CRLF non sono bloccanti se test, verify, health check e `git --no-pager diff --check` passano. DOCX resta best-effort; il Markdown e' l'output principale.
+
+Documenti: `docs/motor/0590_STABLE_POWERSHELL_PUBLISH_RUNNER.md`, `docs/motor/0805_POWERSHELL_PUBLISH_SKILL_SYNC_WITH_PROVEN_RUNNER_FLOW.md`.
 
 ---
 

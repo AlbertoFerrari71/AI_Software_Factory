@@ -155,6 +155,146 @@ function Invoke-NativeCommand {
     }
 }
 
+function Run {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string] $FileName,
+
+        [Parameter()]
+        [string[]] $ArgList = @(),
+
+        [Parameter(Mandatory = $true)]
+        [string] $Label,
+
+        [Parameter()]
+        [switch] $CaptureOutput
+    )
+
+    Test-NativeCommandInput -FileName $FileName -ArgList $ArgList -AllowedExitCodes @(0) -Label $Label
+    $RenderedCommand = Format-NativeCommandForLog -FileName $FileName -ArgList $ArgList
+    Write-Log ("START {0}: {1}" -f $Label, $RenderedCommand)
+
+    if ($CaptureOutput) {
+        $Output = & $FileName @ArgList
+    } else {
+        & $FileName @ArgList
+        $Output = @()
+    }
+
+    $ExitCode = $LASTEXITCODE
+    if ($null -eq $ExitCode) {
+        throw ("{0} did not produce a native LASTEXITCODE." -f $Label)
+    }
+
+    Write-Log ("END {0}: exit {1}" -f $Label, $ExitCode)
+    if ($ExitCode -ne 0) {
+        throw ("{0} failed with exit code {1}" -f $Label, $ExitCode)
+    }
+
+    if ($CaptureOutput) {
+        return (($Output | Out-String).Trim())
+    }
+}
+
+function Invoke-AsfPublishConfigRunnerFlow {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string] $ConfigPath,
+
+        [Parameter(Mandatory = $true)]
+        [string] $BranchName,
+
+        [Parameter()]
+        [string] $RunnerPath = "scripts/asf_publish_step.ps1",
+
+        [Parameter()]
+        [string] $LastCompactPath = ""
+    )
+
+    if ([string]::IsNullOrWhiteSpace($ConfigPath)) {
+        throw "ASF publish config path is empty."
+    }
+    if ([string]::IsNullOrWhiteSpace($BranchName)) {
+        throw "ASF publish branch name is empty."
+    }
+    if ([string]::IsNullOrWhiteSpace($RunnerPath)) {
+        throw "ASF publish runner path is empty."
+    }
+
+    if (-not (Test-Path -Path $ConfigPath)) {
+        throw ("ASF publish config does not exist: {0}" -f $ConfigPath)
+    }
+    if (-not (Test-Path -Path $RunnerPath)) {
+        throw ("ASF publish runner does not exist: {0}" -f $RunnerPath)
+    }
+
+    Write-Log "ASF publish flow: explicit config JSON + scripts/asf_publish_step.ps1 + Phase B -> PR recovery -> Phase C."
+    Write-Log "ASF publish config must declare expected_files and changed_files explicitly; do not infer scope by parsing git status --short."
+    Write-Log "Do not use Get-Command -Path or AST parsing to infer publish runner parameters."
+
+    Run -FileName "pwsh" -ArgList @(
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        $RunnerPath,
+        "-Config",
+        $ConfigPath,
+        "-Phase",
+        "B",
+        "-ApprovePublish"
+    ) -Label "ASF publish Phase B"
+
+    $PrNumber = Run -FileName "gh" -ArgList @(
+        "pr",
+        "list",
+        "--head",
+        $BranchName,
+        "--json",
+        "number",
+        "--jq",
+        ".[0].number"
+    ) -Label "Recover ASF publish PR number" -CaptureOutput
+
+    if ([string]::IsNullOrWhiteSpace($PrNumber)) {
+        throw "ASF publish PR number is empty after gh pr list --head."
+    }
+    if ($PrNumber -notmatch "^\d+$") {
+        throw ("ASF publish PR number is not numeric: {0}" -f $PrNumber)
+    }
+
+    Run -FileName "pwsh" -ArgList @(
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        $RunnerPath,
+        "-Config",
+        $ConfigPath,
+        "-Phase",
+        "C",
+        "-PrNumber",
+        $PrNumber,
+        "-ApproveMerge"
+    ) -Label "ASF publish Phase C"
+
+    Run -FileName "python" -ArgList @("-m", "pytest") -Label "final pytest"
+    Run -FileName "python" -ArgList @("scripts/check_workflow_health.py") -Label "final workflow health"
+    Run -FileName "pwsh" -ArgList @("-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "scripts/verify.ps1") -Label "final verify gate"
+    Run -FileName "git" -ArgList @("--no-pager", "diff", "--check") -Label "final diff check"
+    Run -FileName "git" -ArgList @("--no-pager", "status", "--short") -Label "final git status"
+
+    if (-not [string]::IsNullOrWhiteSpace($LastCompactPath)) {
+        if (-not (Test-Path -Path $LastCompactPath)) {
+            throw ("LAST compact report does not exist: {0}" -f $LastCompactPath)
+        }
+        Get-Content -Path $LastCompactPath -Raw | Set-Clipboard
+        Write-Log "Copied LAST-Output_Compatto.md to clipboard."
+    }
+
+    Write-Log "COMPLETATO after final ASF publish gates passed."
+}
+
 function Test-BranchExists {
     param(
         [Parameter(Mandatory = $true)]

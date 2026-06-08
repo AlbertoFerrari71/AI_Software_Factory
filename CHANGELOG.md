@@ -4,6 +4,31 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.80.5] - 2026-06-08
+
+### Added
+
+- STEP 0805 - PowerShell Publish Skill Sync With Proven ASF Runner Flow.
+- Documento `docs/motor/0805_POWERSHELL_PUBLISH_SKILL_SYNC_WITH_PROVEN_RUNNER_FLOW.md`.
+- Test sui template/skill PowerShell per il flusso config JSON + runner + Phase B -> recupero PR -> Phase C.
+
+### Changed
+
+- Aggiornati template e skill export repository-local `as-common-pwsh-command-pack` con il flusso ASF publish provato negli STEP 0790/0800.
+- Aggiornati Workflow Quick Reference, Workflow Command Cookbook, README, roadmap, decision log, Project Workflow Index e Workflow Health Check.
+
+### Guardrails
+
+- Nessuna modifica alla skill installata esterna.
+- Nessuna riscrittura generale del publish runner.
+- Nessuna Phase B, Phase C, commit, push, PR, merge o deploy eseguiti da Codex.
+
+### Next
+
+- Prossimo step consigliato: `0810) Publish Runner Recovery UX and No-False-Completed Guard`.
+
+---
+
 ## [0.80.0] - 2026-06-08
 
 ### Added

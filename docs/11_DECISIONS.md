@@ -2532,6 +2532,53 @@ warning o exit code non ammessi in successo.
 
 ---
 
+## DEC-094 - PowerShell publish skill sincronizzata al runner ASF provato
+
+**Data:** 2026-06-08
+**Stato:** Accettata
+
+### Contesto
+
+La pubblicazione dello STEP 0800 ha confermato che il flusso robusto non e' un
+mega-wrapper adattivo, ma il modello gia' provato nello STEP 0790:
+
+```text
+config JSON esplicito + scripts/asf_publish_step.ps1 + Phase B -> recupero PR -> Phase C
+```
+
+### Decisione
+
+Lo STEP 0805 introduce
+`docs/motor/0805_POWERSHELL_PUBLISH_SKILL_SYNC_WITH_PROVEN_RUNNER_FLOW.md`.
+
+La skill/template PowerShell repository-local deve raccomandare di default, per
+pubblicazioni ASF, un config JSON esplicito con `expected_files` e
+`changed_files`, chiamata a `scripts/asf_publish_step.ps1`, Phase B con
+`-ApprovePublish`, recupero PR tramite `gh pr list --head`, validazione PR
+number non vuoto e numerico, Phase C con `-PrNumber` e `-ApproveMerge`, e
+verifiche finali prima di qualunque `COMPLETATO`.
+
+### Motivazione
+
+Duplicare logica di publish dentro wrapper PowerShell aumenta fragilita',
+specialmente quando warning LF/CRLF, output Git e recovery si mescolano. Il
+runner versionato deve restare la fonte operativa; il command pack deve
+preparare config esplicita e orchestrare pochi passaggi verificabili.
+
+### Conseguenze
+
+- I template PowerShell e la skill export repository-local documentano il flusso
+  config JSON + runner.
+- Gli anti-pattern emersi nello STEP 0800 sono documentati.
+- La skill installata esterna non viene modificata.
+- Il prossimo step consigliato resta:
+
+```text
+0810) Publish Runner Recovery UX and No-False-Completed Guard
+```
+
+---
+
 ## DEC-091 - MVP Real Step Pilot 3 con Manifest Hooks
 
 **Data:** 2026-06-07
