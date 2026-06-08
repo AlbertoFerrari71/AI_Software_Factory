@@ -2,6 +2,32 @@
 
 Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
+## [0.87.0] - 2026-06-08
+
+### Added
+
+- STEP 0870 - Codex_Skills First Controlled Write Pilot.
+- Documento `docs/motor/0870_CODEX_SKILLS_FIRST_CONTROLLED_WRITE_PILOT.md`.
+- Result report `docs/motor/0870_CODEX_SKILLS_CONTROLLED_WRITE_RESULT.md`.
+- Rollback plan `docs/motor/0870_CODEX_SKILLS_ROLLBACK_PLAN.md`.
+- Evidence manifest esempio `examples/publish_runner/0870_codex_skills_controlled_write_evidence.example.json`.
+- Test `tests/unit/test_codex_skills_first_controlled_write_pilot.py`.
+
+### Changed
+
+- README, roadmap, decision log, Project Workflow Index, Workflow Health Check, Quick Reference e Command Cookbook riconoscono il controlled write pilot 0870.
+- La roadmap post-MVP aggiorna il prossimo step operativo verso `0880) Codex_Skills Controlled Write Review and Rollback/Commit Decision`.
+
+### Guardrails
+
+- La repo esterna `Codex_Skills` e' stata modificata solo con un file Markdown locale, documentale, non funzionale e non committato.
+- Nessun commit, push, PR, merge, deploy, tag, sync skill, installazione skill o modifica remota e' stata eseguita.
+- Il rollback resta manuale e richiede review umana.
+
+### Next
+
+- Prossimo step consigliato: `0880) Codex_Skills Controlled Write Review and Rollback/Commit Decision`.
+
 ---
 
 ## [0.86.0] - 2026-06-08

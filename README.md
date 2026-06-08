@@ -1,7 +1,7 @@
 # AI Software Factory
 
 **Metodo interno:** Codex Alchemy Method
-**Stato:** STEP 0860 - Codex_Skills External Workflow Dry-Run Pilot
+**Stato:** STEP 0870 - Codex_Skills First Controlled Write Pilot
 **Data bootstrap:** 2026-05-25
 **Strategia:** local-first personale, progettato per evoluzione SaaS
 
@@ -28,7 +28,7 @@ Il metodo interno si chiama **Codex Alchemy Method**: l'idea grezza viene trasfo
 
 ## 2. Stato repository
 
-Questo repository e' nello stato **STEP 0860 - Codex_Skills External Workflow Dry-Run Pilot**.
+Questo repository e' nello stato **STEP 0870 - Codex_Skills First Controlled Write Pilot**.
 
 Sono presenti:
 
@@ -88,6 +88,7 @@ Sono presenti:
 - STEP 0840 - Runner Hook Evidence Manifest Post-Publish Pack, con documento operativo 0840, manifest JSON esempio post-publish, test dedicato e riferimenti a PR, merge commit, checks finali, Bridge outputs, LAST files, warning accettati e prossimo step.
 - STEP 0850 - First Real External Workflow Pilot, con pack preparatorio per scegliere `Codex_Skills` come primo pilot esterno controllato, safety boundaries, human gate, manifest JSON planning-only e handoff verso 0860.
 - STEP 0860 - Codex_Skills External Workflow Dry-Run Pilot, con ispezione esterna solo read-only, readiness report, dry-run plan, changed-files preview ipotetica, evidence manifest e human gate verso 0870.
+- STEP 0870 - Codex_Skills First Controlled Write Pilot, con micro-modifica documentale locale su `Codex_Skills`, result report, rollback plan, evidence manifest e nessun commit/push/PR/merge/deploy/tag.
 
 Non sono ancora presenti:
 
@@ -98,7 +99,7 @@ Non sono ancora presenti:
 - integrazioni MCP;
 - automazioni Codex operative;
 - Controlled Codex Executor;
-- first controlled write pilot;
+- decisione review/rollback/commit separata per il controlled write pilot;
 - logica applicativa reale.
 
 ---
@@ -398,6 +399,7 @@ docs/motor/0830_MVP_REAL_STEP_PILOT_4_SLIGHTLY_MORE_OPERATIONAL.md
 docs/motor/0840_RUNNER_HOOK_EVIDENCE_MANIFEST_POST_PUBLISH_PACK.md
 docs/motor/0850_FIRST_REAL_EXTERNAL_WORKFLOW_PILOT.md
 docs/motor/0860_CODEX_SKILLS_EXTERNAL_WORKFLOW_DRY_RUN_PILOT.md
+docs/motor/0870_CODEX_SKILLS_FIRST_CONTROLLED_WRITE_PILOT.md
 ```
 
 ---
@@ -456,7 +458,7 @@ policies/path_policy.v0.json
 ## 11. Prossimo step
 
 ```text
-0870) Codex_Skills First Controlled Write Pilot
+0880) Codex_Skills Controlled Write Review and Rollback/Commit Decision
 ```
 
-Obiettivo: proporre una prima modifica minima e controllata su `Codex_Skills` solo dopo review umana del dry-run 0860, senza automatismi di commit, push, PR, merge o deploy da Codex.
+Obiettivo: decidere con review umana se fare rollback del file locale 0870 in `Codex_Skills` oppure preparare una futura pubblicazione controllata separata, senza automatismi di commit, push, PR, merge o deploy da Codex.
