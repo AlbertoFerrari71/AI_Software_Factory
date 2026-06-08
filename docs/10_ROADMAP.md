@@ -119,7 +119,8 @@ Esempio:
 | 860 | Codex_Skills External Workflow Dry-Run Pilot | Provare ASF su Codex_Skills in read-only/dry-run con human gate | Repo readiness report, dry-run plan, changed-files preview, evidence manifest e human gate | Post-MVP Pilot | Completato |
 | 870 | Codex_Skills First Controlled Write Pilot | Eseguire una micro-modifica documentale locale su Codex_Skills dopo guardrail | Result report, rollback plan, evidence manifest e test, senza pubblicazione Git | Post-MVP Pilot | Completato |
 | 880 | Codex_Skills Controlled Write Review and Rollback/Commit Decision | Decidere con review umana se fare rollback o preparare pubblicazione separata | Decision report, state report, matrix, comandi non eseguiti e evidence JSON | Post-MVP Pilot | Completato |
-| 890 | Codex_Skills Rollback or Controlled Commit Execution | Eseguire solo l'opzione approvata, rollback o commit controllato separato | Rollback puntuale oppure commit locale controllato con gate esplicito | Post-MVP Pilot | Proposto |
+| 890 | Codex_Skills Controlled Local Commit Execution | Eseguire la decisione umana B con commit locale controllato del solo file 0870 | Commit locale Codex_Skills, result report, evidence JSON e nessun push/PR/merge/deploy/tag | Post-MVP Pilot | Completato |
+| 900 | Codex_Skills Controlled Push or Rollback Decision | Decidere se pubblicare, rollbackare o mantenere locale il commit Codex_Skills | Decision pack separato con human gate per qualunque push futuro | Post-MVP Pilot | Proposto |
 
 ---
 
@@ -131,10 +132,18 @@ Prossimo step consigliato dopo 0870:
 
 ---
 
-Prossimo step consigliato dopo 0880:
+Prossimo step consigliato dopo 0880, ora eseguito dallo STEP 0890:
 
 ```text
 0890) Codex_Skills Rollback or Controlled Commit Execution
+```
+
+---
+
+Prossimo step consigliato dopo 0890:
+
+```text
+0900) Codex_Skills Controlled Push or Rollback Decision
 ```
 
 ---

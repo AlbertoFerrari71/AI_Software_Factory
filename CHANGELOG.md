@@ -4,6 +4,33 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.89.0] - 2026-06-08
+
+### Added
+
+- STEP 0890 - Codex_Skills Controlled Local Commit Execution.
+- Documento operativo `docs/motor/0890_CODEX_SKILLS_CONTROLLED_LOCAL_COMMIT_EXECUTION.md`.
+- Report esecuzione `docs/motor/0890_CODEX_SKILLS_CONTROLLED_LOCAL_COMMIT_RESULT.md`.
+- Evidence manifest esempio `examples/publish_runner/0890_codex_skills_controlled_local_commit_evidence.example.json`.
+- Test `tests/unit/test_codex_skills_controlled_local_commit_execution.py`.
+
+### Changed
+
+- README, roadmap, decision log, Project Workflow Index, Workflow Health Check, Quick Reference e Command Cookbook riconoscono il commit locale controllato 0890.
+- La roadmap post-MVP aggiorna il prossimo step operativo verso `0900) Codex_Skills Controlled Push or Rollback Decision`.
+
+### Guardrails
+
+- Lo STEP 0890 autorizza solo un commit locale in `Codex_Skills` del file pilota 0870.
+- Nessun push, PR, merge, deploy, tag, pull/fetch, cambio branch, reset, cleanup distruttivo o sync skill e' autorizzato.
+- Qualunque push futuro resta soggetto a human gate separato.
+
+### Next
+
+- Prossimo step consigliato: `0900) Codex_Skills Controlled Push or Rollback Decision`.
+
+---
+
 ## [0.88.0] - 2026-06-08
 
 ### Added

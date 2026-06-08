@@ -3802,3 +3802,52 @@ Il prossimo step consigliato e':
 ```text
 0890) Codex_Skills Rollback or Controlled Commit Execution
 ```
+
+---
+
+## DEC-103 - Codex_Skills controlled local commit execution
+
+**Data:** 2026-06-08
+**Stato:** Accettata
+
+### Contesto
+
+Dopo lo STEP 0880, Alberto ha scelto esplicitamente l'opzione B:
+
+```text
+B) Commit locale controllato su Codex_Skills, senza push.
+```
+
+La repo esterna `Codex_Skills` conteneva solo il file pilota 0870 come
+modifica untracked:
+
+```text
+docs/asf_external_pilot/0870_CONTROLLED_WRITE_PILOT.md
+```
+
+### Decisione
+
+Lo STEP 0890 esegue un commit locale controllato nella repo esterna
+`Codex_Skills`, limitato al solo file pilota 0870.
+
+Il commit locale usa il messaggio:
+
+```text
+0870 add ASF controlled write pilot note
+```
+
+Lo step produce documento operativo, result report, evidence manifest JSON e
+test automatico dedicato in ASF.
+
+### Conseguenze
+
+Il commit resta locale in `Codex_Skills`. Non vengono eseguiti push, PR, merge,
+deploy, tag, pull/fetch, cambio branch, reset, cleanup distruttivi o sync skill.
+
+Qualunque push futuro richiede un human gate separato.
+
+Il prossimo step consigliato e':
+
+```text
+0900) Codex_Skills Controlled Push or Rollback Decision
+```

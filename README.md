@@ -1,7 +1,7 @@
 # AI Software Factory
 
 **Metodo interno:** Codex Alchemy Method
-**Stato:** STEP 0880 - Codex_Skills Controlled Write Review and Rollback/Commit Decision
+**Stato:** STEP 0890 - Codex_Skills Controlled Local Commit Execution
 **Data bootstrap:** 2026-05-25
 **Strategia:** local-first personale, progettato per evoluzione SaaS
 
@@ -28,7 +28,7 @@ Il metodo interno si chiama **Codex Alchemy Method**: l'idea grezza viene trasfo
 
 ## 2. Stato repository
 
-Questo repository e' nello stato **STEP 0880 - Codex_Skills Controlled Write Review and Rollback/Commit Decision**.
+Questo repository e' nello stato **STEP 0890 - Codex_Skills Controlled Local Commit Execution**.
 
 Sono presenti:
 
@@ -90,6 +90,7 @@ Sono presenti:
 - STEP 0860 - Codex_Skills External Workflow Dry-Run Pilot, con ispezione esterna solo read-only, readiness report, dry-run plan, changed-files preview ipotetica, evidence manifest e human gate verso 0870.
 - STEP 0870 - Codex_Skills First Controlled Write Pilot, con micro-modifica documentale locale su `Codex_Skills`, result report, rollback plan, evidence manifest e nessun commit/push/PR/merge/deploy/tag.
 - STEP 0880 - Codex_Skills Controlled Write Review and Rollback/Commit Decision, con review read-only del file 0870, decision matrix, comandi preparati ma non eseguiti e default rollback human-gated.
+- STEP 0890 - Codex_Skills Controlled Local Commit Execution, con decisione umana B, commit locale controllato del solo file 0870 in `Codex_Skills`, evidence manifest e nessun push/PR/merge/deploy/tag.
 
 Non sono ancora presenti:
 
@@ -100,7 +101,7 @@ Non sono ancora presenti:
 - integrazioni MCP;
 - automazioni Codex operative;
 - Controlled Codex Executor;
-- decisione review/rollback/commit separata per il controlled write pilot;
+- decisione push/rollback/mantenimento locale separata per il commit `Codex_Skills`;
 - logica applicativa reale.
 
 ---
@@ -402,6 +403,7 @@ docs/motor/0850_FIRST_REAL_EXTERNAL_WORKFLOW_PILOT.md
 docs/motor/0860_CODEX_SKILLS_EXTERNAL_WORKFLOW_DRY_RUN_PILOT.md
 docs/motor/0870_CODEX_SKILLS_FIRST_CONTROLLED_WRITE_PILOT.md
 docs/motor/0880_CODEX_SKILLS_CONTROLLED_WRITE_REVIEW_AND_DECISION.md
+docs/motor/0890_CODEX_SKILLS_CONTROLLED_LOCAL_COMMIT_EXECUTION.md
 ```
 
 ---
@@ -460,7 +462,7 @@ policies/path_policy.v0.json
 ## 11. Prossimo step
 
 ```text
-0890) Codex_Skills Rollback or Controlled Commit Execution
+0900) Codex_Skills Controlled Push or Rollback Decision
 ```
 
-Obiettivo: eseguire solo l'opzione approvata esplicitamente da Alberto, rollback del file 0870 oppure commit controllato separato su `Codex_Skills`, senza automatismi di push, PR, merge o deploy da Codex.
+Obiettivo: decidere con human gate esplicito se pubblicare il commit locale `Codex_Skills`, fare rollback oppure mantenerlo solo locale, senza automatismi di push, PR, merge o deploy da Codex.

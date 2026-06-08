@@ -167,6 +167,11 @@ Dopo STEP 0880, la decision matrix raccomanda come default il rollback del file
 0870. Keep local e future controlled commit richiedono scelta esplicita di
 Alberto; lo step 0880 non esegue comandi.
 
+Dopo STEP 0890, Alberto ha scelto B e ASF ha eseguito un commit locale
+controllato del solo file 0870 in `Codex_Skills`. Nessun push, PR, merge,
+deploy o tag e' stato eseguito; qualunque push futuro richiede human gate
+separato nello step 0900.
+
 Se `main...origin/main [ahead N]` contiene merge locali gia' verificati, non fare push diretto a `main`: creare un publish branch da `main`, pushare quel branch, aprire PR, mergiare, riallineare `main` e verificare.
 
 Template:
@@ -188,6 +193,7 @@ docs/motor/0850_FIRST_REAL_EXTERNAL_WORKFLOW_PILOT.md
 docs/motor/0860_CODEX_SKILLS_EXTERNAL_WORKFLOW_DRY_RUN_PILOT.md
 docs/motor/0870_CODEX_SKILLS_FIRST_CONTROLLED_WRITE_PILOT.md
 docs/motor/0880_CODEX_SKILLS_CONTROLLED_WRITE_REVIEW_AND_DECISION.md
+docs/motor/0890_CODEX_SKILLS_CONTROLLED_LOCAL_COMMIT_EXECUTION.md
 ```
 
 ---
