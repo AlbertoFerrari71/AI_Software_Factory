@@ -4,6 +4,36 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.86.0] - 2026-06-08
+
+### Added
+
+- STEP 0860 - Codex_Skills External Workflow Dry-Run Pilot.
+- Documento `docs/motor/0860_CODEX_SKILLS_EXTERNAL_WORKFLOW_DRY_RUN_PILOT.md`.
+- Readiness report `docs/motor/0860_CODEX_SKILLS_READINESS_REPORT.md`.
+- Changed-files preview ipotetica `docs/motor/0860_CODEX_SKILLS_CHANGED_FILES_PREVIEW.md`.
+- Human approval gate `docs/motor/0860_CODEX_SKILLS_HUMAN_APPROVAL_GATE.md`.
+- Dry-run plan esempio `examples/publish_runner/0860_codex_skills_external_dry_run_plan.example.json`.
+- Evidence manifest esempio `examples/publish_runner/0860_codex_skills_dry_run_evidence_manifest.example.json`.
+- Test `tests/unit/test_codex_skills_external_workflow_dry_run_pilot.py`.
+
+### Changed
+
+- README, roadmap, decision log, Project Workflow Index, Workflow Health Check, Quick Reference e Command Cookbook riconoscono il dry-run 0860.
+- La roadmap post-MVP aggiorna il prossimo step operativo verso `0870) Codex_Skills First Controlled Write Pilot`.
+
+### Guardrails
+
+- La repo esterna `Codex_Skills` e' stata ispezionata solo in read-only/dry-run.
+- Nessuna scrittura esterna, sincronizzazione skill, installazione skill o azione Git esterna e' autorizzata dal pack 0860.
+- Nessuna Phase B, Phase C, commit, push, PR, merge, deploy o tag eseguiti da Codex.
+
+### Next
+
+- Prossimo step consigliato: `0870) Codex_Skills First Controlled Write Pilot`.
+
+---
+
 ## [0.85.0] - 2026-06-08
 
 ### Added

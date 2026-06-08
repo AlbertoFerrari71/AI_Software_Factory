@@ -154,6 +154,11 @@ Dopo STEP 0850, il primo pilot esterno consigliato e' `Codex_Skills`. Il pilot
 successivo resta read-only/dry-run, richiede human gate e non deve fare commit,
 push, PR, merge, deploy o tag.
 
+Dopo STEP 0860, il dry-run `Codex_Skills` dispone di readiness report,
+changed-files preview ipotetica, dry-run plan ed evidence manifest. Il prossimo
+step 0870 richiede gate umano prima di qualunque scrittura esterna e non abilita
+commit, push, PR, merge o deploy automatici.
+
 Se `main...origin/main [ahead N]` contiene merge locali gia' verificati, non fare push diretto a `main`: creare un publish branch da `main`, pushare quel branch, aprire PR, mergiare, riallineare `main` e verificare.
 
 Template:
@@ -172,6 +177,7 @@ docs/motor/0810_PUBLISH_RUNNER_SCOPE_DISCOVERY_RECOVERY_UX_AND_NO_FALSE_COMPLETE
 docs/motor/0830_MVP_REAL_STEP_PILOT_4_SLIGHTLY_MORE_OPERATIONAL.md
 docs/motor/0840_RUNNER_HOOK_EVIDENCE_MANIFEST_POST_PUBLISH_PACK.md
 docs/motor/0850_FIRST_REAL_EXTERNAL_WORKFLOW_PILOT.md
+docs/motor/0860_CODEX_SKILLS_EXTERNAL_WORKFLOW_DRY_RUN_PILOT.md
 ```
 
 ---

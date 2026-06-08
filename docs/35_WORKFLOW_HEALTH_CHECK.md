@@ -68,6 +68,7 @@ The script `scripts/check_workflow_health.py` checks:
 - `docs/motor/0830_MVP_REAL_STEP_PILOT_4_SLIGHTLY_MORE_OPERATIONAL.md`, `examples/publish_runner/0830_prepare_config_pilot.json`, `PrepareConfig`, `review umana dello scope`, `Bridge/LAST validation`, `gate bloccanti`, `warning non bloccanti` and `0840) Runner Hook Evidence Manifest Post-Publish Pack` are referenced without executing Phase B/C, publish, merge or requiring Dropbox real paths;
 - `docs/motor/0840_RUNNER_HOOK_EVIDENCE_MANIFEST_POST_PUBLISH_PACK.md`, `examples/publish_runner/0840_post_publish_evidence_manifest.example.json`, `post-publish evidence pack`, PR, merge commit, checks finali, Bridge outputs, LAST files, warning accettati and `0850) First Real External Workflow Pilot` are referenced without executing Phase B/C, publish, merge or requiring Dropbox real paths;
 - `docs/motor/0850_FIRST_REAL_EXTERNAL_WORKFLOW_PILOT.md`, `examples/publish_runner/0850_external_workflow_pilot_plan.example.json`, `Codex_Skills`, `Family_Photo_Organizer`, `Mansionario_Vivo`, `safety boundaries`, `human gate`, `planning_only` and `0860) Codex_Skills External Workflow Dry-Run Pilot` are referenced without accessing or modifying external repositories;
+- `docs/motor/0860_CODEX_SKILLS_EXTERNAL_WORKFLOW_DRY_RUN_PILOT.md`, `docs/motor/0860_CODEX_SKILLS_READINESS_REPORT.md`, `docs/motor/0860_CODEX_SKILLS_CHANGED_FILES_PREVIEW.md`, `docs/motor/0860_CODEX_SKILLS_HUMAN_APPROVAL_GATE.md`, `examples/publish_runner/0860_codex_skills_external_dry_run_plan.example.json`, `examples/publish_runner/0860_codex_skills_dry_run_evidence_manifest.example.json`, `Codex_Skills`, `read-only`, `dry_run_only`, `external_repo_write_allowed`, `GO_FOR_READ_ONLY_DRY_RUN_COMPLETED` and `0870) Codex_Skills First Controlled Write Pilot` are referenced without writing to external repositories;
 - operational scripts do not contain dangerous Git/GitHub command patterns.
 
 The covered areas include:
@@ -132,6 +133,7 @@ The covered areas include:
 - ASF Publish Runner Scope Discovery Recovery UX;
 - ASF PowerShell Native Command Guardrail Hardening;
 - ASF PowerShell Publish Skill Sync With Proven ASF Runner Flow;
+- ASF Codex_Skills External Workflow Dry-Run Pilot;
 - Project Workflow Index.
 
 ---

@@ -1,0 +1,50 @@
+{
+  "is_example": true,
+  "not_live_publication": true,
+  "not_for_automatic_publish": true,
+  "step": "0860",
+  "name": "Codex_Skills_External_Workflow_Dry_Run_Pilot",
+  "status": "dry_run_only",
+  "external_repo": "Codex_Skills",
+  "external_repo_path_candidate": "C:\\Users\\alberto.ferrari\\.agents\\skills",
+  "external_repo_remote_candidate": "AlbertoFerrari71/Codex_Skills",
+  "read_only": true,
+  "external_repo_write_allowed": false,
+  "human_gate_required": true,
+  "automatic_commit_push_pr_merge_deploy": false,
+  "automatic_git_publication_allowed": false,
+  "allowed_actions": [
+    "inspect external repo read-only",
+    "generate readiness report",
+    "generate dry-run plan",
+    "generate changed-files preview",
+    "generate risk assessment"
+  ],
+  "forbidden_actions": [
+    "write_external_repo",
+    "commit",
+    "push",
+    "open_pr",
+    "merge",
+    "deploy",
+    "tag",
+    "destructive_cleanup",
+    "skill_sync",
+    "install_skill",
+    "uninstall_skill"
+  ],
+  "candidate_next_change": {
+    "description": "To be decided after human review",
+    "risk_level": "L1",
+    "requires_human_approval": true
+  },
+  "expected_evidence": [
+    "readiness report",
+    "dry-run plan",
+    "changed-files preview",
+    "risk assessment",
+    "human approval gate",
+    "no external writes confirmation"
+  ],
+  "next_step": "0870) Codex_Skills First Controlled Write Pilot"
+}

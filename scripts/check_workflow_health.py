@@ -114,6 +114,10 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/motor/0830_MVP_REAL_STEP_PILOT_4_SLIGHTLY_MORE_OPERATIONAL.md",
         "docs/motor/0840_RUNNER_HOOK_EVIDENCE_MANIFEST_POST_PUBLISH_PACK.md",
         "docs/motor/0850_FIRST_REAL_EXTERNAL_WORKFLOW_PILOT.md",
+        "docs/motor/0860_CODEX_SKILLS_EXTERNAL_WORKFLOW_DRY_RUN_PILOT.md",
+        "docs/motor/0860_CODEX_SKILLS_READINESS_REPORT.md",
+        "docs/motor/0860_CODEX_SKILLS_CHANGED_FILES_PREVIEW.md",
+        "docs/motor/0860_CODEX_SKILLS_HUMAN_APPROVAL_GATE.md",
         "config/asf_project_profiles.json",
         "scripts/asf_openai_api_adapter.py",
         "scripts/asf_openai_controlled_live_execution_pack.py",
@@ -185,6 +189,9 @@ def check_files(root: Path) -> list[HealthIssue]:
         "examples/publish_step/0750_publish_config_state_hooks_mismatch_fail_closed.example.json",
         "examples/publish_runner/0830_prepare_config_pilot.json",
         "examples/publish_runner/0840_post_publish_evidence_manifest.example.json",
+        "examples/publish_runner/0850_external_workflow_pilot_plan.example.json",
+        "examples/publish_runner/0860_codex_skills_external_dry_run_plan.example.json",
+        "examples/publish_runner/0860_codex_skills_dry_run_evidence_manifest.example.json",
         "examples/risk_classifier/sample_l0_docs_only.json",
         "examples/risk_classifier/sample_l2_code_change.json",
         "examples/risk_classifier/sample_l3_publish.json",
@@ -229,6 +236,8 @@ def check_files(root: Path) -> list[HealthIssue]:
         "tests/unit/test_asf_e2e_mvp_smoke.py",
         "tests/unit/test_asf_motor_run_manifest.py",
         "tests/unit/test_runner_hook_evidence_manifest_post_publish_pack.py",
+        "tests/unit/test_first_real_external_workflow_pilot.py",
+        "tests/unit/test_codex_skills_external_workflow_dry_run_pilot.py",
     ]
 
     issues: list[HealthIssue] = []
@@ -584,6 +593,23 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                     "human gate",
                     "planning_only",
                     "0860) Codex_Skills External Workflow Dry-Run Pilot",
+                ],
+            ),
+            (
+                "ASF Codex_Skills External Workflow Dry-Run Pilot pointers",
+                [
+                    "docs/motor/0860_CODEX_SKILLS_EXTERNAL_WORKFLOW_DRY_RUN_PILOT.md",
+                    "docs/motor/0860_CODEX_SKILLS_READINESS_REPORT.md",
+                    "docs/motor/0860_CODEX_SKILLS_CHANGED_FILES_PREVIEW.md",
+                    "docs/motor/0860_CODEX_SKILLS_HUMAN_APPROVAL_GATE.md",
+                    "examples/publish_runner/0860_codex_skills_external_dry_run_plan.example.json",
+                    "examples/publish_runner/0860_codex_skills_dry_run_evidence_manifest.example.json",
+                    "Codex_Skills",
+                    "read-only",
+                    "dry_run_only",
+                    "external_repo_write_allowed",
+                    "GO_FOR_READ_ONLY_DRY_RUN_COMPLETED",
+                    "0870) Codex_Skills First Controlled Write Pilot",
                 ],
             ),
             (
@@ -960,6 +986,14 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             (
                 "ASF First Real External Workflow Pilot example",
                 ["examples/publish_runner/0850_external_workflow_pilot_plan.example.json"],
+            ),
+            (
+                "ASF Codex_Skills External Workflow Dry-Run Pilot plan example",
+                ["examples/publish_runner/0860_codex_skills_external_dry_run_plan.example.json"],
+            ),
+            (
+                "ASF Codex_Skills External Workflow Dry-Run Pilot evidence example",
+                ["examples/publish_runner/0860_codex_skills_dry_run_evidence_manifest.example.json"],
             ),
             (
                 "ASF Risk Classifier examples",
