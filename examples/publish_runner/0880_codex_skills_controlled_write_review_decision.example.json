@@ -1,0 +1,30 @@
+{
+  "step": "0880",
+  "name": "Codex_Skills_Controlled_Write_Review_And_Rollback_Commit_Decision",
+  "status": "decision_pack_created",
+  "external_repo": "Codex_Skills",
+  "external_repo_path": "C:\\Users\\alberto.ferrari\\.agents\\skills",
+  "external_repo_branch": "main",
+  "external_repo_status_observed": "?? docs/asf_external_pilot/",
+  "external_repo_write_performed_in_0880": false,
+  "external_repo_commit_performed": false,
+  "external_repo_push_performed": false,
+  "external_repo_pr_performed": false,
+  "external_repo_merge_performed": false,
+  "external_repo_deploy_performed": false,
+  "external_repo_tag_performed": false,
+  "skill_sync_performed": false,
+  "observed_external_changes": [
+    "docs/asf_external_pilot/0870_CONTROLLED_WRITE_PILOT.md"
+  ],
+  "unexpected_external_changes_observed": false,
+  "decision_options": [
+    "rollback",
+    "keep_local_temporarily",
+    "future_controlled_commit"
+  ],
+  "default_recommendation": "rollback",
+  "human_gate_required_for_next_step": true,
+  "prepared_commands_executed": false,
+  "next_step": "0890) Codex_Skills Rollback or Controlled Commit Execution"
+}

@@ -46,6 +46,21 @@ CODEX_SKILLS_WRITE_RESULT = (
 CODEX_SKILLS_WRITE_ROLLBACK = (
     ROOT / "docs" / "motor" / "0870_CODEX_SKILLS_ROLLBACK_PLAN.md"
 )
+CODEX_SKILLS_REVIEW_DOC = (
+    ROOT
+    / "docs"
+    / "motor"
+    / "0880_CODEX_SKILLS_CONTROLLED_WRITE_REVIEW_AND_DECISION.md"
+)
+CODEX_SKILLS_REVIEW_STATE = (
+    ROOT / "docs" / "motor" / "0880_CODEX_SKILLS_EXTERNAL_REPO_STATE_REPORT.md"
+)
+CODEX_SKILLS_REVIEW_MATRIX = (
+    ROOT / "docs" / "motor" / "0880_CODEX_SKILLS_DECISION_MATRIX.md"
+)
+CODEX_SKILLS_REVIEW_COMMANDS = (
+    ROOT / "docs" / "motor" / "0880_CODEX_SKILLS_PREPARED_COMMANDS_NOT_EXECUTED.md"
+)
 
 
 def read(path: Path) -> str:
@@ -69,6 +84,10 @@ def test_workflow_health_check_files_exist() -> None:
     assert CODEX_SKILLS_WRITE_DOC.exists()
     assert CODEX_SKILLS_WRITE_RESULT.exists()
     assert CODEX_SKILLS_WRITE_ROLLBACK.exists()
+    assert CODEX_SKILLS_REVIEW_DOC.exists()
+    assert CODEX_SKILLS_REVIEW_STATE.exists()
+    assert CODEX_SKILLS_REVIEW_MATRIX.exists()
+    assert CODEX_SKILLS_REVIEW_COMMANDS.exists()
 
 
 def test_workflow_health_check_script_runs_successfully() -> None:
@@ -377,6 +396,53 @@ def test_workflow_health_tracks_codex_skills_first_controlled_write_pilot() -> N
         "Non usare comandi di cleanup ampio",
     ]:
         assert fragment in rollback
+
+
+def test_workflow_health_tracks_codex_skills_controlled_write_review_decision() -> None:
+    script = read(SCRIPT)
+    doc = read(DOC)
+    index = read(INDEX)
+    review_doc = read(CODEX_SKILLS_REVIEW_DOC)
+    state = read(CODEX_SKILLS_REVIEW_STATE)
+    matrix = read(CODEX_SKILLS_REVIEW_MATRIX)
+    commands = read(CODEX_SKILLS_REVIEW_COMMANDS)
+
+    indexed_fragments = [
+        "docs/motor/0880_CODEX_SKILLS_CONTROLLED_WRITE_REVIEW_AND_DECISION.md",
+        "docs/motor/0880_CODEX_SKILLS_EXTERNAL_REPO_STATE_REPORT.md",
+        "docs/motor/0880_CODEX_SKILLS_DECISION_MATRIX.md",
+        "docs/motor/0880_CODEX_SKILLS_PREPARED_COMMANDS_NOT_EXECUTED.md",
+        "examples/publish_runner/0880_codex_skills_controlled_write_review_decision.example.json",
+        "decision_pack_created",
+        "default_recommendation",
+        "prepared_commands_executed=false",
+        "0890) Codex_Skills Rollback or Controlled Commit Execution",
+    ]
+
+    for fragment in indexed_fragments:
+        assert fragment in script
+        assert fragment in doc
+        assert fragment in index
+
+    for fragment in [
+        "A) rollback",
+        "B) keep local",
+        "C) future controlled commit",
+        "Raccomandazione default: A) rollback",
+        "0890) Codex_Skills Rollback or Controlled Commit Execution",
+    ]:
+        assert fragment in review_doc
+
+    for fragment in [
+        "?? docs/asf_external_pilot/",
+        "File letto: si",
+        "Modifiche inattese: no",
+    ]:
+        assert fragment in state
+
+    assert "Default: A) rollback" in matrix
+    assert "NON ESEGUITO" in commands
+    assert "DA USARE SOLO DOPO APPROVAZIONE ESPLICITA" in commands
 
 
 def test_workflow_health_tracks_powershell_publish_skill_sync() -> None:

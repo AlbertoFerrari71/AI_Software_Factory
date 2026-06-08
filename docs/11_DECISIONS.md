@@ -3758,3 +3758,47 @@ Il prossimo step consigliato e':
 ```text
 0880) Codex_Skills Controlled Write Review and Rollback/Commit Decision
 ```
+
+---
+
+## DEC-102 - Codex_Skills controlled write review decision pack
+
+**Data:** 2026-06-08
+**Stato:** Accettata
+
+### Contesto
+
+Dopo lo STEP 0870, `Codex_Skills` contiene un file locale untracked creato come
+pilot documentale:
+
+```text
+docs/asf_external_pilot/0870_CONTROLLED_WRITE_PILOT.md
+```
+
+Serve una review decisionale prima di qualunque rollback o commit.
+
+### Decisione
+
+Lo STEP 0880 introduce un decision pack read-only:
+
+- documento decisionale 0880;
+- report stato repo esterna;
+- decision matrix;
+- comandi rollback/commit preparati ma NON ESEGUITI;
+- evidence manifest JSON;
+- test automatico dedicato.
+
+La raccomandazione default e' rollback, salvo approvazione esplicita di Alberto
+a mantenere temporaneamente il file o preparare un future controlled commit.
+
+### Conseguenze
+
+ASF separa review e azione. Lo STEP 0880 non modifica `Codex_Skills`, non
+esegue rollback, non committa e non pubblica. Lo step successivo deve eseguire
+solo l'opzione approvata esplicitamente.
+
+Il prossimo step consigliato e':
+
+```text
+0890) Codex_Skills Rollback or Controlled Commit Execution
+```

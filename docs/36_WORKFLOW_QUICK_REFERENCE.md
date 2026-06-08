@@ -163,6 +163,10 @@ Dopo STEP 0870, il controlled write pilot `Codex_Skills` ha creato solo una
 micro-modifica Markdown locale e non committata. Il prossimo step 0880 deve
 decidere con human gate se fare rollback o preparare una pubblicazione separata.
 
+Dopo STEP 0880, la decision matrix raccomanda come default il rollback del file
+0870. Keep local e future controlled commit richiedono scelta esplicita di
+Alberto; lo step 0880 non esegue comandi.
+
 Se `main...origin/main [ahead N]` contiene merge locali gia' verificati, non fare push diretto a `main`: creare un publish branch da `main`, pushare quel branch, aprire PR, mergiare, riallineare `main` e verificare.
 
 Template:
@@ -183,6 +187,7 @@ docs/motor/0840_RUNNER_HOOK_EVIDENCE_MANIFEST_POST_PUBLISH_PACK.md
 docs/motor/0850_FIRST_REAL_EXTERNAL_WORKFLOW_PILOT.md
 docs/motor/0860_CODEX_SKILLS_EXTERNAL_WORKFLOW_DRY_RUN_PILOT.md
 docs/motor/0870_CODEX_SKILLS_FIRST_CONTROLLED_WRITE_PILOT.md
+docs/motor/0880_CODEX_SKILLS_CONTROLLED_WRITE_REVIEW_AND_DECISION.md
 ```
 
 ---

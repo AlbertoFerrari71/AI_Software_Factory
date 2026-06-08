@@ -2,6 +2,37 @@
 
 Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
+---
+
+## [0.88.0] - 2026-06-08
+
+### Added
+
+- STEP 0880 - Codex_Skills Controlled Write Review and Rollback/Commit Decision.
+- Documento decisionale `docs/motor/0880_CODEX_SKILLS_CONTROLLED_WRITE_REVIEW_AND_DECISION.md`.
+- Report stato repo esterna `docs/motor/0880_CODEX_SKILLS_EXTERNAL_REPO_STATE_REPORT.md`.
+- Decision matrix `docs/motor/0880_CODEX_SKILLS_DECISION_MATRIX.md`.
+- Documento comandi preparati ma non eseguiti `docs/motor/0880_CODEX_SKILLS_PREPARED_COMMANDS_NOT_EXECUTED.md`.
+- Evidence manifest esempio `examples/publish_runner/0880_codex_skills_controlled_write_review_decision.example.json`.
+- Test `tests/unit/test_codex_skills_controlled_write_review_decision.py`.
+
+### Changed
+
+- README, roadmap, decision log, Project Workflow Index, Workflow Health Check, Quick Reference e Command Cookbook riconoscono il decision pack 0880.
+- La roadmap post-MVP aggiorna il prossimo step operativo verso `0890) Codex_Skills Rollback or Controlled Commit Execution`.
+
+### Guardrails
+
+- Lo STEP 0880 legge `Codex_Skills` solo in read-only.
+- I comandi rollback/commit sono preparati ma NON ESEGUITI.
+- Nessun commit, push, PR, merge, deploy, tag, rollback, sync skill o scrittura esterna e' stata eseguita.
+
+### Next
+
+- Prossimo step consigliato: `0890) Codex_Skills Rollback or Controlled Commit Execution`.
+
+---
+
 ## [0.87.0] - 2026-06-08
 
 ### Added
