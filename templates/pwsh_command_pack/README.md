@@ -158,6 +158,80 @@ No default command pack should use `git push origin main`.
 
 If local status shows `main...origin/main [ahead N]`, create a publish branch from local `main`, push that branch, open a PR, merge it, realign `main`, then verify.
 
+## ASF Publish Runner Flow
+
+For ASF step publication command packs, default to the proven runner flow from
+STEP 0790 and STEP 0800:
+
+1. create an explicit config JSON in the Bridge;
+2. call `scripts/asf_publish_step.ps1` with `-Config`;
+3. run Phase B with `-ApprovePublish`;
+4. recover the PR number with `gh pr list --head $BranchName --json number --jq ".[0].number"`;
+5. stop if `$PrNumber` is empty;
+6. stop if `$PrNumber` is not numeric;
+7. run Phase C with `-PrNumber $PrNumber -ApproveMerge`;
+8. run final checks;
+9. keep the runner Bridge output numbered and `LAST-*` compatibility files;
+10. copy `LAST-Output_Compatto.md` with `Get-Content -Path <file> -Raw | Set-Clipboard`.
+
+Use this flow when Alberto has explicitly authorized publication of an ASF step
+after local review/intake. Do not use it for clean Codex prompts, read-only
+verification-only work, external target repositories, or generic scripts that do
+not publish through `scripts/asf_publish_step.ps1`.
+
+The config JSON must be explicit. Include at least:
+
+```text
+step
+name
+repo_path
+bridge_root
+branch
+commit_message
+pr_title
+pr_body
+next_step
+expected_files
+changed_files
+verification_profile
+risk_level
+verification_phase
+profile_selector_expected_profile
+intent
+provided_gates
+phase_a_checks
+phase_c_checks
+allow_no_github_checks_reported
+log_max_count
+```
+
+`expected_files` and `changed_files` are operator-owned scope declarations. Do
+not recover scope by parsing Git output when the expected scope is already
+known.
+
+Phase B is publication to branch/PR after local gates. Phase C is PR merge and
+final verification after a valid PR number is available. Do not run Phase C
+without a non-empty numeric PR number.
+
+For short ASF publish packs, a simple `Run` helper is enough: reject empty
+command names and arguments, execute the native command, read `$LASTEXITCODE`
+immediately, and `throw` on non-zero exit code. Avoid adaptive wrappers that try
+to infer runner behavior.
+
+### ASF Publish Anti-Patterns
+
+Avoid these patterns for ASF publication commands:
+
+- mega-wrapper PowerShell that tries to infer everything;
+- fragile parsing of `git status --short` to determine publish scope;
+- using Git `2>&1` output as a file list, because LF/CRLF warnings can pollute it;
+- `Get-Command -Path` introspection on `.ps1` scripts;
+- AST parsing to infer runner parameters, except for exceptional diagnostics;
+- casual scope expansion;
+- printing `COMPLETATO` before final gates pass;
+- `Set-Clipboard -Path`;
+- blocking publication only because Word COM or DOCX generation failed.
+
 ## Output Contract
 
 Use a four-digit step number and a two-digit intra-step iteration:

@@ -1,7 +1,7 @@
 # AI Software Factory
 
 **Metodo interno:** Codex Alchemy Method
-**Stato:** STEP 0800 - PowerShell Native Command Guardrail Hardening
+**Stato:** STEP 0805 - PowerShell Publish Skill Sync With Proven ASF Runner Flow
 **Data bootstrap:** 2026-05-25
 **Strategia:** local-first personale, progettato per evoluzione SaaS
 
@@ -28,7 +28,7 @@ Il metodo interno si chiama **Codex Alchemy Method**: l'idea grezza viene trasfo
 
 ## 2. Stato repository
 
-Questo repository e' nello stato **STEP 0800 - PowerShell Native Command Guardrail Hardening**.
+Questo repository e' nello stato **STEP 0805 - PowerShell Publish Skill Sync With Proven ASF Runner Flow**.
 
 Sono presenti:
 
@@ -81,6 +81,7 @@ Sono presenti:
 - MVP Real Step Pilot 3 with Manifest Hooks, con modifica reale documentale, state file iniziale, config hook-aware, `Phase Plan` locale e manifest sintetico per preparare la validazione post-publish runner -> state machine -> manifest.
 - Post-MVP Roadmap and Hardening Plan, con decisione `HARDENING FIRST`, warning residui consolidati, priorita' PowerShell/recovery/evidence/Bridge e roadmap 0800-0860.
 - PowerShell Native Command Guardrail Hardening, con `Invoke-NativeChecked` nel publish runner, blocco Phase C senza `PrNumber`, validazione `expected_files`/file fuori scope e template command-pack fail-closed.
+- PowerShell Publish Skill Sync With Proven ASF Runner Flow, con skill/template command-pack allineati al flusso config JSON esplicito + `scripts/asf_publish_step.ps1` + Phase B -> recupero PR -> Phase C.
 
 Non sono ancora presenti:
 
@@ -383,6 +384,8 @@ docs/motor/0760_MVP_REAL_STEP_PILOT_2_WITH_STATE_HOOKS.md
 docs/motor/0770_RUNNER_HOOK_EVIDENCE_MANIFEST_INTEGRATION.md
 docs/motor/0780_MVP_REAL_STEP_PILOT_3_WITH_MANIFEST_HOOKS.md
 docs/motor/0790_POST_MVP_ROADMAP_AND_HARDENING_PLAN.md
+docs/motor/0800_POWERSHELL_NATIVE_COMMAND_GUARDRAIL_HARDENING.md
+docs/motor/0805_POWERSHELL_PUBLISH_SKILL_SYNC_WITH_PROVEN_RUNNER_FLOW.md
 ```
 
 ---
@@ -444,4 +447,4 @@ policies/path_policy.v0.json
 0810) Publish Runner Recovery UX and No-False-Completed Guard
 ```
 
-Obiettivo: migliorare recovery, stop condition e messaggi finali del publish runner operativo dopo lo standard nativo PowerShell dello STEP 0800.
+Obiettivo: migliorare recovery, stop condition e messaggi finali del publish runner operativo dopo la sincronizzazione skill/template dello STEP 0805.
