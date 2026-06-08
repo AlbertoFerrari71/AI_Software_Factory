@@ -61,6 +61,18 @@ CODEX_SKILLS_REVIEW_MATRIX = (
 CODEX_SKILLS_REVIEW_COMMANDS = (
     ROOT / "docs" / "motor" / "0880_CODEX_SKILLS_PREPARED_COMMANDS_NOT_EXECUTED.md"
 )
+CODEX_SKILLS_LOCAL_COMMIT_DOC = (
+    ROOT
+    / "docs"
+    / "motor"
+    / "0890_CODEX_SKILLS_CONTROLLED_LOCAL_COMMIT_EXECUTION.md"
+)
+CODEX_SKILLS_LOCAL_COMMIT_RESULT = (
+    ROOT
+    / "docs"
+    / "motor"
+    / "0890_CODEX_SKILLS_CONTROLLED_LOCAL_COMMIT_RESULT.md"
+)
 
 
 def read(path: Path) -> str:
@@ -443,6 +455,47 @@ def test_workflow_health_tracks_codex_skills_controlled_write_review_decision() 
     assert "Default: A) rollback" in matrix
     assert "NON ESEGUITO" in commands
     assert "DA USARE SOLO DOPO APPROVAZIONE ESPLICITA" in commands
+
+
+def test_workflow_health_tracks_codex_skills_controlled_local_commit_execution() -> None:
+    script = read(SCRIPT)
+    doc = read(DOC)
+    index = read(INDEX)
+    execution_doc = read(CODEX_SKILLS_LOCAL_COMMIT_DOC)
+    result = read(CODEX_SKILLS_LOCAL_COMMIT_RESULT)
+
+    indexed_fragments = [
+        "docs/motor/0890_CODEX_SKILLS_CONTROLLED_LOCAL_COMMIT_EXECUTION.md",
+        "docs/motor/0890_CODEX_SKILLS_CONTROLLED_LOCAL_COMMIT_RESULT.md",
+        "examples/publish_runner/0890_codex_skills_controlled_local_commit_evidence.example.json",
+        "local_commit_completed",
+        "external_repo_commit_performed=true",
+        "external_repo_push_performed=false",
+        "human gate per push futuro",
+        "0900) Codex_Skills Controlled Push or Rollback Decision",
+    ]
+
+    for fragment in indexed_fragments:
+        assert fragment in script
+        assert fragment in doc
+        assert fragment in index
+
+    for fragment in [
+        "B) Commit locale controllato su Codex_Skills, senza push",
+        "nessun push",
+        "nessuna PR",
+        "Qualunque push futuro richiede un human gate separato",
+    ]:
+        assert fragment in execution_doc
+
+    for fragment in [
+        "Commit eseguito",
+        "Push eseguito: no",
+        "PR eseguita: no",
+        "Merge eseguito: no",
+        "Deploy eseguito: no",
+    ]:
+        assert fragment in result
 
 
 def test_workflow_health_tracks_powershell_publish_skill_sync() -> None:
