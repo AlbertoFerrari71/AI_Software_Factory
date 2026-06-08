@@ -112,6 +112,27 @@ Avoid fragile parsing based on non-porcelain output. Do not rely on blind `Subst
 
 Do not use `$Args` as a function parameter name in wrappers. `$args` is a PowerShell automatic variable. Use `$ArgList` for native command arguments.
 
+## Native Command Guardrails
+
+All native commands such as `git`, `gh`, `python` and `pwsh` must go through a wrapper equivalent to `Invoke-NativeCommand`.
+
+Required behavior:
+
+- set `$PSNativeCommandUseErrorActionPreference = $false` and classify native command results from explicit exit codes;
+- reject empty `FileName`, empty `Label`, null `ArgList`, empty `ArgList` entries and empty `AllowedExitCodes` before execution;
+- use `System.Diagnostics.ProcessStartInfo.ArgumentList` instead of shell-concatenated command strings;
+- log stdout and stderr separately; non-empty stderr is evidence to classify, not an automatic failure by itself;
+- treat success as `ExitCode` being explicitly listed in `AllowedExitCodes`;
+- print completion language only after every native command and verification gate has passed.
+
+Use this status only after all native guardrails and gates passed:
+
+```text
+COMPLETED_AFTER_ALL_NATIVE_GUARDRAILS
+```
+
+Do not print `COMPLETATO` or an equivalent final success marker before the final native command exit code has been checked.
+
 ## Clipboard
 
 Non usare `Set-Clipboard -Path`: il cmdlet non supporta il parametro `-Path`.

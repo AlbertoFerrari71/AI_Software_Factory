@@ -67,6 +67,22 @@
         exit 1
     }
 
+    if ([string]::IsNullOrWhiteSpace($CommandFile)) {
+        Set-Content -LiteralPath $FullOutputFile -Value "Generated script path is empty. No command was executed." -Encoding utf8
+        Set-Content -LiteralPath $CompactOutputFile -Value "Generated script path is empty. No command was executed." -Encoding utf8
+        Write-Host "Generated script path is empty. No command was executed."
+        Write-Host ";"
+        exit 1
+    }
+    if (-not (Test-Path -LiteralPath $CommandFile)) {
+        Set-Content -LiteralPath $FullOutputFile -Value "Generated script file is missing. No command was executed." -Encoding utf8
+        Set-Content -LiteralPath $CompactOutputFile -Value "Generated script file is missing. No command was executed." -Encoding utf8
+        Write-Host "Generated script file is missing. No command was executed."
+        Write-Host ";"
+        exit 1
+    }
+
+    Write-Host "Executing generated script after parse check."
     & pwsh -NoProfile -ExecutionPolicy Bypass -File $CommandFile
     $ExitCode = $LASTEXITCODE
     if ($null -eq $ExitCode) {
@@ -77,5 +93,6 @@
         Write-Host ";"
         exit $ExitCode
     }
+    Write-Host "Generated script completed after exit code 0."
 }
 Write-Host ";"

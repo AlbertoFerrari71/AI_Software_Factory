@@ -37,6 +37,67 @@ function Write-Log {
     Write-Host $Message
 }
 
+function Test-NativeCommandInput {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string] $FileName,
+
+        [Parameter()]
+        [string[]] $ArgList = @(),
+
+        [Parameter()]
+        [int[]] $AllowedExitCodes = @(0),
+
+        [Parameter(Mandatory = $true)]
+        [string] $Label
+    )
+
+    if ([string]::IsNullOrWhiteSpace($FileName)) {
+        throw ("Native command file name is empty for label: {0}" -f $Label)
+    }
+    if ([string]::IsNullOrWhiteSpace($Label)) {
+        throw "Native command label is empty."
+    }
+    if ($null -eq $ArgList) {
+        throw ("Native command ArgList is null for label: {0}" -f $Label)
+    }
+    if ($null -eq $AllowedExitCodes -or $AllowedExitCodes.Count -eq 0) {
+        throw ("Native command allowed exit codes are empty for label: {0}" -f $Label)
+    }
+
+    for ($Index = 0; $Index -lt $ArgList.Count; $Index++) {
+        $Argument = $ArgList[$Index]
+        if ($null -eq $Argument) {
+            throw ("Native command argument {0} is null for label: {1}" -f $Index, $Label)
+        }
+        if ([string]::IsNullOrWhiteSpace($Argument)) {
+            throw ("Native command argument {0} is empty for label: {1}" -f $Index, $Label)
+        }
+    }
+}
+
+function Format-NativeCommandForLog {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string] $FileName,
+
+        [Parameter()]
+        [string[]] $ArgList = @()
+    )
+
+    $RenderedArgs = @()
+    foreach ($Argument in $ArgList) {
+        if ($Argument -match "\s") {
+            $RenderedArgs += ('"{0}"' -f ($Argument -replace '"', '\"'))
+        }
+        if ($Argument -notmatch "\s") {
+            $RenderedArgs += $Argument
+        }
+    }
+
+    return ("{0} {1}" -f $FileName, ($RenderedArgs -join " ")).Trim()
+}
+
 function Invoke-NativeCommand {
     param(
         [Parameter(Mandatory = $true)]
@@ -52,7 +113,9 @@ function Invoke-NativeCommand {
         [string] $Label
     )
 
-    Write-Log ("START {0}: {1} {2}" -f $Label, $FileName, ($ArgList -join " "))
+    Test-NativeCommandInput -FileName $FileName -ArgList $ArgList -AllowedExitCodes $AllowedExitCodes -Label $Label
+    $RenderedCommand = Format-NativeCommandForLog -FileName $FileName -ArgList $ArgList
+    Write-Log ("START {0}: {1}" -f $Label, $RenderedCommand)
 
     $StartInfo = [System.Diagnostics.ProcessStartInfo]::new()
     $StartInfo.FileName = $FileName
@@ -86,6 +149,7 @@ function Invoke-NativeCommand {
     [pscustomobject]@{
         Label = $Label
         ExitCode = $Process.ExitCode
+        AllowedExitCodes = $AllowedExitCodes
         Stdout = $Stdout
         Stderr = $Stderr
     }
@@ -280,6 +344,9 @@ try {
     Write-Log "If local main is ahead of origin/main, create and push a publish branch, open PR, merge PR, realign main, then verify."
     Write-Log "Use git status --porcelain=v1 --untracked-files=all before scope-sensitive git add operations."
     Write-Log "Use ArgList as the native-command argument parameter name; do not use the PowerShell automatic variable name."
+    Write-Log "Native command guardrail: reject empty FileName, empty Label, null ArgList, empty ArgList entries and empty AllowedExitCodes before execution."
+    Write-Log "Native command guardrail: success means exit code is explicitly listed in AllowedExitCodes; stderr is logged and classified with context."
+    Write-Log "Do not write COMPLETATO until every native command and verification gate has passed with exit code 0 or an explicit allowed exit code."
 
     [void] (Invoke-NativeCommand -FileName "git" -ArgList @("--no-pager", "status", "--short", "--branch") -AllowedExitCodes @(0) -Label "git status")
     [void] (Test-GitScope -AllowedPathList $AllowedPaths)
@@ -291,7 +358,7 @@ try {
     # Use git --no-pager for long output and publish to main by branch + PR only when explicitly requested.
     # Treat LF/CRLF warnings as controlled warnings only when diff-check, tests, health and verify pass.
 
-    New-CompactReport -Status "COMPLETED_OR_READY_FOR_REVIEW" -WarningText "DOCX is best-effort and non-blocking."
+    New-CompactReport -Status "COMPLETED_AFTER_ALL_NATIVE_GUARDRAILS" -WarningText "DOCX is best-effort and non-blocking."
     [void] (Write-DocxBestEffort -CompactPath $CompactOutputPath -DocxPath $DocxOutputPath -FailedPath $DocxFailedPath)
 } catch {
     Write-Log ("ERROR: {0}" -f $_.Exception.Message)

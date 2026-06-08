@@ -61,6 +61,7 @@ The script `scripts/check_workflow_health.py` checks:
 - `docs/motor/0770_RUNNER_HOOK_EVIDENCE_MANIFEST_INTEGRATION.md`, `runner_hooks`, `--include-runner-hooks`, `--expected-events`, `sample_manifest_input_runner_hooks_closed.json`, `sample_closed_with_runner_hooks_state.json` and `0780) MVP Real Step Pilot 3 with Manifest Hooks` are referenced without executing hooks, Phase B/C, publish, merge or requiring Dropbox real paths;
 - `docs/motor/0780_MVP_REAL_STEP_PILOT_3_WITH_MANIFEST_HOOKS.md`, `tmp/0780_mvp_real_step_pilot_3_manifest_hooks`, `READY_TO_PUBLISH`, `Phase Plan`, `--include-runner-hooks`, `--expected-final-state` and `0790) Post-MVP Roadmap and Hardening Plan` are referenced without executing hooks, Phase B/C, publish, merge or requiring Dropbox real paths;
 - `docs/motor/0790_POST_MVP_ROADMAP_AND_HARDENING_PLAN.md`, `POST-MVP DECISION: HARDENING FIRST`, `PowerShell Native Command Guardrail Hardening`, `Bridge Output Consistency and LAST Validation` and `0800) PowerShell Native Command Guardrail Hardening` are referenced without adding automation, executing hooks, Phase B/C, publish, merge or requiring Dropbox real paths;
+- `docs/motor/0800_POWERSHELL_NATIVE_COMMAND_GUARDRAIL_HARDENING.md`, `Invoke-NativeChecked`, `Assert-NoOutOfScopeFiles`, `PrNumber`, `AllowedExitCodes` and `0810) Publish Runner Recovery UX and No-False-Completed Guard` are referenced without executing hooks, Phase B/C, publish, merge or requiring Dropbox real paths;
 - operational scripts do not contain dangerous Git/GitHub command patterns.
 
 The covered areas include:
@@ -122,6 +123,7 @@ The covered areas include:
 - ASF Runner Hook Evidence Manifest Integration;
 - ASF MVP Real Step Pilot 3 with Manifest Hooks;
 - ASF Post-MVP Roadmap and Hardening Plan;
+- ASF PowerShell Native Command Guardrail Hardening;
 - Project Workflow Index.
 
 ---
@@ -315,3 +317,5 @@ After STEP 0770, it also treats `docs/motor/0770_RUNNER_HOOK_EVIDENCE_MANIFEST_I
 After STEP 0780, it also treats `docs/motor/0780_MVP_REAL_STEP_PILOT_3_WITH_MANIFEST_HOOKS.md` and the Project Workflow Index pointers to `tmp/0780_mvp_real_step_pilot_3_manifest_hooks`, `READY_TO_PUBLISH`, `Phase Plan`, `--include-runner-hooks`, `--expected-final-state` and `0790) Post-MVP Roadmap and Hardening Plan` as core workflow references. The check remains read-only: it does not run state hooks, does not call GitHub, does not require Dropbox, and does not execute Phase B, Phase C, publish, merge or deploy.
 
 After STEP 0790, it also treats `docs/motor/0790_POST_MVP_ROADMAP_AND_HARDENING_PLAN.md` and the Project Workflow Index pointers to `POST-MVP DECISION: HARDENING FIRST`, `PowerShell Native Command Guardrail Hardening`, `Bridge Output Consistency and LAST Validation` and `0800) PowerShell Native Command Guardrail Hardening` as core workflow references. The check remains read-only: it does not add automation, does not run state hooks, does not call GitHub, does not require Dropbox, and does not execute Phase B, Phase C, publish, merge or deploy.
+
+After STEP 0800, it also treats `docs/motor/0800_POWERSHELL_NATIVE_COMMAND_GUARDRAIL_HARDENING.md` and the Project Workflow Index pointers to `Invoke-NativeChecked`, `Assert-NoOutOfScopeFiles`, `PrNumber`, `AllowedExitCodes` and `0810) Publish Runner Recovery UX and No-False-Completed Guard` as core workflow references. The check remains read-only: it does not run state hooks, does not call GitHub, does not require Dropbox, and does not execute Phase B, Phase C, publish, merge or deploy.

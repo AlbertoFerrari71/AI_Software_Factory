@@ -16,6 +16,9 @@ HOOK_PILOT_DOC = ROOT / "docs" / "motor" / "0760_MVP_REAL_STEP_PILOT_2_WITH_STAT
 RUNNER_HOOK_MANIFEST_DOC = ROOT / "docs" / "motor" / "0770_RUNNER_HOOK_EVIDENCE_MANIFEST_INTEGRATION.md"
 MANIFEST_HOOKS_PILOT_DOC = ROOT / "docs" / "motor" / "0780_MVP_REAL_STEP_PILOT_3_WITH_MANIFEST_HOOKS.md"
 POST_MVP_ROADMAP_DOC = ROOT / "docs" / "motor" / "0790_POST_MVP_ROADMAP_AND_HARDENING_PLAN.md"
+PWSH_NATIVE_GUARDRAILS_DOC = (
+    ROOT / "docs" / "motor" / "0800_POWERSHELL_NATIVE_COMMAND_GUARDRAIL_HARDENING.md"
+)
 
 
 def read(path: Path) -> str:
@@ -32,6 +35,7 @@ def test_workflow_health_check_files_exist() -> None:
     assert RUNNER_HOOK_MANIFEST_DOC.exists()
     assert MANIFEST_HOOKS_PILOT_DOC.exists()
     assert POST_MVP_ROADMAP_DOC.exists()
+    assert PWSH_NATIVE_GUARDRAILS_DOC.exists()
 
 
 def test_workflow_health_check_script_runs_successfully() -> None:
@@ -255,6 +259,41 @@ def test_workflow_health_tracks_post_mvp_roadmap_and_hardening_plan() -> None:
 
     for fragment in post_mvp_fragments:
         assert fragment in post_mvp_doc
+
+
+def test_workflow_health_tracks_powershell_native_command_guardrail_hardening() -> None:
+    script = read(SCRIPT)
+    doc = read(DOC)
+    index = read(INDEX)
+    native_doc = read(PWSH_NATIVE_GUARDRAILS_DOC)
+
+    indexed_fragments = [
+        "docs/motor/0800_POWERSHELL_NATIVE_COMMAND_GUARDRAIL_HARDENING.md",
+        "Invoke-NativeChecked",
+        "Assert-NoOutOfScopeFiles",
+        "PrNumber",
+        "AllowedExitCodes",
+        "0810) Publish Runner Recovery UX and No-False-Completed Guard",
+    ]
+
+    for fragment in indexed_fragments:
+        assert fragment in script
+        assert fragment in doc
+        assert fragment in index
+
+    native_fragments = [
+        "Invoke-NativeChecked",
+        "$LASTEXITCODE",
+        "PrNumber",
+        "expected_files",
+        "Assert-NoOutOfScopeFiles",
+        "gh pr checks --watch",
+        "COMPLETATO",
+        "0810) Publish Runner Recovery UX and No-False-Completed Guard",
+    ]
+
+    for fragment in native_fragments:
+        assert fragment in native_doc
 
 
 def test_workflow_health_tracks_runner_hook_evidence_manifest_integration() -> None:

@@ -76,6 +76,27 @@ function Invoke-NativeCommand {
 
 Do not use `$Args` as a parameter name. `$args` is a PowerShell automatic variable and can cause ambiguity and fragile diagnostics.
 
+## Native Command Guardrails
+
+All native commands such as `git`, `gh`, `python` and `pwsh` must go through a wrapper equivalent to `Invoke-NativeCommand`.
+
+The wrapper must fail closed before execution when `FileName`, `Label`, `ArgList`, any `ArgList` entry, or `AllowedExitCodes` is empty or null.
+
+Use `System.Diagnostics.ProcessStartInfo.ArgumentList` for argument passing. Do not concatenate shell command strings.
+
+Classify results from explicit exit codes:
+
+- success means `ExitCode` is listed in `AllowedExitCodes`;
+- stderr is logged as evidence and classified with context;
+- non-empty stderr is not automatically a failure;
+- completion language such as `COMPLETATO` is allowed only after every native command and verification gate has passed.
+
+The canonical success status for guarded command packs is:
+
+```text
+COMPLETED_AFTER_ALL_NATIVE_GUARDRAILS
+```
+
 ## Clipboard Rule
 
 Non usare `Set-Clipboard -Path`: il cmdlet non supporta il parametro `-Path`.

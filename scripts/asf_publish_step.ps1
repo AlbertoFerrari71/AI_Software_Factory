@@ -15,6 +15,7 @@ $ErrorActionPreference = "Stop"
 $DefaultBridgeRoot = "D:\FG-SAB Dropbox\Alberto Ferrari\ChatGPT_Bridge\AI_Software_Factory\pwsh_command"
 $script:LogLines = [System.Collections.Generic.List[string]]::new()
 $script:WarningLines = [System.Collections.Generic.List[string]]::new()
+$script:RequestedPrNumber = $PrNumber
 $script:PrNumber = $null
 $script:ProfileValidation = [pscustomobject]@{
     Enabled = $false
@@ -195,6 +196,47 @@ function Get-OptionalStringArrayProperty {
     return @(ConvertTo-StringList -Value $Object.$Name)
 }
 
+function Assert-NonEmptyString {
+    param(
+        [object]$Value,
+        [string]$Name
+    )
+    if ($null -eq $Value) {
+        throw "$Name must not be null."
+    }
+    $text = ([string]$Value).Trim()
+    if ([string]::IsNullOrWhiteSpace($text)) {
+        throw "$Name must not be empty."
+    }
+    return $text
+}
+
+function Assert-NonEmptyArray {
+    param(
+        [object[]]$Value,
+        [string]$Name
+    )
+    if ($null -eq $Value -or @($Value).Count -eq 0) {
+        throw "$Name must not be empty."
+    }
+    return @($Value)
+}
+
+function Assert-ExpectedFiles {
+    param([object[]]$ExpectedFiles)
+    if ($null -eq $ExpectedFiles -or @($ExpectedFiles).Count -eq 0) {
+        throw "expected_files must not be empty."
+    }
+    $items = @(Assert-NonEmptyArray -Value @($ExpectedFiles) -Name "expected_files")
+    foreach ($file in $items) {
+        if (-not ($file -is [string])) {
+            throw "expected_files contains a non-string or empty value."
+        }
+        [void](Assert-NonEmptyString -Value $file -Name "expected_files item")
+    }
+    return @($items)
+}
+
 function Assert-StringProperty {
     param(
         [object]$Object,
@@ -203,11 +245,7 @@ function Assert-StringProperty {
     if (-not (Test-HasProperty -Object $Object -Name $Name)) {
         throw "Missing config field: $Name"
     }
-    $value = [string]$Object.$Name
-    if ([string]::IsNullOrWhiteSpace($value)) {
-        throw "Config field must not be empty: $Name"
-    }
-    return $value
+    return Assert-NonEmptyString -Value $Object.$Name -Name "Config field $Name"
 }
 
 function Test-ProfileIntegrationRequested {
@@ -542,15 +580,7 @@ function Assert-PublishConfig {
     [void](Assert-StringProperty -Object $PublishConfig -Name "pr_body")
     [void](Assert-StringProperty -Object $PublishConfig -Name "next_step")
 
-    $expectedFiles = @(Get-ConfigArray -Object $PublishConfig -Name "expected_files")
-    if (@($expectedFiles).Count -eq 0) {
-        throw "expected_files must not be empty."
-    }
-    foreach ($file in $expectedFiles) {
-        if (-not ($file -is [string]) -or [string]::IsNullOrWhiteSpace($file)) {
-            throw "expected_files contains a non-string or empty value."
-        }
-    }
+    [void](Assert-ExpectedFiles -ExpectedFiles @(Get-ConfigArray -Object $PublishConfig -Name "expected_files"))
 
     foreach ($command in @(Get-ConfigArray -Object $PublishConfig -Name "phase_a_checks")) {
         Assert-ArgvCommand -Command $command -FieldName "phase_a_checks"
@@ -604,15 +634,8 @@ function Normalize-GitPath {
 
 function Get-GitStatusPaths {
     param([string]$RepoPath)
-    Push-Location $RepoPath
-    try {
-        $lines = & git @("status", "--porcelain=v1", "--untracked-files=all") 2>&1
-        if ($LASTEXITCODE -ne 0) {
-            throw "Unable to read git status: $($lines -join [Environment]::NewLine)"
-        }
-    } finally {
-        Pop-Location
-    }
+    $result = Invoke-NativeChecked -Command "git" -Arguments @("status", "--porcelain=v1", "--untracked-files=all") -AllowedExitCodes @(0) -Label "Git status paths" -WorkingDirectory $RepoPath
+    $lines = @($result.Output)
 
     $paths = [System.Collections.Generic.List[string]]::new()
     foreach ($line in @($lines)) {
@@ -661,16 +684,102 @@ function Assert-ExpectedScope {
         [string]$RepoPath,
         [string[]]$ExpectedFiles
     )
+    $expected = @(Assert-ExpectedFiles -ExpectedFiles $ExpectedFiles)
     $changedPaths = @(Get-GitStatusPaths -RepoPath $RepoPath)
     Write-Log ("Changed paths detected: {0}" -f $changedPaths.Count)
     $outside = [System.Collections.Generic.List[string]]::new()
     foreach ($path in $changedPaths) {
-        if (-not (Test-PathExpected -PathText $path -ExpectedFiles $ExpectedFiles)) {
+        if (-not (Test-PathExpected -PathText $path -ExpectedFiles $expected)) {
             $outside.Add($path)
         }
     }
     if ($outside.Count -gt 0) {
         throw "Out-of-scope changes detected: $($outside -join ', ')"
+    }
+}
+
+function Assert-NoOutOfScopeFiles {
+    param(
+        [string]$RepoPath,
+        [string[]]$ExpectedFiles
+    )
+    Assert-ExpectedScope -RepoPath $RepoPath -ExpectedFiles $ExpectedFiles
+}
+
+function Invoke-NativeChecked {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Command,
+
+        [Parameter()]
+        [string[]]$Arguments = @(),
+
+        [Parameter()]
+        [int[]]$AllowedExitCodes = @(0),
+
+        [Parameter()]
+        [string]$Label = "",
+
+        [Parameter()]
+        [string]$WorkingDirectory = (Get-Location).Path,
+
+        [Parameter()]
+        [switch]$AllowAnyExitCode
+    )
+    $commandName = Assert-NonEmptyString -Value $Command -Name "Native command"
+    $displayLabel = $Label
+    if ([string]::IsNullOrWhiteSpace($displayLabel)) {
+        $displayLabel = $commandName
+    } else {
+        $displayLabel = Assert-NonEmptyString -Value $displayLabel -Name "Native command label"
+    }
+    if ($null -eq $Arguments) {
+        throw "Native command arguments are null for label: $displayLabel"
+    }
+    for ($index = 0; $index -lt @($Arguments).Count; $index++) {
+        if ($null -eq $Arguments[$index]) {
+            throw "Native command argument $index is null for label: $displayLabel"
+        }
+        if ([string]::IsNullOrWhiteSpace([string]$Arguments[$index])) {
+            throw "Native command argument $index is empty for label: $displayLabel"
+        }
+    }
+    if (-not $AllowAnyExitCode) {
+        [void](Assert-NonEmptyArray -Value @($AllowedExitCodes) -Name "AllowedExitCodes")
+    }
+    $workDir = Assert-NonEmptyString -Value $WorkingDirectory -Name "Native command working directory"
+    if (-not (Test-Path -LiteralPath $workDir -PathType Container)) {
+        throw "Native command working directory does not exist: $workDir"
+    }
+
+    Write-Log ("RUN {0}: {1} {2}" -f $displayLabel, $commandName, ($Arguments -join " "))
+    Push-Location $workDir
+    $oldPref = $PSNativeCommandUseErrorActionPreference
+    try {
+        $PSNativeCommandUseErrorActionPreference = $false
+        $output = & $commandName @Arguments 2>&1
+        $exitCode = $LASTEXITCODE
+    } finally {
+        $PSNativeCommandUseErrorActionPreference = $oldPref
+        Pop-Location
+    }
+    if ($null -eq $exitCode) {
+        throw "Native command did not produce LASTEXITCODE. Label=$displayLabel Command=$commandName"
+    }
+    foreach ($line in @($output)) {
+        $script:LogLines.Add([string]$line)
+    }
+    Write-Log ("EXIT {0}: {1}" -f $displayLabel, $exitCode)
+    if (-not $AllowAnyExitCode -and $AllowedExitCodes -notcontains $exitCode) {
+        throw "Native command failed. Label=$displayLabel Command=$commandName ExitCode=$exitCode"
+    }
+    return [pscustomobject]@{
+        Name = $displayLabel
+        Command = $commandName
+        Arguments = @($Arguments)
+        ExitCode = $exitCode
+        AllowedExitCodes = @($AllowedExitCodes)
+        Output = @($output)
     }
 }
 
@@ -681,38 +790,21 @@ function Invoke-ArgvCommand {
         [string]$WorkingDirectory,
         [switch]$AllowFailure
     )
-    $safeArgv = @($Argv)
-    if ($safeArgv.Count -eq 0) {
-        throw "Command '$Name' has empty argv."
-    }
+    $safeArgv = @(Assert-NonEmptyArray -Value @($Argv) -Name "Command '$Name' argv")
     $exe = $safeArgv[0]
+    [void](Assert-NonEmptyString -Value $exe -Name "Command '$Name' executable")
     $commandArgs = @()
     if ($safeArgv.Count -gt 1) {
         $commandArgs = @($safeArgv[1..($safeArgv.Count - 1)])
     }
-    Write-Log ("RUN {0}: {1} {2}" -f $Name, $exe, ($commandArgs -join " "))
-    Push-Location $WorkingDirectory
-    $oldPref = $PSNativeCommandUseErrorActionPreference
-    try {
-        $PSNativeCommandUseErrorActionPreference = $false
-        $output = & $exe @commandArgs 2>&1
-        $exitCode = $LASTEXITCODE
-    } finally {
-        $PSNativeCommandUseErrorActionPreference = $oldPref
-        Pop-Location
+
+    if ($AllowFailure) {
+        # Tolerant native probes are allowed only when the caller immediately
+        # inspects ExitCode and decides the next guarded action.
+        return Invoke-NativeChecked -Command $exe -Arguments $commandArgs -Label $Name -WorkingDirectory $WorkingDirectory -AllowAnyExitCode
     }
-    foreach ($line in @($output)) {
-        $script:LogLines.Add([string]$line)
-    }
-    Write-Log ("EXIT {0}: {1}" -f $Name, $exitCode)
-    if ($exitCode -ne 0 -and -not $AllowFailure) {
-        throw "Command failed: $Name (exit $exitCode)"
-    }
-    return [pscustomobject]@{
-        Name = $Name
-        ExitCode = $exitCode
-        Output = @($output)
-    }
+
+    return Invoke-NativeChecked -Command $exe -Arguments $commandArgs -AllowedExitCodes @(0) -Label $Name -WorkingDirectory $WorkingDirectory
 }
 
 function Invoke-Git {
@@ -959,7 +1051,7 @@ function Invoke-PhaseA {
     $branch = Get-CurrentBranch -RepoPath $RepoPath
     Write-Log ("Current branch: {0}" -f $branch)
     [void](Invoke-Git -RepoPath $RepoPath -ArgList @("status", "--porcelain=v1", "--untracked-files=all") -Name "Git status porcelain")
-    Assert-ExpectedScope -RepoPath $RepoPath -ExpectedFiles @($PublishConfig.expected_files)
+    Assert-NoOutOfScopeFiles -RepoPath $RepoPath -ExpectedFiles @($PublishConfig.expected_files)
     Invoke-ConfiguredChecks -Checks @($PublishConfig.phase_a_checks) -RepoPath $RepoPath
     [void](Invoke-Git -RepoPath $RepoPath -ArgList @("--no-pager", "diff", "--check") -Name "Diff check")
     Write-Log "PHASE A completed."
@@ -995,27 +1087,29 @@ function Invoke-PhaseB {
     Assert-StateHookExpectedState -PhaseName "Phase B" -ExpectedState $script:StateHookConfig.ExpectedBeforePhaseB
     [void](Invoke-StateMachineEvent -Event "phase_b_started" -RepoPath $RepoPath)
     try {
-        Invoke-PhaseA -PublishConfig $PublishConfig -RepoPath $RepoPath
-        Ensure-StepBranch -RepoPath $RepoPath -Branch ([string]$PublishConfig.branch)
-        Assert-ExpectedScope -RepoPath $RepoPath -ExpectedFiles @($PublishConfig.expected_files)
-        [void](Invoke-Git -RepoPath $RepoPath -ArgList (@("add", "--") + @($PublishConfig.expected_files)) -Name "Stage expected files")
-        [void](Invoke-Git -RepoPath $RepoPath -ArgList @("--no-pager", "diff", "--cached", "--check") -Name "Cached diff check")
-        [void](Invoke-Git -RepoPath $RepoPath -ArgList @("commit", "-m", ([string]$PublishConfig.commit_message)) -Name "Create commit")
-        [void](Invoke-Git -RepoPath $RepoPath -ArgList @("push", "-u", "origin", ([string]$PublishConfig.branch)) -Name "Push branch")
+        & {
+            Invoke-PhaseA -PublishConfig $PublishConfig -RepoPath $RepoPath
+            Ensure-StepBranch -RepoPath $RepoPath -Branch ([string]$PublishConfig.branch)
+            Assert-NoOutOfScopeFiles -RepoPath $RepoPath -ExpectedFiles @($PublishConfig.expected_files)
+            [void](Invoke-Git -RepoPath $RepoPath -ArgList (@("add", "--") + @($PublishConfig.expected_files)) -Name "Stage expected files")
+            [void](Invoke-Git -RepoPath $RepoPath -ArgList @("--no-pager", "diff", "--cached", "--check") -Name "Cached diff check")
+            [void](Invoke-Git -RepoPath $RepoPath -ArgList @("commit", "-m", ([string]$PublishConfig.commit_message)) -Name "Create commit")
+            [void](Invoke-Git -RepoPath $RepoPath -ArgList @("push", "-u", "origin", ([string]$PublishConfig.branch)) -Name "Push branch")
 
-        $existing = Invoke-ArgvCommand -Name "Find existing PR" -Argv @("gh", "pr", "list", "--head", ([string]$PublishConfig.branch), "--json", "number", "--jq", ".[0].number") -WorkingDirectory $RepoPath -AllowFailure
-        $existingNumber = (($existing.Output) -join "").Trim()
-        if ($existing.ExitCode -eq 0 -and -not [string]::IsNullOrWhiteSpace($existingNumber)) {
-            $script:PrNumber = $existingNumber
-            Write-Log ("Reusing PR #{0}" -f $script:PrNumber)
-        } else {
-            $created = Invoke-Gh -RepoPath $RepoPath -ArgList @("pr", "create", "--base", "main", "--head", ([string]$PublishConfig.branch), "--title", ([string]$PublishConfig.pr_title), "--body", ([string]$PublishConfig.pr_body)) -Name "Create PR"
-            $createdText = ($created.Output -join [Environment]::NewLine)
-            $numberMatch = [regex]::Match($createdText, "/pull/(\d+)")
-            if ($numberMatch.Success) {
-                $script:PrNumber = $numberMatch.Groups[1].Value
+            $existing = Invoke-ArgvCommand -Name "Find existing PR" -Argv @("gh", "pr", "list", "--head", ([string]$PublishConfig.branch), "--json", "number", "--jq", ".[0].number") -WorkingDirectory $RepoPath -AllowFailure
+            $existingNumber = (($existing.Output) -join "").Trim()
+            if ($existing.ExitCode -eq 0 -and -not [string]::IsNullOrWhiteSpace($existingNumber)) {
+                $script:PrNumber = $existingNumber
+                Write-Log ("Reusing PR #{0}" -f $script:PrNumber)
+            } else {
+                $created = Invoke-Gh -RepoPath $RepoPath -ArgList @("pr", "create", "--base", "main", "--head", ([string]$PublishConfig.branch), "--title", ([string]$PublishConfig.pr_title), "--body", ([string]$PublishConfig.pr_body)) -Name "Create PR"
+                $createdText = ($created.Output -join [Environment]::NewLine)
+                $numberMatch = [regex]::Match($createdText, "/pull/(\d+)")
+                if ($numberMatch.Success) {
+                    $script:PrNumber = $numberMatch.Groups[1].Value
+                }
+                Write-Log ("Created PR reference: {0}" -f $createdText)
             }
-            Write-Log ("Created PR reference: {0}" -f $createdText)
         }
     } catch {
         $phaseError = $_.Exception.Message
@@ -1034,21 +1128,15 @@ function Invoke-PhaseB {
 
 function Get-PrNumber {
     param(
-        [object]$PublishConfig,
-        [string]$RepoPath
+        [object]$PublishConfig
     )
-    if ($PrNumber -gt 0) {
-        return [string]$PrNumber
+    if ($script:RequestedPrNumber -gt 0) {
+        return Assert-NonEmptyString -Value ([string]$script:RequestedPrNumber) -Name "PrNumber"
     }
     if ((Test-HasProperty -Object $PublishConfig -Name "pr_number") -and ([int]$PublishConfig.pr_number -gt 0)) {
-        return [string]$PublishConfig.pr_number
+        return Assert-NonEmptyString -Value ([string]$PublishConfig.pr_number) -Name "Config field pr_number"
     }
-    $existing = Invoke-ArgvCommand -Name "Find PR for branch" -Argv @("gh", "pr", "list", "--head", ([string]$PublishConfig.branch), "--json", "number", "--jq", ".[0].number") -WorkingDirectory $RepoPath -AllowFailure
-    $value = (($existing.Output) -join "").Trim()
-    if ($existing.ExitCode -eq 0 -and -not [string]::IsNullOrWhiteSpace($value)) {
-        return $value
-    }
-    throw "Phase C requires -PrNumber or a resolvable PR for the configured branch."
+    throw "Phase C requires a non-empty -PrNumber or config pr_number before any PR command is executed."
 }
 
 function Invoke-GhPrChecks {
@@ -1057,18 +1145,12 @@ function Invoke-GhPrChecks {
         [string]$RepoPath,
         [string]$Number
     )
-    Push-Location $RepoPath
-    $oldPref = $PSNativeCommandUseErrorActionPreference
-    try {
-        $PSNativeCommandUseErrorActionPreference = $false
-        $output = & gh @("pr", "checks", $Number, "--watch") 2>&1
-        $exitCode = $LASTEXITCODE
-    } finally {
-        $PSNativeCommandUseErrorActionPreference = $oldPref
-        Pop-Location
-    }
-    $text = ($output -join [Environment]::NewLine)
-    $script:LogLines.Add($text)
+    $checkedNumber = Assert-NonEmptyString -Value $Number -Name "PrNumber"
+    # GitHub can return exit 1 with "no checks reported"; that single case is
+    # classified below as a warning when the config explicitly allows it.
+    $result = Invoke-NativeChecked -Command "gh" -Arguments @("pr", "checks", $checkedNumber, "--watch") -AllowedExitCodes @(0, 1) -Label "GH PR checks watch" -WorkingDirectory $RepoPath
+    $exitCode = $result.ExitCode
+    $text = ($result.Output -join [Environment]::NewLine)
     Write-Log ("gh pr checks exit: {0}" -f $exitCode)
     if ($exitCode -eq 0) {
         return
@@ -1091,24 +1173,26 @@ function Invoke-PhaseC {
     if (-not $ApproveMerge) {
         throw "Phase C requires -ApproveMerge."
     }
+    $number = Get-PrNumber -PublishConfig $PublishConfig
     Write-Log "PHASE C - merge and final verification"
     Assert-StateHookExpectedState -PhaseName "Phase C" -ExpectedState $script:StateHookConfig.ExpectedBeforePhaseC
     [void](Invoke-StateMachineEvent -Event "phase_c_started" -RepoPath $RepoPath)
     try {
-        $number = Get-PrNumber -PublishConfig $PublishConfig -RepoPath $RepoPath
         $script:PrNumber = $number
-        [void](Invoke-Gh -RepoPath $RepoPath -ArgList @("pr", "view", $number) -Name "View PR")
-        Invoke-GhPrChecks -PublishConfig $PublishConfig -RepoPath $RepoPath -Number $number
-        [void](Invoke-Gh -RepoPath $RepoPath -ArgList @("pr", "merge", $number, "--squash") -Name "Merge PR")
-        [void](Invoke-Git -RepoPath $RepoPath -ArgList @("switch", "main") -Name "Switch main")
-        [void](Invoke-Git -RepoPath $RepoPath -ArgList @("pull", "--ff-only", "origin", "main") -Name "Pull main")
-        Invoke-ConfiguredChecks -Checks @($PublishConfig.phase_c_checks) -RepoPath $RepoPath
-        [void](Invoke-Git -RepoPath $RepoPath -ArgList @("--no-pager", "diff", "--check") -Name "Final diff check")
-        $status = @(Get-GitStatusPaths -RepoPath $RepoPath)
-        if ($status.Count -gt 0) {
-            throw "Working tree is not clean after merge: $($status -join ', ')"
+        & {
+            [void](Invoke-Gh -RepoPath $RepoPath -ArgList @("pr", "view", $number) -Name "View PR")
+            Invoke-GhPrChecks -PublishConfig $PublishConfig -RepoPath $RepoPath -Number $number
+            [void](Invoke-Gh -RepoPath $RepoPath -ArgList @("pr", "merge", $number, "--squash") -Name "Merge PR")
+            [void](Invoke-Git -RepoPath $RepoPath -ArgList @("switch", "main") -Name "Switch main")
+            [void](Invoke-Git -RepoPath $RepoPath -ArgList @("pull", "--ff-only", "origin", "main") -Name "Pull main")
+            Invoke-ConfiguredChecks -Checks @($PublishConfig.phase_c_checks) -RepoPath $RepoPath
+            [void](Invoke-Git -RepoPath $RepoPath -ArgList @("--no-pager", "diff", "--check") -Name "Final diff check")
+            $status = @(Get-GitStatusPaths -RepoPath $RepoPath)
+            if ($status.Count -gt 0) {
+                throw "Working tree is not clean after merge: $($status -join ', ')"
+            }
+            [void](Invoke-Git -RepoPath $RepoPath -ArgList @("--no-pager", "log", "--oneline", "--max-count=$([int]$PublishConfig.log_max_count)") -Name "Final log")
         }
-        [void](Invoke-Git -RepoPath $RepoPath -ArgList @("--no-pager", "log", "--oneline", "--max-count=$([int]$PublishConfig.log_max_count)") -Name "Final log")
     } catch {
         $phaseError = $_.Exception.Message
         Try-StateMachineFailureEvent -Event "phase_c_failed" -RepoPath $RepoPath -OriginalError $phaseError
@@ -1212,8 +1296,8 @@ function Get-ShortCommand {
         $items += "-ApprovePublish"
     }
     if ($EffectivePhase -eq "C") {
-        if ($PrNumber -gt 0) {
-            $items += @("-PrNumber", [string]$PrNumber)
+        if ($script:RequestedPrNumber -gt 0) {
+            $items += @("-PrNumber", [string]$script:RequestedPrNumber)
         }
         $items += "-ApproveMerge"
     }

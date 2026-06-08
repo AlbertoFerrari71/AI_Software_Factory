@@ -550,3 +550,18 @@ Prossimo step consigliato:
 ```text
 0800) PowerShell Native Command Guardrail Hardening
 ```
+
+Aggiornamento dopo STEP 0800:
+
+Il publish runner e i template command-pack repository-local adottano lo
+standard PowerShell per comandi nativi fail-closed.
+
+```text
+docs/motor/0800_POWERSHELL_NATIVE_COMMAND_GUARDRAIL_HARDENING.md
+```
+
+Il prossimo step consigliato diventa:
+
+```text
+0810) Publish Runner Recovery UX and No-False-Completed Guard
+```

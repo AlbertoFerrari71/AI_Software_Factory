@@ -4,6 +4,33 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.80.0] - 2026-06-08
+
+### Added
+
+- STEP 0800 - PowerShell Native Command Guardrail Hardening.
+- Documento `docs/motor/0800_POWERSHELL_NATIVE_COMMAND_GUARDRAIL_HARDENING.md` con standard per exit code nativi, argomenti vuoti, `PrNumber`, `expected_files`, file fuori scope, `gh pr checks --watch` e marker finali.
+- Test `tests/unit/test_pwsh_native_command_guardrails.py`.
+- Test `tests/unit/test_asf_publish_step_native_guardrails.py`.
+
+### Changed
+
+- Rafforzato `scripts/asf_publish_step.ps1` con `Invoke-NativeChecked`, wrapper `git`/`gh`, validazione `PrNumber`, `Assert-ExpectedFiles` e `Assert-NoOutOfScopeFiles`.
+- Rafforzati i template `templates/pwsh_command_pack/safe_bootstrap_template.ps1` e `templates/pwsh_command_pack/safe_command_pack_script_template.ps1`.
+- Aggiornati README, roadmap, decision log, Project Workflow Index, Workflow Health Check e skill draft/export repository-local `as-common-pwsh-command-pack`.
+
+### Guardrails
+
+- Nessuna riscrittura generale del publish runner operativo.
+- Nessuna installazione di skill esterne.
+- Nessuna Phase B, Phase C, commit, push, PR, merge o deploy eseguiti da Codex.
+
+### Next
+
+- Prossimo step consigliato: `0810) Publish Runner Recovery UX and No-False-Completed Guard`.
+
+---
+
 ## [0.79.0] - 2026-06-08
 
 ### Added

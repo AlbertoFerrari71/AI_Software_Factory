@@ -107,6 +107,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/motor/0770_RUNNER_HOOK_EVIDENCE_MANIFEST_INTEGRATION.md",
         "docs/motor/0780_MVP_REAL_STEP_PILOT_3_WITH_MANIFEST_HOOKS.md",
         "docs/motor/0790_POST_MVP_ROADMAP_AND_HARDENING_PLAN.md",
+        "docs/motor/0800_POWERSHELL_NATIVE_COMMAND_GUARDRAIL_HARDENING.md",
         "config/asf_project_profiles.json",
         "scripts/asf_openai_api_adapter.py",
         "scripts/asf_openai_controlled_live_execution_pack.py",
@@ -464,6 +465,20 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
             (
                 "ASF Post-MVP Roadmap and Hardening Plan document",
                 ["docs/motor/0790_POST_MVP_ROADMAP_AND_HARDENING_PLAN.md"],
+            ),
+            (
+                "ASF PowerShell Native Command Guardrail Hardening document",
+                ["docs/motor/0800_POWERSHELL_NATIVE_COMMAND_GUARDRAIL_HARDENING.md"],
+            ),
+            (
+                "ASF PowerShell Native Command Guardrail Hardening pointers",
+                [
+                    "Invoke-NativeChecked",
+                    "Assert-NoOutOfScopeFiles",
+                    "PrNumber",
+                    "AllowedExitCodes",
+                    "0810) Publish Runner Recovery UX and No-False-Completed Guard",
+                ],
             ),
             (
                 "ASF State Machine Bridge Integration pointers",
