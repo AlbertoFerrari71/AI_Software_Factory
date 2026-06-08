@@ -3634,5 +3634,44 @@ autorevoli; Bridge e `LAST-*` restano supporti operativi.
 Il prossimo step consigliato e':
 
 ```text
-0850) Verification Profile Cost Tuning
+0850) First Real External Workflow Pilot
+```
+
+---
+
+## DEC-099 - First Real External Workflow Pilot planning-only
+
+**Data:** 2026-06-08
+**Stato:** Accettata
+
+### Contesto
+
+Dopo gli step 0800-0840 il runner ASF ha guardrail, recovery, Bridge/LAST
+validation, pilot operativo interno e pack post-publish. Il passo successivo e'
+preparare un primo pilot esterno senza anticipare modifiche reali fuori da ASF.
+
+### Decisione
+
+Lo STEP 0850 introduce un External Workflow Pilot Pack preparatorio:
+
+- documento operativo 0850;
+- matrice di scelta repo;
+- raccomandazione `Codex_Skills` come primo target esterno;
+- `Family_Photo_Organizer` come candidata futura;
+- esclusione di `Mansionario_Vivo` come primo pilot per rischio alto;
+- manifest JSON esempio `planning_only`;
+- test automatico dedicato;
+- safety boundaries e human gate espliciti.
+
+### Conseguenze
+
+Il pack non accede operativamente a repository esterne, non modifica
+`Codex_Skills` o altri target e non autorizza commit, push, PR, merge, deploy o
+tag. Il futuro pilot dovra' partire da controlli read-only/dry-run e fermarsi al
+gate umano.
+
+Il prossimo step consigliato e':
+
+```text
+0860) Codex_Skills External Workflow Dry-Run Pilot
 ```

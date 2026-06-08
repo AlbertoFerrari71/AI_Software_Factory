@@ -4,6 +4,32 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.85.0] - 2026-06-08
+
+### Added
+
+- STEP 0850 - First Real External Workflow Pilot.
+- Documento `docs/motor/0850_FIRST_REAL_EXTERNAL_WORKFLOW_PILOT.md`.
+- Manifest esempio `examples/publish_runner/0850_external_workflow_pilot_plan.example.json`.
+- Test `tests/unit/test_first_real_external_workflow_pilot.py`.
+
+### Changed
+
+- README, roadmap, decision log, Project Workflow Index, Workflow Health Check, Quick Reference e Command Cookbook riconoscono il pack 0850.
+- La roadmap post-MVP aggiorna il prossimo step operativo verso `0860) Codex_Skills External Workflow Dry-Run Pilot`.
+
+### Guardrails
+
+- Il manifest 0850 e' marcato `planning_only`, esempio non live e non pubblicante.
+- `Codex_Skills` e' raccomandata come primo pilot esterno; `Family_Photo_Organizer` resta candidata futura e `Mansionario_Vivo` e' esclusa come primo pilot per rischio alto.
+- Nessuna repo esterna modificata e nessuna Phase B, Phase C, commit, push, PR, merge, deploy o tag eseguiti da Codex.
+
+### Next
+
+- Prossimo step consigliato: `0860) Codex_Skills External Workflow Dry-Run Pilot`.
+
+---
+
 ## [0.84.0] - 2026-06-08
 
 ### Added
@@ -26,7 +52,7 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ### Next
 
-- Prossimo step consigliato: `0850) Verification Profile Cost Tuning`.
+- Prossimo step consigliato: `0850) First Real External Workflow Pilot`.
 
 ---
 

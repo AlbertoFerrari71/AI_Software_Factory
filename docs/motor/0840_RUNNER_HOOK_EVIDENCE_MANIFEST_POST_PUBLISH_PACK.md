@@ -238,8 +238,9 @@ Restano fuori scope:
 ## 13. Prossimo step consigliato
 
 ```text
-0850) Verification Profile Cost Tuning
+0850) First Real External Workflow Pilot
 ```
 
 Motivo: dopo avere consolidato la tracciabilita' post-publish, il passo naturale
-e' ottimizzare costo e profilo dei check senza ridurre i gate fail-closed.
+e' preparare il primo pilot esterno controllato senza modificare repository
+esterne o anticipare pubblicazioni.
