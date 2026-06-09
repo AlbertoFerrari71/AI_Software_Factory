@@ -1160,6 +1160,55 @@ function Write-NonBlockingGitPushInformationalStderr {
     Add-WarningLine ("{0} stderr info treated as non-blocking: {1}" -f $Label, $Line.Trim())
 }
 
+function Test-GitPullMainArguments {
+    param([string[]]$Arguments)
+    $safeArgs = @($Arguments)
+    return $safeArgs.Count -eq 4 `
+        -and [string]::Equals([string]$safeArgs[0], "pull", [System.StringComparison]::OrdinalIgnoreCase) `
+        -and [string]::Equals([string]$safeArgs[1], "--ff-only", [System.StringComparison]::Ordinal) `
+        -and [string]::Equals([string]$safeArgs[2], "origin", [System.StringComparison]::Ordinal) `
+        -and [string]::Equals([string]$safeArgs[3], "main", [System.StringComparison]::Ordinal)
+}
+
+function Test-GitPullMainInformationalStderrLine {
+    param(
+        [string]$Line,
+        [string[]]$Arguments
+    )
+    if ([string]::IsNullOrWhiteSpace($Line)) {
+        return $true
+    }
+    if (-not (Test-GitPullMainArguments -Arguments @($Arguments))) {
+        return $false
+    }
+    $text = $Line.Trim()
+    if ($text.StartsWith("From ", [System.StringComparison]::Ordinal) -and $text.Length -gt 5) {
+        return $true
+    }
+    if ($text -match "^\* branch\s+main\s+->\s+FETCH_HEAD$") {
+        return $true
+    }
+    $shaPattern = "[0-9a-fA-F]{7,40}"
+    if ($text -match ('^' + $shaPattern + '\.\.\.?' + $shaPattern + '\s+main\s+->\s+origin/main$')) {
+        return $true
+    }
+    if ($text -match ('^Updating\s+' + $shaPattern + '\.\.' + $shaPattern + '$')) {
+        return $true
+    }
+    if ([string]::Equals($text, "Already up to date.", [System.StringComparison]::Ordinal)) {
+        return $true
+    }
+    return $false
+}
+
+function Write-NonBlockingGitPullMainInformationalStderr {
+    param(
+        [string]$Label,
+        [string]$Line
+    )
+    Add-WarningLine ("{0} stderr info treated as non-blocking: {1}" -f $Label, $Line.Trim())
+}
+
 function Invoke-NativeChecked {
     param(
         [Parameter(Mandatory = $true)]
@@ -1187,7 +1236,10 @@ function Invoke-NativeChecked {
         [switch]$AllowGitSwitchInformationalStderrWithZeroExit,
 
         [Parameter()]
-        [switch]$AllowGitPushInformationalStderrWithZeroExit
+        [switch]$AllowGitPushInformationalStderrWithZeroExit,
+
+        [Parameter()]
+        [switch]$AllowGitPullMainInformationalStderrWithZeroExit
     )
     $commandName = Assert-NonEmptyString -Value $Command -Name "Native command"
     $displayLabel = $Label
@@ -1263,6 +1315,10 @@ function Invoke-NativeChecked {
         }
         if ($AllowGitPushInformationalStderrWithZeroExit -and $isGit -and $exitCode -eq 0 -and (Test-GitPushInformationalStderrLine -Line $line -Arguments @($Arguments))) {
             Write-NonBlockingGitPushInformationalStderr -Label $displayLabel -Line $line
+            continue
+        }
+        if ($AllowGitPullMainInformationalStderrWithZeroExit -and $isGit -and $exitCode -eq 0 -and [string]::Equals($displayLabel, "Pull main", [System.StringComparison]::OrdinalIgnoreCase) -and (Test-GitPullMainInformationalStderrLine -Line $line -Arguments @($Arguments))) {
+            Write-NonBlockingGitPullMainInformationalStderr -Label $displayLabel -Line $line
             continue
         }
         $script:LogLines.Add([string]$line)
@@ -1379,6 +1435,25 @@ function Test-ArgvCommandIsPushBranchGitPush {
     return -not [string]::IsNullOrWhiteSpace((Get-GitPushBranchArgument -Arguments @($args)))
 }
 
+function Test-ArgvCommandIsPullMainGitPull {
+    param(
+        [string]$Name,
+        [string[]]$Argv
+    )
+    if (-not [string]::Equals(([string]$Name).Trim(), "Pull main", [System.StringComparison]::OrdinalIgnoreCase)) {
+        return $false
+    }
+    $safeArgv = @($Argv)
+    if ($safeArgv.Count -ne 5) {
+        return $false
+    }
+    if (-not (Test-NativeCommandIsGit -CommandName ([string]$safeArgv[0]))) {
+        return $false
+    }
+    $args = @($safeArgv[1..($safeArgv.Count - 1)])
+    return Test-GitPullMainArguments -Arguments @($args)
+}
+
 function Invoke-ArgvCommand {
     param(
         [string]$Name,
@@ -1397,14 +1472,15 @@ function Invoke-ArgvCommand {
         -or (Test-ArgvCommandIsStageExpectedFilesGitAdd -Name $Name -Argv @($safeArgv))
     $allowGitSwitchInformationalStderrWithZeroExit = Test-ArgvCommandIsGitSwitch -Argv @($safeArgv)
     $allowGitPushInformationalStderrWithZeroExit = Test-ArgvCommandIsPushBranchGitPush -Name $Name -Argv @($safeArgv)
+    $allowGitPullMainInformationalStderrWithZeroExit = Test-ArgvCommandIsPullMainGitPull -Name $Name -Argv @($safeArgv)
 
     if ($AllowFailure) {
         # Tolerant native probes are allowed only when the caller immediately
         # inspects ExitCode and decides the next guarded action.
-        return Invoke-NativeChecked -Command $exe -Arguments $commandArgs -Label $Name -WorkingDirectory $WorkingDirectory -AllowAnyExitCode -AllowGitLfCrlfWarningsWithZeroExit:$allowGitLfCrlfWarningsWithZeroExit -AllowGitSwitchInformationalStderrWithZeroExit:$allowGitSwitchInformationalStderrWithZeroExit -AllowGitPushInformationalStderrWithZeroExit:$allowGitPushInformationalStderrWithZeroExit
+        return Invoke-NativeChecked -Command $exe -Arguments $commandArgs -Label $Name -WorkingDirectory $WorkingDirectory -AllowAnyExitCode -AllowGitLfCrlfWarningsWithZeroExit:$allowGitLfCrlfWarningsWithZeroExit -AllowGitSwitchInformationalStderrWithZeroExit:$allowGitSwitchInformationalStderrWithZeroExit -AllowGitPushInformationalStderrWithZeroExit:$allowGitPushInformationalStderrWithZeroExit -AllowGitPullMainInformationalStderrWithZeroExit:$allowGitPullMainInformationalStderrWithZeroExit
     }
 
-    return Invoke-NativeChecked -Command $exe -Arguments $commandArgs -AllowedExitCodes @(0) -Label $Name -WorkingDirectory $WorkingDirectory -AllowGitLfCrlfWarningsWithZeroExit:$allowGitLfCrlfWarningsWithZeroExit -AllowGitSwitchInformationalStderrWithZeroExit:$allowGitSwitchInformationalStderrWithZeroExit -AllowGitPushInformationalStderrWithZeroExit:$allowGitPushInformationalStderrWithZeroExit
+    return Invoke-NativeChecked -Command $exe -Arguments $commandArgs -AllowedExitCodes @(0) -Label $Name -WorkingDirectory $WorkingDirectory -AllowGitLfCrlfWarningsWithZeroExit:$allowGitLfCrlfWarningsWithZeroExit -AllowGitSwitchInformationalStderrWithZeroExit:$allowGitSwitchInformationalStderrWithZeroExit -AllowGitPushInformationalStderrWithZeroExit:$allowGitPushInformationalStderrWithZeroExit -AllowGitPullMainInformationalStderrWithZeroExit:$allowGitPullMainInformationalStderrWithZeroExit
 }
 
 function Invoke-Git {
