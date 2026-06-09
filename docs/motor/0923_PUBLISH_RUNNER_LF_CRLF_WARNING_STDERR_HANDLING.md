@@ -126,6 +126,30 @@ Il runner li tratta come info non bloccanti solo quando:
 
 Stderr non whitelisted o exit code non zero restano bloccanti.
 
+## Follow-up R2: stderr update branch su git push
+
+Durante retry o riesecuzioni di Phase B, il branch remoto puo' gia' esistere.
+In questo caso `git push -u origin <branch>` puo' terminare con exit code `0`
+e scrivere su stderr una riga informativa di update:
+
+```text
+<oldsha>..<newsha>  <branch> -> <branch>
+<oldsha>...<newsha>  <branch> -> <branch>
+```
+
+Il runner tratta queste righe come info non bloccanti solo quando:
+
+- la label e' `Push branch`;
+- il comando e' `git push -u origin <branch>`;
+- l'exit code e' `0`;
+- gli SHA sono esadecimali abbreviati;
+- il branch a sinistra e a destra di `->` coincide con il branch pushato.
+
+Per rendere la whitelist verificabile anche su Windows PowerShell 5.1,
+`Invoke-NativeChecked` cattura stdout e stderr raw con `ProcessStartInfo`
+prima di applicare la policy stderr. Non viene reso non bloccante tutto stderr
+di `git push`: ogni riga resta classificata singolarmente.
+
 ## Test
 
 Copertura aggiunta senza chiamate reali a GitHub:
@@ -149,6 +173,9 @@ Copertura aggiunta senza chiamate reali a GitHub:
   FAIL.
 - Phase B con fake `git push -u origin <branch>` e stderr informativo safe:
   PASS.
+- Phase B con fake `git push -u origin <branch>` e stderr update branch con
+  `..` o `...`: PASS.
+- Phase B con stderr update branch riferito a un branch diverso: FAIL.
 - Phase B con stderr push non whitelisted o exit code non zero: FAIL.
 
 Test dedicato:

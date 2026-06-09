@@ -40,9 +40,13 @@ def test_native_checked_wrapper_is_fail_closed() -> None:
         "Native command argument $index is null",
         "Native command argument $index is empty",
         "AllowedExitCodes",
-        "Set-PSNativeCommandUseErrorActionPreferenceSafe -Value $false",
-        "Restore-PSNativeCommandUseErrorActionPreferenceSafe -State $nativePrefState",
-        "$exitCode = $LASTEXITCODE",
+        "System.Diagnostics.ProcessStartInfo",
+        "RedirectStandardOutput",
+        "RedirectStandardError",
+        "Add-ProcessStartInfoArguments",
+        "$exitCode = $process.ExitCode",
+        "Get-NonEmptyTextLines -Text $stdout",
+        "Get-NonEmptyTextLines -Text $stderr",
         "AllowedExitCodes -notcontains $exitCode",
         "Native command failed.",
         "Test-GitLfCrlfWarningLine",
@@ -356,6 +360,18 @@ if args == ["push", "-u", "origin", branch]:
         print(f" * [new branch]      {branch} -> {branch}", file=sys.stderr)
         print(f"branch '{branch}' set up to track 'origin/{branch}'.", file=sys.stderr)
         sys.exit(0)
+    if scenario == "push_update_info":
+        print("To https://github.com/AlbertoFerrari71/AI_Software_Factory.git", file=sys.stderr)
+        print(f"46e2476..d722433  {branch} -> {branch}", file=sys.stderr)
+        sys.exit(0)
+    if scenario == "push_update_info_three_dot":
+        print("To https://github.com/AlbertoFerrari71/AI_Software_Factory.git", file=sys.stderr)
+        print(f"46e2476...d722433  {branch} -> {branch}", file=sys.stderr)
+        sys.exit(0)
+    if scenario == "push_update_wrong_branch":
+        print("To https://github.com/AlbertoFerrari71/AI_Software_Factory.git", file=sys.stderr)
+        print("46e2476..d722433  other-branch -> other-branch", file=sys.stderr)
+        sys.exit(0)
     if scenario == "push_unexpected":
         print("fatal: credential helper failed", file=sys.stderr)
         sys.exit(0)
@@ -582,6 +598,44 @@ def test_phase_b_git_push_informational_stderr_with_zero_exit_is_non_blocking(tm
     assert "Git command wrote unexpected stderr. Label=Push branch" not in combined
     assert "gh pr list" in calls
     assert "PHASE B completed" in combined
+
+
+@pytest.mark.skipif(not pwsh_available(), reason="pwsh executable not available")
+@pytest.mark.parametrize(
+    ("scenario", "expected_line"),
+    [
+        ("push_update_info", "46e2476..d722433"),
+        ("push_update_info_three_dot", "46e2476...d722433"),
+    ],
+)
+def test_phase_b_git_push_branch_update_stderr_with_zero_exit_is_non_blocking(
+    tmp_path: Path, scenario: str, expected_line: str
+) -> None:
+    result, log, bridge, branch = run_phase_b_with_fake_git_switch(tmp_path, scenario)
+    combined = phase_b_combined_output(result, bridge)
+    calls = read(log)
+
+    assert result.returncode == 0, combined
+    assert f"git push -u origin {branch}" in calls
+    assert f"{expected_line}  {branch} -> {branch}" in combined
+    assert "Push branch stderr info treated as non-blocking" in combined
+    assert "Git command wrote unexpected stderr. Label=Push branch" not in combined
+    assert "gh pr list" in calls
+    assert "PHASE B completed" in combined
+
+
+@pytest.mark.skipif(not pwsh_available(), reason="pwsh executable not available")
+def test_phase_b_git_push_branch_update_stderr_requires_pushed_branch(tmp_path: Path) -> None:
+    result, log, bridge, branch = run_phase_b_with_fake_git_switch(tmp_path, "push_update_wrong_branch")
+    combined = phase_b_combined_output(result, bridge)
+    calls = read(log)
+
+    assert result.returncode == 1
+    assert f"git push -u origin {branch}" in calls
+    assert "Git command wrote unexpected stderr. Label=Push branch" in combined
+    assert "other-branch -> other-branch" in combined
+    assert "Push branch stderr info treated as non-blocking: 46e2476..d722433" not in combined
+    assert "gh pr list" not in calls
 
 
 @pytest.mark.skipif(not pwsh_available(), reason="pwsh executable not available")

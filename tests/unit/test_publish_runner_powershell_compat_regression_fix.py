@@ -15,14 +15,18 @@ def read(path: Path) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def test_runner_restores_missing_psnative_preference_safely() -> None:
+def test_runner_avoids_missing_psnative_preference_dependency_safely() -> None:
     content = read(RUNNER)
     native_function = content[
         content.index("function Invoke-NativeChecked") : content.index("function Invoke-ArgvCommand")
     ]
 
     assert 'Get-Variable -Name "PSNativeCommandUseErrorActionPreference"' in content
-    assert "Restore-PSNativeCommandUseErrorActionPreferenceSafe" in native_function
+    assert "System.Diagnostics.ProcessStartInfo" in native_function
+    assert "RedirectStandardOutput" in native_function
+    assert "RedirectStandardError" in native_function
+    assert "Set-PSNativeCommandUseErrorActionPreferenceSafe" not in native_function
+    assert "Restore-PSNativeCommandUseErrorActionPreferenceSafe" not in native_function
     assert "$oldPref = $PSNativeCommandUseErrorActionPreference" not in native_function
     assert "$PSNativeCommandUseErrorActionPreference = $oldPref" not in native_function
 

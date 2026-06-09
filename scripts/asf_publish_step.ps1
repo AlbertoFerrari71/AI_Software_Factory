@@ -1142,6 +1142,10 @@ function Test-GitPushInformationalStderrLine {
     if ($text -match ("^\* \[new branch\]\s+{0}\s+->\s+{0}$" -f $escapedBranch)) {
         return $true
     }
+    $shaPattern = "[0-9a-fA-F]{7,40}"
+    if ($text -match ('^' + $shaPattern + '\.\.\.?' + $shaPattern + '\s+' + $escapedBranch + '\s+->\s+' + $escapedBranch + '$')) {
+        return $true
+    }
     if ([string]::Equals($text, ("branch '{0}' set up to track 'origin/{0}'." -f $branch), [System.StringComparison]::Ordinal)) {
         return $true
     }
@@ -1211,29 +1215,38 @@ function Invoke-NativeChecked {
         throw "Native command working directory does not exist: $workDir"
     }
 
+    $resolvedCommand = $commandName
+    $commandInfo = Get-Command $commandName -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1
+    if ($null -ne $commandInfo -and -not [string]::IsNullOrWhiteSpace([string]$commandInfo.Source)) {
+        $resolvedCommand = [string]$commandInfo.Source
+    }
+
     Write-Log ("RUN {0}: {1} {2}" -f $displayLabel, $commandName, ($Arguments -join " "))
-    Push-Location $workDir
-    $nativePrefState = Get-PSNativeCommandUseErrorActionPreferenceState
-    $stderrPath = [System.IO.Path]::GetTempFileName()
-    $stderrLines = @()
+    $startInfo = [System.Diagnostics.ProcessStartInfo]::new()
+    $startInfo.FileName = $resolvedCommand
+    $startInfo.WorkingDirectory = $workDir
+    $startInfo.UseShellExecute = $false
+    $startInfo.RedirectStandardOutput = $true
+    $startInfo.RedirectStandardError = $true
+    Add-ProcessStartInfoArguments -StartInfo $startInfo -Arguments @($Arguments)
+
+    $process = [System.Diagnostics.Process]::new()
+    $process.StartInfo = $startInfo
     try {
-        Set-PSNativeCommandUseErrorActionPreferenceSafe -Value $false
-        $output = & $commandName @Arguments 2> $stderrPath
-        $exitCode = $LASTEXITCODE
+        [void]$process.Start()
+        $stdout = $process.StandardOutput.ReadToEnd()
+        $stderr = $process.StandardError.ReadToEnd()
+        $process.WaitForExit()
+        $exitCode = $process.ExitCode
     } finally {
-        Restore-PSNativeCommandUseErrorActionPreferenceSafe -State $nativePrefState
-        Pop-Location
-        if (Test-Path -LiteralPath $stderrPath -PathType Leaf) {
-            $stderrText = [System.IO.File]::ReadAllText($stderrPath)
-            $stderrLines = @(Get-NonEmptyTextLines -Text $stderrText)
-            Remove-Item -LiteralPath $stderrPath -Force -ErrorAction SilentlyContinue
-        }
+        $process.Dispose()
     }
     if ($null -eq $exitCode) {
         throw "Native command did not produce LASTEXITCODE. Label=$displayLabel Command=$commandName"
     }
 
-    $stdoutLines = @($output)
+    $stdoutLines = @(Get-NonEmptyTextLines -Text $stdout)
+    $stderrLines = @(Get-NonEmptyTextLines -Text $stderr)
     foreach ($line in @($stdoutLines)) {
         $script:LogLines.Add([string]$line)
     }
