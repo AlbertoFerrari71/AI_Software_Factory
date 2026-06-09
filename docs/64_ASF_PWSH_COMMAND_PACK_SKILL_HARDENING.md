@@ -312,7 +312,7 @@ The skill enforces these guardrails:
 - avoid fragile outer `try/finally` and outer `else` branches in the pasted bootstrap;
 - avoid unrequested destructive commands;
 - keep secrets out of generated files, logs, DOCX and clipboard output;
-- treat `gh pr checks --watch` with no checks reported or exit code 1 as a controlled warning only when all other local gates pass;
+- treat `gh pr checks --watch` with no checks reported as a controlled warning only when all other local gates pass and a GitHub workflow-run fallback on the PR head commit finds at least one `completed/success` run; other nonzero exits remain blocking;
 - treat LF/CRLF warnings as non-blocking when `git --no-pager diff --check`, tests, health check and verify gate pass;
 - recommend `.gitattributes` line-ending policy for mixed Windows/Git work.
 

@@ -74,7 +74,7 @@ def test_critical_native_commands_flow_through_wrapper() -> None:
 
 def test_phase_c_requires_non_empty_pr_number_before_pr_commands() -> None:
     content = read(SCRIPT)
-    pr_number = section(content, "function Get-PrNumber", "function Invoke-GhPrChecks")
+    pr_number = section(content, "function Get-PrNumber", "function Get-NativeOutputText")
     phase_c = section(content, "function Invoke-PhaseC", "function Escape-Xml")
 
     assert "Phase C requires a non-empty -PrNumber or config pr_number" in pr_number
@@ -122,9 +122,12 @@ def test_gh_pr_checks_watch_warning_policy_is_preserved() -> None:
     doc = read(DOC)
 
     for fragment in [
-        "AllowedExitCodes @(0, 1)",
+        "AllowAnyExitCode",
         "no checks reported",
         "allow_no_github_checks_reported",
+        "Get-GhPrHeadSha",
+        "Get-GhWorkflowRunsForHeadSha",
+        "completed/success workflow run",
         "Add-WarningLine",
         "gh pr checks failed with exit code",
     ]:

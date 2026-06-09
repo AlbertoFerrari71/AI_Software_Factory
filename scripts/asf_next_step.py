@@ -853,7 +853,7 @@ Comando di riferimento manuale:
 gh pr checks --watch
 ```
 
-Se i check non sono disponibili o viene riportato `no checks reported`, trattare il caso come attenzione da registrare, non come fallimento automatico. Registrare l'attenzione nello Step Closure Report insieme ai controlli locali eseguiti.
+Se i check non sono disponibili o viene riportato `no checks reported`, trattare il caso come attenzione da registrare, non come fallimento automatico. La pubblicazione puo' dichiarare il remoto verificato solo se esiste evidenza alternativa sufficiente, per esempio un workflow run GitHub `completed/success` sul commit head della PR. Registrare l'attenzione nello Step Closure Report insieme ai controlli locali eseguiti.
 
 ## LF/CRLF handling
 

@@ -134,6 +134,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/motor/0920_CODEX_SKILLS_REMOTE_VERIFICATION_AND_EVIDENCE_CLOSURE.md",
         "docs/motor/0920_CODEX_SKILLS_REMOTE_PUSH_EVIDENCE_REPORT.md",
         "docs/motor/0921_PUBLISH_RUNNER_POWERSHELL_COMPATIBILITY_REGRESSION_FIX.md",
+        "docs/motor/0922_PUBLISH_RUNNER_GH_CHECKS_NO_CHECKS_REPORTED_FALLBACK.md",
         "config/asf_project_profiles.json",
         "scripts/asf_openai_api_adapter.py",
         "scripts/asf_openai_controlled_live_execution_pack.py",
@@ -255,6 +256,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "tests/unit/test_asf_verification_profile_selector.py",
         "tests/unit/test_asf_publish_step_runner.py",
         "tests/unit/test_publish_runner_powershell_compat_regression_fix.py",
+        "tests/unit/test_asf_publish_step_gh_checks_fallback.py",
         "tests/unit/test_asf_publish_config_generator.py",
         "tests/unit/test_asf_step_state_machine.py",
         "tests/unit/test_asf_e2e_mvp_smoke.py",
@@ -717,6 +719,17 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                     "PrepareConfig command argument normalization",
                     "state hook event preservation",
                     "0920 publish retry after 0921 fix",
+                ],
+            ),
+            (
+                "ASF Publish Runner Gh Checks No Checks Reported Fallback pointers",
+                [
+                    "docs/motor/0922_PUBLISH_RUNNER_GH_CHECKS_NO_CHECKS_REPORTED_FALLBACK.md",
+                    "tests/unit/test_asf_publish_step_gh_checks_fallback.py",
+                    "gh run list --commit",
+                    "completed/success",
+                    "no checks reported",
+                    "0930) External Repo Push Pattern Generalization",
                 ],
             ),
             (
