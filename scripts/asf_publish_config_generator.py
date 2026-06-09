@@ -1232,11 +1232,9 @@ def render_bridge_compact(
 
 {error_lines}
 
-## Clipboard
+## Bridge files
 
-```powershell
-Get-Content -Path $File -Raw | Set-Clipboard
-```
+Compact output is written to Bridge files only.
 """
 
 
@@ -1374,22 +1372,6 @@ def write_bridge_outputs(
     if config is not None:
         shutil.copyfile(numbered_paths["config"], last_paths["last_config"])
     return all_paths
-
-
-def copy_compact_to_clipboard(path: Path) -> str | None:
-    executable = shutil.which("pwsh") or shutil.which("powershell")
-    if not executable:
-        return "Clipboard copy skipped: PowerShell executable not found."
-    command_text = f"Get-Content -LiteralPath {powershell_quote(str(path))} -Raw | Set-Clipboard"
-    completed = subprocess.run(
-        [executable, "-NoProfile", "-Command", command_text],
-        text=True,
-        capture_output=True,
-        check=False,
-    )
-    if completed.returncode != 0:
-        return "Clipboard copy failed; Bridge files were still written."
-    return None
 
 
 def prepare_generation(
@@ -1533,11 +1515,6 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         action="store_true",
         help="Allow explicit recovery or combined-step state contexts; otherwise recovery is fail-closed.",
     )
-    parser.add_argument(
-        "--copy-compact-to-clipboard",
-        action="store_true",
-        help="Copy the generated compact Bridge output to the clipboard when possible.",
-    )
     parser.add_argument("--json", action="store_true", help="Print a machine-readable result to stdout.")
     return parser.parse_args(argv)
 
@@ -1628,11 +1605,6 @@ def run(argv: list[str]) -> int:
             )
         except OSError as exc:
             warnings.append(f"Bridge output failed: {exc}")
-        if args.copy_compact_to_clipboard and bridge_paths and "last_compact" in bridge_paths:
-            clipboard_warning = copy_compact_to_clipboard(bridge_paths["last_compact"])
-            if clipboard_warning:
-                warnings.append(clipboard_warning)
-
     if args.json:
         print(
             json.dumps(

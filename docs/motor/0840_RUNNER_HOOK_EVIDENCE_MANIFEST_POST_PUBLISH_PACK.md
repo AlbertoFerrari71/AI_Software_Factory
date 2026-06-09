@@ -204,7 +204,7 @@ checks:
   working_tree: clean
 bridge_outputs:
   compact_output: generated
-  last_compact: LAST-Output_Compatto.md copied to clipboard
+  last_compact: LAST-Output_Compatto.md written to Bridge files
 warnings:
   accepted only when final gates passed
 next_step: 0840) Runner Hook Evidence Manifest Post-Publish Pack

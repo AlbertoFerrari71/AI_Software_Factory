@@ -1703,7 +1703,7 @@ La skill deve:
 - spostare standard e fonti tecniche in `references/pwsh-command-pack-standard.md`;
 - fornire un template robusto in `references/pwsh-command-pack-template.ps1`;
 - includere esempi progressivi in `examples/demo-prompts.md`;
-- generare command pack `.ps1` con output numerati e, nello stato storico STEP 490, `LAST-*`, Markdown/DOCX compatto, clipboard e guardrail Git/Codex/ASF. Questa parte e' superseded da DEC-069: i nuovi command pack usano solo `NNNN-II-Tipo_Nome.ext`.
+- generare command pack `.ps1` con output numerati e, nello stato storico STEP 490, `LAST-*`, Markdown/DOCX compatto, handoff su file e guardrail Git/Codex/ASF. Questa parte e' superseded da DEC-069: i nuovi command pack usano solo `NNNN-II-Tipo_Nome.ext`.
 
 ### Motivazione
 

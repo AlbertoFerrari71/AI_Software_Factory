@@ -231,11 +231,8 @@ Il file DOCX e' un archivio OpenXML minimale valido, con:
 - `_rels/.rels`;
 - `word/document.xml`.
 
-Per la clipboard il runner usa:
-
-```powershell
-Get-Content -Path $File -Raw | Set-Clipboard
-```
+Il runner lascia il compatto disponibile su file Bridge e `LAST-*`; non esegue
+copie automatiche negli appunti.
 
 ---
 

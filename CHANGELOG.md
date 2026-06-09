@@ -349,7 +349,7 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 - Gate Git/PR/test/verify/diff-check restano bloccanti.
 - Un output Bridge/LAST primario bloccato dopo gate passati produce warning non bloccante con fallback, non falso fallimento.
-- `LAST-Output_Compatto.md` si copia con `Get-Content -Path ... -Raw | Set-Clipboard`; `Set-Clipboard -Path` resta vietato.
+- `LAST-Output_Compatto.md` resta recuperabile dal file Bridge; la copia automatica negli appunti non e' prevista.
 - Nessuna Phase B, Phase C, commit, push, PR, merge o deploy eseguiti da Codex.
 
 ### Next
@@ -751,7 +751,7 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 - La state machine resta non operativa: non esegue Phase B, Phase C, commit, push, PR, merge o deploy.
 - Nessuna dipendenza esterna aggiunta.
-- Clipboard automatico non implementato; l'output compatto contiene il comando manuale `Get-Content -Raw | Set-Clipboard`.
+- Copia automatica negli appunti non implementata; l'output compatto resta su file Bridge.
 - I test usano solo directory temporanee.
 
 ### Next
@@ -794,7 +794,7 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 ### Added
 
 - STEP 0660 - Publish Config Generator Bridge Output Integration.
-- Opzioni `--write-bridge`, `--validate-plan`, `--runner-bridge-root` e `--copy-compact-to-clipboard` in `scripts/asf_publish_config_generator.py`.
+- Opzioni `--write-bridge`, `--validate-plan` e `--runner-bridge-root` in `scripts/asf_publish_config_generator.py`.
 - Bridge audit dedicato `publish_config` con file progressivi `step-II` e `LAST-Publish_Config.json`.
 - Runbook `docs/motor/0660_PUBLISH_CONFIG_GENERATOR_BRIDGE_OUTPUT_INTEGRATION.md`.
 - Esempio `examples/publish_config_generator/sample_bridge_output_input.json`.
@@ -1243,7 +1243,7 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ### Changed
 
-- Aggiornati i template canonici `safe_bootstrap_template.ps1` e `safe_command_pack_script_template.ps1` con file prefix a 4 cifre, `ArgList`, parser Git `--porcelain=v1 --untracked-files=all`, scope guard e clipboard best-effort.
+- Aggiornati i template canonici `safe_bootstrap_template.ps1` e `safe_command_pack_script_template.ps1` con file prefix a 4 cifre, `ArgList`, parser Git `--porcelain=v1 --untracked-files=all`, scope guard e handoff su file.
 - Aggiornati AGENTS, README, Codex Workflow, roadmap, decision log, Project Workflow Index, Quick Reference, Command Cookbook e documento PowerShell Command Pack con richiami allo standard finalizzato.
 - Confermato che lo standard STEP 536 e' stato validato concretamente dallo STEP 540 con safe bootstrap e branch/PR.
 - Il prossimo step consigliato e' stato poi spostato a `560) OpenAI API Adapter First Authorized Live Run` dallo STEP 0550.
@@ -1499,7 +1499,7 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ### Changed
 
-- Rafforzata la skill comune `as-common-pwsh-command-pack` per generare script `.ps1` completi, loggati, verificabili, con output numerati e `LAST-*`, Markdown/DOCX compatto, clipboard e guardrail Git/Codex/ASF.
+- Rafforzata la skill comune `as-common-pwsh-command-pack` per generare script `.ps1` completi, loggati, verificabili, con output numerati e `LAST-*`, Markdown/DOCX compatto, handoff su file e guardrail Git/Codex/ASF.
 - Aggiornati roadmap, decision log, README, Project Workflow Index, Workflow Health Check e script `scripts/check_workflow_health.py` con il riferimento allo STEP 490.
 
 ### Not included

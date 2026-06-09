@@ -225,7 +225,7 @@ Dopo il report Codex, usare prima l'intake gate. Solo dopo review, test e gate l
 
 Da STEP 536, quando serve davvero un PowerShell command pack, usare il Safe Bootstrap standard: bootstrap corto, script `.ps1` completo sotto `pwsh_command`, parse-check con `[scriptblock]::Create(...)`, esecuzione via `pwsh -NoProfile -ExecutionPolicy Bypass -File`, artefatti progressivi `NNNN-II-Tipo_Nome.ext` e pubblicazione `main` PR-first. Il bootstrap non deve contenere here-string annidate, logica Git complessa o `finally` fragile.
 
-Per copiare negli appunti il contenuto di un file nei command pack, non usare `Set-Clipboard -Path`: usare `Get-Content -Path <file> -Raw | Set-Clipboard`.
+Nei command pack il contenuto resta su file Bridge; non sono previste copie automatiche negli appunti.
 
 Da STEP 545, lo standard canonico vive in `docs/70_ASF_PWSH_COMMAND_PACK_SKILL_FINALIZATION.md` e `templates/pwsh_command_pack/`. Da STEP 0550, la naming policy vive anche in `docs/73_LAST_DEPRECATION_4_DIGIT_ARTIFACT_NAMING_STANDARD.md`: `LAST-*` e' deprecato, il Bridge e' operativo e la fonte autorevole resta Git + file versionato. I wrapper nativi devono usare `ArgList`, non `$Args`, e i parser Git di scope devono usare `git status --porcelain=v1 --untracked-files=all`.
 

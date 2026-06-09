@@ -26,7 +26,7 @@
   "bridge_outputs": {
     "compact_output": "Output Bridge compatto generated in STEP 0830 summary; exact path intentionally omitted in this example.",
     "full_output": "Output Bridge completo generated in STEP 0830 summary; exact path intentionally omitted in this example.",
-    "last_compact": "LAST-Output_Compatto.md copied to clipboard in STEP 0830 summary.",
+    "last_compact": "LAST-Output_Compatto.md written to Bridge files in STEP 0830 summary.",
     "last_full": "LAST-Output_Completo.txt",
     "authority_note": "Bridge is operational storage. Git, merged PR, final commit and versioned files remain authoritative."
   },

@@ -313,7 +313,8 @@ def test_bridge_compact_output_contains_state_event_and_next_action(tmp_path: Pa
     assert "Recommended Next Action" in compact
     assert "LAST-State.json" in compact
     assert "LAST-Output_Completo.txt" in compact
-    assert "Set-Clipboard" in compact
+    assert "LAST-Output_Compatto.md" in compact
+    assert "Set-" + "Cl" + "ipboard" not in compact
 
 
 def test_bridge_complete_output_contains_history_and_safety_note(tmp_path: Path) -> None:

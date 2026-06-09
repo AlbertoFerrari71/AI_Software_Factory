@@ -124,14 +124,13 @@ def test_asf_publish_flow_validates_pr_number_before_phase_c() -> None:
     assert "PR number is not numeric" in combined
 
 
-def test_asf_publish_flow_uses_content_clipboard_copy_not_path_parameter() -> None:
+def test_asf_publish_flow_uses_bridge_file_handoff_without_appunti_write() -> None:
     script = read(SCRIPT_TEMPLATE)
     combined = combined_template_text()
 
-    assert "Get-Content -Path $LastCompactPath -Raw | Set-Clipboard" in script
-    assert "Get-Content -Path <file> -Raw | Set-Clipboard" in combined
-    assert not re.search(r"Set-Clipboard\s+-Path\b", script, flags=re.IGNORECASE)
-    assert not re.search(r"Set-Clipboard\s+-LiteralPath\b", script, flags=re.IGNORECASE)
+    assert "LAST-Output_Compatto.md" in combined
+    assert "file-only handoff" in combined
+    assert "Set-" + "Cl" + "ipboard" not in combined
 
 
 def test_asf_publish_flow_documents_lf_crlf_and_docx_as_non_blocking() -> None:

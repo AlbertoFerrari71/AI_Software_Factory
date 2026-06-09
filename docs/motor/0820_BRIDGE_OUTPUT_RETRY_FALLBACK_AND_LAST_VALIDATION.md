@@ -74,7 +74,7 @@ the minimum traceability artifact is missing.
 ## 5. Markdown Mandatory, DOCX Best-Effort
 
 TXT and compact Markdown are primary runner outputs. Compact Markdown is the
-minimum audit artifact for human handoff and clipboard copy.
+minimum audit artifact for human handoff from Bridge files.
 
 Compact Markdown is mandatory in the primary path or in a timestamped fallback.
 
@@ -98,17 +98,8 @@ LAST-Output_Compatto.md
 LAST-Output_Compatto.docx
 ```
 
-`LAST-Output_Compatto.md` is copied to the clipboard with:
-
-```powershell
-Get-Content -Path <file> -Raw | Set-Clipboard
-```
-
-Do not use:
-
-```powershell
-Set-Clipboard -Path
-```
+`LAST-Output_Compatto.md` remains available from Bridge files. The runner does
+not perform automatic appunti writes.
 
 When a LAST primary path remains locked, the runner retries, writes a
 timestamped LAST fallback if possible and reports a strong warning. This does

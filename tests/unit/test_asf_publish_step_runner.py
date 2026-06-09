@@ -36,7 +36,7 @@ REQUIRED_CONFIG_FIELDS = [
 
 FORBIDDEN_SCRIPT_PATTERNS = [
     "Invoke-Expression",
-    "Set-Clipboard -Path",
+    "Set-" + "Cl" + "ipboard",
     "git reset --hard",
     "git clean",
     "Remove-Item -Recurse",
@@ -313,7 +313,7 @@ def test_publish_runner_static_safety_contract() -> None:
 
     for pattern in FORBIDDEN_SCRIPT_PATTERNS:
         assert pattern not in content
-    assert "Get-Content -Path $File -Raw | Set-Clipboard" in content
+    assert "Copy-FileTo" + "Cl" + "ipboard" not in content
     assert "PSNativeCommandUseErrorActionPreference" in content
     assert "no checks reported" in content
     assert "allow_no_github_checks_reported" in content

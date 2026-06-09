@@ -62,7 +62,6 @@
         )
         Set-Content -LiteralPath $FullOutputFile -Value $BlockedLines -Encoding utf8
         Set-Content -LiteralPath $CompactOutputFile -Value $BlockedLines -Encoding utf8
-        try { Set-Clipboard -Value ($BlockedLines -join [Environment]::NewLine) } catch { }
         Write-Host "Parse check failed. Generated script was not executed."
         Write-Host ";"
         exit 1

@@ -94,7 +94,6 @@ if (-not $ParseOk) {
     Set-Content -LiteralPath $FullPath -Value $BlockedLines -Encoding utf8
     Set-Content -LiteralPath $CompactPath -Value $BlockedLines -Encoding utf8
     Set-Content -LiteralPath $DocxFailedPath -Value "DOCX skipped because parse check failed." -Encoding utf8
-    Set-Clipboard -Value ($BlockedLines -join [Environment]::NewLine)
     Write-Host "Parse check failed. Generated script was not executed."
     Write-Host ";"
     exit 1
@@ -131,8 +130,6 @@ $CompactLines += $Tail
 $CompactLines += $Fence
 Set-Content -LiteralPath $CompactPath -Value $CompactLines -Encoding utf8
 Set-Content -LiteralPath $DocxFailedPath -Value "DOCX generation was not required for this dry-run template; non-blocking." -Encoding utf8
-
-Get-Content -LiteralPath $CompactPath -Raw | Set-Clipboard
 
 Write-Host ("Generated script exit code: {0}" -f $ExitCode)
 if ($ExitCode -ne 0) {
