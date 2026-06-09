@@ -76,7 +76,8 @@ def test_scope_discovery_uses_stdout_only_name_only_commands() -> None:
     assert '"status"' not in discovery
     assert "RedirectStandardOutput = $true" in stdout_wrapper
     assert "RedirectStandardError = $true" in stdout_wrapper
-    assert "stderr ignored for path discovery" in stdout_wrapper
+    assert "Test-GitLfCrlfWarningLine" in stdout_wrapper
+    assert "Stdout-only native command wrote unexpected stderr" in stdout_wrapper
 
 
 def test_warning_lines_are_not_repository_changed_file_candidates() -> None:

@@ -1,7 +1,7 @@
 # AI Software Factory
 
 **Metodo interno:** Codex Alchemy Method
-**Stato:** STEP 0922 - Publish Runner Gh Checks No Checks Reported Fallback
+**Stato:** STEP 0923 - Publish Runner LF/CRLF Warning Stderr Handling
 **Data bootstrap:** 2026-05-25
 **Strategia:** local-first personale, progettato per evoluzione SaaS
 
@@ -28,7 +28,7 @@ Il metodo interno si chiama **Codex Alchemy Method**: l'idea grezza viene trasfo
 
 ## 2. Stato repository
 
-Questo repository e' nello stato **STEP 0922 - Publish Runner Gh Checks No Checks Reported Fallback**.
+Questo repository e' nello stato **STEP 0923 - Publish Runner LF/CRLF Warning Stderr Handling**.
 
 Sono presenti:
 
@@ -95,6 +95,7 @@ Sono presenti:
 - STEP 0920 - Codex_Skills Remote Verification and Evidence Closure, con evidence del push reale 0910A-3 `36b065d..bec96ff main -> main`, verifica read-only via `$env:USERPROFILE`, JSON evidence e nessuna modifica a `Codex_Skills`.
 - STEP 0921 - Publish Runner PowerShell Compatibility Regression Fix, con safe handling di `PSNativeCommandUseErrorActionPreference`, fallback DOCX valido, compatibilita' `ProcessStartInfo.ArgumentList` e test regressione.
 - STEP 0922 - Publish Runner Gh Checks No Checks Reported Fallback, con fallback prudente da `gh pr checks --watch` a `gh run list --commit <headSha>`, warning visibili e fail-closed senza run `completed/success`.
+- STEP 0923 - Publish Runner LF/CRLF Warning Stderr Handling, con whitelist stretta per warning Git LF/CRLF su stderr, warning visibili e fail-closed su stderr inatteso o exit code non zero.
 
 Non sono ancora presenti:
 
@@ -413,6 +414,7 @@ docs/motor/0920_CODEX_SKILLS_REMOTE_VERIFICATION_AND_EVIDENCE_CLOSURE.md
 docs/motor/0920_CODEX_SKILLS_REMOTE_PUSH_EVIDENCE_REPORT.md
 docs/motor/0921_PUBLISH_RUNNER_POWERSHELL_COMPATIBILITY_REGRESSION_FIX.md
 docs/motor/0922_PUBLISH_RUNNER_GH_CHECKS_NO_CHECKS_REPORTED_FALLBACK.md
+docs/motor/0923_PUBLISH_RUNNER_LF_CRLF_WARNING_STDERR_HANDLING.md
 ```
 
 ---
@@ -474,4 +476,4 @@ policies/path_policy.v0.json
 0930) External Repo Push Pattern Generalization
 ```
 
-Obiettivo: generalizzare il pattern del controlled push esterno ora che 0920/0921 sono chiusi e il runner gestisce in modo prudente `no checks reported`.
+Obiettivo: generalizzare il pattern del controlled push esterno ora che 0920/0921/0922 sono chiusi e il runner gestisce in modo prudente `no checks reported` e warning Git LF/CRLF su stderr.

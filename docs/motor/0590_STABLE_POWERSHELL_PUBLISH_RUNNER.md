@@ -80,6 +80,8 @@ La FASE A verifica lo stato locale:
 - esegue i comandi `phase_a_checks`;
 - esegue `git --no-pager diff --check`;
 - blocca su file fuori scope o check falliti.
+- tratta i soli warning Git LF/CRLF su stderr come warning non bloccanti
+  quando il comando Git termina con exit code `0`.
 
 Non fa commit, push, PR, merge o deploy.
 
@@ -150,7 +152,23 @@ alternativa success, il runner blocca la FASE C.
 
 ---
 
-## 8. Configurazione JSON
+## 8. Gestione warning Git LF/CRLF su stderr
+
+Git puo' scrivere warning di conversione line ending su stderr anche quando il
+comando e' riuscito, per esempio durante `git --no-pager diff --check` o path
+discovery.
+
+Il runner accetta come warning non bloccanti solo le forme:
+
+- `CRLF will be replaced by LF the next time Git touches it`;
+- `LF will be replaced by CRLF the next time Git touches it`.
+
+La policy vale solo con exit code `0`. Exit code diverso da `0`, stderr Git non
+whitelisted o veri errori whitespace restano bloccanti.
+
+---
+
+## 9. Configurazione JSON
 
 Campi principali:
 
@@ -182,7 +200,7 @@ La modalita' shell e' disabilitata. Se un comando dichiara `"shell": true`, il r
 
 ---
 
-## 9. Output Bridge
+## 10. Output Bridge
 
 Il Bridge default e':
 
@@ -221,7 +239,7 @@ Get-Content -Path $File -Raw | Set-Clipboard
 
 ---
 
-## 10. Sicurezza
+## 11. Sicurezza
 
 Default fail-closed:
 
@@ -240,7 +258,7 @@ Il runner evita `Invoke-Expression` e usa comandi `argv`.
 
 ---
 
-## 11. Relazione con autonomia supervisionata a gate
+## 12. Relazione con autonomia supervisionata a gate
 
 Il runner non e' autonomia cieca. E' uno strumento di esecuzione supervisionata:
 
@@ -254,7 +272,7 @@ Il controllo umano resta parte del workflow.
 
 ---
 
-## 12. Limiti residui
+## 13. Limiti residui
 
 - Il runner non sostituisce review umana del diff.
 - La robustezza GitHub dipende da `gh` installato e autenticato.
@@ -263,7 +281,7 @@ Il controllo umano resta parte del workflow.
 
 ---
 
-## 13. Verifiche
+## 14. Verifiche
 
 Test mirati:
 
@@ -283,7 +301,7 @@ git status --short
 
 ---
 
-## 14. Prossimo step
+## 15. Prossimo step
 
 ```text
 0600) Risk Classifier + Gate Policy

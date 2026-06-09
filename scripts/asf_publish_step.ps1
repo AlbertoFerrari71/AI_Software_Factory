@@ -756,15 +756,16 @@ function Invoke-NativeStdoutChecked {
     }
 
     Write-Log ("EXIT {0}: {1}" -f $displayLabel, $exitCode)
-    if (-not [string]::IsNullOrWhiteSpace($stderr)) {
-        foreach ($line in ($stderr -split "`r?`n")) {
-            if (-not [string]::IsNullOrWhiteSpace($line)) {
-                Add-WarningLine ("{0} stderr ignored for path discovery: {1}" -f $displayLabel, $line.Trim())
-            }
-        }
-    }
+    $stderrLines = @(Get-NonEmptyTextLines -Text $stderr)
     if ($exitCode -ne 0) {
         throw "Stdout-only native command failed. Label=$displayLabel Command=$commandName ExitCode=$exitCode"
+    }
+    foreach ($line in @($stderrLines)) {
+        if (Test-GitLfCrlfWarningLine -Line $line) {
+            Write-NonBlockingGitLfCrlfWarning -Label $displayLabel -Line $line
+            continue
+        }
+        throw "Stdout-only native command wrote unexpected stderr. Label=$displayLabel Command=$commandName Stderr=$line"
     }
     return @(($stdout -split "`r?`n") | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
 }
@@ -1020,6 +1021,88 @@ function Restore-PSNativeCommandUseErrorActionPreferenceSafe {
     Remove-Variable -Name "PSNativeCommandUseErrorActionPreference" -Scope Global -Force -ErrorAction SilentlyContinue
 }
 
+function Get-NonEmptyTextLines {
+    param([string]$Text)
+    if ([string]::IsNullOrWhiteSpace($Text)) {
+        return @()
+    }
+    return @(($Text -split "`r?`n") | ForEach-Object { $_.Trim() } | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
+}
+
+function Test-NativeCommandIsGit {
+    param([string]$CommandName)
+    if ([string]::IsNullOrWhiteSpace($CommandName)) {
+        return $false
+    }
+    $leaf = [System.IO.Path]::GetFileNameWithoutExtension($CommandName.Trim())
+    return [string]::Equals($leaf, "git", [System.StringComparison]::OrdinalIgnoreCase)
+}
+
+function Test-GitLfCrlfWarningLine {
+    param([string]$Line)
+    if ([string]::IsNullOrWhiteSpace($Line)) {
+        return $false
+    }
+    $text = $Line.Trim()
+    return ($text -match "^warning: in the working copy of '[^']+', (CRLF will be replaced by LF|LF will be replaced by CRLF) the next time Git touches it$")
+}
+
+function Write-NonBlockingGitLfCrlfWarning {
+    param(
+        [string]$Label,
+        [string]$Line
+    )
+    Add-WarningLine ("{0} stderr warning treated as non-blocking: {1}" -f $Label, $Line.Trim())
+}
+
+function Test-GitSwitchBranchArgument {
+    param([string]$Branch)
+    if ([string]::IsNullOrWhiteSpace($Branch)) {
+        return $false
+    }
+    return -not ([string]$Branch).StartsWith("-")
+}
+
+function Get-GitSwitchInformationalStderrLine {
+    param([string[]]$Arguments)
+    $safeArgs = @($Arguments)
+    if ($safeArgs.Count -eq 2 `
+            -and [string]::Equals([string]$safeArgs[0], "switch", [System.StringComparison]::OrdinalIgnoreCase) `
+            -and (Test-GitSwitchBranchArgument -Branch ([string]$safeArgs[1]))) {
+        return ("Switched to branch '{0}'" -f ([string]$safeArgs[1]))
+    }
+    if ($safeArgs.Count -eq 3 `
+            -and [string]::Equals([string]$safeArgs[0], "switch", [System.StringComparison]::OrdinalIgnoreCase) `
+            -and [string]::Equals([string]$safeArgs[1], "-c", [System.StringComparison]::OrdinalIgnoreCase) `
+            -and (Test-GitSwitchBranchArgument -Branch ([string]$safeArgs[2]))) {
+        return ("Switched to a new branch '{0}'" -f ([string]$safeArgs[2]))
+    }
+    return ""
+}
+
+function Test-GitSwitchInformationalStderrLine {
+    param(
+        [string]$Line,
+        [string[]]$Arguments
+    )
+    if ([string]::IsNullOrWhiteSpace($Line)) {
+        return $false
+    }
+    $expected = Get-GitSwitchInformationalStderrLine -Arguments @($Arguments)
+    if ([string]::IsNullOrWhiteSpace($expected)) {
+        return $false
+    }
+    return [string]::Equals($Line.Trim(), $expected, [System.StringComparison]::Ordinal)
+}
+
+function Write-NonBlockingGitSwitchInformationalStderr {
+    param(
+        [string]$Label,
+        [string]$Line
+    )
+    Add-WarningLine ("{0} stderr info treated as non-blocking: {1}" -f $Label, $Line.Trim())
+}
+
 function Invoke-NativeChecked {
     param(
         [Parameter(Mandatory = $true)]
@@ -1038,7 +1121,13 @@ function Invoke-NativeChecked {
         [string]$WorkingDirectory = (Get-Location).Path,
 
         [Parameter()]
-        [switch]$AllowAnyExitCode
+        [switch]$AllowAnyExitCode,
+
+        [Parameter()]
+        [switch]$AllowGitLfCrlfWarningsWithZeroExit,
+
+        [Parameter()]
+        [switch]$AllowGitSwitchInformationalStderrWithZeroExit
     )
     $commandName = Assert-NonEmptyString -Value $Command -Name "Native command"
     $displayLabel = $Label
@@ -1069,23 +1158,54 @@ function Invoke-NativeChecked {
     Write-Log ("RUN {0}: {1} {2}" -f $displayLabel, $commandName, ($Arguments -join " "))
     Push-Location $workDir
     $nativePrefState = Get-PSNativeCommandUseErrorActionPreferenceState
+    $stderrPath = [System.IO.Path]::GetTempFileName()
+    $stderrLines = @()
     try {
         Set-PSNativeCommandUseErrorActionPreferenceSafe -Value $false
-        $output = & $commandName @Arguments 2>&1
+        $output = & $commandName @Arguments 2> $stderrPath
         $exitCode = $LASTEXITCODE
     } finally {
         Restore-PSNativeCommandUseErrorActionPreferenceSafe -State $nativePrefState
         Pop-Location
+        if (Test-Path -LiteralPath $stderrPath -PathType Leaf) {
+            $stderrText = [System.IO.File]::ReadAllText($stderrPath)
+            $stderrLines = @(Get-NonEmptyTextLines -Text $stderrText)
+            Remove-Item -LiteralPath $stderrPath -Force -ErrorAction SilentlyContinue
+        }
     }
     if ($null -eq $exitCode) {
         throw "Native command did not produce LASTEXITCODE. Label=$displayLabel Command=$commandName"
     }
-    foreach ($line in @($output)) {
+
+    $stdoutLines = @($output)
+    foreach ($line in @($stdoutLines)) {
         $script:LogLines.Add([string]$line)
     }
+    $isGit = Test-NativeCommandIsGit -CommandName $commandName
+    $unexpectedStderr = [System.Collections.Generic.List[string]]::new()
+    foreach ($line in @($stderrLines)) {
+        if ($AllowGitLfCrlfWarningsWithZeroExit -and $isGit -and $exitCode -eq 0 -and (Test-GitLfCrlfWarningLine -Line $line)) {
+            Write-NonBlockingGitLfCrlfWarning -Label $displayLabel -Line $line
+            continue
+        }
+        if ($AllowGitSwitchInformationalStderrWithZeroExit -and $isGit -and $exitCode -eq 0 -and (Test-GitSwitchInformationalStderrLine -Line $line -Arguments @($Arguments))) {
+            Write-NonBlockingGitSwitchInformationalStderr -Label $displayLabel -Line $line
+            continue
+        }
+        $script:LogLines.Add([string]$line)
+        $unexpectedStderr.Add([string]$line)
+    }
+
     Write-Log ("EXIT {0}: {1}" -f $displayLabel, $exitCode)
     if (-not $AllowAnyExitCode -and $AllowedExitCodes -notcontains $exitCode) {
         throw "Native command failed. Label=$displayLabel Command=$commandName ExitCode=$exitCode"
+    }
+    if ($isGit -and $exitCode -eq 0 -and $unexpectedStderr.Count -gt 0) {
+        throw "Git command wrote unexpected stderr. Label=$displayLabel Command=$commandName Stderr=$($unexpectedStderr -join ' | ')"
+    }
+    $returnedOutput = @($stdoutLines)
+    if (-not $isGit) {
+        $returnedOutput += @($stderrLines)
     }
     return [pscustomobject]@{
         Name = $displayLabel
@@ -1093,8 +1213,78 @@ function Invoke-NativeChecked {
         Arguments = @($Arguments)
         ExitCode = $exitCode
         AllowedExitCodes = @($AllowedExitCodes)
-        Output = @($output)
+        Output = @($returnedOutput)
+        Stdout = @($stdoutLines)
+        Stderr = @($stderrLines)
     }
+}
+
+function Test-ArgvCommandIsGitDiffCheck {
+    param(
+        [string]$Name,
+        [string[]]$Argv
+    )
+    if (-not [string]::Equals(([string]$Name).Trim(), "Diff check", [System.StringComparison]::OrdinalIgnoreCase)) {
+        return $false
+    }
+    $safeArgv = @($Argv)
+    if ($safeArgv.Count -lt 3) {
+        return $false
+    }
+    if (-not (Test-NativeCommandIsGit -CommandName ([string]$safeArgv[0]))) {
+        return $false
+    }
+    $args = @()
+    if ($safeArgv.Count -gt 1) {
+        $args = @($safeArgv[1..($safeArgv.Count - 1)])
+    }
+    if ($args.Count -eq 3 `
+            -and [string]::Equals([string]$args[0], "--no-pager", [System.StringComparison]::OrdinalIgnoreCase) `
+            -and [string]::Equals([string]$args[1], "diff", [System.StringComparison]::OrdinalIgnoreCase) `
+            -and [string]::Equals([string]$args[2], "--check", [System.StringComparison]::OrdinalIgnoreCase)) {
+        return $true
+    }
+    if ($args.Count -eq 2 `
+            -and [string]::Equals([string]$args[0], "diff", [System.StringComparison]::OrdinalIgnoreCase) `
+            -and [string]::Equals([string]$args[1], "--check", [System.StringComparison]::OrdinalIgnoreCase)) {
+        return $true
+    }
+    return $false
+}
+
+function Test-ArgvCommandIsStageExpectedFilesGitAdd {
+    param(
+        [string]$Name,
+        [string[]]$Argv
+    )
+    if (-not [string]::Equals(([string]$Name).Trim(), "Stage expected files", [System.StringComparison]::OrdinalIgnoreCase)) {
+        return $false
+    }
+    $safeArgv = @($Argv)
+    if ($safeArgv.Count -lt 4) {
+        return $false
+    }
+    if (-not (Test-NativeCommandIsGit -CommandName ([string]$safeArgv[0]))) {
+        return $false
+    }
+    return [string]::Equals([string]$safeArgv[1], "add", [System.StringComparison]::OrdinalIgnoreCase) `
+        -and [string]::Equals([string]$safeArgv[2], "--", [System.StringComparison]::Ordinal)
+}
+
+function Test-ArgvCommandIsGitSwitch {
+    param([string[]]$Argv)
+    $safeArgv = @($Argv)
+    if ($safeArgv.Count -lt 3) {
+        return $false
+    }
+    if (-not (Test-NativeCommandIsGit -CommandName ([string]$safeArgv[0]))) {
+        return $false
+    }
+    $args = @()
+    if ($safeArgv.Count -gt 1) {
+        $args = @($safeArgv[1..($safeArgv.Count - 1)])
+    }
+    return -not [string]::IsNullOrWhiteSpace((Get-GitSwitchInformationalStderrLine -Arguments @($args)))
 }
 
 function Invoke-ArgvCommand {
@@ -1111,14 +1301,17 @@ function Invoke-ArgvCommand {
     if ($safeArgv.Count -gt 1) {
         $commandArgs = @($safeArgv[1..($safeArgv.Count - 1)])
     }
+    $allowGitLfCrlfWarningsWithZeroExit = (Test-ArgvCommandIsGitDiffCheck -Name $Name -Argv @($safeArgv)) `
+        -or (Test-ArgvCommandIsStageExpectedFilesGitAdd -Name $Name -Argv @($safeArgv))
+    $allowGitSwitchInformationalStderrWithZeroExit = Test-ArgvCommandIsGitSwitch -Argv @($safeArgv)
 
     if ($AllowFailure) {
         # Tolerant native probes are allowed only when the caller immediately
         # inspects ExitCode and decides the next guarded action.
-        return Invoke-NativeChecked -Command $exe -Arguments $commandArgs -Label $Name -WorkingDirectory $WorkingDirectory -AllowAnyExitCode
+        return Invoke-NativeChecked -Command $exe -Arguments $commandArgs -Label $Name -WorkingDirectory $WorkingDirectory -AllowAnyExitCode -AllowGitLfCrlfWarningsWithZeroExit:$allowGitLfCrlfWarningsWithZeroExit -AllowGitSwitchInformationalStderrWithZeroExit:$allowGitSwitchInformationalStderrWithZeroExit
     }
 
-    return Invoke-NativeChecked -Command $exe -Arguments $commandArgs -AllowedExitCodes @(0) -Label $Name -WorkingDirectory $WorkingDirectory
+    return Invoke-NativeChecked -Command $exe -Arguments $commandArgs -AllowedExitCodes @(0) -Label $Name -WorkingDirectory $WorkingDirectory -AllowGitLfCrlfWarningsWithZeroExit:$allowGitLfCrlfWarningsWithZeroExit -AllowGitSwitchInformationalStderrWithZeroExit:$allowGitSwitchInformationalStderrWithZeroExit
 }
 
 function Invoke-Git {
@@ -1129,6 +1322,17 @@ function Invoke-Git {
     )
     $argv = @("git") + $ArgList
     return Invoke-ArgvCommand -Name $Name -Argv $argv -WorkingDirectory $RepoPath
+}
+
+function Invoke-GitDiffCheck {
+    param([string]$RepoPath)
+    return Invoke-NativeChecked `
+        -Command "git" `
+        -Arguments @("--no-pager", "diff", "--check") `
+        -AllowedExitCodes @(0) `
+        -Label "Diff check" `
+        -WorkingDirectory $RepoPath `
+        -AllowGitLfCrlfWarningsWithZeroExit
 }
 
 function Invoke-Gh {
@@ -1367,7 +1571,7 @@ function Invoke-PhaseA {
     [void](Invoke-Git -RepoPath $RepoPath -ArgList @("status", "--porcelain=v1", "--untracked-files=all") -Name "Git status porcelain")
     Assert-NoOutOfScopeFiles -RepoPath $RepoPath -ExpectedFiles @($PublishConfig.expected_files) -PublishConfig $PublishConfig
     Invoke-ConfiguredChecks -Checks @($PublishConfig.phase_a_checks) -RepoPath $RepoPath
-    [void](Invoke-Git -RepoPath $RepoPath -ArgList @("--no-pager", "diff", "--check") -Name "Diff check")
+    [void](Invoke-GitDiffCheck -RepoPath $RepoPath)
     Write-Log "PHASE A completed."
 }
 

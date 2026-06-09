@@ -117,6 +117,7 @@ Per Phase C questo significa che sono gia' passati:
 - working tree clean;
 - `git --no-pager log`;
 - hook di stato finali, se abilitati.
+- warning Git LF/CRLF su stderr solo se whitelisted e con exit code `0`.
 
 Un messaggio positivo tipo `COMPLETATO` non deve essere scritto prima di questi
 gate.
@@ -138,7 +139,35 @@ ASF mantiene la policy speciale per `gh pr checks --watch`:
 Questo caso non indebolisce gli altri comandi `gh`, che restano controllati con
 exit code ammesso `0`.
 
-## 9. Esempi
+## 9. Casi speciali stderr Git whitelisted
+
+ASF mantiene una whitelist stretta per i warning Git LF/CRLF emessi su stderr:
+
+- `CRLF will be replaced by LF the next time Git touches it`;
+- `LF will be replaced by CRLF the next time Git touches it`.
+
+Il runner li registra come warning non bloccanti solo se il comando Git termina
+con exit code `0`. Stderr Git diverso dalla whitelist resta fail-closed; exit
+code diverso da `0` resta bloccante anche se lo stderr contiene un warning
+LF/CRLF.
+
+ASF mantiene anche una whitelist distinta per lo stderr informativo sicuro di
+`git switch` con exit code `0`. Sono ammessi solo questi messaggi quando il
+branch nel messaggio coincide con l'argv del comando:
+
+- `Switched to branch '<branch>'` per `git switch <branch>`;
+- `Switched to a new branch '<branch>'` per `git switch -c <branch>`.
+
+Qualsiasi altro stderr Git, incluso stderr generico con exit code `0`, resta
+fail-closed. Exit code non zero resta bloccante anche se lo stderr contiene uno
+dei messaggi informativi ammessi.
+
+La stessa whitelist LF/CRLF e' ammessa durante Phase B solo per lo staging
+controllato dei file attesi, cioe' label `Stage expected files` con comando
+`git add -- <expected files>` ed exit code `0`. Non viene resa globale per gli
+altri `git add`.
+
+## 10. Esempi
 
 Codice buono:
 
@@ -166,7 +195,7 @@ Codice rischioso:
 if ($?) { Write-Host "OK" }
 ```
 
-## 10. Superfici aggiornate
+## 11. Superfici aggiornate
 
 Superfici principali:
 
@@ -182,7 +211,7 @@ Superfici repository-local gia' rafforzate nello stesso step:
 - `templates/pwsh_command_pack/as-common-pwsh-command-pack-SKILL.md`;
 - `templates/pwsh_command_pack/export/as-common-pwsh-command-pack/SKILL.md`.
 
-## 11. Fuori scope
+## 12. Fuori scope
 
 Restano fuori scope:
 
@@ -193,7 +222,7 @@ Restano fuori scope:
 - esecuzione reale di Phase B o Phase C;
 - commit, push, PR, merge, deploy o tag.
 
-## 12. Prossimo step consigliato
+## 13. Prossimo step consigliato
 
 ```text
 0810) Publish Runner Recovery UX and No-False-Completed Guard
