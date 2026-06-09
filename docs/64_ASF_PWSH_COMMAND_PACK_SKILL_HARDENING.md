@@ -42,7 +42,7 @@ as-common-pwsh-command-pack/
 
 ```yaml
 name: "as-common-pwsh-command-pack"
-description: "Generate safe logged PowerShell command packs for Alberto with robust .ps1 scripts, progressive NNNN-II artifacts, compact Markdown/DOCX reports, clipboard copy, and Git/Codex/ASF guardrails."
+description: "Generate safe logged PowerShell command packs for Alberto with robust .ps1 scripts, progressive NNNN-II artifacts, compact Markdown/DOCX reports, file-only handoff, and Git/Codex/ASF guardrails."
 ```
 
 Long rules, technical sources and the robust template are kept in `references/`. Progressive examples are kept in `examples/`.
@@ -120,14 +120,9 @@ The robust template includes:
 - UTF-8 without BOM writes;
 - compact Markdown output built from arrays of lines or a string builder;
 - DOCX output as a non-blocking best-effort step;
-- `Set-Clipboard` best-effort for content only.
+- file-only handoff for compact reports.
 
-Non usare `Set-Clipboard -Path`: il cmdlet non supporta il parametro `-Path`.
-Per copiare negli appunti il contenuto di un file usare:
-
-```powershell
-Get-Content -Path <file> -Raw | Set-Clipboard
-```
+Non scrivere automaticamente negli appunti; mantenere il compatto su file.
 
 The ASF output root is:
 
@@ -201,7 +196,7 @@ If parsing fails:
 - do not execute the generated script;
 - do not run Git commands;
 - generate full and compact blocked-output artifacts;
-- copy the compact blocked output to the clipboard;
+- write the compact blocked output to file;
 - print a clear parse failure message and exit non-zero.
 
 This prevents partial execution, missing functions such as `Invoke-Native` or `Test-BranchExists`, stray `else` blocks and isolated brace parser errors from becoming publication actions.
@@ -311,7 +306,7 @@ The skill enforces these guardrails:
 - avoid nested here-strings in generated command packs;
 - avoid fragile outer `try/finally` and outer `else` branches in the pasted bootstrap;
 - avoid unrequested destructive commands;
-- keep secrets out of generated files, logs, DOCX and clipboard output;
+- keep secrets out of generated files, logs and DOCX output;
 - treat `gh pr checks --watch` with no checks reported as a controlled warning only when all other local gates pass and a GitHub workflow-run fallback on the PR head commit finds at least one `completed/success` run; other nonzero exits remain blocking;
 - treat LF/CRLF warnings as non-blocking when `git --no-pager diff --check`, tests, health check and verify gate pass;
 - recommend `.gitattributes` line-ending policy for mixed Windows/Git work.

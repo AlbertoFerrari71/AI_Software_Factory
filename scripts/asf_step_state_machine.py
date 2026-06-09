@@ -702,7 +702,6 @@ def render_bridge_compact_markdown(
     event_payload: dict[str, Any],
     paths: dict[str, Path],
 ) -> str:
-    clipboard_command = f'Get-Content -Path "{paths["compact_last"]}" -Raw | Set-Clipboard'
     return f"""# ASF State Machine Bridge Output
 
 ## Summary
@@ -730,12 +729,7 @@ def render_bridge_compact_markdown(
 
 - LAST-State.json: `{paths["state_last"]}`
 - LAST-Output_Completo.txt: `{paths["complete_last"]}`
-
-## Clipboard
-
-```powershell
-{clipboard_command}
-```
+- LAST-Output_Compatto.md: `{paths["compact_last"]}`
 """
 
 

@@ -1307,7 +1307,7 @@ Finalizzare lo standard PowerShell Command Pack come skill/istruzione canonica r
 - documento `docs/70_ASF_PWSH_COMMAND_PACK_SKILL_FINALIZATION.md`;
 - README template `templates/pwsh_command_pack/README.md`;
 - skill draft esportabile `templates/pwsh_command_pack/as-common-pwsh-command-pack-SKILL.md`;
-- template canonici aggiornati con `ArgList`, file prefix a 4 cifre, parser Git robusto e clipboard best-effort;
+- template canonici aggiornati con `ArgList`, file prefix a 4 cifre, parser Git robusto e handoff su file;
 - guardrail su PR-first, DOCX best-effort, warning LF/CRLF e divieto di `$Args` come parametro;
 - test automatici per standard e parse-check.
 
@@ -1676,7 +1676,7 @@ Salvare output e riepiloghi del Publish Config Generator in un Bridge audit dedi
 
 ### Output realizzati
 
-- opzioni `--write-bridge`, `--validate-plan`, `--runner-bridge-root` e `--copy-compact-to-clipboard` nel generator;
+- opzioni `--write-bridge`, `--validate-plan` e `--runner-bridge-root` nel generator;
 - documento `docs/motor/0660_PUBLISH_CONFIG_GENERATOR_BRIDGE_OUTPUT_INTEGRATION.md`;
 - esempio `examples/publish_config_generator/sample_bridge_output_input.json`;
 - artifact progressivi e `LAST-Publish_Config.json` sotto Bridge `publish_config`;

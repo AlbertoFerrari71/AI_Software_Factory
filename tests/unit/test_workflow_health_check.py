@@ -738,7 +738,7 @@ def test_workflow_health_tracks_powershell_publish_skill_sync() -> None:
         "gh pr list --head",
         "-ApprovePublish",
         "-ApproveMerge",
-        "Set-Clipboard -Path",
+        "Bridge file-only handoff",
         "0810) Publish Runner Recovery UX and No-False-Completed Guard",
     ]
 
@@ -840,7 +840,7 @@ def test_workflow_health_tracks_bridge_output_retry_fallback_last_validation() -
         "single writer ownership",
         "Start-Transcript",
         "NNNN-Wrapper_Log_*.txt",
-        "Set-Clipboard -Path",
+        "Bridge files",
     ]
 
     for fragment in bridge_fragments:

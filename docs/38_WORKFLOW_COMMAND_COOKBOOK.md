@@ -202,7 +202,7 @@ NNNN-II-Comando_Eseguito_<nome>.ps1
 
 Dentro lo script `.ps1` possono stare native command wrapper, test, health check, verify gate, PR/merge, output completo/compatto e DOCX best-effort.
 
-Per copiare negli appunti il contenuto di un file, non usare `Set-Clipboard -Path`: usare `Get-Content -Path <file> -Raw | Set-Clipboard`.
+Usare i file Bridge per recuperare il report compatto; nessuna copia automatica negli appunti.
 
 I wrapper nativi devono usare `ArgList`, non `$Args`. I parser Git di scope devono usare:
 
@@ -1449,10 +1449,10 @@ git --no-pager diff --check
 git --no-pager status --short
 ```
 
-Clipboard del report compatto finale:
+Report compatto finale:
 
 ```powershell
-Get-Content -Path "D:\FG-SAB Dropbox\Alberto Ferrari\ChatGPT_Bridge\AI_Software_Factory\publish_step\LAST-Output_Compatto.md" -Raw | Set-Clipboard
+Get-Content -Path "D:\FG-SAB Dropbox\Alberto Ferrari\ChatGPT_Bridge\AI_Software_Factory\publish_step\LAST-Output_Compatto.md" -Raw
 ```
 
 ### Esito atteso
@@ -1477,7 +1477,7 @@ Evitare in particolare:
 - trattamento dei warning LF/CRLF come file fuori scope;
 - introspezione `Get-Command -Path` o AST parsing non necessario;
 - stampa di `COMPLETATO` prima dei gate finali;
-- `Set-Clipboard -Path`;
+- copie automatiche negli appunti;
 - DOCX/Word COM o altri output accessori come dipendenza bloccante.
 
 I warning LF/CRLF non sono bloccanti se test, verify, health check e `git --no-pager diff --check` passano. DOCX resta best-effort; il Markdown e' l'output principale. Se DOCX fallisce dopo gate finali passati, lo stato e' `COMPLETATO CON WARNING NON BLOCCANTE`, non `BLOCCATO`.

@@ -109,7 +109,7 @@ Regole rapide:
 - per trovare l'ultimo artefatto di un tipo per uno step, usare `max(II)` per `(step, tipo)`;
 - il Bridge e' operativo, non autorevole: la fonte ufficiale e' Git + file versionato;
 - DOCX e' best-effort e non blocca se TXT/MD sono validi;
-- non usare `Set-Clipboard -Path`; per copiare file negli appunti usare `Get-Content -Path <file> -Raw | Set-Clipboard`;
+- usare file Bridge per il report compatto; nessuna copia automatica negli appunti;
 - usare `git --no-pager` per log, diff e output lunghi;
 - warning LF/CRLF non sono bloccanti se `diff --check`, test, health e verify passano; per diagnosi `.gitattributes` usare `docs/72_ASF_GIT_LINE_ENDINGS_WARNING_CLEANUP.md`.
 
@@ -131,8 +131,7 @@ runner segnala out-of-scope, leggere recovery report o suggested config e
 aggiungere file allo scope solo dopo review. Warning LF/CRLF non sono file fuori
 scope.
 `COMPLETATO` puo' essere stampato solo dopo i gate finali. Il compatto finale si
-copia con `Get-Content -Path <file> -Raw | Set-Clipboard`, mai con
-`Set-Clipboard -Path`. DOCX/Word COM resta best-effort; output accessori restano
+handoff su file Bridge. DOCX/Word COM resta best-effort; output accessori restano
 best-effort e non invalidano un publish gia' verificato.
 
 Dopo STEP 0820, se un output Bridge o `LAST-*` primario resta bloccato, il

@@ -539,7 +539,7 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                     "gh pr list --head",
                     "-ApprovePublish",
                     "-ApproveMerge",
-                    "Set-Clipboard -Path",
+                    "Bridge file-only handoff",
                     "0810) Publish Runner Recovery UX and No-False-Completed Guard",
                 ],
             ),

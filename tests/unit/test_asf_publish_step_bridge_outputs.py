@@ -64,14 +64,14 @@ def test_bridge_status_policy_keeps_gates_blocking_and_accessories_non_blocking(
         assert fragment in content
 
 
-def test_last_clipboard_contract_uses_content_not_path_parameter() -> None:
+def test_bridge_outputs_do_not_use_automatic_appunti_writes() -> None:
     content = read(SCRIPT)
 
-    assert "Get-Content -Path $File -Raw | Set-Clipboard" in content
     assert "LAST-Output_Compatto.md" in content
     assert "Update-BridgeLastOutputs" in content
     assert "Validate-BridgeLastOutputs" in content
-    assert "Set-Clipboard -Path" not in content
+    assert "Set-" + "Cl" + "ipboard" not in content
+    assert "Copy-FileTo" + "Cl" + "ipboard" not in content
 
 
 @pytest.mark.skipif(not pwsh_available(), reason="pwsh executable not available")

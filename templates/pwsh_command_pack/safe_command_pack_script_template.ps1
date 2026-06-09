@@ -292,14 +292,6 @@ function Invoke-AsfPublishConfigRunnerFlow {
     Run -FileName "git" -ArgList @("--no-pager", "diff", "--check") -Label "final diff check"
     Run -FileName "git" -ArgList @("--no-pager", "status", "--short") -Label "final git status"
 
-    if (-not [string]::IsNullOrWhiteSpace($LastCompactPath)) {
-        if (-not (Test-Path -Path $LastCompactPath)) {
-            throw ("LAST compact report does not exist: {0}" -f $LastCompactPath)
-        }
-        Get-Content -Path $LastCompactPath -Raw | Set-Clipboard
-        Write-Log "Copied LAST-Output_Compatto.md to clipboard."
-    }
-
     Write-Log "COMPLETATO after final ASF publish gates passed."
 }
 
@@ -471,20 +463,6 @@ function Write-DocxBestEffort {
     }
 }
 
-function Copy-CompactReportToClipboard {
-    if (-not (Test-Path -LiteralPath $CompactOutputPath)) {
-        Write-Log "Clipboard copy skipped because compact Markdown is missing."
-        return
-    }
-
-    try {
-        Get-Content -LiteralPath $CompactOutputPath -Raw | Set-Clipboard
-        Write-Log "Copied compact Markdown to clipboard."
-    } catch {
-        Write-Log ("Clipboard copy failed without blocking command pack: {0}" -f $_.Exception.Message)
-    }
-}
-
 try {
     Set-Content -LiteralPath $FullOutputPath -Value @("Safe command pack started: $(Get-Date -Format o)") -Encoding utf8
     Write-Log "Use progressive artifacts only: NNNN-II-Tipo_Nome.ext. Do not generate or read LAST-* artifacts."
@@ -515,5 +493,3 @@ try {
     [void] (Write-DocxBestEffort -CompactPath $CompactOutputPath -DocxPath $DocxOutputPath -FailedPath $DocxFailedPath)
     throw
 }
-
-Copy-CompactReportToClipboard

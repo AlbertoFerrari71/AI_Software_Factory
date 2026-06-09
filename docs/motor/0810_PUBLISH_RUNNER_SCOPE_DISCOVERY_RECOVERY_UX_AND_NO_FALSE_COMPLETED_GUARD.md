@@ -188,7 +188,7 @@ I template `templates/pwsh_command_pack/` ora raccomandano:
 6. Phase C con `PrNumber`;
 7. verifiche finali;
 8. output Bridge numerati e `LAST-*`;
-9. clipboard con `Get-Content -Path ... -Raw | Set-Clipboard`;
+9. compatto finale disponibile su file Bridge;
 10. DOCX/accessori best-effort;
 11. mai `COMPLETATO` prima dei gate finali.
 

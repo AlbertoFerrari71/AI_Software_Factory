@@ -471,7 +471,7 @@ def test_state_integration_does_not_run_publish_runner_or_git(
     input_file.write_text(json.dumps(base_input(tmp_path), indent=2), encoding="utf-8")
 
     def fail_if_called(*_: object, **__: object) -> object:
-        raise AssertionError("No subprocess should run without --validate-plan or clipboard copy.")
+        raise AssertionError("No subprocess should run without --validate-plan.")
 
     monkeypatch.setattr(module.subprocess, "run", fail_if_called)
     code = module.run(

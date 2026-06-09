@@ -2098,17 +2098,6 @@ function Get-BridgeRoot {
     return $DefaultBridgeRoot
 }
 
-function Copy-FileToClipboard {
-    param([string]$File)
-    if (Get-Command Set-Clipboard -ErrorAction SilentlyContinue) {
-        try {
-            Get-Content -Path $File -Raw | Set-Clipboard
-        } catch {
-            Add-WarningLine "Clipboard copy failed; output files were still written."
-        }
-    }
-}
-
 function New-DefaultPublishChecks {
     return @(
         [pscustomobject]@{
@@ -2235,7 +2224,7 @@ function Write-PrepareConfigOutputs {
 
     Write-Log ("PrepareConfig draft config written: {0}" -f $configPath)
     Write-Log ("PrepareConfig review report written: {0}" -f $reviewPath)
-    Copy-FileToClipboard -File $reviewPath
+    Write-Log "PrepareConfig review report available from Bridge files."
 }
 
 function Invoke-PrepareConfig {
@@ -2795,13 +2784,6 @@ function Write-BridgeOutputs {
         }
     }
 
-    $lastCompactPath = $sourcePaths["Compact"]
-    foreach ($result in @($lastUpdateResults)) {
-        if ($result.Label -eq "LAST-Output_Compatto.md" -and $result.Success) {
-            $lastCompactPath = $result.EffectivePath
-        }
-    }
-    Copy-FileToClipboard -File $lastCompactPath
     Write-Log ("Bridge output written to: {0}" -f $root)
 }
 

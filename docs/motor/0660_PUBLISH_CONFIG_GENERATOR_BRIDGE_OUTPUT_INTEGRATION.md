@@ -143,17 +143,12 @@ Plan validation not executed.
 
 ---
 
-## 7. Clipboard
+## 7. Appunti
 
-`--copy-compact-to-clipboard` prova a copiare `LAST-Output_Compatto.md` usando PowerShell senza dipendenze esterne.
+Il generator scrive `LAST-Output_Compatto.md` su file Bridge senza copie
+automatiche negli appunti.
 
-Se la copia fallisce, gli artifact restano validi e il warning viene riportato nell'output JSON/stdout.
-
-Comando manuale equivalente:
-
-```powershell
-Get-Content -Path "<LAST-Output_Compatto.md>" -Raw | Set-Clipboard
-```
+Il contenuto resta recuperabile con normale lettura file.
 
 ---
 

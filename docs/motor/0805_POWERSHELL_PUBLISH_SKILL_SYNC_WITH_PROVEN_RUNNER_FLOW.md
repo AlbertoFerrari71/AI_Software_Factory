@@ -57,7 +57,7 @@ default un comando basato sul runner versionato:
 6. lanciare Phase C solo con `-PrNumber <numero> -ApproveMerge`;
 7. eseguire verifiche finali;
 8. produrre output Bridge numerati e `LAST-*` di compatibilita';
-9. copiare il compatto finale con `Get-Content -Path ... -Raw | Set-Clipboard`.
+9. lasciare il compatto finale su file Bridge.
 
 Il command pack deve restare un orchestratore leggero. La pubblicazione vive nel
 runner versionato, non in logica PowerShell duplicata nel wrapper.
@@ -158,8 +158,6 @@ Run "python" @("scripts/check_workflow_health.py")
 Run "pwsh" @("-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "scripts/verify.ps1")
 Run "git" @("--no-pager", "diff", "--check")
 Run "git" @("--no-pager", "status", "--short")
-
-Get-Content -Path $LastCompact -Raw | Set-Clipboard
 ```
 
 `COMPLETATO` puo' essere scritto solo dopo l'ultima verifica passata.

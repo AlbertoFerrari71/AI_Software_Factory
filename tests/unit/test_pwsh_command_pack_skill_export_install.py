@@ -44,8 +44,7 @@ def test_export_skill_contains_name_and_required_standard() -> None:
         "PR-first",
         "NNNN-II-Tipo_Nome.ext",
         "Do not generate `LAST-*` files",
-        "Non usare `Set-Clipboard -Path`",
-        "Get-Content -Path <file> -Raw | Set-Clipboard",
+        "file-only handoff",
         "DOCX is best-effort",
         "Do not default to `git push origin main`",
     ]

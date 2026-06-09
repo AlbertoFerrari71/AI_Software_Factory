@@ -152,17 +152,11 @@ Se `--write-bridge` non e' attivo, il comportamento 0670 resta invariato.
 
 ---
 
-## 7. Clipboard
+## 7. Appunti
 
-Lo STEP 0680 non implementa copia automatica cross-platform.
+Lo STEP 0680 non implementa copia automatica negli appunti.
 
-Il Markdown compatto include il comando manuale sicuro:
-
-```powershell
-Get-Content -Path "<LAST-Output_Compatto.md>" -Raw | Set-Clipboard
-```
-
-Non usare `Set-Clipboard -Path`.
+Il Markdown compatto include il puntatore a `LAST-Output_Compatto.md`.
 
 ---
 

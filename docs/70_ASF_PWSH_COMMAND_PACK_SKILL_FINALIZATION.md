@@ -103,8 +103,7 @@ The generated `.ps1` should contain, when pertinent:
 - compact Markdown artifact;
 - DOCX best-effort/non-blocking artifact;
 - progressive `NNNN-II-Tipo_Nome.ext` artifacts only;
-- `Set-Clipboard` best-effort for content only;
-- file-to-clipboard copies must use `Get-Content -Path <file> -Raw | Set-Clipboard`;
+- file-only handoff for compact reports;
 - native command wrapper with explicit allowed exit codes;
 - `git --no-pager` for long Git output;
 - robust Git parser;
@@ -127,14 +126,9 @@ function Invoke-NativeCommand {
 
 Do not use `$Args` as a parameter name. `$args` is a PowerShell automatic variable and can create ambiguity, fragile diagnostics and accidental behavior.
 
-### Clipboard Rule
+### Appunti Rule
 
-Non usare `Set-Clipboard -Path`: il cmdlet non supporta il parametro `-Path`.
-Per copiare negli appunti il contenuto di un file usare:
-
-```powershell
-Get-Content -Path <file> -Raw | Set-Clipboard
-```
+Non scrivere automaticamente negli appunti; mantenere il compatto su file.
 
 ---
 
@@ -187,7 +181,7 @@ Forbidden for secrets:
 - truncating keys;
 - printing prefixes or suffixes;
 - recording key length;
-- serializing secrets in output, artifacts, logs, DOCX, Markdown, JSON or clipboard.
+- serializing secrets in output, artifacts, logs, DOCX, Markdown, JSON or appunti.
 
 ---
 

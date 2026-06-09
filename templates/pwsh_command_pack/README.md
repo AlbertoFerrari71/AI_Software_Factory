@@ -62,8 +62,7 @@ Generated `.ps1`:
 - compact Markdown;
 - DOCX best-effort/non-blocking;
 - progressive `NNNN-II-Tipo_Nome.ext` files only;
-- `Set-Clipboard` best-effort for content only;
-- file-to-clipboard copies use `Get-Content -Path <file> -Raw | Set-Clipboard`;
+- file-only handoff with no automatic appunti write;
 - native command wrapper with exit-code control;
 - `git --no-pager` for long Git output;
 - robust Git parser with `git status --porcelain=v1 --untracked-files=all`;
@@ -133,14 +132,10 @@ COMPLETED_AFTER_ALL_NATIVE_GUARDRAILS
 
 Do not print `COMPLETATO` or an equivalent final success marker before the final native command exit code has been checked.
 
-## Clipboard
+## Appunti
 
-Non usare `Set-Clipboard -Path`: il cmdlet non supporta il parametro `-Path`.
-Per copiare negli appunti il contenuto di un file usare:
-
-```powershell
-Get-Content -Path <file> -Raw | Set-Clipboard
-```
+I command pack non scrivono automaticamente negli appunti. Il compatto resta
+recuperabile dai file Bridge e dagli artifact progressivi.
 
 ## Publication
 
@@ -173,7 +168,7 @@ STEP 0790, STEP 0800, STEP 0810, and STEP 0820:
 8. run Phase C with `-PrNumber $PrNumber -ApproveMerge`;
 9. run final checks;
 10. keep the runner Bridge output numbered and `LAST-*` compatibility files;
-11. copy `LAST-Output_Compatto.md` with `Get-Content -Path <file> -Raw | Set-Clipboard`.
+11. read or share `LAST-Output_Compatto.md` from the Bridge file when needed.
 12. let `scripts/asf_publish_step.ps1` own its standard Bridge outputs;
 13. do not open `Start-Transcript` on the runner `Output_Completo` path; use `NNNN-Wrapper_Log_*.txt` for any external wrapper log;
 14. treat Bridge/LAST primary-path locks as retry, timestamped fallback, then `COMPLETATO CON WARNING NON BLOCCANTE` only after required gates passed.
@@ -249,7 +244,7 @@ Avoid these patterns for ASF publication commands:
 - casual scope expansion;
 - printing `COMPLETATO` before final gates pass;
 - using `Start-Transcript` on the same `Output_Completo` file owned by the runner;
-- `Set-Clipboard -Path`;
+- automatic appunti writes;
 - blocking publication only because Word COM or DOCX generation failed;
 - making a verified publish look failed only because a DOCX/accessory output
   failed after the final gates;
