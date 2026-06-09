@@ -3980,3 +3980,54 @@ Il prossimo step consigliato e':
 ```text
 0920 publish retry after 0921 fix
 ```
+
+---
+
+## DEC-107 - Publish runner fallback prudente per gh pr checks senza check
+
+**Data:** 2026-06-09
+**Stato:** Accettata
+
+### Contesto
+
+Durante la chiusura manuale equivalente Phase C dello STEP 0920/0921, la PR
+#84 era sana ma:
+
+```powershell
+gh pr checks 84 --watch
+```
+
+ha restituito:
+
+```text
+no checks reported on the branch
+```
+
+I gate locali e GitHub CI sul commit head erano invece passati.
+
+### Decisione
+
+Lo STEP 0922 rafforza `scripts/asf_publish_step.ps1`: `no checks reported`
+non e' piu' accettato solo per configurazione. Il runner registra un warning e
+interroga i workflow run GitHub sul commit head della PR tramite:
+
+```powershell
+gh pr view <PR> --json headRefOid --jq .headRefOid
+gh run list --commit <headSha> --json status,conclusion,name,databaseId,workflowName,headSha,url --limit 20
+```
+
+Il fallback passa solo se almeno un run e' `completed/success` e riferito allo
+stesso `headSha`. Check falliti, assenza di run success, JSON non valido o
+errore gh/API restano bloccanti.
+
+### Conseguenze
+
+Phase C resta fail-closed: i gate locali non vengono bypassati e una PR senza
+evidenza remota alternativa non viene dichiarata verificata. Il caso anomalo
+rimane visibile nei warning e nel Bridge output.
+
+Il prossimo step consigliato e':
+
+```text
+0930) External Repo Push Pattern Generalization
+```

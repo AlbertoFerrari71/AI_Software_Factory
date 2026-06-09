@@ -14,7 +14,8 @@ Esito operativo noto:
 - `pytest` PASS;
 - `git --no-pager diff --check` PASS;
 - working tree finale pulita;
-- warning `gh pr checks returned no checks reported` accettato dalla config;
+- warning `gh pr checks returned no checks reported` accettato solo con fallback
+  `gh run list --commit <headSha>` e almeno un workflow run `completed/success`;
 - DOCX via Word COM trattato come warning non bloccante.
 
 La lezione principale e' che il flusso stabile non era un mega-wrapper

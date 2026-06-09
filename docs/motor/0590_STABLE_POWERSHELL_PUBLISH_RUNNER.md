@@ -141,9 +141,12 @@ Il runner:
 - salva e ripristina `$PSNativeCommandUseErrorActionPreference`;
 - legge `$LASTEXITCODE`;
 - registra warning per `no checks reported`;
-- prosegue solo se `allow_no_github_checks_reported` e' `true`.
+- prosegue solo se `allow_no_github_checks_reported` e' `true` e il fallback
+  `gh run list --commit <headSha>` trova almeno un workflow run
+  `completed/success` sul commit head della PR.
 
-Se l'output indica veri fallimenti, il runner blocca la FASE C.
+Se l'output indica veri fallimenti, se GitHub API fallisce o se manca evidenza
+alternativa success, il runner blocca la FASE C.
 
 ---
 

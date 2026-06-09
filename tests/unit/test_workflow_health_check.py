@@ -103,6 +103,12 @@ PUBLISH_RUNNER_COMPAT_FIX_DOC = (
     / "motor"
     / "0921_PUBLISH_RUNNER_POWERSHELL_COMPATIBILITY_REGRESSION_FIX.md"
 )
+PUBLISH_RUNNER_GH_CHECKS_FALLBACK_DOC = (
+    ROOT
+    / "docs"
+    / "motor"
+    / "0922_PUBLISH_RUNNER_GH_CHECKS_NO_CHECKS_REPORTED_FALLBACK.md"
+)
 
 
 def read(path: Path) -> str:
@@ -133,6 +139,7 @@ def test_workflow_health_check_files_exist() -> None:
     assert CODEX_SKILLS_REMOTE_VERIFICATION_CLOSURE.exists()
     assert CODEX_SKILLS_REMOTE_PUSH_EVIDENCE.exists()
     assert PUBLISH_RUNNER_COMPAT_FIX_DOC.exists()
+    assert PUBLISH_RUNNER_GH_CHECKS_FALLBACK_DOC.exists()
 
 
 def test_workflow_health_check_script_runs_successfully() -> None:
@@ -646,6 +653,38 @@ def test_workflow_health_tracks_publish_runner_compat_regression_fix() -> None:
         "Out-of-scope changes detected",
     ]:
         assert fragment in fix_doc
+
+
+def test_workflow_health_tracks_publish_runner_gh_checks_fallback() -> None:
+    script = read(SCRIPT)
+    doc = read(DOC)
+    index = read(INDEX)
+    fallback_doc = read(PUBLISH_RUNNER_GH_CHECKS_FALLBACK_DOC)
+
+    indexed_fragments = [
+        "docs/motor/0922_PUBLISH_RUNNER_GH_CHECKS_NO_CHECKS_REPORTED_FALLBACK.md",
+        "tests/unit/test_asf_publish_step_gh_checks_fallback.py",
+        "gh run list --commit",
+        "completed/success",
+        "no checks reported",
+        "0930) External Repo Push Pattern Generalization",
+    ]
+
+    for fragment in indexed_fragments:
+        assert fragment in script
+        assert fragment in doc
+        assert fragment in index
+
+    for fragment in [
+        "gh pr view <PR> --json headRefOid --jq .headRefOid",
+        "gh run list --commit <headSha>",
+        "status = completed",
+        "conclusion = success",
+        "headSha = <headSha PR>",
+        "Check falliti",
+        "non viene marcata PASS",
+    ]:
+        assert fragment in fallback_doc
 
 
 def test_workflow_health_tracks_powershell_publish_skill_sync() -> None:

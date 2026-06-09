@@ -4,6 +4,31 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.92.2] - 2026-06-09
+
+### Added
+
+- STEP 0922 - Publish Runner Gh Checks No Checks Reported Fallback.
+- Documento `docs/motor/0922_PUBLISH_RUNNER_GH_CHECKS_NO_CHECKS_REPORTED_FALLBACK.md`.
+- Test `tests/unit/test_asf_publish_step_gh_checks_fallback.py`.
+
+### Changed
+
+- `scripts/asf_publish_step.ps1` non accetta piu' `no checks reported` solo per config: registra warning e verifica fallback `gh run list --commit <headSha>`.
+- Workflow Health, roadmap, decision log, README e Project Workflow Index riconoscono lo STEP 0922.
+
+### Guardrails
+
+- Check falliti, errori gh/API, JSON non valido o assenza di workflow run `completed/success` restano bloccanti.
+- I gate locali del runner restano invariati.
+- Nessun commit, push, PR, merge, deploy o tag eseguito.
+
+### Next
+
+- Prossimo step consigliato: `0930) External Repo Push Pattern Generalization`.
+
+---
+
 ## [0.92.1] - 2026-06-09
 
 ### Added

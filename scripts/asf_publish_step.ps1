@@ -1468,6 +1468,104 @@ function Get-PrNumber {
     throw "Phase C requires a non-empty -PrNumber or config pr_number before any PR command is executed."
 }
 
+function Get-NativeOutputText {
+    param([object[]]$Output)
+    if ($null -eq $Output) {
+        return ""
+    }
+    return ((@($Output) | ForEach-Object { [string]$_ }) -join [Environment]::NewLine)
+}
+
+function Get-GhPrHeadSha {
+    param(
+        [string]$RepoPath,
+        [string]$Number
+    )
+    $checkedNumber = Assert-NonEmptyString -Value $Number -Name "PrNumber"
+    $result = Invoke-NativeChecked -Command "gh" -Arguments @("pr", "view", $checkedNumber, "--json", "headRefOid", "--jq", ".headRefOid") -AllowedExitCodes @(0) -Label "GH PR head commit" -WorkingDirectory $RepoPath
+    $lines = @($result.Output | ForEach-Object { ([string]$_).Trim() } | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
+    if ($lines.Count -eq 0) {
+        throw "gh pr view did not return a PR head commit for PR $checkedNumber."
+    }
+    $headSha = $lines[0]
+    if ($headSha -notmatch "^[0-9A-Fa-f]{7,40}$") {
+        throw "gh pr view returned an invalid PR head commit for PR $checkedNumber."
+    }
+    Write-Log ("PR {0} head commit: {1}" -f $checkedNumber, $headSha)
+    return $headSha
+}
+
+function Get-GhWorkflowRunsForHeadSha {
+    param(
+        [string]$RepoPath,
+        [string]$HeadSha
+    )
+    $checkedHeadSha = Assert-NonEmptyString -Value $HeadSha -Name "PR head commit"
+    $jsonFields = "status,conclusion,name,databaseId,workflowName,headSha,url"
+    $result = Invoke-NativeChecked -Command "gh" -Arguments @("run", "list", "--commit", $checkedHeadSha, "--json", $jsonFields, "--limit", "20") -AllowedExitCodes @(0) -Label "GH workflow runs fallback" -WorkingDirectory $RepoPath
+    $json = (Get-NativeOutputText -Output @($result.Output)).Trim()
+    if ([string]::IsNullOrWhiteSpace($json)) {
+        throw "gh run list returned empty output for PR head commit $checkedHeadSha."
+    }
+    try {
+        $runs = $json | ConvertFrom-Json
+    } catch {
+        throw "gh run list returned invalid JSON for PR head commit $checkedHeadSha."
+    }
+    if ($null -eq $runs) {
+        return @()
+    }
+    return @($runs)
+}
+
+function Get-CompletedSuccessfulWorkflowRunsForHeadSha {
+    param(
+        [object[]]$Runs,
+        [string]$HeadSha
+    )
+    $checkedHeadSha = Assert-NonEmptyString -Value $HeadSha -Name "PR head commit"
+    $successRuns = [System.Collections.Generic.List[object]]::new()
+    foreach ($run in @($Runs)) {
+        if ($null -eq $run) {
+            continue
+        }
+        $status = Get-OptionalStringProperty -Object $run -Name "status"
+        $conclusion = Get-OptionalStringProperty -Object $run -Name "conclusion"
+        $runHeadSha = Get-OptionalStringProperty -Object $run -Name "headSha"
+        if (
+            [string]::Equals($status, "completed", [System.StringComparison]::OrdinalIgnoreCase) -and
+            [string]::Equals($conclusion, "success", [System.StringComparison]::OrdinalIgnoreCase) -and
+            [string]::Equals($runHeadSha, $checkedHeadSha, [System.StringComparison]::OrdinalIgnoreCase)
+        ) {
+            $successRuns.Add($run)
+        }
+    }
+    return @($successRuns)
+}
+
+function Format-WorkflowRunNames {
+    param([object[]]$Runs)
+    $names = [System.Collections.Generic.List[string]]::new()
+    foreach ($run in @($Runs)) {
+        $workflowName = Get-OptionalStringProperty -Object $run -Name "workflowName"
+        if ([string]::IsNullOrWhiteSpace($workflowName)) {
+            $workflowName = Get-OptionalStringProperty -Object $run -Name "name"
+        }
+        $databaseId = Get-OptionalStringProperty -Object $run -Name "databaseId"
+        if ([string]::IsNullOrWhiteSpace($workflowName)) {
+            $workflowName = "workflow run"
+        }
+        if (-not [string]::IsNullOrWhiteSpace($databaseId)) {
+            $workflowName = "{0}#{1}" -f $workflowName, $databaseId
+        }
+        $names.Add($workflowName)
+    }
+    if ($names.Count -eq 0) {
+        return "not available"
+    }
+    return ($names -join ", ")
+}
+
 function Invoke-GhPrChecks {
     param(
         [object]$PublishConfig,
@@ -1475,21 +1573,33 @@ function Invoke-GhPrChecks {
         [string]$Number
     )
     $checkedNumber = Assert-NonEmptyString -Value $Number -Name "PrNumber"
-    # GitHub can return exit 1 with "no checks reported"; that single case is
-    # classified below as a warning when the config explicitly allows it.
-    $result = Invoke-NativeChecked -Command "gh" -Arguments @("pr", "checks", $checkedNumber, "--watch") -AllowedExitCodes @(0, 1) -Label "GH PR checks watch" -WorkingDirectory $RepoPath
+    # GitHub can return a non-zero exit with "no checks reported"; only that
+    # case is allowed to continue into an explicit workflow-run fallback.
+    $result = Invoke-NativeChecked -Command "gh" -Arguments @("pr", "checks", $checkedNumber, "--watch") -Label "GH PR checks watch" -WorkingDirectory $RepoPath -AllowAnyExitCode
     $exitCode = $result.ExitCode
-    $text = ($result.Output -join [Environment]::NewLine)
+    $text = Get-NativeOutputText -Output @($result.Output)
     Write-Log ("gh pr checks exit: {0}" -f $exitCode)
     if ($exitCode -eq 0) {
         return
     }
-    if ($exitCode -eq 1 -and $text.ToLowerInvariant().Contains("no checks reported")) {
-        if ([bool]$PublishConfig.allow_no_github_checks_reported) {
-            Add-WarningLine "gh pr checks returned no checks reported; accepted by config."
-            return
+    if ($text.ToLowerInvariant().Contains("no checks reported")) {
+        if (-not [bool]$PublishConfig.allow_no_github_checks_reported) {
+            throw "gh pr checks reported no checks and config does not allow this warning."
         }
-        throw "gh pr checks reported no checks and config does not allow this warning."
+        Add-WarningLine "gh pr checks returned no checks reported; attempting GitHub workflow-run fallback on the PR head commit."
+        try {
+            $headSha = Get-GhPrHeadSha -RepoPath $RepoPath -Number $checkedNumber
+            $runs = @(Get-GhWorkflowRunsForHeadSha -RepoPath $RepoPath -HeadSha $headSha)
+            $successfulRuns = @(Get-CompletedSuccessfulWorkflowRunsForHeadSha -Runs $runs -HeadSha $headSha)
+            if ($successfulRuns.Count -gt 0) {
+                $runNames = Format-WorkflowRunNames -Runs $successfulRuns
+                Add-WarningLine ("gh pr checks reported no checks; accepted after gh run list found completed/success workflow run(s) for PR head commit {0}: {1}" -f $headSha, $runNames)
+                return
+            }
+            throw "gh pr checks reported no checks and no completed/success GitHub workflow run was found for PR head commit $headSha."
+        } catch {
+            throw "gh pr checks reported no checks, and fallback GitHub workflow runs check failed: $($_.Exception.Message)"
+        }
     }
     throw "gh pr checks failed with exit code $exitCode"
 }

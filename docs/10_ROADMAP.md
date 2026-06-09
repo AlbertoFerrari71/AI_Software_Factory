@@ -124,6 +124,7 @@ Esempio:
 | 910 | Codex_Skills Controlled Push Execution or Local Rollback | Eseguire solo l'opzione approvata esplicitamente dopo il decision pack 0900 | Push controllato completato nello step 0910A-3 | Post-MVP Pilot | Completato |
 | 920 | Codex_Skills Remote Verification and Evidence Closure | Registrare in ASF la closure/evidence del primo push reale controllato su repo esterna | Closure pack, evidence report, JSON, test e verifica read-only Codex_Skills | Post-MVP Pilot | Completato |
 | 921 | Publish Runner PowerShell Compatibility Regression Fix | Riparare regressioni emerse durante il publish 0920 bloccato dal full pytest | Safe PSNative, DOCX valido, ArgumentList compatibility, recovery/state hooks e test | Post-MVP Hardening | Completato |
+| 922 | Publish Runner Gh Checks No Checks Reported Fallback | Gestire `gh pr checks --watch` con `no checks reported` tramite fallback prudente su workflow run GitHub | Runner fallback, warning espliciti, test fake-gh e documento motore | Post-MVP Hardening | Completato |
 | 930 | External Repo Push Pattern Generalization | Generalizzare il pattern del controlled push esterno dopo la closure 0920 | Regole riusabili, guardrail e template per future repo esterne | Post-MVP Pilot | Proposto |
 
 ---
@@ -171,7 +172,15 @@ Prossimo step consigliato dopo 0920:
 Prossimo step consigliato dopo 0921:
 
 ```text
-0920 publish retry after 0921 fix
+0922) Fix runner gestione gh pr checks --watch no checks reported
+```
+
+---
+
+Prossimo step consigliato dopo 0922:
+
+```text
+0930) External Repo Push Pattern Generalization
 ```
 
 ---
@@ -1457,7 +1466,8 @@ Sostituire i mega-blocchi PowerShell copiati in chat con un runner stabile, vers
 - supporto FASE A locale, FASE B publish con `-ApprovePublish`, FASE C merge con `-ApproveMerge`;
 - output Bridge con file numerati e alias `LAST-*` richiesti dallo step;
 - writer DOCX OpenXML minimale senza dipendenze esterne;
-- gestione `gh pr checks` con warning controllato per `no checks reported`.
+- gestione `gh pr checks` con warning controllato per `no checks reported`
+  solo dopo fallback remoto con workflow run `completed/success`.
 
 ### Guardrail
 

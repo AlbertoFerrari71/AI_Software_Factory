@@ -126,10 +126,12 @@ gate.
 ASF mantiene la policy speciale per `gh pr checks --watch`:
 
 - exit code `0` e' successo;
-- exit code `1` con testo "no checks reported" e config
-  `allow_no_github_checks_reported=true` diventa warning controllato;
-- exit code `1` con altro testo fallisce;
-- altri exit code falliscono;
+- exit code non zero con testo "no checks reported" diventa warning
+  controllato solo se `allow_no_github_checks_reported=true` e il fallback
+  `gh run list --commit <headSha>` trova almeno un workflow run
+  `completed/success` sul commit head della PR;
+- exit code non zero con check falliti, errore gh/API o assenza di workflow run
+  success resta bloccante;
 - `$PSNativeCommandUseErrorActionPreference` viene salvato e ripristinato dal
   wrapper.
 
