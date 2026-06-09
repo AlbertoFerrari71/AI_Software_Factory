@@ -172,6 +172,11 @@ controllato del solo file 0870 in `Codex_Skills`. Nessun push, PR, merge,
 deploy o tag e' stato eseguito; qualunque push futuro richiede human gate
 separato nello step 0900.
 
+Dopo STEP 0900, il commit locale `b488745` in `Codex_Skills` ha un decision
+pack read-only: A) push controllato, B) rollback locale, C) keep local
+temporaneo. Nessuna opzione e' stata eseguita; lo step 0910 richiede decisione
+esplicita di Alberto.
+
 Se `main...origin/main [ahead N]` contiene merge locali gia' verificati, non fare push diretto a `main`: creare un publish branch da `main`, pushare quel branch, aprire PR, mergiare, riallineare `main` e verificare.
 
 Template:
@@ -194,6 +199,7 @@ docs/motor/0860_CODEX_SKILLS_EXTERNAL_WORKFLOW_DRY_RUN_PILOT.md
 docs/motor/0870_CODEX_SKILLS_FIRST_CONTROLLED_WRITE_PILOT.md
 docs/motor/0880_CODEX_SKILLS_CONTROLLED_WRITE_REVIEW_AND_DECISION.md
 docs/motor/0890_CODEX_SKILLS_CONTROLLED_LOCAL_COMMIT_EXECUTION.md
+docs/motor/0900_CODEX_SKILLS_CONTROLLED_PUSH_OR_ROLLBACK_DECISION.md
 ```
 
 ---

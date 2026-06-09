@@ -127,6 +127,10 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/motor/0880_CODEX_SKILLS_PREPARED_COMMANDS_NOT_EXECUTED.md",
         "docs/motor/0890_CODEX_SKILLS_CONTROLLED_LOCAL_COMMIT_EXECUTION.md",
         "docs/motor/0890_CODEX_SKILLS_CONTROLLED_LOCAL_COMMIT_RESULT.md",
+        "docs/motor/0900_CODEX_SKILLS_CONTROLLED_PUSH_OR_ROLLBACK_DECISION.md",
+        "docs/motor/0900_CODEX_SKILLS_PUSH_ROLLBACK_STATE_REPORT.md",
+        "docs/motor/0900_CODEX_SKILLS_PUSH_ROLLBACK_DECISION_MATRIX.md",
+        "docs/motor/0900_CODEX_SKILLS_PREPARED_COMMANDS_NOT_EXECUTED.md",
         "config/asf_project_profiles.json",
         "scripts/asf_openai_api_adapter.py",
         "scripts/asf_openai_controlled_live_execution_pack.py",
@@ -204,6 +208,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "examples/publish_runner/0870_codex_skills_controlled_write_evidence.example.json",
         "examples/publish_runner/0880_codex_skills_controlled_write_review_decision.example.json",
         "examples/publish_runner/0890_codex_skills_controlled_local_commit_evidence.example.json",
+        "examples/publish_runner/0900_codex_skills_push_or_rollback_decision.example.json",
         "examples/risk_classifier/sample_l0_docs_only.json",
         "examples/risk_classifier/sample_l2_code_change.json",
         "examples/risk_classifier/sample_l3_publish.json",
@@ -667,6 +672,20 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                 ],
             ),
             (
+                "ASF Codex_Skills Controlled Push or Rollback Decision pointers",
+                [
+                    "docs/motor/0900_CODEX_SKILLS_CONTROLLED_PUSH_OR_ROLLBACK_DECISION.md",
+                    "docs/motor/0900_CODEX_SKILLS_PUSH_ROLLBACK_STATE_REPORT.md",
+                    "docs/motor/0900_CODEX_SKILLS_PUSH_ROLLBACK_DECISION_MATRIX.md",
+                    "docs/motor/0900_CODEX_SKILLS_PREPARED_COMMANDS_NOT_EXECUTED.md",
+                    "examples/publish_runner/0900_codex_skills_push_or_rollback_decision.example.json",
+                    "push_performed_in_0900=false",
+                    "rollback_performed_in_0900=false",
+                    "prepared_commands_executed=false",
+                    "0910) Codex_Skills Controlled Push Execution or Local Rollback",
+                ],
+            ),
+            (
                 "ASF State Machine Bridge Integration pointers",
                 ["LAST-State.json", "LAST-Output_Compatto.md", "state_machine"],
             ),
@@ -1063,6 +1082,12 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                 "ASF Codex_Skills Controlled Local Commit Execution evidence example",
                 [
                     "examples/publish_runner/0890_codex_skills_controlled_local_commit_evidence.example.json"
+                ],
+            ),
+            (
+                "ASF Codex_Skills Controlled Push or Rollback Decision evidence example",
+                [
+                    "examples/publish_runner/0900_codex_skills_push_or_rollback_decision.example.json"
                 ],
             ),
             (

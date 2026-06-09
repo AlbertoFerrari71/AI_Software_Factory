@@ -3851,3 +3851,50 @@ Il prossimo step consigliato e':
 ```text
 0900) Codex_Skills Controlled Push or Rollback Decision
 ```
+
+---
+
+## DEC-104 - Codex_Skills controlled push or rollback decision
+
+**Data:** 2026-06-08
+**Stato:** Accettata
+
+### Contesto
+
+Dopo lo STEP 0890, ASF risulta su `main` con il commit:
+
+```text
+9d9356d 0890 add Codex_Skills controlled local commit execution (#82)
+```
+
+La repo esterna `Codex_Skills` contiene il commit locale:
+
+```text
+b488745 0870 add ASF controlled write pilot note
+```
+
+`Codex_Skills` e' pulita e il branch locale `main` risulta `ahead 1` rispetto
+al tracking branch locale `origin/main`, senza eseguire fetch.
+
+### Decisione
+
+Lo STEP 0900 introduce un decision pack read-only per scegliere tra:
+
+- A) push controllato del commit `b488745`;
+- B) rollback locale del commit `b488745`;
+- C) keep local temporaneo.
+
+Lo step produce documento decisionale, state report, decision matrix, comandi
+preparati ma NON ESEGUITI, evidence manifest JSON e test automatico dedicato.
+
+### Conseguenze
+
+ASF conserva un gate umano prima di qualunque azione sulla repo esterna. Lo
+STEP 0900 non esegue push, rollback, commit, PR, merge, deploy, tag, reset,
+clean, cancellazioni o sync skill.
+
+Il prossimo step consigliato e':
+
+```text
+0910) Codex_Skills Controlled Push Execution or Local Rollback
+```

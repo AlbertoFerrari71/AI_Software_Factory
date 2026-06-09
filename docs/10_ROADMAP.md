@@ -120,7 +120,8 @@ Esempio:
 | 870 | Codex_Skills First Controlled Write Pilot | Eseguire una micro-modifica documentale locale su Codex_Skills dopo guardrail | Result report, rollback plan, evidence manifest e test, senza pubblicazione Git | Post-MVP Pilot | Completato |
 | 880 | Codex_Skills Controlled Write Review and Rollback/Commit Decision | Decidere con review umana se fare rollback o preparare pubblicazione separata | Decision report, state report, matrix, comandi non eseguiti e evidence JSON | Post-MVP Pilot | Completato |
 | 890 | Codex_Skills Controlled Local Commit Execution | Eseguire la decisione umana B con commit locale controllato del solo file 0870 | Commit locale Codex_Skills, result report, evidence JSON e nessun push/PR/merge/deploy/tag | Post-MVP Pilot | Completato |
-| 900 | Codex_Skills Controlled Push or Rollback Decision | Decidere se pubblicare, rollbackare o mantenere locale il commit Codex_Skills | Decision pack separato con human gate per qualunque push futuro | Post-MVP Pilot | Proposto |
+| 900 | Codex_Skills Controlled Push or Rollback Decision | Decidere se pubblicare, rollbackare o mantenere locale il commit Codex_Skills | Decision pack, state report, matrix, comandi non eseguiti ed evidence JSON | Post-MVP Pilot | Completato |
+| 910 | Codex_Skills Controlled Push Execution or Local Rollback | Eseguire solo l'opzione approvata esplicitamente dopo il decision pack 0900 | Push controllato, rollback locale oppure keep local con gate umano | Post-MVP Pilot | Proposto |
 
 ---
 
@@ -144,6 +145,14 @@ Prossimo step consigliato dopo 0890:
 
 ```text
 0900) Codex_Skills Controlled Push or Rollback Decision
+```
+
+---
+
+Prossimo step consigliato dopo 0900:
+
+```text
+0910) Codex_Skills Controlled Push Execution or Local Rollback
 ```
 
 ---
