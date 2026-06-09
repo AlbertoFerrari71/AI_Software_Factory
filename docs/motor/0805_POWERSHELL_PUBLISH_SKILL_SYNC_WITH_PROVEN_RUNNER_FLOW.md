@@ -179,7 +179,7 @@ Regole:
 ## 7. Warning LF/CRLF
 
 I warning LF/CRLF di Git su Windows sono warning controllati, non failure
-automatiche, solo quando passano:
+automatiche, solo quando sono nella whitelist del runner e passano:
 
 - test;
 - Workflow Health Check;
@@ -188,6 +188,9 @@ automatiche, solo quando passano:
 
 Non usare output Git catturato con `2>&1` come base per liste file: i warning
 possono entrare nel testo e contaminare la logica.
+
+Dal micro-hardening 0923, il publish runner accetta su stderr solo i warning Git
+LF/CRLF noti con exit code `0`; stderr Git diverso resta fail-closed.
 
 ## 8. DOCX best-effort
 

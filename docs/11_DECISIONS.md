@@ -3948,6 +3948,44 @@ Il prossimo step consigliato e':
 
 ---
 
+## DEC-108 - Publish runner gestione prudente warning Git LF/CRLF su stderr
+
+**Data:** 2026-06-09
+**Stato:** Accettata
+
+### Contesto
+
+Durante la pubblicazione dello STEP 0922, `git --no-pager diff --check` ha
+restituito exit code `0` ma Git ha scritto su stderr un warning LF/CRLF. Il
+gate reale era passato, ma il runner poteva trattare stderr come errore
+bloccante o mescolarlo ai risultati del comando.
+
+### Decisione
+
+Lo STEP 0923 rafforza `scripts/asf_publish_step.ps1` con una whitelist stretta
+per i soli warning Git LF/CRLF noti:
+
+- `CRLF will be replaced by LF the next time Git touches it`;
+- `LF will be replaced by CRLF the next time Git touches it`.
+
+La whitelist vale solo per comandi Git con exit code `0`. I warning restano
+visibili nel log/report. Exit code non zero, stderr Git non whitelisted e veri
+errori whitespace restano bloccanti.
+
+### Conseguenze
+
+Il runner non normalizza line endings e non indebolisce i gate. I warning
+LF/CRLF ricorrenti restano un tema separato di igiene repository, ma non
+bloccano una pubblicazione se i gate reali passano.
+
+Il prossimo step consigliato e':
+
+```text
+0930) External Repo Push Pattern Generalization
+```
+
+---
+
 ## DEC-106 - Publish runner PowerShell compatibility regression fix
 
 **Data:** 2026-06-09

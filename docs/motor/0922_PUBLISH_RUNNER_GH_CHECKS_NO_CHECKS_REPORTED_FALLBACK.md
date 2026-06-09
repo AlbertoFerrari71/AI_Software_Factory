@@ -65,6 +65,8 @@ In tutti gli altri casi Phase C fallisce.
 
 - I gate locali non cambiano: full pytest, Workflow Health Check,
   `scripts/verify.ps1` e `git diff --check` restano obbligatori dove previsti.
+- Lo STEP 0923 gestisce separatamente i warning Git LF/CRLF su stderr: restano
+  warning visibili solo con exit code `0` e whitelist stretta.
 - `no checks reported` resta sempre visibile nei warning del runner e nel
   Bridge output.
 - Una PR senza evidenza remota alternativa non viene marcata PASS.

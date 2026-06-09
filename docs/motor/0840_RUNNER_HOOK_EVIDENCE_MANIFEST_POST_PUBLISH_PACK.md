@@ -91,7 +91,8 @@ Un gate bloccante lascia lo step `BLOCCATO`. Non va convertito in warning.
 
 Sono warning accettabili solo se i gate veri passano:
 
-- warning LF/CRLF non accompagnati da errori di `git --no-pager diff --check`;
+- warning LF/CRLF Git su stderr solo se whitelisted dal runner, con exit code
+  `0` e non accompagnati da errori di `git --no-pager diff --check`;
 - `gh pr checks` con "no checks reported" solo se la config lo consente
   esplicitamente e il fallback `gh run list --commit <headSha>` trova almeno
   un workflow run `completed/success`;

@@ -125,6 +125,7 @@ Esempio:
 | 920 | Codex_Skills Remote Verification and Evidence Closure | Registrare in ASF la closure/evidence del primo push reale controllato su repo esterna | Closure pack, evidence report, JSON, test e verifica read-only Codex_Skills | Post-MVP Pilot | Completato |
 | 921 | Publish Runner PowerShell Compatibility Regression Fix | Riparare regressioni emerse durante il publish 0920 bloccato dal full pytest | Safe PSNative, DOCX valido, ArgumentList compatibility, recovery/state hooks e test | Post-MVP Hardening | Completato |
 | 922 | Publish Runner Gh Checks No Checks Reported Fallback | Gestire `gh pr checks --watch` con `no checks reported` tramite fallback prudente su workflow run GitHub | Runner fallback, warning espliciti, test fake-gh e documento motore | Post-MVP Hardening | Completato |
+| 923 | Publish Runner LF/CRLF Warning Stderr Handling | Gestire warning Git LF/CRLF su stderr senza bloccare gate con exit code 0 | Runner stderr whitelist, test fake-git e documento motore | Post-MVP Hardening | Completato |
 | 930 | External Repo Push Pattern Generalization | Generalizzare il pattern del controlled push esterno dopo la closure 0920 | Regole riusabili, guardrail e template per future repo esterne | Post-MVP Pilot | Proposto |
 
 ---
@@ -178,6 +179,14 @@ Prossimo step consigliato dopo 0921:
 ---
 
 Prossimo step consigliato dopo 0922:
+
+```text
+0923) Publish Runner LF/CRLF Warning Stderr Handling
+```
+
+---
+
+Prossimo step consigliato dopo 0923:
 
 ```text
 0930) External Repo Push Pattern Generalization
@@ -1468,6 +1477,8 @@ Sostituire i mega-blocchi PowerShell copiati in chat con un runner stabile, vers
 - writer DOCX OpenXML minimale senza dipendenze esterne;
 - gestione `gh pr checks` con warning controllato per `no checks reported`
   solo dopo fallback remoto con workflow run `completed/success`.
+- gestione warning Git LF/CRLF su stderr come warning non bloccanti solo con
+  exit code `0` e whitelist stretta.
 
 ### Guardrail
 

@@ -4,6 +4,32 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.92.3] - 2026-06-09
+
+### Added
+
+- STEP 0923 - Publish Runner LF/CRLF Warning Stderr Handling.
+- Documento `docs/motor/0923_PUBLISH_RUNNER_LF_CRLF_WARNING_STDERR_HANDLING.md`.
+- Test `tests/unit/test_asf_publish_step_lf_crlf_warning_handling.py`.
+
+### Changed
+
+- `scripts/asf_publish_step.ps1` distingue stderr Git LF/CRLF whitelisted da stderr inatteso.
+- `git diff --check` e path discovery Git accettano warning LF/CRLF solo con exit code `0`, registrandoli come warning visibili.
+- Workflow Health, roadmap, decision log, README e Project Workflow Index riconoscono lo STEP 0923.
+
+### Guardrails
+
+- Exit code Git diverso da `0` resta bloccante.
+- Stderr Git non whitelisted resta fail-closed.
+- Nessuna normalizzazione line ending, commit, push, PR, merge, deploy o tag eseguito.
+
+### Next
+
+- Prossimo step consigliato: `0930) External Repo Push Pattern Generalization`.
+
+---
+
 ## [0.92.2] - 2026-06-09
 
 ### Added
