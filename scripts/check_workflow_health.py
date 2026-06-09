@@ -131,12 +131,16 @@ def check_files(root: Path) -> list[HealthIssue]:
         "docs/motor/0900_CODEX_SKILLS_PUSH_ROLLBACK_STATE_REPORT.md",
         "docs/motor/0900_CODEX_SKILLS_PUSH_ROLLBACK_DECISION_MATRIX.md",
         "docs/motor/0900_CODEX_SKILLS_PREPARED_COMMANDS_NOT_EXECUTED.md",
+        "docs/motor/0920_CODEX_SKILLS_REMOTE_VERIFICATION_AND_EVIDENCE_CLOSURE.md",
+        "docs/motor/0920_CODEX_SKILLS_REMOTE_PUSH_EVIDENCE_REPORT.md",
+        "docs/motor/0921_PUBLISH_RUNNER_POWERSHELL_COMPATIBILITY_REGRESSION_FIX.md",
         "config/asf_project_profiles.json",
         "scripts/asf_openai_api_adapter.py",
         "scripts/asf_openai_controlled_live_execution_pack.py",
         "scripts/asf_openai_first_authorized_live_run.py",
         "scripts/asf_dry_run_loop_runner.py",
         "scripts/asf_publish_step.ps1",
+        "scripts/asf_minimal_docx.py",
         "scripts/asf_publish_config_generator.py",
         "scripts/asf_risk_classifier.py",
         "scripts/asf_gate_decision_report.py",
@@ -209,6 +213,8 @@ def check_files(root: Path) -> list[HealthIssue]:
         "examples/publish_runner/0880_codex_skills_controlled_write_review_decision.example.json",
         "examples/publish_runner/0890_codex_skills_controlled_local_commit_evidence.example.json",
         "examples/publish_runner/0900_codex_skills_push_or_rollback_decision.example.json",
+        "examples/publish_runner/0920_codex_skills_remote_verification_evidence.example.json",
+        "examples/publish_runner/0921_publish_runner_regression_fix_evidence.example.json",
         "examples/risk_classifier/sample_l0_docs_only.json",
         "examples/risk_classifier/sample_l2_code_change.json",
         "examples/risk_classifier/sample_l3_publish.json",
@@ -248,6 +254,7 @@ def check_files(root: Path) -> list[HealthIssue]:
         "examples/motor_run_manifest/sample_manifest_input_runner_hooks_step_mismatch.json",
         "tests/unit/test_asf_verification_profile_selector.py",
         "tests/unit/test_asf_publish_step_runner.py",
+        "tests/unit/test_publish_runner_powershell_compat_regression_fix.py",
         "tests/unit/test_asf_publish_config_generator.py",
         "tests/unit/test_asf_step_state_machine.py",
         "tests/unit/test_asf_e2e_mvp_smoke.py",
@@ -686,6 +693,33 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                 ],
             ),
             (
+                "ASF Codex_Skills Remote Verification and Evidence Closure pointers",
+                [
+                    "docs/motor/0920_CODEX_SKILLS_REMOTE_VERIFICATION_AND_EVIDENCE_CLOSURE.md",
+                    "docs/motor/0920_CODEX_SKILLS_REMOTE_PUSH_EVIDENCE_REPORT.md",
+                    "examples/publish_runner/0920_codex_skills_remote_verification_evidence.example.json",
+                    "push_completed=true",
+                    "push_exit_code=0",
+                    "36b065d..bec96ff main -> main",
+                    "$env:USERPROFILE",
+                    "no-fetch/no-pull",
+                    "0930) External Repo Push Pattern Generalization",
+                ],
+            ),
+            (
+                "ASF Publish Runner PowerShell Compatibility Regression Fix pointers",
+                [
+                    "docs/motor/0921_PUBLISH_RUNNER_POWERSHELL_COMPATIBILITY_REGRESSION_FIX.md",
+                    "scripts/asf_minimal_docx.py",
+                    "examples/publish_runner/0921_publish_runner_regression_fix_evidence.example.json",
+                    "safe PSNativeCommandUseErrorActionPreference handling",
+                    "valid DOCX bridge output",
+                    "PrepareConfig command argument normalization",
+                    "state hook event preservation",
+                    "0920 publish retry after 0921 fix",
+                ],
+            ),
+            (
                 "ASF State Machine Bridge Integration pointers",
                 ["LAST-State.json", "LAST-Output_Compatto.md", "state_machine"],
             ),
@@ -1088,6 +1122,18 @@ def check_project_workflow_index(root: Path) -> list[HealthIssue]:
                 "ASF Codex_Skills Controlled Push or Rollback Decision evidence example",
                 [
                     "examples/publish_runner/0900_codex_skills_push_or_rollback_decision.example.json"
+                ],
+            ),
+            (
+                "ASF Codex_Skills Remote Verification and Evidence Closure evidence example",
+                [
+                    "examples/publish_runner/0920_codex_skills_remote_verification_evidence.example.json"
+                ],
+            ),
+            (
+                "ASF Publish Runner PowerShell Compatibility Regression Fix evidence example",
+                [
+                    "examples/publish_runner/0921_publish_runner_regression_fix_evidence.example.json"
                 ],
             ),
             (

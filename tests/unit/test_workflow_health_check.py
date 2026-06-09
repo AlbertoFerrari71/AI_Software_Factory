@@ -88,6 +88,21 @@ CODEX_SKILLS_PUSH_ROLLBACK_MATRIX = (
 CODEX_SKILLS_PUSH_ROLLBACK_COMMANDS = (
     ROOT / "docs" / "motor" / "0900_CODEX_SKILLS_PREPARED_COMMANDS_NOT_EXECUTED.md"
 )
+CODEX_SKILLS_REMOTE_VERIFICATION_CLOSURE = (
+    ROOT
+    / "docs"
+    / "motor"
+    / "0920_CODEX_SKILLS_REMOTE_VERIFICATION_AND_EVIDENCE_CLOSURE.md"
+)
+CODEX_SKILLS_REMOTE_PUSH_EVIDENCE = (
+    ROOT / "docs" / "motor" / "0920_CODEX_SKILLS_REMOTE_PUSH_EVIDENCE_REPORT.md"
+)
+PUBLISH_RUNNER_COMPAT_FIX_DOC = (
+    ROOT
+    / "docs"
+    / "motor"
+    / "0921_PUBLISH_RUNNER_POWERSHELL_COMPATIBILITY_REGRESSION_FIX.md"
+)
 
 
 def read(path: Path) -> str:
@@ -115,6 +130,9 @@ def test_workflow_health_check_files_exist() -> None:
     assert CODEX_SKILLS_REVIEW_STATE.exists()
     assert CODEX_SKILLS_REVIEW_MATRIX.exists()
     assert CODEX_SKILLS_REVIEW_COMMANDS.exists()
+    assert CODEX_SKILLS_REMOTE_VERIFICATION_CLOSURE.exists()
+    assert CODEX_SKILLS_REMOTE_PUSH_EVIDENCE.exists()
+    assert PUBLISH_RUNNER_COMPAT_FIX_DOC.exists()
 
 
 def test_workflow_health_check_script_runs_successfully() -> None:
@@ -556,6 +574,78 @@ def test_workflow_health_tracks_codex_skills_push_or_rollback_decision() -> None
 
     assert "Nessuna opzione viene eseguita nello STEP 0900" in matrix
     assert "NON ESEGUITI" in commands
+
+
+def test_workflow_health_tracks_codex_skills_remote_verification_closure() -> None:
+    script = read(SCRIPT)
+    doc = read(DOC)
+    index = read(INDEX)
+    closure = read(CODEX_SKILLS_REMOTE_VERIFICATION_CLOSURE)
+    evidence = read(CODEX_SKILLS_REMOTE_PUSH_EVIDENCE)
+
+    indexed_fragments = [
+        "docs/motor/0920_CODEX_SKILLS_REMOTE_VERIFICATION_AND_EVIDENCE_CLOSURE.md",
+        "docs/motor/0920_CODEX_SKILLS_REMOTE_PUSH_EVIDENCE_REPORT.md",
+        "examples/publish_runner/0920_codex_skills_remote_verification_evidence.example.json",
+        "push_completed=true",
+        "push_exit_code=0",
+        "36b065d..bec96ff main -> main",
+        "$env:USERPROFILE",
+        "no-fetch/no-pull",
+        "0930) External Repo Push Pattern Generalization",
+    ]
+
+    for fragment in indexed_fragments:
+        assert fragment in script
+        assert fragment in doc
+        assert fragment in index
+
+    for fragment in [
+        "0910A-3",
+        "Codex_Skills",
+        "b488745",
+        "bec96ff",
+        "## main...origin/main",
+        "remote verification is based on local tracking state",
+    ]:
+        assert fragment in closure
+        assert fragment in evidence
+
+    for fragment in ["PR", "merge", "deploy", "tag"]:
+        assert fragment in closure
+        assert fragment in evidence
+
+
+def test_workflow_health_tracks_publish_runner_compat_regression_fix() -> None:
+    script = read(SCRIPT)
+    doc = read(DOC)
+    index = read(INDEX)
+    fix_doc = read(PUBLISH_RUNNER_COMPAT_FIX_DOC)
+
+    indexed_fragments = [
+        "docs/motor/0921_PUBLISH_RUNNER_POWERSHELL_COMPATIBILITY_REGRESSION_FIX.md",
+        "scripts/asf_minimal_docx.py",
+        "examples/publish_runner/0921_publish_runner_regression_fix_evidence.example.json",
+        "safe PSNativeCommandUseErrorActionPreference handling",
+        "valid DOCX bridge output",
+        "PrepareConfig command argument normalization",
+        "state hook event preservation",
+        "0920 publish retry after 0921 fix",
+    ]
+
+    for fragment in indexed_fragments:
+        assert fragment in script
+        assert fragment in doc
+        assert fragment in index
+
+    for fragment in [
+        "PSNativeCommandUseErrorActionPreference",
+        "ProcessStartInfo.ArgumentList",
+        "scripts/asf_minimal_docx.py",
+        "DOCX zip valido",
+        "Out-of-scope changes detected",
+    ]:
+        assert fragment in fix_doc
 
 
 def test_workflow_health_tracks_powershell_publish_skill_sync() -> None:

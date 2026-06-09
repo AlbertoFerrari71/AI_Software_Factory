@@ -92,6 +92,23 @@ function Add-WarningLine {
     Write-Warning $Message
 }
 
+function Write-Utf8NoBomFile {
+    param(
+        [string]$Path,
+        [string]$Text
+    )
+
+    if ($null -eq $Text) {
+        $Text = ""
+    }
+    $directory = Split-Path -Parent $Path
+    if (-not [string]::IsNullOrWhiteSpace($directory)) {
+        [void][System.IO.Directory]::CreateDirectory($directory)
+    }
+    $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+    [System.IO.File]::WriteAllText($Path, $Text, $utf8NoBom)
+}
+
 function Test-HasProperty {
     param(
         [object]$Object,
@@ -646,6 +663,39 @@ function Normalize-GitPath {
     return $value
 }
 
+function ConvertTo-ProcessArgumentString {
+    param([string[]]$Arguments)
+    $parts = [System.Collections.Generic.List[string]]::new()
+    foreach ($argument in @($Arguments)) {
+        if ($null -eq $argument) {
+            throw "Process argument must not be null."
+        }
+        $text = [string]$argument
+        if ($text.Length -eq 0) {
+            $parts.Add('""')
+        } elseif ($text -match '[\s"]') {
+            $parts.Add(('"{0}"' -f $text.Replace('"', '\"')))
+        } else {
+            $parts.Add($text)
+        }
+    }
+    return ($parts -join " ")
+}
+
+function Add-ProcessStartInfoArguments {
+    param(
+        [System.Diagnostics.ProcessStartInfo]$StartInfo,
+        [string[]]$Arguments
+    )
+    if ($StartInfo.PSObject.Properties.Name -contains "ArgumentList") {
+        foreach ($argument in @($Arguments)) {
+            [void]$StartInfo.ArgumentList.Add([string]$argument)
+        }
+        return
+    }
+    $StartInfo.Arguments = ConvertTo-ProcessArgumentString -Arguments @($Arguments)
+}
+
 function Invoke-NativeStdoutChecked {
     param(
         [Parameter(Mandatory = $true)]
@@ -691,9 +741,7 @@ function Invoke-NativeStdoutChecked {
     $startInfo.UseShellExecute = $false
     $startInfo.RedirectStandardOutput = $true
     $startInfo.RedirectStandardError = $true
-    foreach ($argument in @($Arguments)) {
-        [void]$startInfo.ArgumentList.Add([string]$argument)
-    }
+    Add-ProcessStartInfoArguments -StartInfo $startInfo -Arguments @($Arguments)
 
     $process = [System.Diagnostics.Process]::new()
     $process.StartInfo = $startInfo
@@ -853,7 +901,8 @@ function Write-OutOfScopeRecoveryReport {
     $suggestedConfigPath = Join-Path $root ("{0}-Recovery_Out_Of_Scope_Suggested_Config_{1}.json" -f $prefix, $name)
 
     $suggested = Copy-PublishConfigWithScope -PublishConfig $PublishConfig -ChangedFiles @($ChangedFiles)
-    $suggested | ConvertTo-Json -Depth 20 | Set-Content -Path $suggestedConfigPath -Encoding UTF8
+    $suggestedJson = ($suggested | ConvertTo-Json -Depth 20) -join [Environment]::NewLine
+    Write-Utf8NoBomFile -Path $suggestedConfigPath -Text $suggestedJson
 
     $expectedText = if (@($ExpectedFiles).Count -gt 0) { (@($ExpectedFiles) -join [Environment]::NewLine) } else { "none" }
     $changedText = if (@($ChangedFiles).Count -gt 0) { (@($ChangedFiles) -join [Environment]::NewLine) } else { "none" }
@@ -943,6 +992,34 @@ function Assert-NoOutOfScopeFiles {
     Assert-ExpectedScope -RepoPath $RepoPath -ExpectedFiles $ExpectedFiles -PublishConfig $PublishConfig
 }
 
+function Get-PSNativeCommandUseErrorActionPreferenceState {
+    $variable = Get-Variable -Name "PSNativeCommandUseErrorActionPreference" -Scope Global -ErrorAction SilentlyContinue
+    if ($null -eq $variable) {
+        return [pscustomobject]@{
+            Exists = $false
+            Value = $null
+        }
+    }
+    return [pscustomobject]@{
+        Exists = $true
+        Value = $variable.Value
+    }
+}
+
+function Set-PSNativeCommandUseErrorActionPreferenceSafe {
+    param([object]$Value)
+    Set-Variable -Name "PSNativeCommandUseErrorActionPreference" -Scope Global -Value $Value -Force -ErrorAction SilentlyContinue
+}
+
+function Restore-PSNativeCommandUseErrorActionPreferenceSafe {
+    param([object]$State)
+    if ($null -ne $State -and $State.Exists) {
+        Set-Variable -Name "PSNativeCommandUseErrorActionPreference" -Scope Global -Value $State.Value -Force -ErrorAction SilentlyContinue
+        return
+    }
+    Remove-Variable -Name "PSNativeCommandUseErrorActionPreference" -Scope Global -Force -ErrorAction SilentlyContinue
+}
+
 function Invoke-NativeChecked {
     param(
         [Parameter(Mandatory = $true)]
@@ -991,13 +1068,13 @@ function Invoke-NativeChecked {
 
     Write-Log ("RUN {0}: {1} {2}" -f $displayLabel, $commandName, ($Arguments -join " "))
     Push-Location $workDir
-    $oldPref = $PSNativeCommandUseErrorActionPreference
+    $nativePrefState = Get-PSNativeCommandUseErrorActionPreferenceState
     try {
-        $PSNativeCommandUseErrorActionPreference = $false
+        Set-PSNativeCommandUseErrorActionPreferenceSafe -Value $false
         $output = & $commandName @Arguments 2>&1
         $exitCode = $LASTEXITCODE
     } finally {
-        $PSNativeCommandUseErrorActionPreference = $oldPref
+        Restore-PSNativeCommandUseErrorActionPreferenceSafe -State $nativePrefState
         Pop-Location
     }
     if ($null -eq $exitCode) {
@@ -1473,7 +1550,7 @@ function Escape-Xml {
 
 function Add-ZipTextEntry {
     param(
-        [System.IO.Compression.ZipArchive]$Archive,
+        [object]$Archive,
         [string]$Name,
         [string]$Content
     )
@@ -1485,6 +1562,48 @@ function Add-ZipTextEntry {
     $stream.Dispose()
 }
 
+function Initialize-ZipArchiveSupport {
+    try {
+        [void][System.IO.Compression.ZipArchive]
+        [void][System.IO.Compression.ZipArchiveMode]
+        return $true
+    } catch {
+    }
+    foreach ($assemblyName in @("System.IO.Compression", "System.IO.Compression.FileSystem")) {
+        try {
+            Add-Type -AssemblyName $assemblyName -ErrorAction SilentlyContinue
+        } catch {
+        }
+    }
+    try {
+        [void][System.IO.Compression.ZipArchive]
+        [void][System.IO.Compression.ZipArchiveMode]
+        return $true
+    } catch {
+        return $false
+    }
+}
+
+function Write-MinimalDocxWithPythonFallback {
+    param(
+        [string]$Path,
+        [string]$Text
+    )
+    $helperPath = Join-Path $PSScriptRoot "asf_minimal_docx.py"
+    if (-not (Test-Path -LiteralPath $helperPath -PathType Leaf)) {
+        throw "DOCX Python fallback helper not found: $helperPath"
+    }
+    $tempText = [System.IO.Path]::GetTempFileName()
+    try {
+        [System.IO.File]::WriteAllText($tempText, $Text, [System.Text.Encoding]::UTF8)
+        [void](Invoke-NativeChecked -Command "python" -Arguments @($helperPath, "--output", $Path, "--input", $tempText) -AllowedExitCodes @(0) -Label "DOCX Python fallback" -WorkingDirectory (Split-Path -Path $helperPath -Parent))
+    } finally {
+        if (Test-Path -LiteralPath $tempText -PathType Leaf) {
+            Remove-Item -LiteralPath $tempText -Force -ErrorAction SilentlyContinue
+        }
+    }
+}
+
 function Write-MinimalDocx {
     param(
         [string]$Path,
@@ -1493,6 +1612,11 @@ function Write-MinimalDocx {
     $fullPath = [System.IO.Path]::GetFullPath($Path)
     $parent = [System.IO.Path]::GetDirectoryName($fullPath)
     [void][System.IO.Directory]::CreateDirectory($parent)
+
+    if (-not (Initialize-ZipArchiveSupport)) {
+        Write-MinimalDocxWithPythonFallback -Path $fullPath -Text $Text
+        return
+    }
 
     $contentTypes = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>'
     $rels = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>'
@@ -1662,7 +1786,8 @@ function Write-PrepareConfigOutputs {
     $lastConfigPath = Join-Path $root "LAST-Publish_Config_Draft.json"
     $lastReviewPath = Join-Path $root "LAST-PrepareConfig_Review.md"
 
-    $DraftConfig | ConvertTo-Json -Depth 20 | Set-Content -Path $configPath -Encoding UTF8
+    $draftJson = ($DraftConfig | ConvertTo-Json -Depth 20) -join [Environment]::NewLine
+    Write-Utf8NoBomFile -Path $configPath -Text $draftJson
     Copy-Item -Path $configPath -Destination $lastConfigPath -Force
 
     $changedText = if (@($ChangedFiles).Count -gt 0) { (@($ChangedFiles) -join [Environment]::NewLine) } else { "none" }

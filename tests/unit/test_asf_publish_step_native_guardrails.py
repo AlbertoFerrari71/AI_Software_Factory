@@ -39,12 +39,16 @@ def test_native_checked_wrapper_is_fail_closed() -> None:
         "Native command argument $index is null",
         "Native command argument $index is empty",
         "AllowedExitCodes",
-        "$PSNativeCommandUseErrorActionPreference = $false",
+        "Set-PSNativeCommandUseErrorActionPreferenceSafe -Value $false",
+        "Restore-PSNativeCommandUseErrorActionPreferenceSafe -State $nativePrefState",
         "$exitCode = $LASTEXITCODE",
         "AllowedExitCodes -notcontains $exitCode",
         "Native command failed.",
     ]:
         assert fragment in wrapper
+
+    assert "$oldPref = $PSNativeCommandUseErrorActionPreference" not in wrapper
+    assert "$PSNativeCommandUseErrorActionPreference = $oldPref" not in wrapper
 
 
 def test_critical_native_commands_flow_through_wrapper() -> None:

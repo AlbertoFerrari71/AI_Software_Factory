@@ -3898,3 +3898,85 @@ Il prossimo step consigliato e':
 ```text
 0910) Codex_Skills Controlled Push Execution or Local Rollback
 ```
+
+---
+
+## DEC-105 - Codex_Skills remote verification and evidence closure
+
+**Data:** 2026-06-09
+**Stato:** Accettata
+
+### Contesto
+
+Lo step 0910A-3 ha completato il primo push reale controllato verso
+`Codex_Skills`:
+
+```text
+36b065d..bec96ff main -> main
+exit code: 0
+```
+
+I commit pubblicati sono:
+
+```text
+b488745 0870 add ASF controlled write pilot note
+bec96ff 0905 harden PowerShell Bridge and Codex skill workflows
+```
+
+### Decisione
+
+Lo STEP 0920 registra in ASF la closure/evidence del push riuscito, senza
+modificare `Codex_Skills`. La repo esterna viene verificata solo read-only,
+risolvendo il path con:
+
+```powershell
+$CodexSkillsPath = Join-Path $env:USERPROFILE ".agents\skills"
+```
+
+### Conseguenze
+
+ASF ha evidence versionata del primo workflow multi-repo arrivato fino al
+remoto. La verifica remota resta basata sul tracking locale post-push, senza
+fetch/pull, e documenta che non sono stati eseguiti commit, push ulteriori,
+PR, merge, deploy, tag, reset, clean, rebase o modifiche a `Codex_Skills`.
+
+Il prossimo step consigliato e':
+
+```text
+0930) External Repo Push Pattern Generalization
+```
+
+---
+
+## DEC-106 - Publish runner PowerShell compatibility regression fix
+
+**Data:** 2026-06-09
+**Stato:** Accettata
+
+### Contesto
+
+Il tentativo di pubblicazione dello STEP 0920 e' stato bloccato correttamente:
+i test specifici 0920 e Workflow Health passavano, ma il full pytest falliva.
+ASF non deve pubblicare quando il full pytest fallisce.
+
+### Decisione
+
+Lo STEP 0921 corregge il publish runner senza ridurre guardrail:
+
+- gestione sicura di `PSNativeCommandUseErrorActionPreference`;
+- compatibilita' runtime senza `ProcessStartInfo.ArgumentList`;
+- DOCX Bridge valido con fallback Python standard library;
+- copertura regressione dedicata;
+- nessuna pubblicazione 0920 nello stesso step.
+
+### Conseguenze
+
+Il pacchetto locale 0920 resta pronto per una nuova pubblicazione, ora insieme
+al fix 0921. La riprova deve rieseguire full pytest, Workflow Health,
+Verification Gate e diff check prima di qualunque commit/push/PR.
+
+Il prossimo step consigliato e':
+
+```text
+0920 publish retry after 0921 fix
+```

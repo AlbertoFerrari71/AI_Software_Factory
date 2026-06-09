@@ -1,0 +1,31 @@
+{
+  "step": "0921",
+  "name": "Publish_Runner_PowerShell_Compatibility_Regression_Fix",
+  "trigger_step": "0920",
+  "blocked_publish_reason": "Full pytest failed before publishing 0920",
+  "fixed_areas": [
+    "safe PSNativeCommandUseErrorActionPreference handling",
+    "valid DOCX bridge output",
+    "PrepareConfig command argument normalization",
+    "out-of-scope recovery message",
+    "state hook event preservation",
+    "PrepareConfig and recovery JSON UTF-8 without BOM"
+  ],
+  "micro_fix_0921_b": {
+    "root_cause": "runner JSON outputs were written with UTF-8 BOM on Windows PowerShell 5.1",
+    "writer": "Write-Utf8NoBomFile",
+    "json_outputs": [
+      "*-Publish_Config_Draft_*.json",
+      "*-Recovery_Out_Of_Scope_Suggested_Config_*.json"
+    ],
+    "utf8_bom_allowed": false
+  },
+  "tests_expected": {
+    "full_pytest": "pass",
+    "workflow_health": "pass",
+    "verify_ps1": "pass",
+    "diff_check": "pass"
+  },
+  "publish_performed": false,
+  "next_step": "0920 publish retry after 0921 fix"
+}
