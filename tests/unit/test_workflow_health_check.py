@@ -73,6 +73,21 @@ CODEX_SKILLS_LOCAL_COMMIT_RESULT = (
     / "motor"
     / "0890_CODEX_SKILLS_CONTROLLED_LOCAL_COMMIT_RESULT.md"
 )
+CODEX_SKILLS_PUSH_ROLLBACK_DOC = (
+    ROOT
+    / "docs"
+    / "motor"
+    / "0900_CODEX_SKILLS_CONTROLLED_PUSH_OR_ROLLBACK_DECISION.md"
+)
+CODEX_SKILLS_PUSH_ROLLBACK_STATE = (
+    ROOT / "docs" / "motor" / "0900_CODEX_SKILLS_PUSH_ROLLBACK_STATE_REPORT.md"
+)
+CODEX_SKILLS_PUSH_ROLLBACK_MATRIX = (
+    ROOT / "docs" / "motor" / "0900_CODEX_SKILLS_PUSH_ROLLBACK_DECISION_MATRIX.md"
+)
+CODEX_SKILLS_PUSH_ROLLBACK_COMMANDS = (
+    ROOT / "docs" / "motor" / "0900_CODEX_SKILLS_PREPARED_COMMANDS_NOT_EXECUTED.md"
+)
 
 
 def read(path: Path) -> str:
@@ -496,6 +511,51 @@ def test_workflow_health_tracks_codex_skills_controlled_local_commit_execution()
         "Deploy eseguito: no",
     ]:
         assert fragment in result
+
+
+def test_workflow_health_tracks_codex_skills_push_or_rollback_decision() -> None:
+    script = read(SCRIPT)
+    doc = read(DOC)
+    index = read(INDEX)
+    decision_doc = read(CODEX_SKILLS_PUSH_ROLLBACK_DOC)
+    state = read(CODEX_SKILLS_PUSH_ROLLBACK_STATE)
+    matrix = read(CODEX_SKILLS_PUSH_ROLLBACK_MATRIX)
+    commands = read(CODEX_SKILLS_PUSH_ROLLBACK_COMMANDS)
+
+    indexed_fragments = [
+        "docs/motor/0900_CODEX_SKILLS_CONTROLLED_PUSH_OR_ROLLBACK_DECISION.md",
+        "docs/motor/0900_CODEX_SKILLS_PUSH_ROLLBACK_STATE_REPORT.md",
+        "docs/motor/0900_CODEX_SKILLS_PUSH_ROLLBACK_DECISION_MATRIX.md",
+        "docs/motor/0900_CODEX_SKILLS_PREPARED_COMMANDS_NOT_EXECUTED.md",
+        "examples/publish_runner/0900_codex_skills_push_or_rollback_decision.example.json",
+        "push_performed_in_0900=false",
+        "rollback_performed_in_0900=false",
+        "prepared_commands_executed=false",
+        "0910) Codex_Skills Controlled Push Execution or Local Rollback",
+    ]
+
+    for fragment in indexed_fragments:
+        assert fragment in script
+        assert fragment in doc
+        assert fragment in index
+
+    for fragment in [
+        "A) Push controllato",
+        "B) Rollback locale",
+        "C) Keep local temporaneo",
+        "Lo STEP 0900 non esegue nessuna delle tre opzioni",
+    ]:
+        assert fragment in decision_doc
+
+    for fragment in [
+        "## main...origin/main [ahead 1]",
+        "b488745 0870 add ASF controlled write pilot note",
+        "non verificato live per vincolo no-fetch",
+    ]:
+        assert fragment in state
+
+    assert "Nessuna opzione viene eseguita nello STEP 0900" in matrix
+    assert "NON ESEGUITI" in commands
 
 
 def test_workflow_health_tracks_powershell_publish_skill_sync() -> None:

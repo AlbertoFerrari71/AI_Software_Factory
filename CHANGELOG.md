@@ -4,6 +4,35 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.90.0] - 2026-06-08
+
+### Added
+
+- STEP 0900 - Codex_Skills Controlled Push or Rollback Decision.
+- Documento decisionale `docs/motor/0900_CODEX_SKILLS_CONTROLLED_PUSH_OR_ROLLBACK_DECISION.md`.
+- State report `docs/motor/0900_CODEX_SKILLS_PUSH_ROLLBACK_STATE_REPORT.md`.
+- Decision matrix `docs/motor/0900_CODEX_SKILLS_PUSH_ROLLBACK_DECISION_MATRIX.md`.
+- Documento comandi preparati ma non eseguiti `docs/motor/0900_CODEX_SKILLS_PREPARED_COMMANDS_NOT_EXECUTED.md`.
+- Evidence manifest esempio `examples/publish_runner/0900_codex_skills_push_or_rollback_decision.example.json`.
+- Test `tests/unit/test_codex_skills_push_or_rollback_decision.py`.
+
+### Changed
+
+- README, roadmap, decision log, Project Workflow Index, Workflow Health Check, Quick Reference e Command Cookbook riconoscono il decision pack 0900.
+- La roadmap post-MVP aggiorna il prossimo step operativo verso `0910) Codex_Skills Controlled Push Execution or Local Rollback`.
+
+### Guardrails
+
+- Lo STEP 0900 legge `Codex_Skills` solo in read-only.
+- Push, rollback, commit, PR, merge, deploy, tag, reset, clean, cancellazioni e sync skill sono vietati nello step.
+- I comandi push/rollback/keep local sono preparati ma NON ESEGUITI.
+
+### Next
+
+- Prossimo step consigliato: `0910) Codex_Skills Controlled Push Execution or Local Rollback`.
+
+---
+
 ## [0.89.0] - 2026-06-08
 
 ### Added

@@ -1394,6 +1394,11 @@ locale controllato. Non usare push, PR, merge, deploy, tag o sync skill nello
 stesso step; il futuro 0900 deve decidere esplicitamente se pubblicare,
 rollbackare o mantenere locale.
 
+Dopo STEP 0900, usare la decision matrix push/rollback/keep local e i comandi
+preparati ma non eseguiti. Non eseguire push, rollback, commit, PR, merge,
+deploy, tag, reset o cancellazioni senza uno step 0910 approvato esplicitamente
+da Alberto.
+
 ### Comandi
 
 PREPARE CONFIG, bozza scope da review:
@@ -1471,7 +1476,7 @@ Evitare in particolare:
 
 I warning LF/CRLF non sono bloccanti se test, verify, health check e `git --no-pager diff --check` passano. DOCX resta best-effort; il Markdown e' l'output principale. Se DOCX fallisce dopo gate finali passati, lo stato e' `COMPLETATO CON WARNING NON BLOCCANTE`, non `BLOCCATO`.
 
-Documenti: `docs/motor/0590_STABLE_POWERSHELL_PUBLISH_RUNNER.md`, `docs/motor/0805_POWERSHELL_PUBLISH_SKILL_SYNC_WITH_PROVEN_RUNNER_FLOW.md`, `docs/motor/0810_PUBLISH_RUNNER_SCOPE_DISCOVERY_RECOVERY_UX_AND_NO_FALSE_COMPLETED_GUARD.md`, `docs/motor/0830_MVP_REAL_STEP_PILOT_4_SLIGHTLY_MORE_OPERATIONAL.md`, `docs/motor/0840_RUNNER_HOOK_EVIDENCE_MANIFEST_POST_PUBLISH_PACK.md`, `docs/motor/0850_FIRST_REAL_EXTERNAL_WORKFLOW_PILOT.md`, `docs/motor/0860_CODEX_SKILLS_EXTERNAL_WORKFLOW_DRY_RUN_PILOT.md`, `docs/motor/0870_CODEX_SKILLS_FIRST_CONTROLLED_WRITE_PILOT.md`, `docs/motor/0880_CODEX_SKILLS_CONTROLLED_WRITE_REVIEW_AND_DECISION.md`, `docs/motor/0890_CODEX_SKILLS_CONTROLLED_LOCAL_COMMIT_EXECUTION.md`.
+Documenti: `docs/motor/0590_STABLE_POWERSHELL_PUBLISH_RUNNER.md`, `docs/motor/0805_POWERSHELL_PUBLISH_SKILL_SYNC_WITH_PROVEN_RUNNER_FLOW.md`, `docs/motor/0810_PUBLISH_RUNNER_SCOPE_DISCOVERY_RECOVERY_UX_AND_NO_FALSE_COMPLETED_GUARD.md`, `docs/motor/0830_MVP_REAL_STEP_PILOT_4_SLIGHTLY_MORE_OPERATIONAL.md`, `docs/motor/0840_RUNNER_HOOK_EVIDENCE_MANIFEST_POST_PUBLISH_PACK.md`, `docs/motor/0850_FIRST_REAL_EXTERNAL_WORKFLOW_PILOT.md`, `docs/motor/0860_CODEX_SKILLS_EXTERNAL_WORKFLOW_DRY_RUN_PILOT.md`, `docs/motor/0870_CODEX_SKILLS_FIRST_CONTROLLED_WRITE_PILOT.md`, `docs/motor/0880_CODEX_SKILLS_CONTROLLED_WRITE_REVIEW_AND_DECISION.md`, `docs/motor/0890_CODEX_SKILLS_CONTROLLED_LOCAL_COMMIT_EXECUTION.md`, `docs/motor/0900_CODEX_SKILLS_CONTROLLED_PUSH_OR_ROLLBACK_DECISION.md`.
 
 ---
 

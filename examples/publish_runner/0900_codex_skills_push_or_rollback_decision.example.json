@@ -1,0 +1,36 @@
+{
+  "step": "0900",
+  "name": "Codex_Skills_Controlled_Push_Or_Rollback_Decision",
+  "status": "decision_pack_created",
+  "external_repo": "Codex_Skills",
+  "external_repo_path": "C:\\Users\\alberto.ferrari\\.agents\\skills",
+  "external_repo_branch": "main",
+  "external_repo_remote": "https://github.com/AlbertoFerrari71/Codex_Skills.git",
+  "local_commit_hash": "b488745",
+  "local_commit_message": "0870 add ASF controlled write pilot note",
+  "local_commit_files": [
+    "docs/asf_external_pilot/0870_CONTROLLED_WRITE_PILOT.md"
+  ],
+  "external_repo_status_clean": true,
+  "external_repo_status_sb": "## main...origin/main [ahead 1]",
+  "ahead_behind_source": "local branch -vv without fetch",
+  "ahead_behind_live_verified": false,
+  "asf_step_0890_found_on_main": true,
+  "asf_step_0890_commit": "9d9356d",
+  "push_performed_in_0900": false,
+  "rollback_performed_in_0900": false,
+  "commit_performed_in_0900": false,
+  "pr_performed_in_0900": false,
+  "merge_performed_in_0900": false,
+  "deploy_performed_in_0900": false,
+  "tag_performed_in_0900": false,
+  "decision_options": [
+    "controlled_push",
+    "local_rollback",
+    "keep_local_temporarily"
+  ],
+  "prepared_commands_executed": false,
+  "human_gate_required_for_next_step": true,
+  "recommended_default": "keep_local_temporarily_until_explicit_decision",
+  "next_step": "0910) Codex_Skills Controlled Push Execution or Local Rollback"
+}
