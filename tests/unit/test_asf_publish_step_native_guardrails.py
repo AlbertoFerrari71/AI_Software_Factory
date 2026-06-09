@@ -58,6 +58,9 @@ def test_native_checked_wrapper_is_fail_closed() -> None:
         "AllowGitPushInformationalStderrWithZeroExit",
         "Test-GitPushInformationalStderrLine",
         "Write-NonBlockingGitPushInformationalStderr",
+        "AllowGitPullMainInformationalStderrWithZeroExit",
+        "Test-GitPullMainInformationalStderrLine",
+        "Write-NonBlockingGitPullMainInformationalStderr",
         "Git command wrote unexpected stderr",
     ]:
         assert fragment in wrapper
@@ -663,3 +666,265 @@ def test_phase_b_git_push_informational_stderr_with_nonzero_exit_is_blocking(tmp
     assert "Native command failed. Label=Push branch" in combined
     assert "Push branch stderr info treated as non-blocking" not in combined
     assert "gh pr list" not in calls
+
+
+def write_phase_c_pull_main_config(tmp_path: Path, repo: Path, bridge: Path) -> Path:
+    config = tmp_path / "publish_config_phase_c.json"
+    config.write_text(
+        json.dumps(
+            {
+                "step": "0924-D",
+                "name": "Pull_Main_Informational_Stderr_Test",
+                "repo_path": str(repo),
+                "bridge_root": str(bridge),
+                "branch": "step-0924-d-pull-main-stderr-test",
+                "commit_message": "0924-D test pull main stderr",
+                "pr_title": "0924-D test pull main stderr",
+                "pr_body": "Test-only config for safe git pull main stderr handling.",
+                "pr_number": "87",
+                "next_step": "0930) External Repo Push Pattern Generalization",
+                "expected_files": ["scripts/asf_publish_step.ps1"],
+                "phase_a_checks": [{"name": "Noop", "argv": ["pwsh", "-NoProfile", "-Command", "Write-Output noop"]}],
+                "phase_c_checks": [{"name": "Noop", "argv": ["pwsh", "-NoProfile", "-Command", "Write-Output noop"]}],
+                "allow_no_github_checks_reported": True,
+                "log_max_count": 3,
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    return config
+
+
+def write_phase_c_fake_tools(tmp_path: Path) -> tuple[Path, Path]:
+    tools = tmp_path / "tools"
+    tools.mkdir()
+    log = tmp_path / "tool_calls.log"
+    python_exe = sys.executable
+
+    git_fake = tools / "git_fake.py"
+    git_fake.write_text(
+        """from __future__ import annotations
+
+import os
+import sys
+
+args = sys.argv[1:]
+scenario = os.environ.get("ASF_FAKE_GIT_PULL_SCENARIO", "safe_fetch")
+log_path = os.environ.get("ASF_FAKE_TOOL_LOG")
+if log_path:
+    with open(log_path, "a", encoding="utf-8") as handle:
+        handle.write("git " + " ".join(args) + "\\n")
+
+if args == ["switch", "main"]:
+    sys.exit(0)
+
+if args == ["pull", "--ff-only", "origin", "main"]:
+    if scenario == "safe_fetch":
+        print("From https://github.com/AlbertoFerrari71/AI_Software_Factory", file=sys.stderr)
+        print(" * branch            main       -> FETCH_HEAD", file=sys.stderr)
+        print("75d57f6..fa20db6  main       -> origin/main", file=sys.stderr)
+        sys.exit(0)
+    if scenario == "safe_fetch_three_dot":
+        print("From https://github.com/AlbertoFerrari71/AI_Software_Factory", file=sys.stderr)
+        print("75d57f6...fa20db6  main       -> origin/main", file=sys.stderr)
+        sys.exit(0)
+    if scenario == "safe_already":
+        print("Already up to date.", file=sys.stderr)
+        sys.exit(0)
+    if scenario == "safe_updating":
+        print("Updating 75d57f6..fa20db6", file=sys.stderr)
+        sys.exit(0)
+    if scenario == "wrong_ref":
+        print("75d57f6..fa20db6  main       -> origin/feature", file=sys.stderr)
+        sys.exit(0)
+    if scenario == "unexpected":
+        print("fatal: credential helper failed", file=sys.stderr)
+        sys.exit(0)
+    if scenario == "nonzero":
+        print("From https://github.com/AlbertoFerrari71/AI_Software_Factory", file=sys.stderr)
+        print("75d57f6..fa20db6  main       -> origin/main", file=sys.stderr)
+        sys.exit(1)
+    sys.exit(0)
+
+if args == ["--no-pager", "diff", "--check"]:
+    sys.exit(0)
+
+if args == ["status", "--porcelain=v1", "--untracked-files=all"]:
+    sys.exit(0)
+
+if len(args) == 3 and args[:2] == ["--no-pager", "log"]:
+    print("fa20db6 0924 remove automatic clipboard writes (#87)")
+    sys.exit(0)
+
+sys.exit(0)
+""",
+        encoding="utf-8",
+    )
+
+    gh_fake = tools / "gh_fake.py"
+    gh_fake.write_text(
+        """from __future__ import annotations
+
+import os
+import sys
+
+args = sys.argv[1:]
+log_path = os.environ.get("ASF_FAKE_TOOL_LOG")
+if log_path:
+    with open(log_path, "a", encoding="utf-8") as handle:
+        handle.write("gh " + " ".join(args) + "\\n")
+
+if args == ["pr", "view", "87"]:
+    sys.exit(0)
+
+if args == ["pr", "checks", "87", "--watch"]:
+    sys.exit(0)
+
+if args == ["pr", "merge", "87", "--squash"]:
+    sys.exit(0)
+
+sys.exit(0)
+""",
+        encoding="utf-8",
+    )
+
+    for tool_name in ["git", "gh"]:
+        fake_name = f"{tool_name}_fake.py"
+        cmd_tool = tools / f"{tool_name}.cmd"
+        cmd_tool.write_text(
+            "\n".join(
+                [
+                    "@echo off",
+                    f"\"{python_exe}\" \"%~dp0{fake_name}\" %*",
+                    "exit /b %ERRORLEVEL%",
+                ]
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        sh_tool = tools / tool_name
+        sh_tool.write_text(
+            "\n".join(
+                [
+                    "#!/usr/bin/env sh",
+                    f"exec \"{python_exe}\" \"$(dirname \"$0\")/{fake_name}\" \"$@\"",
+                ]
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        sh_tool.chmod(0o755)
+
+    return tools, log
+
+
+def run_phase_c_with_fake_pull_main(
+    tmp_path: Path, scenario: str
+) -> tuple[subprocess.CompletedProcess[str], Path, Path]:
+    repo = tmp_path / "fake_repo"
+    repo.mkdir()
+    (repo / ".git").mkdir()
+    (repo / "scripts").mkdir()
+    (repo / "scripts" / "asf_publish_step.ps1").write_text("fake\n", encoding="utf-8")
+    bridge = tmp_path / "bridge"
+    config = write_phase_c_pull_main_config(tmp_path, repo, bridge)
+    tools, log = write_phase_c_fake_tools(tmp_path)
+
+    env = os.environ.copy()
+    env["PATH"] = str(tools) + os.pathsep + env.get("PATH", "")
+    env["ASF_FAKE_TOOL_LOG"] = str(log)
+    env["ASF_FAKE_GIT_PULL_SCENARIO"] = scenario
+
+    result = subprocess.run(
+        [
+            "pwsh",
+            "-NoProfile",
+            "-ExecutionPolicy",
+            "Bypass",
+            "-File",
+            str(SCRIPT),
+            "-Config",
+            str(config),
+            "-Phase",
+            "C",
+            "-PrNumber",
+            "87",
+            "-ApproveMerge",
+            "-BridgeRoot",
+            str(bridge),
+        ],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+        check=False,
+        env=env,
+    )
+    return result, log, bridge
+
+
+def phase_c_combined_output(result: subprocess.CompletedProcess[str], bridge: Path) -> str:
+    parts = [result.stdout, result.stderr]
+    for path in sorted(bridge.glob("*Output_Compatto*.md")):
+        parts.append(read(path))
+    for path in sorted(bridge.glob("*Output_Completo*.txt")):
+        parts.append(read(path))
+    return "\n".join(parts)
+
+
+@pytest.mark.skipif(not pwsh_available(), reason="pwsh executable not available")
+@pytest.mark.parametrize(
+    ("scenario", "expected_line"),
+    [
+        ("safe_fetch", "75d57f6..fa20db6  main       -> origin/main"),
+        ("safe_fetch_three_dot", "75d57f6...fa20db6  main       -> origin/main"),
+        ("safe_already", "Already up to date."),
+        ("safe_updating", "Updating 75d57f6..fa20db6"),
+    ],
+)
+def test_phase_c_git_pull_main_safe_stderr_with_zero_exit_is_non_blocking(
+    tmp_path: Path, scenario: str, expected_line: str
+) -> None:
+    result, log, bridge = run_phase_c_with_fake_pull_main(tmp_path, scenario)
+    combined = phase_c_combined_output(result, bridge)
+    calls = read(log)
+
+    assert result.returncode == 0, combined
+    assert "git pull --ff-only origin main" in calls
+    assert expected_line in combined
+    assert "Pull main stderr info treated as non-blocking" in combined
+    assert "Git command wrote unexpected stderr. Label=Pull main" not in combined
+    assert "git --no-pager diff --check" in calls
+    assert "PHASE C completed" in combined
+
+
+@pytest.mark.skipif(not pwsh_available(), reason="pwsh executable not available")
+@pytest.mark.parametrize(("scenario", "expected_line"), [("unexpected", "credential helper failed"), ("wrong_ref", "origin/feature")])
+def test_phase_c_git_pull_main_unexpected_stderr_with_zero_exit_is_blocking(
+    tmp_path: Path, scenario: str, expected_line: str
+) -> None:
+    result, log, bridge = run_phase_c_with_fake_pull_main(tmp_path, scenario)
+    combined = phase_c_combined_output(result, bridge)
+    calls = read(log)
+
+    assert result.returncode == 1
+    assert "git pull --ff-only origin main" in calls
+    assert "Git command wrote unexpected stderr. Label=Pull main" in combined
+    assert expected_line in combined
+    assert "Pull main stderr info treated as non-blocking" not in combined
+    assert "git --no-pager diff --check" not in calls
+    assert "PHASE C completed" not in combined
+
+
+@pytest.mark.skipif(not pwsh_available(), reason="pwsh executable not available")
+def test_phase_c_git_pull_main_informational_stderr_with_nonzero_exit_is_blocking(tmp_path: Path) -> None:
+    result, log, bridge = run_phase_c_with_fake_pull_main(tmp_path, "nonzero")
+    combined = phase_c_combined_output(result, bridge)
+    calls = read(log)
+
+    assert result.returncode == 1
+    assert "git pull --ff-only origin main" in calls
+    assert "Native command failed. Label=Pull main" in combined
+    assert "Pull main stderr info treated as non-blocking" not in combined
+    assert "git --no-pager diff --check" not in calls
+    assert "PHASE C completed" not in combined

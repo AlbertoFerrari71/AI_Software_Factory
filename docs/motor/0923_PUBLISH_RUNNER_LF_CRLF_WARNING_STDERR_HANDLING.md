@@ -150,6 +150,32 @@ Per rendere la whitelist verificabile anche su Windows PowerShell 5.1,
 prima di applicare la policy stderr. Non viene reso non bloccante tutto stderr
 di `git push`: ogni riga resta classificata singolarmente.
 
+## Follow-up S2: stderr informativo git pull main
+
+Durante Phase C, dopo il merge riuscito, `git pull --ff-only origin main` puo'
+terminare con exit code `0` e scrivere su stderr messaggi informativi di fetch,
+come:
+
+```text
+From https://github.com/AlbertoFerrari71/AI_Software_Factory
+* branch            main       -> FETCH_HEAD
+75d57f6..fa20db6  main       -> origin/main
+```
+
+Il runner li tratta come info non bloccanti solo quando:
+
+- la label e' `Pull main`;
+- il comando e' `git pull --ff-only origin main`;
+- l'exit code e' `0`;
+- ogni riga stderr e' uno dei pattern safe ammessi:
+  `From <remote>`, `* branch main -> FETCH_HEAD`,
+  `<oldsha>..<newsha> main -> origin/main`,
+  `<oldsha>...<newsha> main -> origin/main`,
+  `Already up to date.` oppure `Updating <oldsha>..<newsha>`.
+
+Stderr non whitelisted, label diverse, argv diversi o exit code non zero
+restano bloccanti. Non viene reso non bloccante tutto stderr di `git pull`.
+
 ## Test
 
 Copertura aggiunta senza chiamate reali a GitHub:
@@ -177,6 +203,9 @@ Copertura aggiunta senza chiamate reali a GitHub:
   `..` o `...`: PASS.
 - Phase B con stderr update branch riferito a un branch diverso: FAIL.
 - Phase B con stderr push non whitelisted o exit code non zero: FAIL.
+- Phase C con fake `git pull --ff-only origin main` e stderr informativo safe:
+  PASS.
+- Phase C con stderr pull non whitelisted o exit code non zero: FAIL.
 
 Test dedicato:
 

@@ -172,6 +172,13 @@ Lo stderr informativo di `git push -u origin <branch>` e' ammesso solo con label
 `* [new branch] <branch> -> <branch>`, tracking branch origin). Stderr push non
 whitelisted o exit code non zero restano bloccanti.
 
+Lo stderr informativo di `git pull --ff-only origin main` e' ammesso solo con
+label `Pull main`, exit code `0`, e righe safe note di fetch/allineamento
+(`From <remote>`, `* branch main -> FETCH_HEAD`, update `main -> origin/main`,
+`Already up to date.`, `Updating <oldsha>..<newsha>`). Stderr pull non
+whitelisted, label diverse, argv diversi o exit code non zero restano
+bloccanti.
+
 ## 10. Esempi
 
 Codice buono:
