@@ -177,6 +177,11 @@ pack read-only: A) push controllato, B) rollback locale, C) keep local
 temporaneo. Nessuna opzione e' stata eseguita; lo step 0910 richiede decisione
 esplicita di Alberto.
 
+Dopo STEP 0920, ASF registra la closure/evidence del primo push reale
+controllato su `Codex_Skills`: `36b065d..bec96ff main -> main`, exit code 0,
+commit `b488745` e `bec96ff`, verifica read-only via `$env:USERPROFILE` e
+nota no-fetch/no-pull. Il prossimo step consigliato e' la generalizzazione 0930.
+
 Se `main...origin/main [ahead N]` contiene merge locali gia' verificati, non fare push diretto a `main`: creare un publish branch da `main`, pushare quel branch, aprire PR, mergiare, riallineare `main` e verificare.
 
 Template:
@@ -200,6 +205,8 @@ docs/motor/0870_CODEX_SKILLS_FIRST_CONTROLLED_WRITE_PILOT.md
 docs/motor/0880_CODEX_SKILLS_CONTROLLED_WRITE_REVIEW_AND_DECISION.md
 docs/motor/0890_CODEX_SKILLS_CONTROLLED_LOCAL_COMMIT_EXECUTION.md
 docs/motor/0900_CODEX_SKILLS_CONTROLLED_PUSH_OR_ROLLBACK_DECISION.md
+docs/motor/0920_CODEX_SKILLS_REMOTE_VERIFICATION_AND_EVIDENCE_CLOSURE.md
+docs/motor/0920_CODEX_SKILLS_REMOTE_PUSH_EVIDENCE_REPORT.md
 ```
 
 ---

@@ -4,6 +4,60 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.92.1] - 2026-06-09
+
+### Added
+
+- STEP 0921 - Publish Runner PowerShell Compatibility Regression Fix.
+- Documento `docs/motor/0921_PUBLISH_RUNNER_POWERSHELL_COMPATIBILITY_REGRESSION_FIX.md`.
+- Evidence JSON `examples/publish_runner/0921_publish_runner_regression_fix_evidence.example.json`.
+- Helper DOCX valido `scripts/asf_minimal_docx.py`.
+- Test `tests/unit/test_publish_runner_powershell_compat_regression_fix.py`.
+
+### Changed
+
+- `scripts/asf_publish_step.ps1` gestisce in modo sicuro `PSNativeCommandUseErrorActionPreference`, `ProcessStartInfo.ArgumentList` e fallback DOCX.
+- STEP 0921-B: i JSON runner `Publish_Config_Draft` e `Recovery_Out_Of_Scope_Suggested_Config` sono scritti in UTF-8 senza BOM.
+- Workflow Health, roadmap, decision log e Project Workflow Index riconoscono il fix 0921.
+
+### Guardrails
+
+- Nessuna pubblicazione 0920 eseguita nello step 0921.
+- Nessun commit, push, PR, merge, deploy, tag o modifica a `Codex_Skills`.
+
+### Next
+
+- Prossimo step consigliato: `0920 publish retry after 0921 fix`.
+
+---
+
+## [0.92.0] - 2026-06-09
+
+### Added
+
+- STEP 0920 - Codex_Skills Remote Verification and Evidence Closure.
+- Closure pack `docs/motor/0920_CODEX_SKILLS_REMOTE_VERIFICATION_AND_EVIDENCE_CLOSURE.md`.
+- Evidence report `docs/motor/0920_CODEX_SKILLS_REMOTE_PUSH_EVIDENCE_REPORT.md`.
+- Evidence JSON `examples/publish_runner/0920_codex_skills_remote_verification_evidence.example.json`.
+- Test `tests/unit/test_codex_skills_remote_verification_evidence_closure.py`.
+
+### Changed
+
+- README, roadmap, decision log, Project Workflow Index, Workflow Health Check, Quick Reference e Command Cookbook riconoscono la closure evidence 0920.
+- Workflow Health Check e relativo test tracciano il nuovo evidence pack senza accedere a repo esterne.
+
+### Guardrails
+
+- `Codex_Skills` e' stata verificata solo read-only via `Join-Path $env:USERPROFILE ".agents\skills"`.
+- La verifica remota e' basata sul tracking locale post-push; nessun fetch/pull e' stato eseguito nello STEP 0920.
+- Nessun commit, push, PR, merge, deploy, tag, reset, clean, rebase o modifica a `Codex_Skills`.
+
+### Next
+
+- Prossimo step consigliato: `0930) External Repo Push Pattern Generalization`.
+
+---
+
 ## [0.90.0] - 2026-06-08
 
 ### Added

@@ -1,7 +1,7 @@
 # AI Software Factory
 
 **Metodo interno:** Codex Alchemy Method
-**Stato:** STEP 0900 - Codex_Skills Controlled Push or Rollback Decision
+**Stato:** STEP 0921 - Publish Runner PowerShell Compatibility Regression Fix
 **Data bootstrap:** 2026-05-25
 **Strategia:** local-first personale, progettato per evoluzione SaaS
 
@@ -28,7 +28,7 @@ Il metodo interno si chiama **Codex Alchemy Method**: l'idea grezza viene trasfo
 
 ## 2. Stato repository
 
-Questo repository e' nello stato **STEP 0900 - Codex_Skills Controlled Push or Rollback Decision**.
+Questo repository e' nello stato **STEP 0921 - Publish Runner PowerShell Compatibility Regression Fix**.
 
 Sono presenti:
 
@@ -92,6 +92,8 @@ Sono presenti:
 - STEP 0880 - Codex_Skills Controlled Write Review and Rollback/Commit Decision, con review read-only del file 0870, decision matrix, comandi preparati ma non eseguiti e default rollback human-gated.
 - STEP 0890 - Codex_Skills Controlled Local Commit Execution, con decisione umana B, commit locale controllato del solo file 0870 in `Codex_Skills`, evidence manifest e nessun push/PR/merge/deploy/tag.
 - STEP 0900 - Codex_Skills Controlled Push or Rollback Decision, con review read-only del commit locale `b488745`, decision matrix push/rollback/keep local, comandi preparati ma non eseguiti e human gate verso 0910.
+- STEP 0920 - Codex_Skills Remote Verification and Evidence Closure, con evidence del push reale 0910A-3 `36b065d..bec96ff main -> main`, verifica read-only via `$env:USERPROFILE`, JSON evidence e nessuna modifica a `Codex_Skills`.
+- STEP 0921 - Publish Runner PowerShell Compatibility Regression Fix, con safe handling di `PSNativeCommandUseErrorActionPreference`, fallback DOCX valido, compatibilita' `ProcessStartInfo.ArgumentList` e test regressione.
 
 Non sono ancora presenti:
 
@@ -102,7 +104,7 @@ Non sono ancora presenti:
 - integrazioni MCP;
 - automazioni Codex operative;
 - Controlled Codex Executor;
-- esecuzione push/rollback/mantenimento locale separata per il commit `Codex_Skills`;
+- generalizzazione del pattern external repo controlled push per altre repo;
 - logica applicativa reale.
 
 ---
@@ -406,6 +408,9 @@ docs/motor/0870_CODEX_SKILLS_FIRST_CONTROLLED_WRITE_PILOT.md
 docs/motor/0880_CODEX_SKILLS_CONTROLLED_WRITE_REVIEW_AND_DECISION.md
 docs/motor/0890_CODEX_SKILLS_CONTROLLED_LOCAL_COMMIT_EXECUTION.md
 docs/motor/0900_CODEX_SKILLS_CONTROLLED_PUSH_OR_ROLLBACK_DECISION.md
+docs/motor/0920_CODEX_SKILLS_REMOTE_VERIFICATION_AND_EVIDENCE_CLOSURE.md
+docs/motor/0920_CODEX_SKILLS_REMOTE_PUSH_EVIDENCE_REPORT.md
+docs/motor/0921_PUBLISH_RUNNER_POWERSHELL_COMPATIBILITY_REGRESSION_FIX.md
 ```
 
 ---
@@ -464,7 +469,7 @@ policies/path_policy.v0.json
 ## 11. Prossimo step
 
 ```text
-0910) Codex_Skills Controlled Push Execution or Local Rollback
+0920 publish retry after 0921 fix
 ```
 
-Obiettivo: eseguire solo l'opzione approvata esplicitamente da Alberto tra push controllato, rollback locale o mantenimento temporaneo del commit `Codex_Skills`, senza automatismi di PR, merge o deploy da Codex.
+Obiettivo: riprovare la pubblicazione controllata del pacchetto locale 0920 + 0921 dopo il fix del publish runner, senza bypassare il full pytest.

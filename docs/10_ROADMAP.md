@@ -121,7 +121,10 @@ Esempio:
 | 880 | Codex_Skills Controlled Write Review and Rollback/Commit Decision | Decidere con review umana se fare rollback o preparare pubblicazione separata | Decision report, state report, matrix, comandi non eseguiti e evidence JSON | Post-MVP Pilot | Completato |
 | 890 | Codex_Skills Controlled Local Commit Execution | Eseguire la decisione umana B con commit locale controllato del solo file 0870 | Commit locale Codex_Skills, result report, evidence JSON e nessun push/PR/merge/deploy/tag | Post-MVP Pilot | Completato |
 | 900 | Codex_Skills Controlled Push or Rollback Decision | Decidere se pubblicare, rollbackare o mantenere locale il commit Codex_Skills | Decision pack, state report, matrix, comandi non eseguiti ed evidence JSON | Post-MVP Pilot | Completato |
-| 910 | Codex_Skills Controlled Push Execution or Local Rollback | Eseguire solo l'opzione approvata esplicitamente dopo il decision pack 0900 | Push controllato, rollback locale oppure keep local con gate umano | Post-MVP Pilot | Proposto |
+| 910 | Codex_Skills Controlled Push Execution or Local Rollback | Eseguire solo l'opzione approvata esplicitamente dopo il decision pack 0900 | Push controllato completato nello step 0910A-3 | Post-MVP Pilot | Completato |
+| 920 | Codex_Skills Remote Verification and Evidence Closure | Registrare in ASF la closure/evidence del primo push reale controllato su repo esterna | Closure pack, evidence report, JSON, test e verifica read-only Codex_Skills | Post-MVP Pilot | Completato |
+| 921 | Publish Runner PowerShell Compatibility Regression Fix | Riparare regressioni emerse durante il publish 0920 bloccato dal full pytest | Safe PSNative, DOCX valido, ArgumentList compatibility, recovery/state hooks e test | Post-MVP Hardening | Completato |
+| 930 | External Repo Push Pattern Generalization | Generalizzare il pattern del controlled push esterno dopo la closure 0920 | Regole riusabili, guardrail e template per future repo esterne | Post-MVP Pilot | Proposto |
 
 ---
 
@@ -149,10 +152,26 @@ Prossimo step consigliato dopo 0890:
 
 ---
 
-Prossimo step consigliato dopo 0900:
+Prossimo step consigliato dopo 0900, ora eseguito nello STEP 0910A-3:
 
 ```text
 0910) Codex_Skills Controlled Push Execution or Local Rollback
+```
+
+---
+
+Prossimo step consigliato dopo 0920:
+
+```text
+0930) External Repo Push Pattern Generalization
+```
+
+---
+
+Prossimo step consigliato dopo 0921:
+
+```text
+0920 publish retry after 0921 fix
 ```
 
 ---

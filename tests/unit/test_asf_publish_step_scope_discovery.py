@@ -151,6 +151,7 @@ def test_prepare_config_generates_draft_config_without_warning_paths(tmp_path: P
     review_path = bridge / "0810-PrepareConfig_Review_Publish_Runner_Scope_Discovery_Test.md"
     assert config_path.exists()
     assert review_path.exists()
+    assert config_path.read_bytes()[:3] != b"\xef\xbb\xbf"
 
     config = json.loads(read(config_path))
     assert sorted(config["expected_files"]) == sorted(
@@ -217,6 +218,7 @@ def test_out_of_scope_blocks_and_writes_recovery_suggested_config(tmp_path: Path
     suggested_config = bridge / "0810-Recovery_Out_Of_Scope_Suggested_Config_Out_Of_Scope_Test.json"
     assert recovery_report.exists()
     assert suggested_config.exists()
+    assert suggested_config.read_bytes()[:3] != b"\xef\xbb\xbf"
     suggested = json.loads(read(suggested_config))
     assert sorted(suggested["expected_files"]) == sorted(
         [
