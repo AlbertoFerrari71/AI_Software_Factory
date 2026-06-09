@@ -1103,6 +1103,59 @@ function Write-NonBlockingGitSwitchInformationalStderr {
     Add-WarningLine ("{0} stderr info treated as non-blocking: {1}" -f $Label, $Line.Trim())
 }
 
+function Get-GitPushBranchArgument {
+    param([string[]]$Arguments)
+    $safeArgs = @($Arguments)
+    if ($safeArgs.Count -ne 4 `
+            -or -not [string]::Equals([string]$safeArgs[0], "push", [System.StringComparison]::OrdinalIgnoreCase) `
+            -or -not [string]::Equals([string]$safeArgs[1], "-u", [System.StringComparison]::Ordinal) `
+            -or -not [string]::Equals([string]$safeArgs[2], "origin", [System.StringComparison]::Ordinal)) {
+        return ""
+    }
+    $branch = [string]$safeArgs[3]
+    if (-not (Test-GitSwitchBranchArgument -Branch $branch)) {
+        return ""
+    }
+    return $branch
+}
+
+function Test-GitPushInformationalStderrLine {
+    param(
+        [string]$Line,
+        [string[]]$Arguments
+    )
+    if ([string]::IsNullOrWhiteSpace($Line)) {
+        return $true
+    }
+    $branch = Get-GitPushBranchArgument -Arguments @($Arguments)
+    if ([string]::IsNullOrWhiteSpace($branch)) {
+        return $false
+    }
+    $text = $Line.Trim()
+    if ($text.StartsWith("remote:", [System.StringComparison]::Ordinal)) {
+        return $true
+    }
+    if ($text.StartsWith("To ", [System.StringComparison]::Ordinal) -and $text.Length -gt 3) {
+        return $true
+    }
+    $escapedBranch = [regex]::Escape($branch)
+    if ($text -match ("^\* \[new branch\]\s+{0}\s+->\s+{0}$" -f $escapedBranch)) {
+        return $true
+    }
+    if ([string]::Equals($text, ("branch '{0}' set up to track 'origin/{0}'." -f $branch), [System.StringComparison]::Ordinal)) {
+        return $true
+    }
+    return $false
+}
+
+function Write-NonBlockingGitPushInformationalStderr {
+    param(
+        [string]$Label,
+        [string]$Line
+    )
+    Add-WarningLine ("{0} stderr info treated as non-blocking: {1}" -f $Label, $Line.Trim())
+}
+
 function Invoke-NativeChecked {
     param(
         [Parameter(Mandatory = $true)]
@@ -1127,7 +1180,10 @@ function Invoke-NativeChecked {
         [switch]$AllowGitLfCrlfWarningsWithZeroExit,
 
         [Parameter()]
-        [switch]$AllowGitSwitchInformationalStderrWithZeroExit
+        [switch]$AllowGitSwitchInformationalStderrWithZeroExit,
+
+        [Parameter()]
+        [switch]$AllowGitPushInformationalStderrWithZeroExit
     )
     $commandName = Assert-NonEmptyString -Value $Command -Name "Native command"
     $displayLabel = $Label
@@ -1190,6 +1246,10 @@ function Invoke-NativeChecked {
         }
         if ($AllowGitSwitchInformationalStderrWithZeroExit -and $isGit -and $exitCode -eq 0 -and (Test-GitSwitchInformationalStderrLine -Line $line -Arguments @($Arguments))) {
             Write-NonBlockingGitSwitchInformationalStderr -Label $displayLabel -Line $line
+            continue
+        }
+        if ($AllowGitPushInformationalStderrWithZeroExit -and $isGit -and $exitCode -eq 0 -and (Test-GitPushInformationalStderrLine -Line $line -Arguments @($Arguments))) {
+            Write-NonBlockingGitPushInformationalStderr -Label $displayLabel -Line $line
             continue
         }
         $script:LogLines.Add([string]$line)
@@ -1287,6 +1347,25 @@ function Test-ArgvCommandIsGitSwitch {
     return -not [string]::IsNullOrWhiteSpace((Get-GitSwitchInformationalStderrLine -Arguments @($args)))
 }
 
+function Test-ArgvCommandIsPushBranchGitPush {
+    param(
+        [string]$Name,
+        [string[]]$Argv
+    )
+    if (-not [string]::Equals(([string]$Name).Trim(), "Push branch", [System.StringComparison]::OrdinalIgnoreCase)) {
+        return $false
+    }
+    $safeArgv = @($Argv)
+    if ($safeArgv.Count -ne 5) {
+        return $false
+    }
+    if (-not (Test-NativeCommandIsGit -CommandName ([string]$safeArgv[0]))) {
+        return $false
+    }
+    $args = @($safeArgv[1..($safeArgv.Count - 1)])
+    return -not [string]::IsNullOrWhiteSpace((Get-GitPushBranchArgument -Arguments @($args)))
+}
+
 function Invoke-ArgvCommand {
     param(
         [string]$Name,
@@ -1304,14 +1383,15 @@ function Invoke-ArgvCommand {
     $allowGitLfCrlfWarningsWithZeroExit = (Test-ArgvCommandIsGitDiffCheck -Name $Name -Argv @($safeArgv)) `
         -or (Test-ArgvCommandIsStageExpectedFilesGitAdd -Name $Name -Argv @($safeArgv))
     $allowGitSwitchInformationalStderrWithZeroExit = Test-ArgvCommandIsGitSwitch -Argv @($safeArgv)
+    $allowGitPushInformationalStderrWithZeroExit = Test-ArgvCommandIsPushBranchGitPush -Name $Name -Argv @($safeArgv)
 
     if ($AllowFailure) {
         # Tolerant native probes are allowed only when the caller immediately
         # inspects ExitCode and decides the next guarded action.
-        return Invoke-NativeChecked -Command $exe -Arguments $commandArgs -Label $Name -WorkingDirectory $WorkingDirectory -AllowAnyExitCode -AllowGitLfCrlfWarningsWithZeroExit:$allowGitLfCrlfWarningsWithZeroExit -AllowGitSwitchInformationalStderrWithZeroExit:$allowGitSwitchInformationalStderrWithZeroExit
+        return Invoke-NativeChecked -Command $exe -Arguments $commandArgs -Label $Name -WorkingDirectory $WorkingDirectory -AllowAnyExitCode -AllowGitLfCrlfWarningsWithZeroExit:$allowGitLfCrlfWarningsWithZeroExit -AllowGitSwitchInformationalStderrWithZeroExit:$allowGitSwitchInformationalStderrWithZeroExit -AllowGitPushInformationalStderrWithZeroExit:$allowGitPushInformationalStderrWithZeroExit
     }
 
-    return Invoke-NativeChecked -Command $exe -Arguments $commandArgs -AllowedExitCodes @(0) -Label $Name -WorkingDirectory $WorkingDirectory -AllowGitLfCrlfWarningsWithZeroExit:$allowGitLfCrlfWarningsWithZeroExit -AllowGitSwitchInformationalStderrWithZeroExit:$allowGitSwitchInformationalStderrWithZeroExit
+    return Invoke-NativeChecked -Command $exe -Arguments $commandArgs -AllowedExitCodes @(0) -Label $Name -WorkingDirectory $WorkingDirectory -AllowGitLfCrlfWarningsWithZeroExit:$allowGitLfCrlfWarningsWithZeroExit -AllowGitSwitchInformationalStderrWithZeroExit:$allowGitSwitchInformationalStderrWithZeroExit -AllowGitPushInformationalStderrWithZeroExit:$allowGitPushInformationalStderrWithZeroExit
 }
 
 function Invoke-Git {

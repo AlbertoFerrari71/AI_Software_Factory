@@ -104,6 +104,28 @@ questo warning come non bloccante solo quando:
 Stderr generico su `git add`, label diverse o exit code non zero restano
 bloccanti.
 
+## Follow-up O2: stderr informativo git push
+
+Durante Phase B, `git push -u origin <branch>` puo' terminare con exit code `0`
+e scrivere su stderr messaggi informativi di Git/GitHub, come:
+
+```text
+remote:
+remote: Create a pull request for '<branch>' on GitHub by visiting:
+To <remote-url>
+* [new branch]      <branch> -> <branch>
+branch '<branch>' set up to track 'origin/<branch>'.
+```
+
+Il runner li tratta come info non bloccanti solo quando:
+
+- la label e' `Push branch`;
+- il comando e' `git push -u origin <branch>`;
+- l'exit code e' `0`;
+- ogni riga stderr e' uno dei pattern safe ammessi.
+
+Stderr non whitelisted o exit code non zero restano bloccanti.
+
 ## Test
 
 Copertura aggiunta senza chiamate reali a GitHub:
@@ -125,6 +147,9 @@ Copertura aggiunta senza chiamate reali a GitHub:
 - Phase B con fake `git add -- README.md` e warning LF/CRLF: PASS.
 - Phase B con stderr non whitelisted o exit code non zero su `git add --`:
   FAIL.
+- Phase B con fake `git push -u origin <branch>` e stderr informativo safe:
+  PASS.
+- Phase B con stderr push non whitelisted o exit code non zero: FAIL.
 
 Test dedicato:
 

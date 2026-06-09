@@ -51,6 +51,9 @@ def test_native_checked_wrapper_is_fail_closed() -> None:
         "AllowGitSwitchInformationalStderrWithZeroExit",
         "Test-GitSwitchInformationalStderrLine",
         "Write-NonBlockingGitSwitchInformationalStderr",
+        "AllowGitPushInformationalStderrWithZeroExit",
+        "Test-GitPushInformationalStderrLine",
+        "Write-NonBlockingGitPushInformationalStderr",
         "Git command wrote unexpected stderr",
     ]:
         assert fragment in wrapper
@@ -340,7 +343,25 @@ if args == ["add", "--", "README.md"]:
         sys.exit(1)
     sys.exit(0)
 
-if len(args) >= 1 and args[0] in {"commit", "push"}:
+if len(args) >= 1 and args[0] == "commit":
+    sys.exit(0)
+
+if args == ["push", "-u", "origin", branch]:
+    if scenario == "push_info":
+        print("remote:", file=sys.stderr)
+        print(f"remote: Create a pull request for '{branch}' on GitHub by visiting:", file=sys.stderr)
+        print(f"remote:      https://github.com/AlbertoFerrari71/AI_Software_Factory/pull/new/{branch}", file=sys.stderr)
+        print("remote:", file=sys.stderr)
+        print("To https://github.com/AlbertoFerrari71/AI_Software_Factory.git", file=sys.stderr)
+        print(f" * [new branch]      {branch} -> {branch}", file=sys.stderr)
+        print(f"branch '{branch}' set up to track 'origin/{branch}'.", file=sys.stderr)
+        sys.exit(0)
+    if scenario == "push_unexpected":
+        print("fatal: credential helper failed", file=sys.stderr)
+        sys.exit(0)
+    if scenario == "push_nonzero":
+        print(f" * [new branch]      {branch} -> {branch}", file=sys.stderr)
+        sys.exit(1)
     sys.exit(0)
 
 sys.exit(0)
@@ -544,3 +565,47 @@ def test_phase_b_git_add_lf_crlf_warning_with_nonzero_exit_is_blocking(tmp_path:
     assert "Stage expected files stderr warning treated as non-blocking" not in combined
     assert "git commit" not in calls
     assert "git push" not in calls
+
+
+@pytest.mark.skipif(not pwsh_available(), reason="pwsh executable not available")
+def test_phase_b_git_push_informational_stderr_with_zero_exit_is_non_blocking(tmp_path: Path) -> None:
+    result, log, bridge, branch = run_phase_b_with_fake_git_switch(tmp_path, "push_info")
+    combined = phase_b_combined_output(result, bridge)
+    calls = read(log)
+
+    assert result.returncode == 0, combined
+    assert f"git push -u origin {branch}" in calls
+    assert "remote: Create a pull request" in combined
+    assert f"* [new branch]      {branch} -> {branch}" in combined
+    assert f"branch '{branch}' set up to track 'origin/{branch}'." in combined
+    assert "Push branch stderr info treated as non-blocking" in combined
+    assert "Git command wrote unexpected stderr. Label=Push branch" not in combined
+    assert "gh pr list" in calls
+    assert "PHASE B completed" in combined
+
+
+@pytest.mark.skipif(not pwsh_available(), reason="pwsh executable not available")
+def test_phase_b_git_push_unexpected_stderr_with_zero_exit_is_blocking(tmp_path: Path) -> None:
+    result, log, bridge, branch = run_phase_b_with_fake_git_switch(tmp_path, "push_unexpected")
+    combined = phase_b_combined_output(result, bridge)
+    calls = read(log)
+
+    assert result.returncode == 1
+    assert f"git push -u origin {branch}" in calls
+    assert "Git command wrote unexpected stderr. Label=Push branch" in combined
+    assert "credential helper failed" in combined
+    assert "Push branch stderr info treated as non-blocking" not in combined
+    assert "gh pr list" not in calls
+
+
+@pytest.mark.skipif(not pwsh_available(), reason="pwsh executable not available")
+def test_phase_b_git_push_informational_stderr_with_nonzero_exit_is_blocking(tmp_path: Path) -> None:
+    result, log, bridge, branch = run_phase_b_with_fake_git_switch(tmp_path, "push_nonzero")
+    combined = phase_b_combined_output(result, bridge)
+    calls = read(log)
+
+    assert result.returncode == 1
+    assert f"git push -u origin {branch}" in calls
+    assert "Native command failed. Label=Push branch" in combined
+    assert "Push branch stderr info treated as non-blocking" not in combined
+    assert "gh pr list" not in calls

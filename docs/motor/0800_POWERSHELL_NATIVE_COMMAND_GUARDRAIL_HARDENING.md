@@ -167,6 +167,11 @@ controllato dei file attesi, cioe' label `Stage expected files` con comando
 `git add -- <expected files>` ed exit code `0`. Non viene resa globale per gli
 altri `git add`.
 
+Lo stderr informativo di `git push -u origin <branch>` e' ammesso solo con label
+`Push branch`, exit code `0`, e righe safe note (`remote:`, `To <remote-url>`,
+`* [new branch] <branch> -> <branch>`, tracking branch origin). Stderr push non
+whitelisted o exit code non zero restano bloccanti.
+
 ## 10. Esempi
 
 Codice buono:
