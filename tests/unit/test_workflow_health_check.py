@@ -115,6 +115,32 @@ PUBLISH_RUNNER_LF_CRLF_WARNING_DOC = (
     / "motor"
     / "0923_PUBLISH_RUNNER_LF_CRLF_WARNING_STDERR_HANDLING.md"
 )
+SUPERVISED_LOOP_ADR = (
+    ROOT
+    / "docs"
+    / "adr"
+    / "0940_SUPERVISED_LOOP_ARCHITECTURE_WITH_POWERSHELL_FAST_LANE_AND_RECOVERY.md"
+)
+SUPERVISED_LOOP_ARCHITECTURE_DOC = (
+    ROOT / "docs" / "motor" / "0940_SUPERVISED_LOOP_ARCHITECTURE.md"
+)
+POWERSHELL_FAST_LANE_DOC = ROOT / "docs" / "motor" / "0940_POWERSHELL_FAST_LANE_SPEC.md"
+POWERSHELL_RECOVERY_LOOP_DOC = (
+    ROOT / "docs" / "motor" / "0940_POWERSHELL_RECOVERY_LOOP_SPEC.md"
+)
+SUPERVISED_LOOP_STATE_MACHINE_DOC = (
+    ROOT / "docs" / "motor" / "0940_SUPERVISED_LOOP_STATE_MACHINE.md"
+)
+SUPERVISED_LOOP_ROADMAP_DOC = ROOT / "docs" / "motor" / "0940_SUPERVISED_LOOP_ROADMAP.md"
+SUPERVISED_LOOP_STEP_PLAN_TEMPLATE = (
+    ROOT / "docs" / "templates" / "0940_SUPERVISED_LOOP_STEP_PLAN_TEMPLATE.md"
+)
+POWERSHELL_TASK_ENVELOPE_TEMPLATE = (
+    ROOT / "docs" / "templates" / "0940_POWERSHELL_TASK_ENVELOPE_TEMPLATE.md"
+)
+SUPERVISED_LOOP_OPERATOR_RUNBOOK = (
+    ROOT / "docs" / "runbooks" / "0940_SUPERVISED_LOOP_OPERATOR_RUNBOOK.md"
+)
 
 
 def read(path: Path) -> str:
@@ -147,6 +173,15 @@ def test_workflow_health_check_files_exist() -> None:
     assert PUBLISH_RUNNER_COMPAT_FIX_DOC.exists()
     assert PUBLISH_RUNNER_GH_CHECKS_FALLBACK_DOC.exists()
     assert PUBLISH_RUNNER_LF_CRLF_WARNING_DOC.exists()
+    assert SUPERVISED_LOOP_ADR.exists()
+    assert SUPERVISED_LOOP_ARCHITECTURE_DOC.exists()
+    assert POWERSHELL_FAST_LANE_DOC.exists()
+    assert POWERSHELL_RECOVERY_LOOP_DOC.exists()
+    assert SUPERVISED_LOOP_STATE_MACHINE_DOC.exists()
+    assert SUPERVISED_LOOP_ROADMAP_DOC.exists()
+    assert SUPERVISED_LOOP_STEP_PLAN_TEMPLATE.exists()
+    assert POWERSHELL_TASK_ENVELOPE_TEMPLATE.exists()
+    assert SUPERVISED_LOOP_OPERATOR_RUNBOOK.exists()
 
 
 def test_workflow_health_check_script_runs_successfully() -> None:
@@ -723,6 +758,98 @@ def test_workflow_health_tracks_publish_runner_lf_crlf_warning_handling() -> Non
         "warning visibile",
     ]:
         assert fragment in warning_doc
+
+
+def test_workflow_health_tracks_supervised_loop_0940_pack() -> None:
+    script = read(SCRIPT)
+    doc = read(DOC)
+    index = read(INDEX)
+    adr = read(SUPERVISED_LOOP_ADR)
+    architecture = read(SUPERVISED_LOOP_ARCHITECTURE_DOC)
+    fast_lane = read(POWERSHELL_FAST_LANE_DOC)
+    recovery = read(POWERSHELL_RECOVERY_LOOP_DOC)
+    state_machine = read(SUPERVISED_LOOP_STATE_MACHINE_DOC)
+    roadmap = read(SUPERVISED_LOOP_ROADMAP_DOC)
+    step_template = read(SUPERVISED_LOOP_STEP_PLAN_TEMPLATE)
+    task_template = read(POWERSHELL_TASK_ENVELOPE_TEMPLATE)
+    runbook = read(SUPERVISED_LOOP_OPERATOR_RUNBOOK)
+
+    indexed_fragments = [
+        "docs/adr/0940_SUPERVISED_LOOP_ARCHITECTURE_WITH_POWERSHELL_FAST_LANE_AND_RECOVERY.md",
+        "docs/motor/0940_SUPERVISED_LOOP_ARCHITECTURE.md",
+        "docs/motor/0940_POWERSHELL_FAST_LANE_SPEC.md",
+        "docs/motor/0940_POWERSHELL_RECOVERY_LOOP_SPEC.md",
+        "docs/motor/0940_SUPERVISED_LOOP_STATE_MACHINE.md",
+        "docs/motor/0940_SUPERVISED_LOOP_ROADMAP.md",
+        "docs/templates/0940_SUPERVISED_LOOP_STEP_PLAN_TEMPLATE.md",
+        "docs/templates/0940_POWERSHELL_TASK_ENVELOPE_TEMPLATE.md",
+        "docs/runbooks/0940_SUPERVISED_LOOP_OPERATOR_RUNBOOK.md",
+        "PowerShell Fast Lane",
+        "PowerShell Recovery Loop",
+        "GPT-discretionary bounded retry policy",
+        "max retry assoluto 10",
+        "PASS/FIX/STOP/ASK_ALBERTO",
+        "state.json",
+        "0950) Bridge State and Semaphore Protocol",
+    ]
+
+    for fragment in indexed_fragments:
+        assert fragment in script
+        assert fragment in doc
+        assert fragment in index
+
+    for fragment in [
+        "ASF Supervisor non invoca sempre modelli AI",
+        "GPT API non esegue direttamente PowerShell",
+        "PowerShell runner esegue solo comandi o script autorizzati",
+        "Alberto mantiene approval gate",
+    ]:
+        assert fragment in adr
+
+    for fragment in [
+        "PASS",
+        "FIX",
+        "STOP",
+        "ASK_ALBERTO",
+        "GPT planner/reviewer",
+        "Codex executor",
+        "PowerShell Recovery Loop",
+    ]:
+        assert fragment in architecture
+
+    for fragment in [
+        "pwsh -NoProfile -NonInteractive -ExecutionPolicy Bypass",
+        "Phase A locale",
+        "Exit code `0` piu' stderr informativo sicuro",
+    ]:
+        assert fragment in fast_lane
+
+    for fragment in [
+        "POWERSHELL_PARSE_ERROR",
+        "POWERSHELL_HUNG",
+        "GPT-discretionary bounded retry policy",
+        "rischio passa a L3",
+    ]:
+        assert fragment in recovery
+
+    for fragment in [
+        "NEEDS_ALBERTO_APPROVAL",
+        "COMPLETED",
+        "state.json",
+        "max_retry_absolute",
+    ]:
+        assert fragment in state_machine
+
+    for fragment in [
+        "0950) Bridge State and Semaphore Protocol",
+        "0960) PowerShell Fast Task Runner",
+        "1010) Final End-to-End Smoke Test",
+    ]:
+        assert fragment in roadmap
+
+    assert "allowed_lanes" in step_template
+    assert "max_retry_absolute" in task_template
+    assert "Se i gate danno risultati incoerenti" in runbook
 
 
 def test_workflow_health_tracks_powershell_publish_skill_sync() -> None:

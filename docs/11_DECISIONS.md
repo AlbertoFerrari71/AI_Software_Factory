@@ -3948,6 +3948,52 @@ Il prossimo step consigliato e':
 
 ---
 
+## DEC-109 - ASF supervised loop lanes, Fast Lane and recovery
+
+**Data:** 2026-06-10
+**Stato:** Accettata
+
+### Contesto
+
+Dopo gli step di hardening del publish runner, ASF V1 deve chiudere la propria architettura come ciclo supervisionato end-to-end senza diventare ASF V2 e senza introdurre pubblicazione automatica.
+
+### Decisione
+
+ASF Supervisor sceglie una execution lane per ogni attivita':
+
+- Deterministic lane: PowerShell Fast Lane per comandi noti, veloci, ripetibili e verificabili.
+- Reasoning lane: GPT API / ChatGPT API per pianificazione, review, diagnosi errori, scelta del prossimo step e generazione prompt.
+- Code-editing lane: Codex CLI / `codex exec` per modifiche locali a codice, test e documentazione.
+
+Il passaggio tra lane avviene tramite Bridge, `state.json`, report deterministici e semafori. GPT non esegue direttamente PowerShell: puo' proporre un tool, ma ASF Supervisor locale decide se e' consentito. Alberto mantiene approval gate su publish, merge, deploy e milestone strategiche.
+
+La retry policy adottata e':
+
+```text
+GPT-discretionary bounded retry policy
+max retry assoluto: 10
+```
+
+`10` e' un limite massimo di sicurezza, non il default automatico.
+
+### Conseguenze
+
+Gli step successivi devono procedere in ordine piccolo:
+
+```text
+0950) Bridge State and Semaphore Protocol
+0960) PowerShell Fast Task Runner
+0970) PowerShell Error Recovery Loop
+0980) GPT Prompt Generator API Adapter
+0990) Codex Exec Runner Adapter
+1000) Auto Review and Step Decision Policy
+1010) Final End-to-End Smoke Test
+```
+
+Nessuno di questi step puo' saltare i gate umani per publish, merge, deploy o scope strategico.
+
+---
+
 ## DEC-108 - Publish runner gestione prudente warning Git LF/CRLF su stderr
 
 **Data:** 2026-06-09

@@ -76,6 +76,7 @@ The script `scripts/check_workflow_health.py` checks:
 - `docs/motor/0920_CODEX_SKILLS_REMOTE_VERIFICATION_AND_EVIDENCE_CLOSURE.md`, `docs/motor/0920_CODEX_SKILLS_REMOTE_PUSH_EVIDENCE_REPORT.md`, `examples/publish_runner/0920_codex_skills_remote_verification_evidence.example.json`, `push_completed=true`, `push_exit_code=0`, `36b065d..bec96ff main -> main` and `0930) External Repo Push Pattern Generalization` are referenced without accessing external repositories or executing fetch, pull, commit, push, PR, merge, deploy, tag or external writes;
 - `docs/motor/0921_PUBLISH_RUNNER_POWERSHELL_COMPATIBILITY_REGRESSION_FIX.md`, `scripts/asf_minimal_docx.py`, `examples/publish_runner/0921_publish_runner_regression_fix_evidence.example.json`, `safe PSNativeCommandUseErrorActionPreference handling`, `valid DOCX bridge output`, `PrepareConfig command argument normalization` and `0920 publish retry after 0921 fix` are referenced without publishing or weakening runner guardrails;
 - operational scripts do not contain dangerous Git/GitHub command patterns.
+- `docs/adr/0940_SUPERVISED_LOOP_ARCHITECTURE_WITH_POWERSHELL_FAST_LANE_AND_RECOVERY.md`, `docs/motor/0940_SUPERVISED_LOOP_ARCHITECTURE.md`, `docs/motor/0940_POWERSHELL_FAST_LANE_SPEC.md`, `docs/motor/0940_POWERSHELL_RECOVERY_LOOP_SPEC.md`, `docs/motor/0940_SUPERVISED_LOOP_STATE_MACHINE.md`, `docs/motor/0940_SUPERVISED_LOOP_ROADMAP.md`, `docs/templates/0940_SUPERVISED_LOOP_STEP_PLAN_TEMPLATE.md`, `docs/templates/0940_POWERSHELL_TASK_ENVELOPE_TEMPLATE.md` and `docs/runbooks/0940_SUPERVISED_LOOP_OPERATOR_RUNBOOK.md` are referenced as the ASF V1 supervised loop completion pack without implementing automatic publish, merge or deploy.
 
 The covered areas include:
 
@@ -146,6 +147,7 @@ The covered areas include:
 - ASF Codex_Skills Controlled Push or Rollback Decision;
 - ASF Codex_Skills Remote Verification and Evidence Closure;
 - ASF Publish Runner PowerShell Compatibility Regression Fix;
+- ASF Supervised Loop Architecture 0940;
 - Project Workflow Index.
 
 ---
@@ -369,3 +371,5 @@ After STEP 0921, it also treats `docs/motor/0921_PUBLISH_RUNNER_POWERSHELL_COMPA
 After STEP 0922, it also treats `docs/motor/0922_PUBLISH_RUNNER_GH_CHECKS_NO_CHECKS_REPORTED_FALLBACK.md`, `tests/unit/test_asf_publish_step_gh_checks_fallback.py` and the Project Workflow Index pointers to `gh run list --commit`, `completed/success`, `no checks reported` and `0930) External Repo Push Pattern Generalization` as core publish-runner fallback references. The check remains read-only and does not call GitHub, publish, merge, deploy or weaken local verification gates.
 
 After STEP 0923, it also treats `docs/motor/0923_PUBLISH_RUNNER_LF_CRLF_WARNING_STDERR_HANDLING.md`, `tests/unit/test_asf_publish_step_lf_crlf_warning_handling.py` and the Project Workflow Index pointers to `stderr warning treated as non-blocking`, `LF will be replaced by CRLF`, `CRLF will be replaced by LF`, `Git command wrote unexpected stderr` and `0930) External Repo Push Pattern Generalization` as core publish-runner stderr-warning references. The check remains read-only and does not normalize line endings, publish, merge, deploy or weaken local verification gates.
+
+After STEP 0940, it also treats the ADR, supervised loop architecture, PowerShell Fast Lane spec, PowerShell Recovery Loop spec, state machine, roadmap, step plan template, task envelope template and operator runbook as core ASF V1 completion references. The Project Workflow Index must reference PowerShell Fast Lane, PowerShell Recovery Loop, GPT-discretionary bounded retry policy, max retry assoluto 10, `PASS/FIX/STOP/ASK_ALBERTO`, `state.json` and `0950) Bridge State and Semaphore Protocol`. The check remains read-only and does not call APIs, execute Codex, run PowerShell recovery automatically, publish, merge, deploy or require the real Bridge path.

@@ -4,6 +4,37 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.94.0] - 2026-06-10
+
+### Added
+
+- STEP 0940 - ASF Supervised Loop Architecture with PowerShell Fast Lane and Recovery.
+- ADR `docs/adr/0940_SUPERVISED_LOOP_ARCHITECTURE_WITH_POWERSHELL_FAST_LANE_AND_RECOVERY.md`.
+- Documenti motore 0940 per supervised loop, PowerShell Fast Lane, PowerShell Recovery Loop, state machine e roadmap.
+- Template `docs/templates/0940_SUPERVISED_LOOP_STEP_PLAN_TEMPLATE.md`.
+- Template `docs/templates/0940_POWERSHELL_TASK_ENVELOPE_TEMPLATE.md`.
+- Runbook `docs/runbooks/0940_SUPERVISED_LOOP_OPERATOR_RUNBOOK.md`.
+
+### Changed
+
+- README, roadmap, decision log, Project Workflow Index e Workflow Health Check riconoscono lo STEP 0940.
+- `tests/unit/test_workflow_health_check.py` copre i riferimenti 0940.
+- `CLAUDE.md` include lo scope autorizzato di supporto agente per il supervised loop ASF.
+
+### Guardrails
+
+- Nessuna implementazione del loop automatico completo.
+- Nessuna chiamata API live.
+- Nessuna esecuzione annidata di `codex exec`.
+- Nessuna modifica al publish runner.
+- Nessun commit, push, PR, merge, deploy o normalizzazione line endings eseguiti.
+
+### Next
+
+- Prossimo step consigliato: `0950) Bridge State and Semaphore Protocol`.
+
+---
+
 ## [0.92.3] - 2026-06-09
 
 ### Added
