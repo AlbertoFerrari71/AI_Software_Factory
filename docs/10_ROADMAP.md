@@ -127,6 +127,7 @@ Esempio:
 | 922 | Publish Runner Gh Checks No Checks Reported Fallback | Gestire `gh pr checks --watch` con `no checks reported` tramite fallback prudente su workflow run GitHub | Runner fallback, warning espliciti, test fake-gh e documento motore | Post-MVP Hardening | Completato |
 | 923 | Publish Runner LF/CRLF Warning Stderr Handling | Gestire warning Git LF/CRLF su stderr senza bloccare gate con exit code 0 | Runner stderr whitelist, test fake-git e documento motore | Post-MVP Hardening | Completato |
 | 930 | External Repo Push Pattern Generalization | Generalizzare il pattern del controlled push esterno dopo la closure 0920 | Regole riusabili, guardrail e template per future repo esterne | Post-MVP Pilot | Proposto |
+| 940 | ASF Supervised Loop Architecture with PowerShell Fast Lane and Recovery | Chiudere l'architettura ASF V1 come ciclo supervisionato con lane deterministiche, reasoning, Codex, Bridge e recovery | ADR, docs motore, state machine, retry policy, template e runbook operatore | ASF V1 Completion | Completato |
 
 ---
 
@@ -190,6 +191,14 @@ Prossimo step consigliato dopo 0923:
 
 ```text
 0930) External Repo Push Pattern Generalization
+```
+
+---
+
+Prossimo step consigliato dopo 0940:
+
+```text
+0950) Bridge State and Semaphore Protocol
 ```
 
 ---
