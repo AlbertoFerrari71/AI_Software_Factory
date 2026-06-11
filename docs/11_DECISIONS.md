@@ -4215,3 +4215,69 @@ Il prossimo step consigliato e':
 ```text
 0930) External Repo Push Pattern Generalization
 ```
+
+---
+
+## DEC-113 - Shared Four-Hands Development Backbone
+
+**Data:** 2026-06-11
+**Stato:** Accettata
+
+### Contesto
+
+[F] Alberto vuole preparare una collaborazione a quattro mani con Luca sui repository `AI_Software_Factory`, `AI_Release_Radar`, `ASF_Blueprint_Studio` e `Codex_Skills`.
+
+[F] Il metodo operativo separa pianificazione/review GPT, esecuzione locale Codex, runner PowerShell deterministici e approvazione umana Alberto/Luca.
+
+[S] La collaborazione stabile richiede una base comune su GitHub, Bridge, ChatGPT Projects, skills, branch/PR/gate, review e segreti prima di modificare permessi reali.
+
+### Decisione
+
+[F] Lo STEP 0200-0280 introduce `docs/collaboration` come backbone versionato per la collaborazione Alberto-Luca.
+
+[F] Il pack include un documento master, documenti specialistici 0210-0280, template condivisi e script PowerShell safe-by-default.
+
+[F] Lo step non trasferisce repository, non crea Organization, non modifica permessi GitHub, branch protection, secrets o token, e non esegue commit/push/PR/merge.
+
+[O] Il prossimo uso pratico deve essere un pilot piccolo su `ASF_Blueprint_Studio`.
+
+### Conseguenze
+
+[F] Git resta la fonte ufficiale del codice e della documentazione stabile.
+
+[F] Dropbox Bridge resta spazio operativo per prompt, report, log e handoff, non per repository Git o segreti.
+
+[F] `Codex_Skills` resta la fonte proposta per skills comuni, sincronizzate solo con dry-run, backup e report.
+
+[S] Una GitHub Organization e' raccomandata per collaborazione stabile, ma richiede step manuale separato.
+
+Il prossimo step consigliato e':
+
+```text
+0290) Apply Collaboration Backbone to ASF Blueprint Studio Pilot
+```
+
+---
+
+## DEC-114 - OpenAI Adapter Test Environment Isolation
+
+**Data:** 2026-06-11
+**Stato:** Accettata
+
+### Contesto
+
+[F] Lo STEP 0285 ha rilevato che `tests/unit/test_asf_openai_api_adapter.py::test_live_mode_emits_gate_report_without_network` falliva quando `OPENAI_API_KEY` era presente nella shell locale.
+
+[F] Il failure non indicava una chiamata live o un leak di segreti: il test ereditava l'ambiente del processo e riceveva `not_configured` invece di `credential_missing`.
+
+### Decisione
+
+[F] Lo STEP 0286 isola il test OpenAI adapter dalla presenza locale di `OPENAI_API_KEY`.
+
+[F] Il comportamento live reale dell'adapter non viene indebolito: il test continua a verificare che la live mode resti fail-closed e senza rete quando manca la credenziale.
+
+### Conseguenze
+
+[F] Il Verification Gate diventa ripetibile su PC Alberto, PC Luca, Codex e CI anche quando una shell locale contiene `OPENAI_API_KEY`.
+
+[F] Il valore della credenziale non viene letto, stampato o salvato.

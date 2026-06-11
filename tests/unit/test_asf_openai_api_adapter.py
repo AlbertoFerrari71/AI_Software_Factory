@@ -110,7 +110,9 @@ def test_check_env_never_emits_api_key_value() -> None:
     assert secret not in encoded
 
 
-def test_live_mode_emits_gate_report_without_network() -> None:
+def test_live_mode_emits_gate_report_without_network(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+
     result = run_script("--mode", "live", "--input", adapter.DEFAULT_LIVE_SMOKE_INPUT)
 
     assert result.returncode == 0, result.stdout + result.stderr

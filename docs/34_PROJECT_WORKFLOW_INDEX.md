@@ -34,6 +34,7 @@ L'indice orienta il lavoro. Non sostituisce i documenti specifici, il Verificati
 | Usare ASF PowerShell Command Pack Skill Export Install | `docs/71_ASF_PWSH_COMMAND_PACK_SKILL_EXPORT_INSTALL.md` | `templates/pwsh_command_pack/export/as-common-pwsh-command-pack/SKILL.md`, `scripts/install_pwsh_command_pack_skill.py` | Quando serve preparare dry-run/apply della skill comune dopo intake manuale | Codex non installa direttamente fuori repo; target esplicito, backup prima di overwrite |
 | Diagnosticare Git line endings warning | `docs/72_ASF_GIT_LINE_ENDINGS_WARNING_CLEANUP.md` | `.gitattributes`, `git --no-pager ls-files --eol`, `git --no-pager check-attr` | Quando Git segnala warning LF/CRLF o serve verificare `templates/test_plans/test_plan_template.md` | Policy repository-level; no rinormalizzazione massiva non misurata |
 | Usare LAST Deprecation and 4-Digit Artifact Naming Standard | `docs/73_LAST_DEPRECATION_4_DIGIT_ARTIFACT_NAMING_STANDARD.md` | `scripts/migrate_artifact_names_4digit.py`, `templates/pwsh_command_pack/` | Quando serve generare o migrare artefatti Bridge/audit | No `LAST-*`; `NNNN-II-Tipo_Nome.ext`; ultimo artefatto = `max(II)` |
+| Usare Shared Four-Hands Development Backbone | `docs/collaboration/0200_0280_SHARED_FOUR_HANDS_BACKBONE.md` | `templates/collaboration/`, `scripts/collaboration/` | Quando Alberto e Luca devono collaborare su piu' repo con GitHub, Bridge, ChatGPT Projects e Codex Skills | Organization proposta ma non applicata, Bridge separato per utente/progetto, script dry-run/read-only, no segreti, prossimo passo `0290) Apply Collaboration Backbone to ASF Blueprint Studio Pilot` |
 | Usare Workflow Status Dashboard | `docs/39_WORKFLOW_STATUS_DASHBOARD.md` | `scripts/show_workflow_status.py` | Quando serve vedere branch, working tree, commit recenti e file workflow presenti | Read-only; non usa GitHub API |
 | Valutare Release Readiness | `docs/40_RELEASE_READINESS.md` | `templates/codex_tasks/release_readiness_checklist.md` | Prima di applicare il metodo a un progetto pilota reale | Readiness per pilot interno, non release pubblica o SaaS |
 | Preparare Existing Project Pilot Onboarding | `docs/41_EXISTING_PROJECT_PILOT_ONBOARDING.md` | `templates/codex_tasks/existing_project_intake_template.md`, `templates/codex_tasks/first_pilot_step_packet_template.md` | Dopo readiness e prima del primo pilot reale | Intake, fotografia repo, rischi e primo task packet pilot |
@@ -644,6 +645,18 @@ Usarlo solo come pulizia dei riferimenti remoti, non come sostituto di diagnosi 
 
 Questo indice orienta l'uso operativo quotidiano del workflow.
 
+- `docs/collaboration/0200_0280_SHARED_FOUR_HANDS_BACKBONE.md`: documento master del backbone Alberto-Luca.
+- `docs/collaboration/0210_GITHUB_ORG_REPO_PLAN.md`: piano manuale Organization/repository, senza esecuzione automatica.
+- `docs/collaboration/0220_LUCA_ONBOARDING_CHECKLIST.md`: checklist onboarding Luca e primo micro-step.
+- `docs/collaboration/0230_CHATGPT_PROJECTS_HANDOFF_POLICY.md`: policy ChatGPT Projects e handoff.
+- `docs/collaboration/0240_CODEX_SKILLS_SYNC_SPEC.md`: specifica sync skills safe-by-default.
+- `docs/collaboration/0245_AGENTS_MD_POLICY.md`: policy AGENTS.md globale/repo.
+- `docs/collaboration/0250_DROPBOX_BRIDGE_SHARED_SPEC.md`: specifica Bridge condiviso anti-conflitto.
+- `docs/collaboration/0260_BRANCH_PR_GATE_WORKFLOW.md`: workflow branch, PR draft, gate e review.
+- `docs/collaboration/0270_REVIEW_AND_MERGE_POLICY.md`: policy review e merge controllato.
+- `docs/collaboration/0280_SECRETS_AND_CREDENTIALS_POLICY.md`: policy segreti e credenziali.
+- `templates/collaboration/`: template AGENTS, CODEOWNERS, PR, Bridge e primo micro-step Luca.
+- `scripts/collaboration/`: script PowerShell dry-run/read-only per Bridge, readiness e sync skills.
 La roadmap `docs/10_ROADMAP.md` descrive evoluzione, step completati e prossimi step.
 
 Il decision log `docs/11_DECISIONS.md` registra le decisioni stabili che spiegano perche' il metodo funziona in questo modo.

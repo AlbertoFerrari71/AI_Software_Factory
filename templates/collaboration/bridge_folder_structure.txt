@@ -1,0 +1,59 @@
+[F] Struttura Bridge condiviso proposta. Non e' creata automaticamente da questo template.
+[S] Root proposta: D:\FG-SAB Dropbox\Alberto Ferrari\ChatGPT_Bridge_Shared
+[O] Crearla prima con dry-run usando scripts/collaboration/New-SharedBridgeStructure.ps1.
+
+D:\FG-SAB Dropbox\Alberto Ferrari\ChatGPT_Bridge_Shared
+  _shared_docs
+  _handoff
+  _templates
+  AI_Software_Factory
+    alberto
+      codex_command
+      pwsh_command
+    luca
+      codex_command
+      pwsh_command
+    shared_reports
+  AI_Release_Radar
+    alberto
+      codex_command
+      pwsh_command
+    luca
+      codex_command
+      pwsh_command
+    shared_reports
+  ASF_Blueprint_Studio
+    alberto
+      codex_command
+      pwsh_command
+    luca
+      codex_command
+      pwsh_command
+    shared_reports
+  Codex_Skills
+    alberto
+      codex_command
+      pwsh_command
+    luca
+      codex_command
+      pwsh_command
+    shared_reports
+
+Regole operative:
+[F] Non mettere repository Git in Dropbox.
+[F] Non usare LAST-* o latest-* nelle cartelle condivise.
+[F] Non salvare token, API key, password o .env reali.
+[F] Ogni utente scrive nella propria cartella.
+
+Rischi:
+[S] Dropbox puo' creare conflicted copy se due utenti scrivono lo stesso file.
+[O] Usare file numerati/datati e shared_reports solo per report consolidati.
+
+Checklist:
+[ ] [F] Root verificata.
+[ ] [F] Dry-run eseguito.
+[ ] [F] Apply autorizzato manualmente.
+[ ] [F] Cartelle utente separate.
+
+Prossimo step consigliato:
+[O] Applicare in dry-run nel pilot 0290.

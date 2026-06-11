@@ -1,0 +1,24 @@
+# CODEOWNERS.template - documentale, non installato automaticamente
+#
+# [F] Questo file e' un template: copiarlo manualmente in .github/CODEOWNERS solo dopo decisione umana.
+# [S] Sostituire @LucaGitHubUsername con lo username reale solo quando noto e approvato.
+# [O] Per file high-risk, tenere almeno Alberto e Luca come reviewer consigliati.
+#
+# Esempio:
+# * @AlbertoFerrari71 @LucaGitHubUsername
+# /scripts/ @AlbertoFerrari71 @LucaGitHubUsername
+# /.github/ @AlbertoFerrari71 @LucaGitHubUsername
+# /docs/collaboration/ @AlbertoFerrari71 @LucaGitHubUsername
+# /AGENTS.md @AlbertoFerrari71 @LucaGitHubUsername
+#
+# Rischi:
+# [F] CODEOWNERS non sostituisce branch protection o review umana.
+# [S] I required reviewers dipendono dal piano GitHub e dalle impostazioni repo.
+#
+# Checklist:
+# [ ] [F] Username reali verificati.
+# [ ] [F] Path high-risk verificati.
+# [ ] [F] Branch protection/review rule configurata manualmente se disponibile.
+#
+# Prossimo step consigliato:
+# [O] Valutare installazione manuale durante un futuro step GitHub governance dedicato.
