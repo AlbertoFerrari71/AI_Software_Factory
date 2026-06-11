@@ -6,6 +6,7 @@ Use this template to describe one supervised automatic step before any execution
 step_id: "NNNN"
 title: "<step title>"
 objective: "<single concrete objective>"
+milestone: "<milestone or project phase>"
 risk_level: "L0|L1|L2|L3|L4"
 
 allowed_lanes:
@@ -29,6 +30,16 @@ forbidden_actions:
 
 expected_files:
   - "docs/example.md"
+
+allowed_paths:
+  - "docs/"
+  - "tests/"
+  - "scripts/"
+
+forbidden_paths:
+  - ".git/"
+  - ".venv/"
+  - "external_target_repo/"
 
 expected_commands:
   - command: "python scripts/check_workflow_health.py"
@@ -60,6 +71,12 @@ bridge_outputs:
   stdout_log: "supervised_loop/NNNN-stdout.txt"
   stderr_log: "supervised_loop/NNNN-stderr.txt"
 
+expected_state_transitions:
+  - "IDLE -> PLAN_REQUESTED"
+  - "PLAN_REQUESTED -> GPT_PLANNING"
+  - "GPT_PLAN_READY -> POWERSHELL_READY|CODEX_READY"
+  - "VERIFY_PASS -> COMPLETED|NEEDS_ALBERTO_APPROVAL"
+
 success_criteria:
   - "expected files created or updated"
   - "mandatory verification commands pass"
@@ -73,6 +90,15 @@ stop_conditions:
   - "same failure repeats without new diagnosis"
   - "diff outside expected_files"
   - "publish, merge or deploy required"
+
+max_retry_absolute: 10
+
+budget_notes:
+  token_budget: "<optional budget or none>"
+  time_budget_minutes: "<optional budget or none>"
+  cost_policy: "avoid AI calls for deterministic Fast Lane tasks"
+
+report_required: true
 ```
 
 ## Report section
@@ -88,4 +114,3 @@ The final report should include:
 - Cose non fatte
 - Prossimo step consigliato
 - Riepilogo finale
-

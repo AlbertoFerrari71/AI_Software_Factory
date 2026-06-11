@@ -137,8 +137,60 @@ def test_json_output_is_valid_and_contains_required_fields() -> None:
         "safety_notes",
         "fail_closed",
         "recommended_next_action",
+        "selected_profile",
+        "required_commands",
+        "optional_commands",
+        "skipped_commands",
+        "rationale",
+        "escalation_reasons",
+        "full_required",
+        "stop_reasons",
     ]:
         assert field in payload
+
+
+def test_adaptive_profiles_cover_supervised_loop_0945_rules() -> None:
+    docs_only = select(risk_level="L0", changed_files=("docs/motor/0945_ADAPTIVE_VERIFICATION_PROFILES.md",))
+    templates_only = select(
+        risk_level="L1",
+        changed_files=("docs/templates/0950_SUPERVISED_LOOP_STATE_JSON_TEMPLATE.json",),
+    )
+    runner = select(risk_level="L2", changed_files=("scripts/asf_powershell_task_runner.py",))
+    tests_changed = select(risk_level="L2", changed_files=("tests/unit/test_asf_powershell_task_runner.py",))
+    phase_c = select(
+        risk_level="L1",
+        phase="Phase C",
+        changed_files=("docs/motor/0950_BRIDGE_STATE_AND_SEMAPHORE_PROTOCOL.md",),
+    )
+    milestone = select(
+        risk_level="L1",
+        changed_files=("docs/motor/0950_BRIDGE_STATE_AND_SEMAPHORE_PROTOCOL.md",),
+        milestone=True,
+    )
+    repeated_retry = select(
+        risk_level="L1",
+        changed_files=("docs/motor/0950_BRIDGE_STATE_AND_SEMAPHORE_PROTOCOL.md",),
+        retry_count=2,
+        previous_failures=("VERIFY_FAILURE", "VERIFY_FAILURE"),
+    )
+    high_risk = select(risk_level="L3", changed_files=("docs/motor/0950_BRIDGE_STATE_AND_SEMAPHORE_PROTOCOL.md",))
+    forbidden = select(risk_level="L1", changed_files=(".git/config",))
+
+    assert docs_only["selected_profile"] == "LIGHT"
+    assert templates_only["selected_profile"] in {"LIGHT", "STANDARD"}
+    assert runner["selected_profile"] == "FULL"
+    assert tests_changed["selected_profile"] == "FULL"
+    assert phase_c["selected_profile"] == "FULL"
+    assert milestone["selected_profile"] == "FULL"
+    assert repeated_retry["selected_profile"] == "ESCALATED"
+    assert high_risk["selected_profile"] == "ESCALATED"
+    assert any("ASK_ALBERTO" in reason for reason in high_risk["stop_reasons"])
+    assert forbidden["selected_profile"] == "ESCALATED"
+    assert any("STOP" in reason for reason in forbidden["stop_reasons"])
+
+    for packet in [runner, tests_changed, phase_c, milestone, repeated_retry]:
+        assert "python -m pytest" in packet["required_commands"]
+        assert packet["full_required"] is True
 
 
 def test_markdown_output_is_readable_without_cosmetic_assertions() -> None:

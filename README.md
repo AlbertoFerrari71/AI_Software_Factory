@@ -1,7 +1,7 @@
 # AI Software Factory
 
 **Metodo interno:** Codex Alchemy Method
-**Stato:** STEP 0940 - ASF Supervised Loop Architecture with PowerShell Fast Lane and Recovery
+**Stato:** STEP 0945-0970 - ASF Supervised Loop Foundation Batch
 **Data bootstrap:** 2026-05-25
 **Strategia:** local-first personale, progettato per evoluzione SaaS
 
@@ -28,7 +28,7 @@ Il metodo interno si chiama **Codex Alchemy Method**: l'idea grezza viene trasfo
 
 ## 2. Stato repository
 
-Questo repository e' nello stato **STEP 0940 - ASF Supervised Loop Architecture with PowerShell Fast Lane and Recovery**.
+Questo repository e' nello stato **STEP 0945-0970 - ASF Supervised Loop Foundation Batch**.
 
 Sono presenti:
 
@@ -97,6 +97,7 @@ Sono presenti:
 - STEP 0922 - Publish Runner Gh Checks No Checks Reported Fallback, con fallback prudente da `gh pr checks --watch` a `gh run list --commit <headSha>`, warning visibili e fail-closed senza run `completed/success`.
 - STEP 0923 - Publish Runner LF/CRLF Warning Stderr Handling, con whitelist stretta per warning Git LF/CRLF su stderr, warning visibili e fail-closed su stderr inatteso o exit code non zero.
 - STEP 0940 - ASF Supervised Loop Architecture with PowerShell Fast Lane and Recovery, con ADR, architettura supervised loop, PowerShell Fast Lane, PowerShell Recovery Loop, state machine, retry policy max 10, roadmap 0950-1010, template e runbook operatore.
+- STEP 0945-0970 - ASF Supervised Loop Foundation Batch, con profili adattivi `LIGHT`/`STANDARD`/`FULL`/`ESCALATED`, protocollo Bridge `state.json` e `.flag`, runner PowerShell dry-run default e recovery classifier locale.
 
 Non sono ancora presenti:
 
@@ -425,6 +426,16 @@ docs/motor/0940_SUPERVISED_LOOP_ROADMAP.md
 docs/templates/0940_SUPERVISED_LOOP_STEP_PLAN_TEMPLATE.md
 docs/templates/0940_POWERSHELL_TASK_ENVELOPE_TEMPLATE.md
 docs/runbooks/0940_SUPERVISED_LOOP_OPERATOR_RUNBOOK.md
+docs/motor/0945_ADAPTIVE_VERIFICATION_PROFILES.md
+docs/motor/0950_BRIDGE_STATE_AND_SEMAPHORE_PROTOCOL.md
+docs/motor/0960_POWERSHELL_FAST_TASK_RUNNER.md
+docs/motor/0970_POWERSHELL_RECOVERY_LOOP_FOUNDATION.md
+docs/templates/0950_SUPERVISED_LOOP_STATE_JSON_TEMPLATE.json
+docs/templates/0950_SUPERVISED_LOOP_EVENT_LOG_TEMPLATE.jsonl
+docs/templates/0960_POWERSHELL_TASK_ENVELOPE_EXAMPLES.md
+docs/templates/0970_POWERSHELL_RECOVERY_CLASSIFICATION_EXAMPLES.md
+scripts/asf_powershell_task_runner.py
+scripts/asf_powershell_recovery_classifier.py
 ```
 
 ---
@@ -483,7 +494,7 @@ policies/path_policy.v0.json
 ## 11. Prossimo step
 
 ```text
-0950) Bridge State and Semaphore Protocol
+0980) GPT Prompt Generator API Adapter
 ```
 
-Obiettivo: trasformare la state machine 0940 in un protocollo Bridge operativo per `state.json`, semafori, report e recovery evidence.
+Obiettivo: collegare il futuro GPT planner/reviewer a un adapter API controllato, senza ancora eseguire task operativi non supervisionati.

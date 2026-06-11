@@ -229,8 +229,6 @@ examples/publish_config_generator/
 
 Il generator consuma il selector senza copiarne la logica completa. Per prudenza, `scripts/asf_publish_config_generator.py` e' classificato come `motor-core`, perche' influenza le config usate dal Publish Runner.
 
-## 15. Prossimo step
-
 ## 15. Stato dopo STEP 0660
 
 Il selector resta la fonte deterministica della raccomandazione profilo.
@@ -242,3 +240,16 @@ Il prossimo step consigliato e':
 ```text
 0670) Step Execution State Machine
 ```
+
+## 16. Stato dopo STEP 0945
+
+Lo STEP 0945 mantiene i profili legacy ma aggiunge un layer adattivo per il supervised loop:
+
+- `LIGHT`;
+- `STANDARD`;
+- `FULL`;
+- `ESCALATED`.
+
+Il JSON ora include anche `selected_profile`, `required_commands`, `optional_commands`, `skipped_commands`, `rationale`, `escalation_reasons`, `full_required` e `stop_reasons`.
+
+`FULL` resta obbligatorio per Phase C, milestone, modifiche runner/core/test/API/security, retry sospetti e rischio alto. `ESCALATED` blocca o chiede Alberto quando il rischio, lo scope o la causa non sono chiari.

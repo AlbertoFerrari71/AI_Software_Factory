@@ -3994,6 +3994,38 @@ Nessuno di questi step puo' saltare i gate umani per publish, merge, deploy o sc
 
 ---
 
+## DEC-110 - ASF supervised loop foundation batch 0945-0970
+
+**Data:** 2026-06-10
+**Stato:** Accettata
+
+### Contesto
+
+Lo STEP 0940 ha definito l'architettura del supervised loop. Prima di collegare GPT API o Codex exec reali serve una foundation locale, testabile e non pubblicante per verifiche adattive, Bridge state, task PowerShell e recovery.
+
+### Decisione
+
+Il batch 0945-0970 introduce:
+
+- profili adattivi `LIGHT`, `STANDARD`, `FULL`, `ESCALATED` nel selector;
+- protocollo Bridge con `state.json`, event log append-only e `.flag`;
+- runner PowerShell con dry-run default e `--execute` solo per comandi read-only whitelisted;
+- recovery classifier con classi failure, retry safety e stop reason.
+
+La retry policy resta GPT-discretionary bounded retry policy con max retry assoluto 10. `10` non e' default automatico.
+
+### Conseguenze
+
+Il loop automatico completo non e' ancora implementato. Non sono abilitate API live, Codex exec, publish automatico, merge automatico o deploy automatico.
+
+Il prossimo step consigliato e':
+
+```text
+0980) GPT Prompt Generator API Adapter
+```
+
+---
+
 ## DEC-108 - Publish runner gestione prudente warning Git LF/CRLF su stderr
 
 **Data:** 2026-06-09

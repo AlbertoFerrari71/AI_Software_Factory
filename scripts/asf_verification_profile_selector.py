@@ -13,6 +13,17 @@ EXIT_INPUT_ERROR = 2
 
 RISK_LEVELS = {"L0", "L1", "L2", "L3", "L4"}
 PROFILES = {"docs-only", "code-unit", "motor-core", "publish", "final-main", "high-risk"}
+ADAPTIVE_PROFILES = {"LIGHT", "STANDARD", "FULL", "ESCALATED"}
+
+LIGHT_COMMANDS = [
+    "git --no-pager diff --check",
+    "python scripts/check_workflow_health.py",
+    "python -m pytest tests/unit/test_workflow_health_check.py",
+]
+STANDARD_COMMANDS = LIGHT_COMMANDS + [
+    "pwsh -NoProfile -ExecutionPolicy Bypass -File scripts\\verify.ps1",
+]
+FULL_COMMANDS = STANDARD_COMMANDS + ["python -m pytest"]
 
 MOTOR_CORE_FILES = {
     "scripts/asf_publish_step.ps1",
@@ -24,6 +35,8 @@ MOTOR_CORE_FILES = {
     "scripts/asf_step_state_machine.py",
     "scripts/asf_e2e_mvp_smoke.py",
     "scripts/check_workflow_health.py",
+    "scripts/asf_powershell_task_runner.py",
+    "scripts/asf_powershell_recovery_classifier.py",
 }
 
 SCRIPT_TESTS = {
@@ -36,6 +49,10 @@ SCRIPT_TESTS = {
     "scripts/asf_step_state_machine.py": "python -m pytest tests/unit/test_asf_step_state_machine.py -q",
     "scripts/asf_e2e_mvp_smoke.py": "python -m pytest tests/unit/test_asf_e2e_mvp_smoke.py -q",
     "scripts/check_workflow_health.py": "python -m pytest tests/unit/test_workflow_health_check.py -q",
+    "scripts/asf_powershell_task_runner.py": "python -m pytest tests/unit/test_asf_powershell_task_runner.py -q",
+    "scripts/asf_powershell_recovery_classifier.py": (
+        "python -m pytest tests/unit/test_asf_powershell_recovery_classifier.py -q"
+    ),
 }
 
 INDEXED_DOC_PATHS = {
@@ -70,6 +87,15 @@ PUBLISH_INTENT_KEYWORDS = (
 )
 
 FINAL_PHASE_KEYWORDS = ("final", "final-main", "post-merge", "phase c", "main verification")
+PHASE_C_KEYWORDS = ("phase c", "final-main", "post-merge", "main verification")
+APPROVAL_GATE_TOKENS = {
+    "approval_granted",
+    "alberto_approval",
+    "manual_approval",
+    "elevated_manual_approval",
+    "provided_approval_gate",
+    "approve_publish",
+}
 
 HIGH_RISK_KEYWORDS = (
     "deploy",
@@ -92,6 +118,17 @@ HIGH_RISK_KEYWORDS = (
     "live provider",
     "network call",
     "merge",
+    "false pass",
+    "suspicious pass",
+    "security",
+)
+
+FORBIDDEN_PATH_PREFIXES = (
+    ".git/",
+    ".venv/",
+    "venv/",
+    "external_target_repo/",
+    "../",
 )
 
 
@@ -104,6 +141,9 @@ class SelectorInput:
     intent: tuple[str, ...] = ()
     checks_already_run: tuple[str, ...] = ()
     provided_gates: tuple[str, ...] = ()
+    retry_count: int = 0
+    previous_failures: tuple[str, ...] = ()
+    milestone: bool = False
 
 
 def compact_string(value: Any) -> str:
@@ -127,6 +167,25 @@ def compact_list(value: Any) -> list[str]:
         return items
     text = compact_string(value)
     return [text] if text else []
+
+
+def compact_bool(value: Any) -> bool:
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, int):
+        return value != 0
+    text = compact_string(value).casefold()
+    return text in {"1", "true", "yes", "y", "si", "milestone"}
+
+
+def compact_int(value: Any, *, default: int = 0) -> int:
+    if value is None:
+        return default
+    try:
+        number = int(value)
+    except (TypeError, ValueError):
+        return default
+    return max(0, number)
 
 
 def collect_string_values(value: Any) -> list[str]:
@@ -234,6 +293,16 @@ def selector_input_from_json(raw: dict[str, Any]) -> SelectorInput:
         ),
     )
     gates = list_from_json_field(raw, ("provided_gates", "declared_gates", "satisfied_gates"))
+    previous_failures = list_from_json_field(
+        raw,
+        (
+            "previous_failures",
+            "failed_checks",
+            "failure_history",
+            "previous_failure_classes",
+            "retry_failures",
+        ),
+    )
 
     return SelectorInput(
         risk_level=risk_level,
@@ -243,6 +312,11 @@ def selector_input_from_json(raw: dict[str, Any]) -> SelectorInput:
         intent=tuple(dedupe(list(intent))),
         checks_already_run=tuple(dedupe(list(checks))),
         provided_gates=tuple(dedupe(list(gates))),
+        retry_count=compact_int(
+            first_string(raw.get("retry_count"), raw.get("current_retry"), raw.get("attempt"), fallback="0")
+        ),
+        previous_failures=tuple(dedupe(list(previous_failures))),
+        milestone=compact_bool(raw.get("milestone") or raw.get("milestone_flag")),
     )
 
 
@@ -271,6 +345,9 @@ def merge_inputs(left: SelectorInput, right: SelectorInput) -> SelectorInput:
         intent=tuple(dedupe(list(right.intent) + list(left.intent))),
         checks_already_run=tuple(dedupe(list(right.checks_already_run) + list(left.checks_already_run))),
         provided_gates=tuple(dedupe(list(right.provided_gates) + list(left.provided_gates))),
+        retry_count=max(left.retry_count, right.retry_count),
+        previous_failures=tuple(dedupe(list(right.previous_failures) + list(left.previous_failures))),
+        milestone=left.milestone or right.milestone,
     )
 
 
@@ -282,9 +359,40 @@ def is_doc_file(path: str) -> bool:
     )
 
 
+def is_template_file(path: str) -> bool:
+    normalized = normalize_path(path)
+    return normalized.startswith("docs/templates/") or normalized.startswith("templates/")
+
+
+def is_test_file(path: str) -> bool:
+    normalized = normalize_path(path)
+    return normalized.startswith("tests/") and normalized.endswith(".py")
+
+
 def is_code_or_test_file(path: str) -> bool:
     normalized = normalize_path(path)
     return normalized.startswith("tests/") or normalized.endswith((".py", ".ps1"))
+
+
+def is_forbidden_path(path: str) -> bool:
+    normalized = normalize_path(path).casefold()
+    if ":" in normalized and not normalized.startswith("c:/users/alberto.ferrari/source/repos/ai_software_factory/"):
+        return True
+    return any(normalized.startswith(prefix) for prefix in FORBIDDEN_PATH_PREFIXES)
+
+
+def has_approval_gate(gates: tuple[str, ...]) -> bool:
+    normalized = {gate.casefold().strip() for gate in gates}
+    return bool(normalized & APPROVAL_GATE_TOKENS)
+
+
+def touches_api_or_security(paths: tuple[str, ...], intent: tuple[str, ...]) -> bool:
+    values = paths + intent
+    return contains_keyword(values, ("api", "openai", "provider", "security", "secret", "credential", "token"))
+
+
+def touches_runner_core(paths: tuple[str, ...]) -> bool:
+    return any(path in MOTOR_CORE_FILES for path in paths)
 
 
 def has_indexed_docs(paths: tuple[str, ...]) -> bool:
@@ -332,6 +440,119 @@ def remove_already_run(checks: list[str], checks_already_run: tuple[str, ...]) -
         else:
             remaining.append(check)
     return remaining, skipped
+
+
+def adaptive_commands(profile: str) -> tuple[list[str], list[str], list[str]]:
+    if profile == "LIGHT":
+        return (
+            list(LIGHT_COMMANDS),
+            ["pwsh -NoProfile -ExecutionPolicy Bypass -File scripts\\verify.ps1"],
+            ["python -m pytest", "verify.ps1 deferred to stronger gate unless risk changes"],
+        )
+    if profile == "STANDARD":
+        return (
+            list(STANDARD_COMMANDS),
+            ["python -m pytest"],
+            ["full pytest deferred to FULL gate"],
+        )
+    if profile == "FULL":
+        return (
+            list(FULL_COMMANDS),
+            [],
+            ["no verification command intentionally skipped"],
+        )
+    return (
+        list(FULL_COMMANDS),
+        ["manual review", "ask Alberto if risk, scope, or safety remains ambiguous"],
+        ["no reduced profile allowed"],
+    )
+
+
+def select_adaptive_profile(data: SelectorInput, legacy_packet: dict[str, Any]) -> dict[str, Any]:
+    paths = tuple(normalize_path(path) for path in data.changed_files)
+    risk_level = data.risk_level.upper()
+    intent_values = data.intent + (data.step_type, data.phase)
+    rationale: list[str] = []
+    escalation_reasons: list[str] = []
+    stop_reasons: list[str] = []
+    full_required = False
+
+    forbidden_paths = [path for path in paths if is_forbidden_path(path)]
+    if forbidden_paths:
+        escalation_reasons.append("Forbidden file or path was declared in changed_files.")
+        stop_reasons.append("STOP: forbidden file/path: " + ", ".join(forbidden_paths))
+
+    if legacy_packet.get("fail_closed"):
+        escalation_reasons.append("Legacy selector result is fail-closed.")
+        if not stop_reasons:
+            stop_reasons.append("STOP: selector could not prove a safe reduced verification path.")
+
+    if risk_level in {"L3", "L4"}:
+        escalation_reasons.append(f"Risk level {risk_level} requires human review before reduced verification.")
+        if risk_level == "L4" or not has_approval_gate(data.provided_gates):
+            stop_reasons.append("ASK_ALBERTO: high-risk or approval-gated work cannot use a reduced profile.")
+
+    if data.retry_count >= 10:
+        escalation_reasons.append("Retry count reached the absolute ceiling.")
+        stop_reasons.append("STOP: max retry assoluto 10 reached.")
+    elif data.retry_count >= 2 or len(data.previous_failures) >= 2:
+        escalation_reasons.append("Repeated failure or suspicious retry history detected.")
+
+    if contains_keyword(intent_values, ("false pass", "suspicious pass", "ambiguous", "unknown failure")):
+        escalation_reasons.append("Ambiguous or suspicious PASS/failure signal detected.")
+
+    phase_c = contains_keyword((data.phase, data.step_type), PHASE_C_KEYWORDS)
+    if phase_c:
+        full_required = True
+        rationale.append("Phase C/final verification keeps FULL verification mandatory.")
+
+    if data.milestone or contains_keyword(intent_values, ("milestone", "release gate", "strong gate")):
+        full_required = True
+        rationale.append("Milestone flag keeps FULL verification mandatory.")
+
+    if any(is_test_file(path) for path in paths):
+        full_required = True
+        rationale.append("Tests changed; full pytest remains mandatory.")
+
+    if touches_runner_core(paths) or touches_api_or_security(paths, data.intent):
+        full_required = True
+        rationale.append("Runner/core/test/API/security scope requires FULL verification.")
+
+    if escalation_reasons or stop_reasons:
+        selected = "ESCALATED"
+    elif full_required:
+        selected = "FULL"
+    elif paths and all(is_doc_file(path) or is_template_file(path) for path in paths) and risk_level in {"", "L0", "L1"}:
+        selected = "LIGHT"
+        rationale.append("Docs/template-only low-risk scope can use LIGHT checks during iteration.")
+    elif legacy_packet["profile"] == "docs-only" and risk_level in {"", "L0", "L1"}:
+        selected = "LIGHT"
+        rationale.append("Docs-only low-risk scope can use LIGHT checks during iteration.")
+    elif legacy_packet["profile"] in {"docs-only", "code-unit"}:
+        selected = "STANDARD"
+        rationale.append("Scoped low/medium-risk work uses STANDARD checks before handoff.")
+    else:
+        selected = "FULL"
+        full_required = True
+        rationale.append("Legacy conservative profile maps to FULL verification.")
+
+    required, optional, skipped = adaptive_commands(selected)
+    return {
+        "selected_profile": selected,
+        "required_commands": dedupe(required),
+        "optional_commands": dedupe(optional),
+        "skipped_commands": dedupe(skipped),
+        "rationale": dedupe(rationale + list(legacy_packet.get("reasons", []))),
+        "escalation_reasons": dedupe(escalation_reasons),
+        "full_required": full_required or selected in {"FULL", "ESCALATED"},
+        "stop_reasons": dedupe(stop_reasons),
+    }
+
+
+def finalize_packet(data: SelectorInput, packet: dict[str, Any]) -> dict[str, Any]:
+    adaptive = select_adaptive_profile(data, packet)
+    packet.update(adaptive)
+    return packet
 
 
 def base_packet(
@@ -584,39 +805,42 @@ def select_profile(data: SelectorInput) -> dict[str, Any]:
     high_risk_values = paths + data.intent + (data.step_type,)
 
     if risk_level and risk_level not in RISK_LEVELS:
-        return fail_closed_packet(risk_level, f"Unknown risk_level `{data.risk_level}`; refusing to infer safety.")
+        return finalize_packet(
+            data,
+            fail_closed_packet(risk_level, f"Unknown risk_level `{data.risk_level}`; refusing to infer safety."),
+        )
     if not any(compact_string(item) for item in signal_values) and not risk_level:
-        return fail_closed_packet(risk_level, "Input is empty; refusing to infer a verification profile.")
+        return finalize_packet(data, fail_closed_packet(risk_level, "Input is empty; refusing to infer a verification profile."))
 
     if risk_level == "L4" or contains_keyword(high_risk_values, HIGH_RISK_KEYWORDS):
         reasons.append("L4 or high-risk intent detected.")
-        return build_high_risk(data, risk_level, reasons, warnings)
+        return finalize_packet(data, build_high_risk(data, risk_level, reasons, warnings))
 
     if contains_keyword((data.phase, data.step_type), FINAL_PHASE_KEYWORDS):
         reasons.append("Final or post-merge verification phase requested.")
-        return build_final_main(data, risk_level, reasons, warnings)
+        return finalize_packet(data, build_final_main(data, risk_level, reasons, warnings))
 
     if risk_level == "L3" or contains_keyword(intent_values, PUBLISH_INTENT_KEYWORDS):
         reasons.append("L3 risk or publication intent detected.")
-        return build_publish(data, risk_level or "L3", reasons, warnings)
+        return finalize_packet(data, build_publish(data, risk_level or "L3", reasons, warnings))
 
     if any(path in MOTOR_CORE_FILES for path in paths):
         reasons.append("Runner, gate, risk, publish, workflow health, or verification selector file changed.")
-        return build_motor_core(data, risk_level or "L2", reasons, warnings)
+        return finalize_packet(data, build_motor_core(data, risk_level or "L2", reasons, warnings))
 
-    if paths and all(is_doc_file(path) for path in paths):
-        reasons.append("Changed files are documentation-only.")
-        return build_docs_only(data, risk_level, reasons, warnings)
+    if paths and all(is_doc_file(path) or is_template_file(path) for path in paths):
+        reasons.append("Changed files are documentation/template-only.")
+        return finalize_packet(data, build_docs_only(data, risk_level, reasons, warnings))
 
     if paths and any(is_code_or_test_file(path) for path in paths):
         reasons.append("Changed files include scoped source or tests outside motor-core.")
-        return build_code_unit(data, risk_level or "L2", reasons, warnings)
+        return finalize_packet(data, build_code_unit(data, risk_level or "L2", reasons, warnings))
 
     if contains_keyword(data.intent, ("docs only", "documentation", "read-only", "inspect")):
         reasons.append("Intent is documentation or read-only oriented.")
-        return build_docs_only(data, risk_level, reasons, warnings)
+        return finalize_packet(data, build_docs_only(data, risk_level, reasons, warnings))
 
-    return fail_closed_packet(risk_level, "Input is ambiguous or does not match a known low-risk profile.")
+    return finalize_packet(data, fail_closed_packet(risk_level, "Input is ambiguous or does not match a known low-risk profile."))
 
 
 def render_json(packet: dict[str, Any]) -> str:
@@ -635,14 +859,28 @@ def render_markdown(packet: dict[str, Any]) -> str:
 ## Summary
 
 - profile: `{packet["profile"]}`
+- selected_profile: `{packet["selected_profile"]}`
 - risk_level: `{packet["risk_level"]}`
 - confidence: `{packet["confidence"]}`
 - estimated_cost: `{packet["estimated_cost"]}`
 - fail_closed: `{str(packet["fail_closed"]).lower()}`
+- full_required: `{str(packet["full_required"]).lower()}`
 
 ## Recommended checks
 
 {bullets(packet["recommended_checks"])}
+
+## Required commands
+
+{bullets(packet["required_commands"])}
+
+## Optional commands
+
+{bullets(packet["optional_commands"])}
+
+## Skipped commands
+
+{bullets(packet["skipped_commands"])}
 
 ## Required checks
 
@@ -659,6 +897,18 @@ def render_markdown(packet: dict[str, Any]) -> str:
 ## Reasons
 
 {bullets(packet["reasons"])}
+
+## Rationale
+
+{bullets(packet["rationale"])}
+
+## Escalation reasons
+
+{bullets(packet["escalation_reasons"])}
+
+## Stop reasons
+
+{bullets(packet["stop_reasons"])}
 
 ## Warnings
 
@@ -677,9 +927,11 @@ def render_markdown(packet: dict[str, Any]) -> str:
 def render_text(packet: dict[str, Any]) -> str:
     return (
         f"profile: {packet['profile']}\n"
+        f"selected_profile: {packet['selected_profile']}\n"
         f"risk_level: {packet['risk_level']}\n"
         f"confidence: {packet['confidence']}\n"
         f"estimated_cost: {packet['estimated_cost']}\n"
+        f"full_required: {str(packet['full_required']).lower()}\n"
         f"fail_closed: {str(packet['fail_closed']).lower()}\n"
         f"recommended_next_action: {packet['recommended_next_action']}\n"
     )
@@ -697,6 +949,9 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--intent", action="append", default=[], help="Intent text. Can be passed more than once.")
     parser.add_argument("--check-executed", action="append", default=[], help="Already executed check.")
     parser.add_argument("--provided-gate", action="append", default=[], help="Provided gate token.")
+    parser.add_argument("--retry-count", type=int, default=0, help="Current retry count for supervised-loop decisions.")
+    parser.add_argument("--previous-failure", action="append", default=[], help="Previous failure class or summary.")
+    parser.add_argument("--milestone", action="store_true", help="Treat the step as a milestone or strong gate.")
     parser.add_argument("--json", action="store_true", help="Print JSON output.")
     parser.add_argument("--markdown", action="store_true", help="Print Markdown output.")
     return parser.parse_args(argv)
@@ -711,6 +966,9 @@ def input_from_args(args: argparse.Namespace) -> SelectorInput:
         intent=tuple(compact_list(args.intent)),
         checks_already_run=tuple(compact_list(args.check_executed)),
         provided_gates=tuple(compact_list(args.provided_gate)),
+        retry_count=compact_int(args.retry_count),
+        previous_failures=tuple(compact_list(args.previous_failure)),
+        milestone=bool(args.milestone),
     )
 
 
