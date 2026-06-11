@@ -130,6 +130,7 @@ Esempio:
 | 940 | ASF Supervised Loop Architecture with PowerShell Fast Lane and Recovery | Chiudere l'architettura ASF V1 come ciclo supervisionato con lane deterministiche, reasoning, Codex, Bridge e recovery | ADR, docs motore, state machine, retry policy, template e runbook operatore | ASF V1 Completion | Completato |
 | 945-970 | ASF Supervised Loop Foundation Batch | Preparare selector adattivo, Bridge state/semafori, runner PowerShell dry-run e recovery classifier | Profili LIGHT/STANDARD/FULL/ESCALATED, `state.json`, task runner, classifier, test e docs | ASF V1 Completion | Completato |
 | 980-1010 | ASF Supervised Loop AI Adapter and End-to-End Smoke Batch | Collegare prompt generator GPT mock, Codex exec dry-run, decision policy e smoke finale | Adapter mock/dry-run, policy `PASS/FIX/STOP/ASK_ALBERTO`, smoke `1010-smoke-docs-step`, test e docs | ASF V1 Completion | Completato |
+| 1020 | GPT Prompt Generator Live Controlled Run | Maturare il prompt generator con live controllato, fail-closed e sanitizzato | `--approve-live`, una sola chiamata provider, fallback mock, result JSON/Markdown sanitizzati e Quality-first operating principle | ASF V1 Completion | Completato |
 
 ---
 
@@ -205,10 +206,18 @@ Prossimo step consigliato dopo 0945-0970, ora eseguito dal mega-step 0980-1010:
 
 ---
 
-Prossimo step consigliato dopo 0980-1010:
+Prossimo step consigliato dopo 0980-1010, ora eseguito dallo STEP 1020:
 
 ```text
 1020) GPT Prompt Generator Live Controlled Run
+```
+
+---
+
+Prossimo step consigliato dopo 1020:
+
+```text
+1020-A) Review and Publish Live Controlled Adapter
 ```
 
 ---

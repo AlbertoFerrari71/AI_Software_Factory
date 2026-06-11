@@ -1,0 +1,37 @@
+{
+  "step_id": "1020-smoke-generate-codex-prompt",
+  "controller_step_id": "1020",
+  "title": "GPT live controlled prompt generation smoke",
+  "objective": "Generate a Codex prompt for a fictitious docs-only ASF step, without code changes, commit, push, PR, merge or deploy.",
+  "risk_level": "L1",
+  "phase": "live-controlled-smoke",
+  "allowed_paths": [
+    "docs/motor",
+    "docs/templates",
+    "D:\\FG-SAB Dropbox\\Alberto Ferrari\\ChatGPT_Bridge\\AI_Software_Factory\\codex_command"
+  ],
+  "forbidden_actions": [
+    "destructive command",
+    "commit",
+    "push",
+    "PR",
+    "merge",
+    "deploy",
+    "OS appunti",
+    "real codex run"
+  ],
+  "expected_output": {
+    "mode": "live",
+    "fallback_mode": "mock",
+    "allowed_statuses": [
+      "LIVE_SUCCESS",
+      "LIVE_SKIPPED_NO_APPROVAL",
+      "LIVE_SKIPPED_NO_API_KEY",
+      "LIVE_BLOCKED_BY_CONFIG",
+      "LIVE_BLOCKED_BY_PROVIDER",
+      "LIVE_BLOCKED_BY_QUOTA_OR_RATE_LIMIT",
+      "LIVE_FAILED_SAFE"
+    ],
+    "next_action": "REVIEW_PROMPT_BEFORE_CODEX"
+  }
+}

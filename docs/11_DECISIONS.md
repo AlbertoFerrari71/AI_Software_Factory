@@ -4056,6 +4056,44 @@ Il prossimo step consigliato e':
 
 ---
 
+## DEC-112 - Quality-first operating principle for strategic ASF automation
+
+**Data:** 2026-06-11
+**Stato:** Accettata
+
+### Contesto
+
+Dopo il batch 0980-1010, ASF puo' generare prompt mock e preparare un primo percorso live controllato. Prompt strategici, architettura, gate, policy e strumenti di automazione influenzano direttamente qualita' e sicurezza dello sviluppo, quindi non possono essere ottimizzati prima per velocita' o costo.
+
+### Decisione
+
+Quality-first operating principle:
+
+Per prompt strategici, architettura, gate, policy, automazione e strumenti che guidano sviluppo software, ASF privilegia qualita', robustezza, sicurezza e tracciabilita' rispetto a velocita' e costo.
+
+La riduzione di costo o output e' importante solo dopo aver preservato:
+
+- correttezza tecnica;
+- sicurezza operativa;
+- ripetibilita';
+- auditabilita';
+- fail-closed behavior;
+- chiarezza dei gate umani.
+
+Per lo step 1020 questo significa che `scripts/asf_gpt_prompt_generator.py` deve mantenere `mock` come default, richiedere `--approve-live` per ogni percorso live, fare al massimo una chiamata provider, scrivere solo artifact sanitizzati e classificare gli errori senza retry automatici.
+
+### Conseguenze
+
+Modelli, budget e provider restano configurabili, ma non possono indebolire i gate umani o la tracciabilita'. Se configurazione, credenziale, quota, modello o provider sono ambigui, il risultato deve essere `LIVE_SKIPPED_NO_APPROVAL`, `LIVE_SKIPPED_NO_API_KEY`, `LIVE_BLOCKED_BY_CONFIG`, `LIVE_BLOCKED_BY_PROVIDER`, `LIVE_BLOCKED_BY_QUOTA_OR_RATE_LIMIT` o `LIVE_FAILED_SAFE`.
+
+Il prossimo step consigliato e':
+
+```text
+1020-A) Review and Publish Live Controlled Adapter
+```
+
+---
+
 ## DEC-108 - Publish runner gestione prudente warning Git LF/CRLF su stderr
 
 **Data:** 2026-06-09

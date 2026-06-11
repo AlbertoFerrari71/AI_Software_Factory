@@ -73,9 +73,21 @@ CODEX_DRY_RUN_READY
 
 ## Live mode
 
-`--mode live` non e' implementato in questo step. Anche con il flag futuro `--allow-live`, lo script risponde fail-closed.
+Nello step 0980-1010 `--mode live` non eseguiva chiamate provider. Dallo step 1020 il confine live e' stato maturato in modalita' controllata:
 
-La modalita' live richiede uno step separato, gate umano, verifica credenziali fuori repository e test dedicati.
+- `mock` resta il default;
+- `--mode live` richiede `--approve-live`;
+- `--allow-live` resta alias legacy;
+- la credenziale viene letta solo dall'ambiente locale e mai stampata o salvata;
+- il result JSON e il Markdown sono sanitizzati;
+- la chiamata provider, quando tutte le condizioni sono vere, e' al massimo una;
+- ogni errore viene classificato e non produce retry automatici.
+
+Documento operativo 1020:
+
+```text
+docs/motor/1020_GPT_PROMPT_GENERATOR_LIVE_CONTROLLED_RUN.md
+```
 
 ## Guardrail
 

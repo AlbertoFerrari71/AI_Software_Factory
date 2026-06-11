@@ -4,6 +4,38 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [1.02.0] - 2026-06-11
+
+### Added
+
+- STEP 1020 - GPT Prompt Generator Live Controlled Run.
+- Documento `docs/motor/1020_GPT_PROMPT_GENERATOR_LIVE_CONTROLLED_RUN.md`.
+- Template `docs/templates/1020_GPT_LIVE_CONTROLLED_PLAN_TEMPLATE.json`.
+- Template `docs/templates/1020_GPT_LIVE_CONTROLLED_RESULT_TEMPLATE.json`.
+- Test `tests/unit/test_asf_gpt_prompt_generator_live_controlled.py`.
+
+### Changed
+
+- `scripts/asf_gpt_prompt_generator.py` mantiene `mock` default e aggiunge live controllato con `--approve-live`, output sanitizzato, fallback mock e classificazione provider/config/quota/rate-limit.
+- README, roadmap, decision log, Project Workflow Index e Workflow Health Check riconoscono lo step 1020.
+- `tests/unit/test_asf_gpt_prompt_generator.py` copre il nuovo stato controllato mantenendo compatibilita' con `PROMPT_READY`.
+
+### Guardrails
+
+- Live non parte senza approval esplicita.
+- Live non parte senza credenziale locale.
+- Nessuna credenziale stampata o salvata.
+- Al massimo una chiamata provider per esecuzione controllata.
+- Nessun retry live automatico.
+- Nessuna esecuzione reale Codex.
+- Nessun commit, push, PR, merge, deploy o normalizzazione line endings eseguiti.
+
+### Next
+
+- Prossimo step consigliato: `1020-A) Review and Publish Live Controlled Adapter`.
+
+---
+
 ## [1.01.0] - 2026-06-11
 
 ### Added

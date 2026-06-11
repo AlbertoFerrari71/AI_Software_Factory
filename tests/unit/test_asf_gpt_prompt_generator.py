@@ -48,7 +48,9 @@ def test_mock_mode_generates_deterministic_prompt(tmp_path: Path) -> None:
     second_packet = module.generate_prompt(plan, output_path=second, mode="mock")
 
     assert first_packet["status"] == "PROMPT_READY"
+    assert first_packet["controlled_status"] == "MOCK_SUCCESS"
     assert second_packet["status"] == "PROMPT_READY"
+    assert second_packet["controlled_status"] == "MOCK_SUCCESS"
     assert first.read_text(encoding="utf-8") == second.read_text(encoding="utf-8")
     assert "generator_mode: mock" in first.read_text(encoding="utf-8")
 
@@ -56,17 +58,27 @@ def test_mock_mode_generates_deterministic_prompt(tmp_path: Path) -> None:
 def test_live_mode_is_disabled_by_default(tmp_path: Path) -> None:
     module = load_module()
     plan = write_plan(tmp_path / "plan.json")
+    output = tmp_path / "prompt.md"
 
-    with pytest.raises(ValueError, match="Live mode requested"):
-        module.generate_prompt(plan, output_path=tmp_path / "prompt.md", mode="live")
+    packet = module.generate_prompt(plan, output_path=output, mode="live", environ={})
+
+    assert packet["status"] == "LIVE_SKIPPED_NO_APPROVAL"
+    assert packet["live_call_attempted"] is False
+    assert packet["fallback_mode"] == "mock"
+    assert output.is_file()
 
 
 def test_live_mode_with_future_flag_still_fails_closed(tmp_path: Path) -> None:
     module = load_module()
     plan = write_plan(tmp_path / "plan.json")
+    output = tmp_path / "prompt.md"
 
-    with pytest.raises(ValueError, match="disabled"):
-        module.generate_prompt(plan, output_path=tmp_path / "prompt.md", mode="live", allow_live=True)
+    packet = module.generate_prompt(plan, output_path=output, mode="live", allow_live=True, environ={})
+
+    assert packet["status"] == "LIVE_SKIPPED_NO_API_KEY"
+    assert packet["live_call_attempted"] is False
+    assert packet["fallback_mode"] == "mock"
+    assert output.is_file()
 
 
 def test_mock_mode_does_not_require_provider_secret(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
@@ -150,4 +162,5 @@ def test_cli_mock_json_works(tmp_path: Path) -> None:
     assert result.returncode == 0, result.stdout + result.stderr
     payload = json.loads(result.stdout)
     assert payload["status"] == "PROMPT_READY"
+    assert payload["controlled_status"] == "MOCK_SUCCESS"
     assert output.is_file()
