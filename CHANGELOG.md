@@ -4,6 +4,42 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [0.97.0] - 2026-06-10
+
+### Added
+
+- MEGA-STEP 0945-0970 - ASF Supervised Loop Foundation Batch.
+- Documento `docs/motor/0945_ADAPTIVE_VERIFICATION_PROFILES.md`.
+- Documento `docs/motor/0950_BRIDGE_STATE_AND_SEMAPHORE_PROTOCOL.md`.
+- Documento `docs/motor/0960_POWERSHELL_FAST_TASK_RUNNER.md`.
+- Documento `docs/motor/0970_POWERSHELL_RECOVERY_LOOP_FOUNDATION.md`.
+- Template `docs/templates/0950_SUPERVISED_LOOP_STATE_JSON_TEMPLATE.json`.
+- Template `docs/templates/0950_SUPERVISED_LOOP_EVENT_LOG_TEMPLATE.jsonl`.
+- Esempi `docs/templates/0960_POWERSHELL_TASK_ENVELOPE_EXAMPLES.md`.
+- Esempi `docs/templates/0970_POWERSHELL_RECOVERY_CLASSIFICATION_EXAMPLES.md`.
+- Script `scripts/asf_powershell_task_runner.py`.
+- Script `scripts/asf_powershell_recovery_classifier.py`.
+- Test `tests/unit/test_asf_powershell_task_runner.py`, `tests/unit/test_asf_powershell_recovery_classifier.py` e `tests/unit/test_supervised_loop_state_protocol.py`.
+
+### Changed
+
+- `scripts/asf_verification_profile_selector.py` emette anche `LIGHT`, `STANDARD`, `FULL` ed `ESCALATED`, mantenendo i profili legacy.
+- README, roadmap, decision log, Project Workflow Index e Workflow Health Check riconoscono il batch 0945-0970.
+- `tests/unit/test_workflow_health_check.py` copre i riferimenti 0945-0970.
+
+### Guardrails
+
+- Nessuna API live.
+- Nessuna esecuzione annidata di `codex exec`.
+- Nessuna implementazione completa del loop automatico.
+- Nessun commit, push, PR, merge, deploy o normalizzazione line endings eseguiti.
+
+### Next
+
+- Prossimo step consigliato: `0980) GPT Prompt Generator API Adapter`.
+
+---
+
 ## [0.94.0] - 2026-06-10
 
 ### Added

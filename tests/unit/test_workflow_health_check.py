@@ -141,6 +141,37 @@ POWERSHELL_TASK_ENVELOPE_TEMPLATE = (
 SUPERVISED_LOOP_OPERATOR_RUNBOOK = (
     ROOT / "docs" / "runbooks" / "0940_SUPERVISED_LOOP_OPERATOR_RUNBOOK.md"
 )
+ADAPTIVE_VERIFICATION_PROFILES_DOC = (
+    ROOT / "docs" / "motor" / "0945_ADAPTIVE_VERIFICATION_PROFILES.md"
+)
+BRIDGE_STATE_PROTOCOL_DOC = (
+    ROOT / "docs" / "motor" / "0950_BRIDGE_STATE_AND_SEMAPHORE_PROTOCOL.md"
+)
+POWERSHELL_FAST_TASK_RUNNER_DOC = (
+    ROOT / "docs" / "motor" / "0960_POWERSHELL_FAST_TASK_RUNNER.md"
+)
+POWERSHELL_RECOVERY_FOUNDATION_DOC = (
+    ROOT / "docs" / "motor" / "0970_POWERSHELL_RECOVERY_LOOP_FOUNDATION.md"
+)
+SUPERVISED_LOOP_STATE_JSON_TEMPLATE = (
+    ROOT / "docs" / "templates" / "0950_SUPERVISED_LOOP_STATE_JSON_TEMPLATE.json"
+)
+SUPERVISED_LOOP_EVENT_LOG_TEMPLATE = (
+    ROOT / "docs" / "templates" / "0950_SUPERVISED_LOOP_EVENT_LOG_TEMPLATE.jsonl"
+)
+POWERSHELL_TASK_ENVELOPE_EXAMPLES = (
+    ROOT / "docs" / "templates" / "0960_POWERSHELL_TASK_ENVELOPE_EXAMPLES.md"
+)
+POWERSHELL_RECOVERY_CLASSIFICATION_EXAMPLES = (
+    ROOT / "docs" / "templates" / "0970_POWERSHELL_RECOVERY_CLASSIFICATION_EXAMPLES.md"
+)
+POWERSHELL_TASK_RUNNER_SCRIPT = ROOT / "scripts" / "asf_powershell_task_runner.py"
+POWERSHELL_RECOVERY_CLASSIFIER_SCRIPT = ROOT / "scripts" / "asf_powershell_recovery_classifier.py"
+POWERSHELL_TASK_RUNNER_TEST = ROOT / "tests" / "unit" / "test_asf_powershell_task_runner.py"
+POWERSHELL_RECOVERY_CLASSIFIER_TEST = (
+    ROOT / "tests" / "unit" / "test_asf_powershell_recovery_classifier.py"
+)
+SUPERVISED_LOOP_STATE_PROTOCOL_TEST = ROOT / "tests" / "unit" / "test_supervised_loop_state_protocol.py"
 
 
 def read(path: Path) -> str:
@@ -182,6 +213,19 @@ def test_workflow_health_check_files_exist() -> None:
     assert SUPERVISED_LOOP_STEP_PLAN_TEMPLATE.exists()
     assert POWERSHELL_TASK_ENVELOPE_TEMPLATE.exists()
     assert SUPERVISED_LOOP_OPERATOR_RUNBOOK.exists()
+    assert ADAPTIVE_VERIFICATION_PROFILES_DOC.exists()
+    assert BRIDGE_STATE_PROTOCOL_DOC.exists()
+    assert POWERSHELL_FAST_TASK_RUNNER_DOC.exists()
+    assert POWERSHELL_RECOVERY_FOUNDATION_DOC.exists()
+    assert SUPERVISED_LOOP_STATE_JSON_TEMPLATE.exists()
+    assert SUPERVISED_LOOP_EVENT_LOG_TEMPLATE.exists()
+    assert POWERSHELL_TASK_ENVELOPE_EXAMPLES.exists()
+    assert POWERSHELL_RECOVERY_CLASSIFICATION_EXAMPLES.exists()
+    assert POWERSHELL_TASK_RUNNER_SCRIPT.exists()
+    assert POWERSHELL_RECOVERY_CLASSIFIER_SCRIPT.exists()
+    assert POWERSHELL_TASK_RUNNER_TEST.exists()
+    assert POWERSHELL_RECOVERY_CLASSIFIER_TEST.exists()
+    assert SUPERVISED_LOOP_STATE_PROTOCOL_TEST.exists()
 
 
 def test_workflow_health_check_script_runs_successfully() -> None:
@@ -850,6 +894,53 @@ def test_workflow_health_tracks_supervised_loop_0940_pack() -> None:
     assert "allowed_lanes" in step_template
     assert "max_retry_absolute" in task_template
     assert "Se i gate danno risultati incoerenti" in runbook
+
+
+def test_workflow_health_tracks_supervised_loop_foundation_0945_0970() -> None:
+    script = read(SCRIPT)
+    doc = read(DOC)
+    index = read(INDEX)
+    selector_doc = read(ADAPTIVE_VERIFICATION_PROFILES_DOC)
+    bridge_doc = read(BRIDGE_STATE_PROTOCOL_DOC)
+    runner_doc = read(POWERSHELL_FAST_TASK_RUNNER_DOC)
+    recovery_doc = read(POWERSHELL_RECOVERY_FOUNDATION_DOC)
+
+    indexed_fragments = [
+        "docs/motor/0945_ADAPTIVE_VERIFICATION_PROFILES.md",
+        "docs/motor/0950_BRIDGE_STATE_AND_SEMAPHORE_PROTOCOL.md",
+        "docs/motor/0960_POWERSHELL_FAST_TASK_RUNNER.md",
+        "docs/motor/0970_POWERSHELL_RECOVERY_LOOP_FOUNDATION.md",
+        "docs/templates/0950_SUPERVISED_LOOP_STATE_JSON_TEMPLATE.json",
+        "docs/templates/0950_SUPERVISED_LOOP_EVENT_LOG_TEMPLATE.jsonl",
+        "docs/templates/0960_POWERSHELL_TASK_ENVELOPE_EXAMPLES.md",
+        "docs/templates/0970_POWERSHELL_RECOVERY_CLASSIFICATION_EXAMPLES.md",
+        "scripts/asf_powershell_task_runner.py",
+        "scripts/asf_powershell_recovery_classifier.py",
+        "tests/unit/test_asf_powershell_task_runner.py",
+        "tests/unit/test_asf_powershell_recovery_classifier.py",
+        "tests/unit/test_supervised_loop_state_protocol.py",
+        "LIGHT",
+        "STANDARD",
+        "FULL",
+        "ESCALATED",
+        "READY_FOR_GPT.flag",
+        "GPT-discretionary bounded retry policy",
+        "0980) GPT Prompt Generator API Adapter",
+    ]
+
+    for fragment in indexed_fragments:
+        assert fragment in script
+        assert fragment in doc
+        assert fragment in index
+
+    for fragment in ["selected_profile", "required_commands", "full_required", "stop_reasons"]:
+        assert fragment in selector_doc
+    for fragment in ["state.json", "append-only", "approval_reason", "COMPLETED.flag"]:
+        assert fragment in bridge_doc
+    for fragment in ["dry-run", "allowed_paths", "forbidden_patterns", "COMMAND_NOT_WHITELISTED"]:
+        assert fragment in runner_doc
+    for fragment in ["POTENTIALLY_DESTRUCTIVE_COMMAND", "max retry assoluto: 10", "UNKNOWN_FAILURE"]:
+        assert fragment in recovery_doc
 
 
 def test_workflow_health_tracks_powershell_publish_skill_sync() -> None:
