@@ -1,7 +1,7 @@
 # AI Software Factory
 
 **Metodo interno:** Codex Alchemy Method
-**Stato:** STEP 1020 - GPT Prompt Generator Live Controlled Run
+**Stato:** STEP 0200-0280 - Shared Four-Hands Development Backbone
 **Data bootstrap:** 2026-05-25
 **Strategia:** local-first personale, progettato per evoluzione SaaS
 
@@ -28,7 +28,7 @@ Il metodo interno si chiama **Codex Alchemy Method**: l'idea grezza viene trasfo
 
 ## 2. Stato repository
 
-Questo repository e' nello stato **STEP 1020 - GPT Prompt Generator Live Controlled Run**.
+Questo repository e' nello stato **STEP 0200-0280 - Shared Four-Hands Development Backbone**.
 
 Sono presenti:
 
@@ -100,6 +100,7 @@ Sono presenti:
 - STEP 0945-0970 - ASF Supervised Loop Foundation Batch, con profili adattivi `LIGHT`/`STANDARD`/`FULL`/`ESCALATED`, protocollo Bridge `state.json` e `.flag`, runner PowerShell dry-run default e recovery classifier locale.
 - STEP 0980-1010 - ASF Supervised Loop AI Adapter and End-to-End Smoke Batch, con prompt generator GPT mock-first, adapter Codex exec dry-run, decision policy `PASS/FIX/STOP/ASK_ALBERTO` e smoke `1010-smoke-docs-step` fino a `COMPLETED`.
 - STEP 1020 - GPT Prompt Generator Live Controlled Run, con `mock` ancora default, live solo con `--approve-live`, una sola chiamata provider consentita quando configurata, fallback mock, result sanitizzato e Quality-first operating principle documentato.
+- STEP 0200-0280 - Shared Four-Hands Development Backbone, con documenti `docs/collaboration`, template condivisi, script PowerShell safe-by-default e policy operative Alberto-Luca su GitHub, Bridge, ChatGPT Projects, Codex Skills, review, merge e segreti.
 
 Non sono ancora presenti:
 
@@ -497,7 +498,7 @@ policies/path_policy.v0.json
 ## 11. Prossimo step
 
 ```text
-0980) GPT Prompt Generator API Adapter
+0290) Apply Collaboration Backbone to ASF Blueprint Studio Pilot
 ```
 
-Obiettivo: collegare il futuro GPT planner/reviewer a un adapter API controllato, senza ancora eseguire task operativi non supervisionati.
+Obiettivo: applicare il Collaboration Backbone a un pilot piccolo su `ASF_Blueprint_Studio`, mantenendo Organization GitHub, permessi reali, segreti, commit, push, PR e merge fuori scope finche' non autorizzati da uno step separato.

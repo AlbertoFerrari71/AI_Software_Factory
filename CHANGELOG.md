@@ -4,6 +4,34 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [1.03.0] - 2026-06-11
+
+### Added
+
+- STEP 0200-0280 - Shared Four-Hands Development Backbone.
+- Documenti `docs/collaboration/0200_0280_SHARED_FOUR_HANDS_BACKBONE.md`, `0210_GITHUB_ORG_REPO_PLAN.md`, `0220_LUCA_ONBOARDING_CHECKLIST.md`, `0230_CHATGPT_PROJECTS_HANDOFF_POLICY.md`, `0240_CODEX_SKILLS_SYNC_SPEC.md`, `0245_AGENTS_MD_POLICY.md`, `0250_DROPBOX_BRIDGE_SHARED_SPEC.md`, `0260_BRANCH_PR_GATE_WORKFLOW.md`, `0270_REVIEW_AND_MERGE_POLICY.md` e `0280_SECRETS_AND_CREDENTIALS_POLICY.md`.
+- Template `templates/collaboration/AGENTS.shared.template.md`, `CODEOWNERS.template`, `pull_request_template.shared.md`, `bridge_folder_structure.txt` e `luca_first_micro_step_prompt.md`.
+- Script safe-by-default `scripts/collaboration/New-SharedBridgeStructure.ps1`, `Test-CollaborationReadiness.ps1` e `Sync-CodexSkillsFromRepo.ps1`.
+
+### Changed
+
+- README, roadmap, decision log e Project Workflow Index riconoscono il nuovo backbone di collaborazione Alberto-Luca.
+- STEP 0286 isola il test OpenAI adapter dalla presenza locale di `OPENAI_API_KEY`, rendendo il Verification Gate ripetibile su PC Alberto, PC Luca, Codex e CI.
+
+### Guardrails
+
+- Nessun trasferimento repository GitHub.
+- Nessuna Organization GitHub creata o modificata.
+- Nessun permesso, branch protection, secret o token modificato.
+- Nessun commit, push, PR, merge, rebase, reset, clean, deploy o clipboard eseguito.
+- Script PowerShell dry-run/read-only per default e senza delete operations.
+
+### Next
+
+- Prossimo step consigliato: `0290) Apply Collaboration Backbone to ASF Blueprint Studio Pilot`.
+
+---
+
 ## [1.02.0] - 2026-06-11
 
 ### Added

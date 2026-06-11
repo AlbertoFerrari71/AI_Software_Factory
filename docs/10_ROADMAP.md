@@ -131,6 +131,7 @@ Esempio:
 | 945-970 | ASF Supervised Loop Foundation Batch | Preparare selector adattivo, Bridge state/semafori, runner PowerShell dry-run e recovery classifier | Profili LIGHT/STANDARD/FULL/ESCALATED, `state.json`, task runner, classifier, test e docs | ASF V1 Completion | Completato |
 | 980-1010 | ASF Supervised Loop AI Adapter and End-to-End Smoke Batch | Collegare prompt generator GPT mock, Codex exec dry-run, decision policy e smoke finale | Adapter mock/dry-run, policy `PASS/FIX/STOP/ASK_ALBERTO`, smoke `1010-smoke-docs-step`, test e docs | ASF V1 Completion | Completato |
 | 1020 | GPT Prompt Generator Live Controlled Run | Maturare il prompt generator con live controllato, fail-closed e sanitizzato | `--approve-live`, una sola chiamata provider, fallback mock, result JSON/Markdown sanitizzati e Quality-first operating principle | ASF V1 Completion | Completato |
+| 0200-0280 | Shared Four-Hands Development Backbone | Preparare il backbone documentale e operativo Alberto-Luca su piu' repo | Documenti `docs/collaboration`, template, script PowerShell safe-by-default, policy Bridge/GitHub/skills/segreti | Collaboration Backbone | Completato |
 
 ---
 
@@ -218,6 +219,13 @@ Prossimo step consigliato dopo 1020:
 
 ```text
 1020-A) Review and Publish Live Controlled Adapter
+```
+
+---
+Prossimo step consigliato dopo 0200-0280:
+
+```text
+0290) Apply Collaboration Backbone to ASF Blueprint Studio Pilot
 ```
 
 ---
