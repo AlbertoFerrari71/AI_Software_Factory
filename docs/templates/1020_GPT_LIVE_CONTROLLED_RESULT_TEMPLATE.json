@@ -1,0 +1,29 @@
+{
+  "step_id": "1020",
+  "source_plan_step_id": "1020-smoke-generate-codex-prompt",
+  "mode": "live",
+  "status": "LIVE_SKIPPED_NO_API_KEY",
+  "allowed_statuses": [
+    "LIVE_SUCCESS",
+    "LIVE_SKIPPED_NO_APPROVAL",
+    "LIVE_SKIPPED_NO_API_KEY",
+    "LIVE_BLOCKED_BY_CONFIG",
+    "LIVE_BLOCKED_BY_PROVIDER",
+    "LIVE_BLOCKED_BY_QUOTA_OR_RATE_LIMIT",
+    "LIVE_FAILED_SAFE"
+  ],
+  "provider": "openai",
+  "selected_model": "gpt-5.5",
+  "live_enabled": false,
+  "live_call_attempted": false,
+  "live_call_count": 0,
+  "api_key_present": false,
+  "api_key_logged": false,
+  "raw_secret_logged": false,
+  "authorization_header_logged": false,
+  "output_prompt_path": "D:\\FG-SAB Dropbox\\Alberto Ferrari\\ChatGPT_Bridge\\AI_Software_Factory\\codex_command\\1020-Live-Controlled-Prompt.md",
+  "result_json_path": "D:\\FG-SAB Dropbox\\Alberto Ferrari\\ChatGPT_Bridge\\AI_Software_Factory\\codex_command\\1020-Live-Controlled-Result.json",
+  "sanitized_result_path": "D:\\FG-SAB Dropbox\\Alberto Ferrari\\ChatGPT_Bridge\\AI_Software_Factory\\codex_command\\1020-Live-Controlled-Result-Sanitized.md",
+  "requires_alberto": true,
+  "next_action": "CONFIGURE_API_KEY_OR_RUN_MOCK"
+}

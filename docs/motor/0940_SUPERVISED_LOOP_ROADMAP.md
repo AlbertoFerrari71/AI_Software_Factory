@@ -13,6 +13,7 @@ Questa roadmap trasforma l'architettura 0940 in step piccoli. Non anticipa ASF V
 | 0990 | Implementativo controllato | Creare Codex Exec Runner Adapter | Adapter preview/default e invocazione controllata futura | Safety gate, repo dirty check, sandbox policy | Medio-alto | Prepara o esegue solo quando lo step lo autorizza |
 | 1000 | Documentale/implementativo | Definire Auto Review and Step Decision Policy | Policy PASS/FIX/STOP/ASK_ALBERTO e scoring evidence | Test decision matrix, esempi failure | Medio | Decisioni ripetibili e fail-closed |
 | 1010 | Smoke test | Final End-to-End Smoke Test | Run sintetica supervised loop completa su tmp/ | Full pytest, workflow health, verify, diff check | Medio | Loop dimostra plan -> lane -> review -> verify -> stop/pass senza publish automatico |
+| 1020 | Implementativo controllato | GPT Prompt Generator Live Controlled Run | Live controllato per prompt strategici, mock default e fallback sanitizzato | Test monkeypatch, no secret, una sola chiamata provider | Medio | Produce prompt e result sanitizzato senza Codex reale |
 
 ## Sequenza consigliata
 
@@ -26,6 +27,7 @@ La sequenza piu' logica dopo 0940 e':
 0990) Codex Exec Runner Adapter
 1000) Auto Review and Step Decision Policy
 1010) Final End-to-End Smoke Test
+1020) GPT Prompt Generator Live Controlled Run
 ```
 
 Il primo passo deve essere 0950 per rendere stabile il contratto `state.json`/flag/report prima di implementare runner o adapter.
@@ -43,4 +45,21 @@ Il prossimo passo consigliato e':
 
 ```text
 1020) GPT Prompt Generator Live Controlled Run
+```
+
+## Stato dopo 1020
+
+Lo step 1020 ha maturato `scripts/asf_gpt_prompt_generator.py` con:
+
+- `mock` ancora default;
+- live solo con `--approve-live`;
+- fallback mock;
+- result JSON/Markdown sanitizzati;
+- classificazione `LIVE_SUCCESS`, `LIVE_SKIPPED_NO_APPROVAL`, `LIVE_SKIPPED_NO_API_KEY`, `LIVE_BLOCKED_BY_CONFIG`, `LIVE_BLOCKED_BY_PROVIDER`, `LIVE_BLOCKED_BY_QUOTA_OR_RATE_LIMIT`, `LIVE_FAILED_SAFE`;
+- Quality-first operating principle per prompt strategici e gate del supervised loop.
+
+Prossimo step consigliato:
+
+```text
+1020-A) Review and Publish Live Controlled Adapter
 ```

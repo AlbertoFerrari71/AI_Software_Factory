@@ -165,6 +165,9 @@ STEP_DECISION_POLICY_DOC = (
 SUPERVISED_LOOP_SMOKE_DOC = (
     ROOT / "docs" / "motor" / "1010_FINAL_END_TO_END_SMOKE_TEST.md"
 )
+GPT_PROMPT_GENERATOR_LIVE_DOC = (
+    ROOT / "docs" / "motor" / "1020_GPT_PROMPT_GENERATOR_LIVE_CONTROLLED_RUN.md"
+)
 SUPERVISED_LOOP_STATE_JSON_TEMPLATE = (
     ROOT / "docs" / "templates" / "0950_SUPERVISED_LOOP_STATE_JSON_TEMPLATE.json"
 )
@@ -189,6 +192,12 @@ STEP_DECISION_INPUT_TEMPLATE = (
 SUPERVISED_LOOP_SMOKE_STATE_TEMPLATE = (
     ROOT / "docs" / "templates" / "1010_SUPERVISED_LOOP_SMOKE_STATE_TEMPLATE.json"
 )
+GPT_LIVE_CONTROLLED_PLAN_TEMPLATE = (
+    ROOT / "docs" / "templates" / "1020_GPT_LIVE_CONTROLLED_PLAN_TEMPLATE.json"
+)
+GPT_LIVE_CONTROLLED_RESULT_TEMPLATE = (
+    ROOT / "docs" / "templates" / "1020_GPT_LIVE_CONTROLLED_RESULT_TEMPLATE.json"
+)
 POWERSHELL_TASK_RUNNER_SCRIPT = ROOT / "scripts" / "asf_powershell_task_runner.py"
 POWERSHELL_RECOVERY_CLASSIFIER_SCRIPT = ROOT / "scripts" / "asf_powershell_recovery_classifier.py"
 GPT_PROMPT_GENERATOR_SCRIPT = ROOT / "scripts" / "asf_gpt_prompt_generator.py"
@@ -201,6 +210,9 @@ POWERSHELL_RECOVERY_CLASSIFIER_TEST = (
 )
 SUPERVISED_LOOP_STATE_PROTOCOL_TEST = ROOT / "tests" / "unit" / "test_supervised_loop_state_protocol.py"
 GPT_PROMPT_GENERATOR_TEST = ROOT / "tests" / "unit" / "test_asf_gpt_prompt_generator.py"
+GPT_PROMPT_GENERATOR_LIVE_TEST = (
+    ROOT / "tests" / "unit" / "test_asf_gpt_prompt_generator_live_controlled.py"
+)
 CODEX_EXEC_ADAPTER_TEST = ROOT / "tests" / "unit" / "test_asf_codex_exec_adapter.py"
 STEP_DECISION_POLICY_TEST = ROOT / "tests" / "unit" / "test_asf_step_decision_policy.py"
 SUPERVISED_LOOP_SMOKE_TEST = ROOT / "tests" / "unit" / "test_asf_supervised_loop_smoke.py"
@@ -253,6 +265,7 @@ def test_workflow_health_check_files_exist() -> None:
     assert CODEX_EXEC_ADAPTER_DOC.exists()
     assert STEP_DECISION_POLICY_DOC.exists()
     assert SUPERVISED_LOOP_SMOKE_DOC.exists()
+    assert GPT_PROMPT_GENERATOR_LIVE_DOC.exists()
     assert SUPERVISED_LOOP_STATE_JSON_TEMPLATE.exists()
     assert SUPERVISED_LOOP_EVENT_LOG_TEMPLATE.exists()
     assert POWERSHELL_TASK_ENVELOPE_EXAMPLES.exists()
@@ -261,6 +274,8 @@ def test_workflow_health_check_files_exist() -> None:
     assert CODEX_EXEC_ENVELOPE_TEMPLATE.exists()
     assert STEP_DECISION_INPUT_TEMPLATE.exists()
     assert SUPERVISED_LOOP_SMOKE_STATE_TEMPLATE.exists()
+    assert GPT_LIVE_CONTROLLED_PLAN_TEMPLATE.exists()
+    assert GPT_LIVE_CONTROLLED_RESULT_TEMPLATE.exists()
     assert POWERSHELL_TASK_RUNNER_SCRIPT.exists()
     assert POWERSHELL_RECOVERY_CLASSIFIER_SCRIPT.exists()
     assert GPT_PROMPT_GENERATOR_SCRIPT.exists()
@@ -271,6 +286,7 @@ def test_workflow_health_check_files_exist() -> None:
     assert POWERSHELL_RECOVERY_CLASSIFIER_TEST.exists()
     assert SUPERVISED_LOOP_STATE_PROTOCOL_TEST.exists()
     assert GPT_PROMPT_GENERATOR_TEST.exists()
+    assert GPT_PROMPT_GENERATOR_LIVE_TEST.exists()
     assert CODEX_EXEC_ADAPTER_TEST.exists()
     assert STEP_DECISION_POLICY_TEST.exists()
     assert SUPERVISED_LOOP_SMOKE_TEST.exists()
@@ -1038,6 +1054,55 @@ def test_workflow_health_tracks_supervised_loop_ai_adapter_smoke_0980_1010() -> 
         assert fragment in decision_doc
     for fragment in ["1010-smoke-docs-step", "CODEX_DRY_RUN_DONE", "COMPLETED"]:
         assert fragment in smoke_doc
+
+
+def test_workflow_health_tracks_gpt_prompt_generator_live_controlled_1020() -> None:
+    script = read(SCRIPT)
+    doc = read(DOC)
+    index = read(INDEX)
+    live_doc = read(GPT_PROMPT_GENERATOR_LIVE_DOC)
+    plan_template = read(GPT_LIVE_CONTROLLED_PLAN_TEMPLATE)
+    result_template = read(GPT_LIVE_CONTROLLED_RESULT_TEMPLATE)
+
+    indexed_fragments = [
+        "docs/motor/1020_GPT_PROMPT_GENERATOR_LIVE_CONTROLLED_RUN.md",
+        "docs/templates/1020_GPT_LIVE_CONTROLLED_PLAN_TEMPLATE.json",
+        "docs/templates/1020_GPT_LIVE_CONTROLLED_RESULT_TEMPLATE.json",
+        "scripts/asf_gpt_prompt_generator.py",
+        "tests/unit/test_asf_gpt_prompt_generator.py",
+        "tests/unit/test_asf_gpt_prompt_generator_live_controlled.py",
+        "Quality-first operating principle",
+        "MOCK_SUCCESS",
+        "LIVE_SUCCESS",
+        "LIVE_SKIPPED_NO_APPROVAL",
+        "LIVE_SKIPPED_NO_API_KEY",
+        "LIVE_BLOCKED_BY_CONFIG",
+        "LIVE_BLOCKED_BY_PROVIDER",
+        "LIVE_BLOCKED_BY_QUOTA_OR_RATE_LIMIT",
+        "LIVE_FAILED_SAFE",
+        "1020-smoke-generate-codex-prompt",
+        "1020-A) Review and Publish Live Controlled Adapter",
+    ]
+
+    for fragment in indexed_fragments:
+        assert fragment in script
+        assert fragment in doc
+        assert fragment in index
+
+    for fragment in [
+        "mock",
+        "--approve-live",
+        "LIVE_SKIPPED_NO_APPROVAL",
+        "LIVE_SKIPPED_NO_API_KEY",
+        "LIVE_BLOCKED_BY_CONFIG",
+        "LIVE_BLOCKED_BY_QUOTA_OR_RATE_LIMIT",
+        "fail-closed behavior",
+    ]:
+        assert fragment in live_doc
+
+    for fragment in ["1020-smoke-generate-codex-prompt", "LIVE_SUCCESS", "LIVE_FAILED_SAFE"]:
+        assert fragment in plan_template
+        assert fragment in result_template
 
 
 def test_workflow_health_tracks_powershell_publish_skill_sync() -> None:
