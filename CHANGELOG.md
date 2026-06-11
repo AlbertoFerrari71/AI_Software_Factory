@@ -4,6 +4,45 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [1.01.0] - 2026-06-11
+
+### Added
+
+- MEGA-STEP 0980-1010 - ASF Supervised Loop AI Adapter and End-to-End Smoke Batch.
+- Documento `docs/motor/0980_GPT_PROMPT_GENERATOR_API_ADAPTER.md`.
+- Documento `docs/motor/0990_CODEX_EXEC_RUNNER_ADAPTER.md`.
+- Documento `docs/motor/1000_AUTO_REVIEW_AND_STEP_DECISION_POLICY.md`.
+- Documento `docs/motor/1010_FINAL_END_TO_END_SMOKE_TEST.md`.
+- Template `docs/templates/0980_GPT_PROMPT_REQUEST_TEMPLATE.json`.
+- Template `docs/templates/0990_CODEX_EXEC_ENVELOPE_TEMPLATE.json`.
+- Template `docs/templates/1000_STEP_DECISION_INPUT_TEMPLATE.json`.
+- Template `docs/templates/1010_SUPERVISED_LOOP_SMOKE_STATE_TEMPLATE.json`.
+- Script `scripts/asf_gpt_prompt_generator.py`.
+- Script `scripts/asf_codex_exec_adapter.py`.
+- Script `scripts/asf_step_decision_policy.py`.
+- Script `scripts/asf_supervised_loop_smoke.py`.
+- Test `tests/unit/test_asf_gpt_prompt_generator.py`, `tests/unit/test_asf_codex_exec_adapter.py`, `tests/unit/test_asf_step_decision_policy.py` e `tests/unit/test_asf_supervised_loop_smoke.py`.
+
+### Changed
+
+- `scripts/asf_verification_profile_selector.py` tratta gli adapter 0980-1010 come motor-core/FULL.
+- README, roadmap, decision log, Project Workflow Index e Workflow Health Check riconoscono il batch 0980-1010.
+- `tests/unit/test_workflow_health_check.py` copre i riferimenti 0980-1010.
+
+### Guardrails
+
+- Mock/dry-run first.
+- Nessuna API live.
+- Nessuna esecuzione reale di Codex.
+- Nessun publish, merge o deploy automatico.
+- Nessun commit, push, PR, merge, deploy o normalizzazione line endings eseguiti.
+
+### Next
+
+- Prossimo step consigliato: `1020) GPT Prompt Generator Live Controlled Run`.
+
+---
+
 ## [0.97.0] - 2026-06-10
 
 ### Added

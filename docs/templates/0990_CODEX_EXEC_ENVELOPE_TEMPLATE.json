@@ -1,0 +1,20 @@
+{
+  "step_id": "0990",
+  "mode": "dry-run",
+  "prompt_path": "D:\\FG-SAB Dropbox\\Alberto Ferrari\\ChatGPT_Bridge\\AI_Software_Factory\\codex_command\\0980-generated-prompt.md",
+  "working_directory": "C:\\Users\\alberto.ferrari\\source\\repos\\AI_Software_Factory",
+  "allowed_paths": [
+    "C:\\Users\\alberto.ferrari\\source\\repos\\AI_Software_Factory",
+    "D:\\FG-SAB Dropbox\\Alberto Ferrari\\ChatGPT_Bridge\\AI_Software_Factory\\codex_command"
+  ],
+  "forbidden_actions": [
+    "real codex execution",
+    "publish",
+    "merge",
+    "deploy"
+  ],
+  "execute_enabled": false,
+  "requires_alberto": false,
+  "status": "CODEX_DRY_RUN_DONE",
+  "next_action": "REVIEW_REQUESTED"
+}

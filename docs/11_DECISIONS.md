@@ -3946,8 +3946,6 @@ Il prossimo step consigliato e':
 0930) External Repo Push Pattern Generalization
 ```
 
----
-
 ## DEC-109 - ASF supervised loop lanes, Fast Lane and recovery
 
 **Data:** 2026-06-10
@@ -4022,6 +4020,38 @@ Il prossimo step consigliato e':
 
 ```text
 0980) GPT Prompt Generator API Adapter
+```
+
+---
+
+## DEC-111 - Supervised loop AI adapter smoke mock-first
+
+**Data:** 2026-06-11
+**Stato:** Accettata
+
+### Contesto
+
+Il batch 0945-0970 ha preparato profili adattivi, Bridge state, task runner PowerShell e recovery classifier. Prima di qualunque esecuzione live GPT o Codex serve un collegamento locale, mock e verificabile tra planner, Codex adapter, verification selector e policy decisionale.
+
+### Decisione
+
+Il mega-step 0980-1010 introduce:
+
+- GPT Prompt Generator API Adapter con `mock` default e `PROMPT_READY`;
+- Codex Exec Runner Adapter con `dry-run` default e `CODEX_DRY_RUN_DONE`;
+- Auto Review and Step Decision Policy con `PASS/FIX/STOP/ASK_ALBERTO`;
+- Final End-to-End Smoke Test su `1010-smoke-docs-step` fino a `COMPLETED`.
+
+La modalita' live e l'esecuzione reale Codex restano disabilitate e fail-closed.
+
+### Conseguenze
+
+ASF puo' ora dimostrare un ciclo supervisionato sintetico end-to-end senza chiamate live, senza publish automatico, senza merge automatico e senza deploy.
+
+Il prossimo step consigliato e':
+
+```text
+1020) GPT Prompt Generator Live Controlled Run
 ```
 
 ---

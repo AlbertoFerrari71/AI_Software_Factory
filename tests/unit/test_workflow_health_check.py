@@ -153,6 +153,18 @@ POWERSHELL_FAST_TASK_RUNNER_DOC = (
 POWERSHELL_RECOVERY_FOUNDATION_DOC = (
     ROOT / "docs" / "motor" / "0970_POWERSHELL_RECOVERY_LOOP_FOUNDATION.md"
 )
+GPT_PROMPT_GENERATOR_DOC = (
+    ROOT / "docs" / "motor" / "0980_GPT_PROMPT_GENERATOR_API_ADAPTER.md"
+)
+CODEX_EXEC_ADAPTER_DOC = (
+    ROOT / "docs" / "motor" / "0990_CODEX_EXEC_RUNNER_ADAPTER.md"
+)
+STEP_DECISION_POLICY_DOC = (
+    ROOT / "docs" / "motor" / "1000_AUTO_REVIEW_AND_STEP_DECISION_POLICY.md"
+)
+SUPERVISED_LOOP_SMOKE_DOC = (
+    ROOT / "docs" / "motor" / "1010_FINAL_END_TO_END_SMOKE_TEST.md"
+)
 SUPERVISED_LOOP_STATE_JSON_TEMPLATE = (
     ROOT / "docs" / "templates" / "0950_SUPERVISED_LOOP_STATE_JSON_TEMPLATE.json"
 )
@@ -165,13 +177,33 @@ POWERSHELL_TASK_ENVELOPE_EXAMPLES = (
 POWERSHELL_RECOVERY_CLASSIFICATION_EXAMPLES = (
     ROOT / "docs" / "templates" / "0970_POWERSHELL_RECOVERY_CLASSIFICATION_EXAMPLES.md"
 )
+GPT_PROMPT_REQUEST_TEMPLATE = (
+    ROOT / "docs" / "templates" / "0980_GPT_PROMPT_REQUEST_TEMPLATE.json"
+)
+CODEX_EXEC_ENVELOPE_TEMPLATE = (
+    ROOT / "docs" / "templates" / "0990_CODEX_EXEC_ENVELOPE_TEMPLATE.json"
+)
+STEP_DECISION_INPUT_TEMPLATE = (
+    ROOT / "docs" / "templates" / "1000_STEP_DECISION_INPUT_TEMPLATE.json"
+)
+SUPERVISED_LOOP_SMOKE_STATE_TEMPLATE = (
+    ROOT / "docs" / "templates" / "1010_SUPERVISED_LOOP_SMOKE_STATE_TEMPLATE.json"
+)
 POWERSHELL_TASK_RUNNER_SCRIPT = ROOT / "scripts" / "asf_powershell_task_runner.py"
 POWERSHELL_RECOVERY_CLASSIFIER_SCRIPT = ROOT / "scripts" / "asf_powershell_recovery_classifier.py"
+GPT_PROMPT_GENERATOR_SCRIPT = ROOT / "scripts" / "asf_gpt_prompt_generator.py"
+CODEX_EXEC_ADAPTER_SCRIPT = ROOT / "scripts" / "asf_codex_exec_adapter.py"
+STEP_DECISION_POLICY_SCRIPT = ROOT / "scripts" / "asf_step_decision_policy.py"
+SUPERVISED_LOOP_SMOKE_SCRIPT = ROOT / "scripts" / "asf_supervised_loop_smoke.py"
 POWERSHELL_TASK_RUNNER_TEST = ROOT / "tests" / "unit" / "test_asf_powershell_task_runner.py"
 POWERSHELL_RECOVERY_CLASSIFIER_TEST = (
     ROOT / "tests" / "unit" / "test_asf_powershell_recovery_classifier.py"
 )
 SUPERVISED_LOOP_STATE_PROTOCOL_TEST = ROOT / "tests" / "unit" / "test_supervised_loop_state_protocol.py"
+GPT_PROMPT_GENERATOR_TEST = ROOT / "tests" / "unit" / "test_asf_gpt_prompt_generator.py"
+CODEX_EXEC_ADAPTER_TEST = ROOT / "tests" / "unit" / "test_asf_codex_exec_adapter.py"
+STEP_DECISION_POLICY_TEST = ROOT / "tests" / "unit" / "test_asf_step_decision_policy.py"
+SUPERVISED_LOOP_SMOKE_TEST = ROOT / "tests" / "unit" / "test_asf_supervised_loop_smoke.py"
 
 
 def read(path: Path) -> str:
@@ -217,15 +249,31 @@ def test_workflow_health_check_files_exist() -> None:
     assert BRIDGE_STATE_PROTOCOL_DOC.exists()
     assert POWERSHELL_FAST_TASK_RUNNER_DOC.exists()
     assert POWERSHELL_RECOVERY_FOUNDATION_DOC.exists()
+    assert GPT_PROMPT_GENERATOR_DOC.exists()
+    assert CODEX_EXEC_ADAPTER_DOC.exists()
+    assert STEP_DECISION_POLICY_DOC.exists()
+    assert SUPERVISED_LOOP_SMOKE_DOC.exists()
     assert SUPERVISED_LOOP_STATE_JSON_TEMPLATE.exists()
     assert SUPERVISED_LOOP_EVENT_LOG_TEMPLATE.exists()
     assert POWERSHELL_TASK_ENVELOPE_EXAMPLES.exists()
     assert POWERSHELL_RECOVERY_CLASSIFICATION_EXAMPLES.exists()
+    assert GPT_PROMPT_REQUEST_TEMPLATE.exists()
+    assert CODEX_EXEC_ENVELOPE_TEMPLATE.exists()
+    assert STEP_DECISION_INPUT_TEMPLATE.exists()
+    assert SUPERVISED_LOOP_SMOKE_STATE_TEMPLATE.exists()
     assert POWERSHELL_TASK_RUNNER_SCRIPT.exists()
     assert POWERSHELL_RECOVERY_CLASSIFIER_SCRIPT.exists()
+    assert GPT_PROMPT_GENERATOR_SCRIPT.exists()
+    assert CODEX_EXEC_ADAPTER_SCRIPT.exists()
+    assert STEP_DECISION_POLICY_SCRIPT.exists()
+    assert SUPERVISED_LOOP_SMOKE_SCRIPT.exists()
     assert POWERSHELL_TASK_RUNNER_TEST.exists()
     assert POWERSHELL_RECOVERY_CLASSIFIER_TEST.exists()
     assert SUPERVISED_LOOP_STATE_PROTOCOL_TEST.exists()
+    assert GPT_PROMPT_GENERATOR_TEST.exists()
+    assert CODEX_EXEC_ADAPTER_TEST.exists()
+    assert STEP_DECISION_POLICY_TEST.exists()
+    assert SUPERVISED_LOOP_SMOKE_TEST.exists()
 
 
 def test_workflow_health_check_script_runs_successfully() -> None:
@@ -941,6 +989,55 @@ def test_workflow_health_tracks_supervised_loop_foundation_0945_0970() -> None:
         assert fragment in runner_doc
     for fragment in ["POTENTIALLY_DESTRUCTIVE_COMMAND", "max retry assoluto: 10", "UNKNOWN_FAILURE"]:
         assert fragment in recovery_doc
+
+
+def test_workflow_health_tracks_supervised_loop_ai_adapter_smoke_0980_1010() -> None:
+    script = read(SCRIPT)
+    doc = read(DOC)
+    index = read(INDEX)
+    prompt_doc = read(GPT_PROMPT_GENERATOR_DOC)
+    codex_doc = read(CODEX_EXEC_ADAPTER_DOC)
+    decision_doc = read(STEP_DECISION_POLICY_DOC)
+    smoke_doc = read(SUPERVISED_LOOP_SMOKE_DOC)
+
+    indexed_fragments = [
+        "docs/motor/0980_GPT_PROMPT_GENERATOR_API_ADAPTER.md",
+        "docs/motor/0990_CODEX_EXEC_RUNNER_ADAPTER.md",
+        "docs/motor/1000_AUTO_REVIEW_AND_STEP_DECISION_POLICY.md",
+        "docs/motor/1010_FINAL_END_TO_END_SMOKE_TEST.md",
+        "docs/templates/0980_GPT_PROMPT_REQUEST_TEMPLATE.json",
+        "docs/templates/0990_CODEX_EXEC_ENVELOPE_TEMPLATE.json",
+        "docs/templates/1000_STEP_DECISION_INPUT_TEMPLATE.json",
+        "docs/templates/1010_SUPERVISED_LOOP_SMOKE_STATE_TEMPLATE.json",
+        "scripts/asf_gpt_prompt_generator.py",
+        "scripts/asf_codex_exec_adapter.py",
+        "scripts/asf_step_decision_policy.py",
+        "scripts/asf_supervised_loop_smoke.py",
+        "tests/unit/test_asf_gpt_prompt_generator.py",
+        "tests/unit/test_asf_codex_exec_adapter.py",
+        "tests/unit/test_asf_step_decision_policy.py",
+        "tests/unit/test_asf_supervised_loop_smoke.py",
+        "PROMPT_READY",
+        "CODEX_DRY_RUN_DONE",
+        "PASS/FIX/STOP/ASK_ALBERTO",
+        "1010-smoke-docs-step",
+        "COMPLETED",
+        "1020) GPT Prompt Generator Live Controlled Run",
+    ]
+
+    for fragment in indexed_fragments:
+        assert fragment in script
+        assert fragment in doc
+        assert fragment in index
+
+    for fragment in ["mock", "live", "PROMPT_READY", "CODEX_DRY_RUN_READY"]:
+        assert fragment in prompt_doc
+    for fragment in ["dry-run", "CODEX_DRY_RUN_DONE", "CODEX_BLOCKED"]:
+        assert fragment in codex_doc
+    for fragment in ["PASS", "FIX", "STOP", "ASK_ALBERTO", "max retry assoluto: 10"]:
+        assert fragment in decision_doc
+    for fragment in ["1010-smoke-docs-step", "CODEX_DRY_RUN_DONE", "COMPLETED"]:
+        assert fragment in smoke_doc
 
 
 def test_workflow_health_tracks_powershell_publish_skill_sync() -> None:

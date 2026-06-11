@@ -1,0 +1,41 @@
+{
+  "schema_version": "1010.1",
+  "project": "AI_Software_Factory",
+  "bridge_root": "tmp/asf_supervised_loop_smoke/bridge_simulated",
+  "state_file": "state.json",
+  "event_log": "events.jsonl",
+  "step_id": "1010-smoke-docs-step",
+  "state": "IDLE",
+  "allowed_states": [
+    "IDLE",
+    "PLAN_REQUESTED",
+    "GPT_PLANNING",
+    "GPT_PLAN_READY",
+    "CODEX_READY",
+    "CODEX_DONE",
+    "REVIEW_REQUESTED",
+    "REVIEW_PASS",
+    "VERIFY_RUNNING",
+    "VERIFY_PASS",
+    "COMPLETED"
+  ],
+  "retry_policy": {
+    "name": "GPT-discretionary bounded retry policy",
+    "max_retry_absolute": 10,
+    "current_retry": 0,
+    "retry_remaining": 10,
+    "ceiling_is_default": false
+  },
+  "verification": {
+    "selected_profile": null,
+    "required_commands": [],
+    "passed_commands": [],
+    "failed_commands": []
+  },
+  "artifacts": {
+    "prompt": null,
+    "codex_envelope": null,
+    "state": "state.json",
+    "events": "events.jsonl"
+  }
+}

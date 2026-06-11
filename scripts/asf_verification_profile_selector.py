@@ -37,6 +37,10 @@ MOTOR_CORE_FILES = {
     "scripts/check_workflow_health.py",
     "scripts/asf_powershell_task_runner.py",
     "scripts/asf_powershell_recovery_classifier.py",
+    "scripts/asf_gpt_prompt_generator.py",
+    "scripts/asf_codex_exec_adapter.py",
+    "scripts/asf_step_decision_policy.py",
+    "scripts/asf_supervised_loop_smoke.py",
 }
 
 SCRIPT_TESTS = {
@@ -53,6 +57,10 @@ SCRIPT_TESTS = {
     "scripts/asf_powershell_recovery_classifier.py": (
         "python -m pytest tests/unit/test_asf_powershell_recovery_classifier.py -q"
     ),
+    "scripts/asf_gpt_prompt_generator.py": "python -m pytest tests/unit/test_asf_gpt_prompt_generator.py -q",
+    "scripts/asf_codex_exec_adapter.py": "python -m pytest tests/unit/test_asf_codex_exec_adapter.py -q",
+    "scripts/asf_step_decision_policy.py": "python -m pytest tests/unit/test_asf_step_decision_policy.py -q",
+    "scripts/asf_supervised_loop_smoke.py": "python -m pytest tests/unit/test_asf_supervised_loop_smoke.py -q",
 }
 
 INDEXED_DOC_PATHS = {
@@ -388,7 +396,10 @@ def has_approval_gate(gates: tuple[str, ...]) -> bool:
 
 def touches_api_or_security(paths: tuple[str, ...], intent: tuple[str, ...]) -> bool:
     values = paths + intent
-    return contains_keyword(values, ("api", "openai", "provider", "security", "secret", "credential", "token"))
+    return contains_keyword(
+        values,
+        ("api", "openai", "provider", "security", "secret", "credential", "token", "gpt", "codex", "adapter"),
+    )
 
 
 def touches_runner_core(paths: tuple[str, ...]) -> bool:
