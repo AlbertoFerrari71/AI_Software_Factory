@@ -1,7 +1,7 @@
 # AI Software Factory
 
 **Metodo interno:** Codex Alchemy Method
-**Stato:** STEP 0945-0970 - ASF Supervised Loop Foundation Batch
+**Stato:** STEP 0980-1010 - ASF Supervised Loop AI Adapter and End-to-End Smoke Batch
 **Data bootstrap:** 2026-05-25
 **Strategia:** local-first personale, progettato per evoluzione SaaS
 
@@ -28,7 +28,7 @@ Il metodo interno si chiama **Codex Alchemy Method**: l'idea grezza viene trasfo
 
 ## 2. Stato repository
 
-Questo repository e' nello stato **STEP 0945-0970 - ASF Supervised Loop Foundation Batch**.
+Questo repository e' nello stato **STEP 0980-1010 - ASF Supervised Loop AI Adapter and End-to-End Smoke Batch**.
 
 Sono presenti:
 
@@ -98,6 +98,7 @@ Sono presenti:
 - STEP 0923 - Publish Runner LF/CRLF Warning Stderr Handling, con whitelist stretta per warning Git LF/CRLF su stderr, warning visibili e fail-closed su stderr inatteso o exit code non zero.
 - STEP 0940 - ASF Supervised Loop Architecture with PowerShell Fast Lane and Recovery, con ADR, architettura supervised loop, PowerShell Fast Lane, PowerShell Recovery Loop, state machine, retry policy max 10, roadmap 0950-1010, template e runbook operatore.
 - STEP 0945-0970 - ASF Supervised Loop Foundation Batch, con profili adattivi `LIGHT`/`STANDARD`/`FULL`/`ESCALATED`, protocollo Bridge `state.json` e `.flag`, runner PowerShell dry-run default e recovery classifier locale.
+- STEP 0980-1010 - ASF Supervised Loop AI Adapter and End-to-End Smoke Batch, con prompt generator GPT mock-first, adapter Codex exec dry-run, decision policy `PASS/FIX/STOP/ASK_ALBERTO` e smoke `1010-smoke-docs-step` fino a `COMPLETED`.
 
 Non sono ancora presenti:
 
@@ -108,6 +109,7 @@ Non sono ancora presenti:
 - integrazioni MCP;
 - automazioni Codex operative;
 - Controlled Codex Executor;
+- esecuzioni GPT/Codex live controllate del supervised loop;
 - generalizzazione del pattern external repo controlled push per altre repo;
 - logica applicativa reale.
 

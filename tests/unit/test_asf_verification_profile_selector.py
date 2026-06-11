@@ -69,6 +69,10 @@ def test_motor_core_profile_is_recognized_for_runner_gate_risk_and_workflow_file
         "scripts/asf_risk_classifier.py",
         "scripts/asf_gate_decision_report.py",
         "scripts/check_workflow_health.py",
+        "scripts/asf_gpt_prompt_generator.py",
+        "scripts/asf_codex_exec_adapter.py",
+        "scripts/asf_step_decision_policy.py",
+        "scripts/asf_supervised_loop_smoke.py",
     ]:
         packet = select(risk_level="L2", changed_files=(path,))
         assert packet["profile"] == "motor-core", path

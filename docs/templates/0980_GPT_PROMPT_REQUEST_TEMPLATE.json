@@ -1,0 +1,24 @@
+{
+  "step_id": "0980",
+  "title": "GPT Prompt Generator API Adapter",
+  "objective": "Generate a deterministic Codex prompt from this step plan in mock mode.",
+  "risk_level": "L1",
+  "phase": "mock-planning",
+  "allowed_paths": [
+    "scripts/asf_gpt_prompt_generator.py",
+    "tests/unit/test_asf_gpt_prompt_generator.py",
+    "docs/motor/0980_GPT_PROMPT_GENERATOR_API_ADAPTER.md"
+  ],
+  "forbidden_actions": [
+    "live provider call",
+    "real codex execution",
+    "publish",
+    "merge",
+    "deploy"
+  ],
+  "expected_output": {
+    "mode": "mock",
+    "status": "PROMPT_READY",
+    "next_action": "CODEX_DRY_RUN_READY"
+  }
+}

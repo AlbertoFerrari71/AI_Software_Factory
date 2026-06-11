@@ -30,3 +30,17 @@ La sequenza piu' logica dopo 0940 e':
 
 Il primo passo deve essere 0950 per rendere stabile il contratto `state.json`/flag/report prima di implementare runner o adapter.
 
+## Stato dopo 0980-1010
+
+Il batch 0980-1010 ha implementato la versione mock/dry-run di:
+
+- `0980) GPT Prompt Generator API Adapter`;
+- `0990) Codex Exec Runner Adapter`;
+- `1000) Auto Review and Step Decision Policy`;
+- `1010) Final End-to-End Smoke Test`.
+
+Il prossimo passo consigliato e':
+
+```text
+1020) GPT Prompt Generator Live Controlled Run
+```
