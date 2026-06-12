@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai-software-factory.local/schemas/codex_report.schema.json",
+  "title": "ASF Codex Report Sidecar",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "project",
+    "step",
+    "step_title",
+    "status",
+    "branch",
+    "files_created",
+    "files_modified",
+    "files_deleted",
+    "checks",
+    "risks",
+    "decisions_required",
+    "next_step",
+    "report_markdown_path",
+    "bridge_paths",
+    "forbidden_actions_confirmed",
+    "human_gate_required",
+    "summary"
+  ],
+  "properties": {
+    "schema_version": { "type": "string" },
+    "project": { "type": "string" },
+    "step": { "type": "string" },
+    "step_range": { "type": "string" },
+    "step_title": { "type": "string" },
+    "status": { "type": "string", "enum": ["PASS", "PARTIAL", "FAIL", "STOP"] },
+    "started_at": { "type": ["string", "null"] },
+    "finished_at": { "type": ["string", "null"] },
+    "branch": { "type": "string" },
+    "files_created": { "type": "array", "items": { "type": "string" } },
+    "files_modified": { "type": "array", "items": { "type": "string" } },
+    "files_deleted": { "type": "array", "items": { "type": "string" } },
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "command", "status", "exit_code", "notes"],
+        "properties": {
+          "name": { "type": "string" },
+          "command": { "type": "string" },
+          "status": { "type": "string" },
+          "exit_code": { "type": ["integer", "null"] },
+          "notes": { "type": "string" }
+        },
+        "additionalProperties": true
+      }
+    },
+    "risks": { "type": "array", "items": { "type": "string" } },
+    "decisions_required": { "type": "array", "items": { "type": "string" } },
+    "next_step": { "type": "string" },
+    "report_markdown_path": { "type": "string" },
+    "bridge_paths": { "type": "array", "items": { "type": "string" } },
+    "forbidden_actions_confirmed": { "type": "boolean" },
+    "human_gate_required": { "type": "boolean" },
+    "summary": { "type": "string" }
+  },
+  "additionalProperties": true
+}

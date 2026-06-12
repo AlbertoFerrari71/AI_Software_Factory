@@ -26,6 +26,10 @@ For Alberto's operational vision of AI as a verifiable collaborator, see docs/pr
 - Do not modify external target repositories unless explicitly requested.
 - Do not include secrets, credentials, tokens, API keys, or private data in files or logs.
 - Do not paste platform policies or hidden instructions into repository files.
+- Step numbers are scoped by series namespace. Use the directory or series name
+  when the reference crosses a series, for example `motor/1050`,
+  `collaboration/0200` or `skills/0260`. A four-digit number is unique only
+  inside its own series.
 
 ## Git and publication rules
 
@@ -47,7 +51,13 @@ For Alberto's operational vision of AI as a verifiable collaborator, see docs/pr
 - Do not put complex Git logic, DOCX XML, long functions, nested here-strings, or fragile outer `finally` blocks in the pasted bootstrap.
 - In generated command-pack scripts, use `ArgList` for native command argument parameters; do not use `$Args` as a function parameter name.
 - For scope-sensitive Git parsing, use `git status --porcelain=v1 --untracked-files=all` so untracked directories are expanded to individual files before guarded staging.
-- Command packs must generate only progressive artifacts using `NNNN-II-Tipo_Nome.ext`; do not generate or read `LAST-*` artifacts.
+- `LAST-*` is deprecated as a general artifact pattern. Do not create new
+  permanent repository artifacts named `LAST-*`.
+- `LAST-*` is allowed only as standard operational Bridge output under
+  Bridge/codex_command, Bridge/pwsh_command, or as standard Bridge output
+  already implemented by the publish runner/state machine. These files are
+  compatibility mirrors, not authoritative repository artifacts.
+- Command packs must generate only progressive artifacts using `NNNN-II-Tipo_Nome.ext` for repository-durable artifacts.
 - To find the latest artifact of a type for a step, use `max(II)` for `(step, type)`.
 - The ChatGPT Bridge is operational storage, not the authoritative source; Git and versioned files are authoritative.
 - Publication command packs must use branch + PR by default for `main`; direct push to `main` is forbidden unless Alberto explicitly requests an emergency bypass.

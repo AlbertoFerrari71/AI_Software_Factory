@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0",
+  "project": "AI_Software_Factory",
+  "step_range": "1050-1130",
+  "step_title": "ASF V1 Supervised Operator Release Candidate",
+  "status": "PASS",
+  "started_at": null,
+  "finished_at": null,
+  "branch": "step/1050-1130-v1-operator-rc-audit-hardened",
+  "files_created": [
+    "scripts/asf_operator_status.py",
+    "scripts/asf_publish_readiness_gate.py",
+    "examples/operator/1050-1130-Report_Codex.json"
+  ],
+  "files_modified": [
+    "README.md",
+    "docs/34_PROJECT_WORKFLOW_INDEX.md"
+  ],
+  "files_deleted": [],
+  "checks": [
+    {
+      "name": "operator tests",
+      "command": "python -m pytest tests/unit/test_asf_operator_tools.py",
+      "status": "PASS",
+      "exit_code": 0,
+      "notes": "sample fixture"
+    },
+    {
+      "name": "risk eval",
+      "command": "python scripts/asf_risk_classifier_eval.py",
+      "status": "PASS",
+      "exit_code": 0,
+      "notes": "zero downgrade"
+    }
+  ],
+  "risks": [
+    "Publication remains human-gated.",
+    "Bridge is operational storage, not authoritative."
+  ],
+  "decisions_required": [
+    "Alberto approval required before any publish."
+  ],
+  "next_step": "1140) Prompt Injection Adversarial Samples and Fencing",
+  "report_markdown_path": "examples/operator/1050-1130-Report_Codex.md",
+  "bridge_paths": [],
+  "forbidden_actions_confirmed": true,
+  "human_gate_required": true,
+  "summary": "Dogfood sample report for ASF operator loop."
+}

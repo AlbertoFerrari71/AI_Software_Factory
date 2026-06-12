@@ -1,0 +1,13 @@
+title = "AI Software Factory gitleaks configuration"
+
+[allowlist]
+description = "Repository contains documented placeholders and fake examples only."
+paths = [
+  '''docs/templates/.*''',
+  '''examples/.*''',
+]
+
+regexes = [
+  '''ASF_OPENAI_LIVE_SMOKE_OK''',
+  '''I_UNDERSTAND_THIS_CALLS_OPENAI_API''',
+]

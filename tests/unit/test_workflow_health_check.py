@@ -180,6 +180,32 @@ PROMPT_LENGTH_ADVISOR_DOC = ROOT / "docs" / "motor" / "1030_PROMPT_LENGTH_ADVISO
 PROVIDER_RESPONSE_DIAGNOSTIC_DOC = (
     ROOT / "docs" / "motor" / "1035_PROVIDER_RESPONSE_DIAGNOSTIC_SANITIZED_REVIEW.md"
 )
+OPERATOR_CONTRACT_DOC = ROOT / "docs" / "motor" / "1050_CONTRACT_COHERENCE_AND_NUMBERING_BASELINE.md"
+SECRET_SCAN_DOC = ROOT / "docs" / "motor" / "1060_SECRET_SCANNING_GATE_FOUNDATION.md"
+WINDOWS_CI_DOC = ROOT / "docs" / "motor" / "1070_WINDOWS_CI_MATRIX_FOR_POWERSHELL_RUNNER.md"
+CODEX_REPORT_SCHEMA_DOC = ROOT / "docs" / "motor" / "1080_CODEX_REPORT_JSON_SIDECAR_AND_LATEST_RESOLVER.md"
+RISK_EVAL_DOC = ROOT / "docs" / "motor" / "1090_RISK_CLASSIFIER_GOLDEN_EVAL_ZERO_DOWNGRADE.md"
+INDEPENDENT_REVIEW_PROTOCOL_DOC = (
+    ROOT / "docs" / "motor" / "1100_INDEPENDENT_REVIEW_AND_DISAGREEMENT_PROTOCOL.md"
+)
+OPERATOR_STATUS_DOC = ROOT / "docs" / "motor" / "1110_ASF_OPERATOR_STATUS_AND_PUBLISH_READINESS.md"
+DOGFOOD_EVIDENCE_DOC = ROOT / "docs" / "motor" / "1120_REAL_DOGFOOD_LOOP_EVIDENCE.md"
+OPERATOR_RC_DOC = ROOT / "docs" / "motor" / "1130_ASF_V1_SUPERVISED_OPERATOR_RC.md"
+OPERATOR_RUNBOOK_DOC = ROOT / "docs" / "motor" / "1130_OPERATOR_RUNBOOK.md"
+OPERATOR_LIMITS_DOC = ROOT / "docs" / "motor" / "1130_KNOWN_LIMITS_AND_NEXT_ROADMAP.md"
+CODEX_REPORT_SCHEMA_TEMPLATE = ROOT / "docs" / "templates" / "codex_report.schema.json"
+INDEPENDENT_REVIEW_PACKET_TEMPLATE = ROOT / "docs" / "templates" / "independent_review_packet.md"
+DISAGREEMENT_COMPARISON_TEMPLATE = ROOT / "docs" / "templates" / "disagreement_comparison.md"
+LATEST_REPORT_RESOLVER_SCRIPT = ROOT / "scripts" / "asf_latest_report_resolver.py"
+OPERATOR_STATUS_SCRIPT = ROOT / "scripts" / "asf_operator_status.py"
+PUBLISH_READINESS_SCRIPT = ROOT / "scripts" / "asf_publish_readiness_gate.py"
+REVIEWER_PACKET_SCRIPT = ROOT / "scripts" / "asf_reviewer_packet_builder.py"
+CODEX_NEXT_PROMPT_SCRIPT = ROOT / "scripts" / "asf_codex_next_prompt_builder.py"
+RISK_CLASSIFIER_EVAL_SCRIPT = ROOT / "scripts" / "asf_risk_classifier_eval.py"
+RISK_CLASSIFIER_GOLDEN = ROOT / "examples" / "eval" / "risk_classifier" / "golden.jsonl"
+DOGFOOD_REPORT_JSON = ROOT / "examples" / "operator" / "1120_sample_codex_report.json"
+DOGFOOD_NATIVE_REPORT_JSON = ROOT / "examples" / "operator" / "1050-1130-Report_Codex.json"
+REVIEWER_PACKET_EXAMPLE = ROOT / "examples" / "reviewer_packets" / "1110-GPT_Reviewer_Packet.md"
 SUPERVISED_LOOP_STATE_JSON_TEMPLATE = (
     ROOT / "docs" / "templates" / "0950_SUPERVISED_LOOP_STATE_JSON_TEMPLATE.json"
 )
@@ -333,6 +359,30 @@ def test_workflow_health_check_files_exist() -> None:
     assert PROMPT_LENGTH_ADVISOR_TEST.exists()
     assert DONE_TRIGGER_SPEC_TEST.exists()
     assert PROVIDER_RESPONSE_DIAGNOSTIC_TEST.exists()
+    assert OPERATOR_CONTRACT_DOC.exists()
+    assert SECRET_SCAN_DOC.exists()
+    assert WINDOWS_CI_DOC.exists()
+    assert CODEX_REPORT_SCHEMA_DOC.exists()
+    assert RISK_EVAL_DOC.exists()
+    assert INDEPENDENT_REVIEW_PROTOCOL_DOC.exists()
+    assert OPERATOR_STATUS_DOC.exists()
+    assert DOGFOOD_EVIDENCE_DOC.exists()
+    assert OPERATOR_RC_DOC.exists()
+    assert OPERATOR_RUNBOOK_DOC.exists()
+    assert OPERATOR_LIMITS_DOC.exists()
+    assert CODEX_REPORT_SCHEMA_TEMPLATE.exists()
+    assert INDEPENDENT_REVIEW_PACKET_TEMPLATE.exists()
+    assert DISAGREEMENT_COMPARISON_TEMPLATE.exists()
+    assert LATEST_REPORT_RESOLVER_SCRIPT.exists()
+    assert OPERATOR_STATUS_SCRIPT.exists()
+    assert PUBLISH_READINESS_SCRIPT.exists()
+    assert REVIEWER_PACKET_SCRIPT.exists()
+    assert CODEX_NEXT_PROMPT_SCRIPT.exists()
+    assert RISK_CLASSIFIER_EVAL_SCRIPT.exists()
+    assert RISK_CLASSIFIER_GOLDEN.exists()
+    assert DOGFOOD_REPORT_JSON.exists()
+    assert DOGFOOD_NATIVE_REPORT_JSON.exists()
+    assert REVIEWER_PACKET_EXAMPLE.exists()
     assert CODEX_EXEC_ADAPTER_TEST.exists()
     assert STEP_DECISION_POLICY_TEST.exists()
     assert SUPERVISED_LOOP_SMOKE_TEST.exists()
@@ -1262,6 +1312,82 @@ def test_workflow_health_tracks_provider_response_diagnostic_1035() -> None:
         "1030_READY_FOR_PUBLISH_AFTER_REVIEW",
     ]:
         assert fragment in diagnostic_doc
+
+
+def test_workflow_health_tracks_operator_rc_1050_1130() -> None:
+    script = read(SCRIPT)
+    doc = read(DOC)
+    index = read(INDEX)
+    contract_doc = read(OPERATOR_CONTRACT_DOC)
+    secret_doc = read(SECRET_SCAN_DOC)
+    windows_doc = read(WINDOWS_CI_DOC)
+    resolver_doc = read(CODEX_REPORT_SCHEMA_DOC)
+    eval_doc = read(RISK_EVAL_DOC)
+    review_doc = read(INDEPENDENT_REVIEW_PROTOCOL_DOC)
+    status_doc = read(OPERATOR_STATUS_DOC)
+    dogfood_doc = read(DOGFOOD_EVIDENCE_DOC)
+    rc_doc = read(OPERATOR_RC_DOC)
+    runbook_doc = read(OPERATOR_RUNBOOK_DOC)
+    limits_doc = read(OPERATOR_LIMITS_DOC)
+
+    indexed_fragments = [
+        "docs/motor/1050_CONTRACT_COHERENCE_AND_NUMBERING_BASELINE.md",
+        "docs/motor/1060_SECRET_SCANNING_GATE_FOUNDATION.md",
+        "docs/motor/1070_WINDOWS_CI_MATRIX_FOR_POWERSHELL_RUNNER.md",
+        "docs/motor/1080_CODEX_REPORT_JSON_SIDECAR_AND_LATEST_RESOLVER.md",
+        "docs/motor/1090_RISK_CLASSIFIER_GOLDEN_EVAL_ZERO_DOWNGRADE.md",
+        "docs/motor/1100_INDEPENDENT_REVIEW_AND_DISAGREEMENT_PROTOCOL.md",
+        "docs/motor/1110_ASF_OPERATOR_STATUS_AND_PUBLISH_READINESS.md",
+        "docs/motor/1120_REAL_DOGFOOD_LOOP_EVIDENCE.md",
+        "docs/motor/1130_ASF_V1_SUPERVISED_OPERATOR_RC.md",
+        "docs/motor/1130_OPERATOR_RUNBOOK.md",
+        "docs/motor/1130_KNOWN_LIMITS_AND_NEXT_ROADMAP.md",
+        "docs/templates/codex_report.schema.json",
+        "docs/templates/independent_review_packet.md",
+        "docs/templates/disagreement_comparison.md",
+        "scripts/asf_latest_report_resolver.py",
+        "scripts/asf_operator_status.py",
+        "scripts/asf_publish_readiness_gate.py",
+        "scripts/asf_reviewer_packet_builder.py",
+        "scripts/asf_codex_next_prompt_builder.py",
+        "scripts/asf_risk_classifier_eval.py",
+        "examples/eval/risk_classifier/golden.jsonl",
+        "examples/operator/1120_sample_codex_report.json",
+        "examples/reviewer_packets/1110-GPT_Reviewer_Packet.md",
+        "LAST-* is deprecated as a general repository artifact pattern",
+        "Bridge/codex_command",
+        "namespace = directory/serie",
+        "TREE.txt is not the live operational map",
+        "gitleaks",
+        "windows-powershell-runner-gate",
+        "zero downgrade",
+        "ASK_ALBERTO is mandatory",
+        "publish_command_allowed=false",
+        "1140) Prompt Injection Adversarial Samples and Fencing",
+    ]
+
+    for fragment in indexed_fragments:
+        assert fragment in script
+        assert fragment in doc
+        assert fragment in index
+
+    for fragment in [
+        "Bridge/codex_command",
+        "namespace = directory/serie",
+        "TREE.txt is not the live operational map",
+    ]:
+        assert fragment in contract_doc
+    for fragment in ["gitleaks", "CI is the strong gate", "warning"]:
+        assert fragment in secret_doc
+    assert "windows-powershell-runner-gate" in windows_doc
+    assert "scripts/asf_latest_report_resolver.py" in resolver_doc
+    assert "zero downgrade" in eval_doc
+    assert "ASK_ALBERTO is mandatory" in review_doc
+    assert "publish_command_allowed=false" in status_doc
+    assert "1120_sample_codex_report.json" in dogfood_doc
+    assert "no automatic publish" in rc_doc
+    assert "Codex fatto" in runbook_doc
+    assert "Error Learning Ledger 0930" in limits_doc
 
 
 def test_workflow_health_tracks_powershell_publish_skill_sync() -> None:

@@ -61,8 +61,8 @@ No support agent should write automatic OS appunti, create hidden publication st
 
 ## Critical conventions
 
-- **Step numbering:** all work is organized as numbered steps `NNNN) Title`. The current step / next step is tracked in `README.md` §2 and §11. Preserve existing numbering when adding docs.
-- **Artifact naming:** progressive artifacts use `NNNN-II-Tipo_Nome.ext`. **Never create or read `LAST-*` artifacts** (deprecated) — to find the latest artifact of a type, use `max(II)` for `(step, type)`.
+- **Step numbering:** all work is organized as numbered steps `NNNN) Title` inside a series namespace. Use cross-series references such as `motor/1050`, `collaboration/0200`, or `skills/0260`; a four-digit number is unique only inside its directory/series. Preserve existing numbering when adding docs and do not renumber historical gaps.
+- **Artifact naming:** progressive artifacts use `NNNN-II-Tipo_Nome.ext`. `LAST-*` is deprecated as a general repository artifact pattern. The only exception is standard operational Bridge output under Bridge/codex_command, Bridge/pwsh_command, or existing publish runner/state machine Bridge mirrors. Do not create permanent repository artifacts named `LAST-*`; to find the latest durable artifact of a type, use `max(II)` for `(step, type)`.
 - **The "Bridge":** the ChatGPT Bridge is operational scratch storage, **not authoritative** — Git and versioned files are the source of truth. Test-time Bridge output must go under `tmp/` or an ignored location, never to real Dropbox.
 - **Human gates are mandatory:** do not commit, push, open PRs, merge, tag, or deploy unless the user explicitly asks. If asked, run the verification gate first and stop on failure. Publishing to `main` is **branch + PR by default**; direct push to `main` is forbidden absent an explicit emergency bypass.
 - **Scope discipline:** do not delete/move/rename/overwrite files outside the requested scope; do not modify external target repositories unless explicitly requested. A target repo becoming dirty after a read-only run is a serious safety failure.

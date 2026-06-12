@@ -4,6 +4,36 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [1.05.0] - 2026-06-12
+
+### Added
+
+- STEP 1050-1130 - ASF V1 Supervised Operator Release Candidate.
+- Resolver report Codex JSON/Markdown `scripts/asf_latest_report_resolver.py`.
+- Operator status, publish readiness, reviewer packet e draft prompt builder.
+- Risk classifier golden eval zero-downgrade con dataset JSONL.
+- Secret scan foundation con gitleaks in CI e warning locale esplicito.
+- Windows PowerShell Runner Gate in GitHub Actions.
+- RC pack, runbook, known limits e dogfood evidence pack.
+
+### Changed
+
+- AGENTS.md, CLAUDE.md e README documentano numerazione multi-serie.
+- Regola `LAST-*` chiarita: vietata come pattern generale repo, ammessa solo come mirror operativo Bridge standard.
+- Workflow Health Check e Project Workflow Index riconoscono la milestone 1050-1130.
+
+### Guardrails
+
+- Nessun commit, push, PR, merge, tag o deploy eseguito.
+- Publish readiness gate non pubblica e mantiene `publish_command_allowed=false`.
+- Nessun segreto o raw provider payload nei fixture.
+
+### Next
+
+- `1140) Prompt Injection Adversarial Samples and Fencing`.
+
+---
+
 ## [1.04.1] - 2026-06-12
 
 ### Added

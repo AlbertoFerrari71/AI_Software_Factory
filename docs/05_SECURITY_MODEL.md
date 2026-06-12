@@ -143,7 +143,8 @@ Regole obbligatorie:
 - non copiare token in prompt, log, issue, PR o documentazione;
 - mascherare eventuali token nei log;
 - non inserire chiavi API nei template;
-- introdurre in futuro un secret scanner nel Verification Gate.
+- usare un secret scanner nel Verification Gate quando disponibile localmente;
+- mantenere la CI come fonte forte per il secret scanning.
 
 Pattern da trattare come sensibili:
 
@@ -155,6 +156,22 @@ Pattern da trattare come sensibili:
 - certificati;
 - chiavi SSH;
 - cookie/session token.
+
+### 8.1 Secret scanning gate
+
+STEP 1060 introduce una fondazione operativa basata su gitleaks:
+
+- la CI esegue un job dedicato di secret scanning;
+- `scripts/verify.ps1` prova a eseguire gitleaks se il binario e'
+  disponibile localmente;
+- se gitleaks manca localmente, il verify registra un warning esplicito e non
+  inventa un PASS locale;
+- nessun test o fixture deve contenere segreti reali;
+- eventuali allowlist versionate devono spiegare perche' un pattern e' lecito.
+
+Il warning locale "gitleaks not available" non autorizza pubblicazione da solo:
+prima di publish serve comunque il gate umano e la CI deve restare la fonte
+forte per lo scan.
 
 ---
 

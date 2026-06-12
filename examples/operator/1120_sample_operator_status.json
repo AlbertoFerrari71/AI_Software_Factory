@@ -1,0 +1,14 @@
+{
+  "project": "AI_Software_Factory",
+  "branch": "step/1050-1130-v1-operator-rc-audit-hardened",
+  "working_tree_status": "fixture",
+  "latest_commit": "sample",
+  "bridge_reachable": true,
+  "latest_report": "examples/operator/1120_sample_codex_report.json",
+  "latest_step": "1050-1130",
+  "expected_next_step": "1140) Prompt Injection Adversarial Samples and Fencing",
+  "warnings": [
+    "fixture only"
+  ],
+  "recommended_action": "Generate GPT reviewer packet and keep publish human-gated."
+}

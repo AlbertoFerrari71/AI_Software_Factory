@@ -23,6 +23,13 @@ Official source = Git + versioned file.
 Bridge = operational, not authoritative.
 ```
 
+STEP 1050 clarification: `LAST-*` remains deprecated as a general repository
+artifact pattern. The only accepted exception is operational Bridge
+compatibility output under Bridge/codex_command, Bridge/pwsh_command, or
+standard Bridge mirrors already produced by the publish runner/state machine.
+Those `LAST-*` files are convenience mirrors, not authoritative durable
+artifacts, and must not be introduced as permanent repository files.
+
 ## 3. Naming Standard
 
 Use:
@@ -126,7 +133,8 @@ remain historical evidence only.
 Historical docs, changelog entries and decision records can mention `LAST-*`
 when they describe what an older step did. New operational instructions,
 templates and skill exports must not ask agents or command packs to generate or
-read `LAST-*`.
+read `LAST-*` as durable repository artifacts. The Bridge exception in section
+2 is limited to standard operational mirrors.
 
 PowerShell `$LASTEXITCODE` is unrelated to `LAST-*` artifact files and remains
 valid where native command exit-code handling is required.
