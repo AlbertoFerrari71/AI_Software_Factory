@@ -131,6 +131,8 @@ Esempio:
 | 945-970 | ASF Supervised Loop Foundation Batch | Preparare selector adattivo, Bridge state/semafori, runner PowerShell dry-run e recovery classifier | Profili LIGHT/STANDARD/FULL/ESCALATED, `state.json`, task runner, classifier, test e docs | ASF V1 Completion | Completato |
 | 980-1010 | ASF Supervised Loop AI Adapter and End-to-End Smoke Batch | Collegare prompt generator GPT mock, Codex exec dry-run, decision policy e smoke finale | Adapter mock/dry-run, policy `PASS/FIX/STOP/ASK_ALBERTO`, smoke `1010-smoke-docs-step`, test e docs | ASF V1 Completion | Completato |
 | 1020 | GPT Prompt Generator Live Controlled Run | Maturare il prompt generator con live controllato, fail-closed e sanitizzato | `--approve-live`, una sola chiamata provider, fallback mock, result JSON/Markdown sanitizzati e Quality-first operating principle | ASF V1 Completion | Completato |
+| 1030 | ASF GPT Live Continuity Mega-Step | Rafforzare parser Responses API e continuita' manuale/semi-automatica tra ChatGPT, Codex, PowerShell, Bridge e nuova chat | Responses parser hardening, parser normalizzato, Bridge report discovery, Done Trigger Spec, handoff pack generator, prompt length advisor leggero, smoke sicuro e test | ASF V1 Completion | Completato |
+| 1035 | Provider Response Diagnostic Sanitized Review | Diagnosticare in sicurezza lo shape provider dopo LIVE_FAILED_SAFE 1030 | Sanitizer shape provider, candidate path detector, live diagnostic one-call, evidence Bridge sanitizzata e decisione per 1030 | ASF V1 Completion | Completato |
 | 0200-0280 | Shared Four-Hands Development Backbone | Preparare il backbone documentale e operativo Alberto-Luca su piu' repo | Documenti `docs/collaboration`, template, script PowerShell safe-by-default, policy Bridge/GitHub/skills/segreti | Collaboration Backbone | Completato |
 
 ---
@@ -215,10 +217,26 @@ Prossimo step consigliato dopo 0980-1010, ora eseguito dallo STEP 1020:
 
 ---
 
-Prossimo step consigliato dopo 1020:
+Prossimo step consigliato dopo 1020, ora eseguito dallo STEP 1030:
 
 ```text
-1020-A) Review and Publish Live Controlled Adapter
+1030) ASF GPT Live Continuity Mega-Step
+```
+
+---
+
+Prossimo step consigliato dopo 1030, ora eseguito dallo STEP 1035:
+
+```text
+1035) Provider Response Diagnostic Sanitized Review
+```
+
+---
+
+Prossimo step consigliato dopo 1035:
+
+```text
+1040) Publish GPT Live Continuity Mega-Step
 ```
 
 ---

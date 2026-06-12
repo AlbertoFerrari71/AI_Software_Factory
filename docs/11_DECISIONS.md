@@ -4281,3 +4281,81 @@ Il prossimo step consigliato e':
 [F] Il Verification Gate diventa ripetibile su PC Alberto, PC Luca, Codex e CI anche quando una shell locale contiene `OPENAI_API_KEY`.
 
 [F] Il valore della credenziale non viene letto, stampato o salvato.
+
+---
+
+## DEC-115 - ASF GPT Live Continuity and Handoff Bridge
+
+**Data:** 2026-06-11
+**Stato:** Accettata
+
+### Contesto
+
+[F] Dopo lo STEP 1020, la live GPT era arrivata fino alla chiamata provider controllata, ma il parser non estraeva il prompt dalla risposta Responses API in modo abbastanza robusto.
+
+[F] Il loop operativo tra ChatGPT, Codex, PowerShell, Bridge e nuova chat richiede meno copia-incolla e meno perdita di contesto, senza diventare un loop automatico unattended.
+
+### Decisione
+
+[F] Lo STEP 1030 introduce Responses API Output Extraction Hardening nel GPT Prompt Generator.
+
+[F] Il parser supporta `output_text`, `output[].content[].text`, content part `type=output_text`, oggetti SDK-like con `model_dump`, `to_dict` o `dict`, e refusal fail-closed.
+
+[F] `scripts/asf_responses_parser.py` aggiunge una normalizzazione deterministica per JSON/dict Responses-style con stati `success`, `empty`, `partial`, `malformed`, `provider_error`, `rate_limited`, `quota_exceeded`, `missing_credentials` e `unknown_schema`.
+
+[F] La live reale resta una sola chiamata controllata: il client OpenAI deve essere creato con `max_retries=0`; se non e' garantibile, la live viene bloccata prima della chiamata.
+
+[F] Lo STEP 1030 introduce anche `scripts/asf_bridge_report_discovery.py`, `docs/motor/1030_DONE_TRIGGER_SPEC.md` e `scripts/asf_handoff_pack_generator.py` per discovery report/output e ripartenza nuova chat.
+
+[F] Il prompt monolitico da 20-30k caratteri resta il default ASF/Codex. L'advisor `scripts/asf_prompt_length_advisor.py` e' solo un guardrail leggero: nessuna packetizzazione obbligatoria e nessuno splitter automatico.
+
+### Conseguenze
+
+[F] I trigger come `Codex fatto`, `CF`, `Pwsh fatto` e `PF` sono una convenzione operativa documentata: ChatGPT deve cercare il report nel Bridge se ha accesso e chiedere incolla manuale solo se necessario.
+
+[F] Il Bridge resta storage operativo. Git e file versionati restano autorevoli.
+
+[F] Nessun publish automatico, merge automatico, Codex exec reale, scheduler o polling continuo viene introdotto nello STEP 1030.
+
+[F] Nessun sistema pesante di context governance viene introdotto nello STEP 1030.
+
+Il prossimo step consigliato e':
+
+```text
+1040) Publish GPT Live Continuity Mega-Step
+```
+
+---
+
+## DEC-116 - Provider Response Diagnostic Sanitized Review
+
+**Data:** 2026-06-12
+**Stato:** Accettata
+
+### Contesto
+
+[F] Lo STEP 1030 ha chiuso i gate locali PASS ma ha lasciato stato `PARTIAL` per una live one-call `LIVE_FAILED_SAFE` con messaggio sanitizzato `Provider response did not contain prompt text.`
+
+[F] Non e' consentito salvare raw request, raw response, token, API key o testo provider completo per diagnosticare lo schema.
+
+### Decisione
+
+[F] Lo STEP 1035 introduce `scripts/asf_provider_response_diagnostic.py` come diagnostica chirurgica e testata.
+
+[F] Il sanitizer salva solo shape, chiavi, tipi, lunghezze, enum strutturali consentiti e path candidati, senza payload raw.
+
+[F] La live diagnostic resta al massimo una chiamata, con retry automatici disabilitati e `store=false`.
+
+[F] La diagnostica 1035 ha confermato testo utile in `output[1].content[0].text`, path gia' supportato dal parser 1030.
+
+### Conseguenze
+
+[F] Nessuna micro-patch parser e' richiesta dallo STEP 1035.
+
+[F] Lo STEP 1030 non viene trasformato retroattivamente in PASS, ma la decisione consigliata diventa `1030_READY_FOR_PUBLISH_AFTER_REVIEW`.
+
+Il prossimo step consigliato e':
+
+```text
+1040) Publish GPT Live Continuity Mega-Step
+```

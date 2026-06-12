@@ -6,6 +6,7 @@ import json
 import os
 import re
 import sys
+from collections.abc import Mapping as MappingABC
 from dataclasses import dataclass
 from pathlib import Path
 from tempfile import gettempdir
@@ -52,6 +53,7 @@ PROVIDER_ERROR_CLASSES = {
     "bad_request",
     "unknown_provider_error",
     "invalid_live_config",
+    "provider_refusal",
 }
 SECRET_REDACTION = "[REDACTED_SECRET]"
 OPENAI_SECRET_PATTERN = re.compile(r"sk-(?:proj-|svcacct-)?[A-Za-z0-9_-]{8,}")
@@ -62,6 +64,14 @@ SECRET_ASSIGNMENT_PATTERN = re.compile(
 
 
 LiveClientFactory = Callable[[str], Any]
+
+
+class LiveRetryConfigurationError(RuntimeError):
+    """Raised when the provider client cannot guarantee one-call/no-retry behavior."""
+
+
+class ProviderRefusalError(ValueError):
+    """Raised when the provider returned a refusal instead of prompt text."""
 
 
 @dataclass(frozen=True)
@@ -313,6 +323,16 @@ def load_openai_client_class() -> Any:
         raise ImportError("openai package does not expose OpenAI client") from exc
 
 
+def build_default_live_client(api_key: str) -> Any:
+    openai_client_class = load_openai_client_class()
+    try:
+        return openai_client_class(api_key=api_key, max_retries=0)
+    except TypeError as exc:
+        raise LiveRetryConfigurationError(
+            "OpenAI client does not support max_retries=0; live call not attempted."
+        ) from exc
+
+
 def build_live_request_text(plan: StepPlan) -> str:
     safe_plan = json.dumps(sanitize_data(plan.raw), indent=2, sort_keys=True)
     return "\n".join(
@@ -332,38 +352,186 @@ def build_live_request_text(plan: StepPlan) -> str:
     )
 
 
-def extract_response_text(response: Any) -> str:
-    output_text = getattr(response, "output_text", None)
-    if output_text:
-        return compact_string(output_text)
-    if isinstance(response, Mapping):
-        output_text = response.get("output_text")
-        if output_text:
-            return compact_string(output_text)
-        choices = response.get("choices")
-        if isinstance(choices, list) and choices:
-            first = choices[0]
-            if isinstance(first, Mapping):
-                message = first.get("message")
-                if isinstance(message, Mapping) and message.get("content"):
-                    return compact_string(message["content"])
-    output = getattr(response, "output", None)
+def _call_response_serializer(value: Any, name: str) -> Any:
+    serializer = getattr(value, name, None)
+    if not callable(serializer):
+        return None
+    try:
+        if name == "model_dump":
+            try:
+                return serializer(mode="json")
+            except TypeError:
+                return serializer()
+        return serializer()
+    except Exception:
+        return None
+
+
+def _normalize_provider_response(value: Any, *, _depth: int = 0, _seen: set[int] | None = None) -> Any:
+    if _depth > 8:
+        return None
+    if value is None or isinstance(value, str | int | float | bool):
+        return value
+
+    if _seen is None:
+        _seen = set()
+    object_id = id(value)
+    if object_id in _seen:
+        return None
+    _seen.add(object_id)
+
+    if isinstance(value, MappingABC):
+        return {
+            str(key): _normalize_provider_response(item, _depth=_depth + 1, _seen=_seen)
+            for key, item in value.items()
+        }
+    if isinstance(value, list | tuple):
+        return [_normalize_provider_response(item, _depth=_depth + 1, _seen=_seen) for item in value]
+
+    for serializer_name in ("model_dump", "to_dict", "dict"):
+        serialized = _call_response_serializer(value, serializer_name)
+        if serialized is not None and serialized is not value:
+            return _normalize_provider_response(serialized, _depth=_depth + 1, _seen=_seen)
+
+    attrs: dict[str, Any] = {}
+    for attr_name in (
+        "id",
+        "object",
+        "status",
+        "output_text",
+        "output",
+        "content",
+        "text",
+        "type",
+        "role",
+        "refusal",
+        "message",
+        "choices",
+        "error",
+    ):
+        try:
+            attr_value = getattr(value, attr_name)
+        except Exception:
+            continue
+        if attr_value is not None:
+            attrs[attr_name] = _normalize_provider_response(attr_value, _depth=_depth + 1, _seen=_seen)
+
+    if attrs:
+        return attrs
+
+    public_attrs = getattr(value, "__dict__", None)
+    if isinstance(public_attrs, dict):
+        return {
+            str(key): _normalize_provider_response(item, _depth=_depth + 1, _seen=_seen)
+            for key, item in public_attrs.items()
+            if not str(key).startswith("_")
+        }
+
+    return None
+
+
+def _append_text_segment(segments: list[str], value: Any) -> None:
+    if isinstance(value, str):
+        text = compact_string(value)
+        if text and text not in segments:
+            segments.append(text)
+        return
+    for item in compact_list(value):
+        if item and item not in segments:
+            segments.append(item)
+
+
+def _is_refusal_node(value: Any) -> bool:
+    if not isinstance(value, dict):
+        return False
+    node_type = compact_string(value.get("type")).casefold()
+    if node_type == "refusal":
+        return True
+    refusal = value.get("refusal")
+    return isinstance(refusal, str) and bool(compact_string(refusal))
+
+
+def _response_has_refusal(value: Any) -> bool:
+    if isinstance(value, dict):
+        if _is_refusal_node(value):
+            return True
+        return any(_response_has_refusal(item) for item in value.values())
+    if isinstance(value, list):
+        return any(_response_has_refusal(item) for item in value)
+    return False
+
+
+def _iter_content_text_segments(content: Any) -> list[str]:
+    segments: list[str] = []
+    content_items = content if isinstance(content, list) else [content]
+    for content_item in content_items:
+        if isinstance(content_item, str):
+            _append_text_segment(segments, content_item)
+            continue
+        if not isinstance(content_item, dict) or _is_refusal_node(content_item):
+            continue
+        part_type = compact_string(content_item.get("type")).casefold()
+        text = content_item.get("text")
+        if part_type in {"", "output_text", "text"} and text:
+            _append_text_segment(segments, text)
+    return segments
+
+
+def _iter_output_text_segments(normalized: Any) -> list[str]:
+    segments: list[str] = []
+    if not isinstance(normalized, dict):
+        return segments
+
+    _append_text_segment(segments, normalized.get("output_text"))
+
+    choices = normalized.get("choices")
+    if isinstance(choices, list):
+        for choice in choices:
+            if not isinstance(choice, dict):
+                continue
+            message = choice.get("message")
+            if isinstance(message, dict):
+                _append_text_segment(segments, message.get("content"))
+
+    message = normalized.get("message")
+    if isinstance(message, dict):
+        _append_text_segment(segments, message.get("content"))
+
+    for segment in _iter_content_text_segments(normalized.get("content")):
+        _append_text_segment(segments, segment)
+
+    output = normalized.get("output")
     if isinstance(output, list):
-        parts: list[str] = []
         for item in output:
-            content = item.get("content") if isinstance(item, Mapping) else getattr(item, "content", None)
-            if isinstance(content, list):
-                for content_item in content:
-                    text = (
-                        content_item.get("text")
-                        if isinstance(content_item, Mapping)
-                        else getattr(content_item, "text", None)
-                    )
-                    if text:
-                        parts.append(compact_string(text))
-        if parts:
-            return "\n".join(part for part in parts if part)
-    return ""
+            if isinstance(item, str):
+                _append_text_segment(segments, item)
+                continue
+            if not isinstance(item, dict) or _is_refusal_node(item):
+                continue
+            item_type = compact_string(item.get("type")).casefold()
+            if item_type == "output_text":
+                _append_text_segment(segments, item.get("text"))
+            if item_type in {"", "message", "output_text"}:
+                for segment in _iter_content_text_segments(item.get("content")):
+                    _append_text_segment(segments, segment)
+
+    return segments
+
+
+def _join_text_segments(segments: list[str]) -> str:
+    clean = [compact_string(segment) for segment in segments if compact_string(segment)]
+    if not clean:
+        return ""
+    return "\n".join(clean)
+
+
+def provider_response_has_refusal(response: Any) -> bool:
+    return _response_has_refusal(_normalize_provider_response(response))
+
+
+def extract_response_text(response: Any) -> str:
+    normalized = _normalize_provider_response(response)
+    return _join_text_segments(_iter_output_text_segments(normalized))
 
 
 def classify_provider_error(error: BaseException | str) -> str:
@@ -389,6 +557,8 @@ def classify_provider_error(error: BaseException | str) -> str:
         return "network_error"
     if "badrequest" in combined or "bad request" in combined or "400" in combined:
         return "bad_request"
+    if isinstance(error, ProviderRefusalError) or "provider refusal" in combined or "refusal" in combined:
+        return "provider_refusal"
     return "unknown_provider_error"
 
 
@@ -399,7 +569,7 @@ def status_for_error_class(error_class: str) -> str:
         return "LIVE_BLOCKED_BY_CONFIG"
     if error_class in {"quota_exceeded", "rate_limit"}:
         return "LIVE_BLOCKED_BY_QUOTA_OR_RATE_LIMIT"
-    if error_class in {"invalid_model", "authentication_error", "permission_error", "bad_request"}:
+    if error_class in {"invalid_model", "authentication_error", "permission_error", "bad_request", "provider_refusal"}:
         return "LIVE_BLOCKED_BY_PROVIDER"
     return "LIVE_FAILED_SAFE"
 
@@ -616,8 +786,7 @@ def live_generate_prompt(
     try:
         factory = client_factory
         if factory is None:
-            openai_client_class = load_openai_client_class()
-            factory = lambda key: openai_client_class(api_key=key)
+            factory = build_default_live_client
         client = factory(api_key)
     except ImportError as exc:
         write_mock_fallback_prompt(plan, output_path)
@@ -638,6 +807,23 @@ def live_generate_prompt(
             fallback_mode="mock",
         )
         return write_controlled_result(result, result_json_path=result_json_path, sanitized_result_path=sanitized_result_path)
+    except LiveRetryConfigurationError as exc:
+        result = base_controlled_result(
+            plan,
+            mode="live",
+            status="LIVE_BLOCKED_BY_CONFIG",
+            output_prompt_path=output_path,
+            selected_model=selected_model,
+            provider=provider,
+            max_output_tokens=max_output_tokens,
+            result_json_path=result_json_path,
+            sanitized_result_path=sanitized_result_path,
+            api_key_present=True,
+            error_class="invalid_live_config",
+            error_message=str(exc),
+        )
+        result["automatic_retries_disabled"] = False
+        return write_controlled_result(result, result_json_path=result_json_path, sanitized_result_path=sanitized_result_path)
 
     live_call_count = 0
     try:
@@ -649,6 +835,8 @@ def live_generate_prompt(
         )
         prompt_text = extract_response_text(response)
         if not prompt_text:
+            if provider_response_has_refusal(response):
+                raise ProviderRefusalError("Provider refusal returned instead of prompt text.")
             raise ValueError("Provider response did not contain prompt text.")
         prompt_path = write_text(output_path, redact_sensitive_text(prompt_text))
         result = base_controlled_result(
@@ -665,6 +853,7 @@ def live_generate_prompt(
             live_call_attempted=True,
             live_call_count=live_call_count,
         )
+        result["automatic_retries_disabled"] = client_factory is None
         return write_controlled_result(result, result_json_path=result_json_path, sanitized_result_path=sanitized_result_path)
     except Exception as exc:
         error_class = classify_provider_error(exc)
@@ -687,6 +876,7 @@ def live_generate_prompt(
             error_message=str(exc),
             fallback_mode="mock",
         )
+        result["automatic_retries_disabled"] = client_factory is None
         return write_controlled_result(result, result_json_path=result_json_path, sanitized_result_path=sanitized_result_path)
 
 

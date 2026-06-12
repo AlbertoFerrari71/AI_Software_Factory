@@ -168,6 +168,18 @@ SUPERVISED_LOOP_SMOKE_DOC = (
 GPT_PROMPT_GENERATOR_LIVE_DOC = (
     ROOT / "docs" / "motor" / "1020_GPT_PROMPT_GENERATOR_LIVE_CONTROLLED_RUN.md"
 )
+GPT_LIVE_CONTINUITY_DOC = (
+    ROOT / "docs" / "motor" / "1030_GPT_LIVE_CONTINUITY_MEGA_STEP.md"
+)
+DONE_TRIGGER_SPEC_DOC = ROOT / "docs" / "motor" / "1030_DONE_TRIGGER_SPEC.md"
+HANDOFF_AUTOMATION_DOC = ROOT / "docs" / "motor" / "1030_HANDOFF_AUTOMATION.md"
+MANUAL_LOOP_RUNBOOK_DOC = (
+    ROOT / "docs" / "motor" / "1030_MANUAL_SEMI_AUTOMATIC_LOOP_RUNBOOK.md"
+)
+PROMPT_LENGTH_ADVISOR_DOC = ROOT / "docs" / "motor" / "1030_PROMPT_LENGTH_ADVISOR.md"
+PROVIDER_RESPONSE_DIAGNOSTIC_DOC = (
+    ROOT / "docs" / "motor" / "1035_PROVIDER_RESPONSE_DIAGNOSTIC_SANITIZED_REVIEW.md"
+)
 SUPERVISED_LOOP_STATE_JSON_TEMPLATE = (
     ROOT / "docs" / "templates" / "0950_SUPERVISED_LOOP_STATE_JSON_TEMPLATE.json"
 )
@@ -201,6 +213,11 @@ GPT_LIVE_CONTROLLED_RESULT_TEMPLATE = (
 POWERSHELL_TASK_RUNNER_SCRIPT = ROOT / "scripts" / "asf_powershell_task_runner.py"
 POWERSHELL_RECOVERY_CLASSIFIER_SCRIPT = ROOT / "scripts" / "asf_powershell_recovery_classifier.py"
 GPT_PROMPT_GENERATOR_SCRIPT = ROOT / "scripts" / "asf_gpt_prompt_generator.py"
+RESPONSES_PARSER_SCRIPT = ROOT / "scripts" / "asf_responses_parser.py"
+BRIDGE_REPORT_DISCOVERY_SCRIPT = ROOT / "scripts" / "asf_bridge_report_discovery.py"
+HANDOFF_PACK_GENERATOR_SCRIPT = ROOT / "scripts" / "asf_handoff_pack_generator.py"
+PROMPT_LENGTH_ADVISOR_SCRIPT = ROOT / "scripts" / "asf_prompt_length_advisor.py"
+PROVIDER_RESPONSE_DIAGNOSTIC_SCRIPT = ROOT / "scripts" / "asf_provider_response_diagnostic.py"
 CODEX_EXEC_ADAPTER_SCRIPT = ROOT / "scripts" / "asf_codex_exec_adapter.py"
 STEP_DECISION_POLICY_SCRIPT = ROOT / "scripts" / "asf_step_decision_policy.py"
 SUPERVISED_LOOP_SMOKE_SCRIPT = ROOT / "scripts" / "asf_supervised_loop_smoke.py"
@@ -212,6 +229,17 @@ SUPERVISED_LOOP_STATE_PROTOCOL_TEST = ROOT / "tests" / "unit" / "test_supervised
 GPT_PROMPT_GENERATOR_TEST = ROOT / "tests" / "unit" / "test_asf_gpt_prompt_generator.py"
 GPT_PROMPT_GENERATOR_LIVE_TEST = (
     ROOT / "tests" / "unit" / "test_asf_gpt_prompt_generator_live_controlled.py"
+)
+GPT_RESPONSES_PARSER_TEST = (
+    ROOT / "tests" / "unit" / "test_asf_gpt_prompt_generator_responses_parser.py"
+)
+NORMALIZED_RESPONSES_PARSER_TEST = ROOT / "tests" / "unit" / "test_asf_responses_parser.py"
+BRIDGE_REPORT_DISCOVERY_TEST = ROOT / "tests" / "unit" / "test_asf_bridge_report_discovery.py"
+HANDOFF_PACK_GENERATOR_TEST = ROOT / "tests" / "unit" / "test_asf_handoff_pack_generator.py"
+PROMPT_LENGTH_ADVISOR_TEST = ROOT / "tests" / "unit" / "test_asf_prompt_length_advisor.py"
+DONE_TRIGGER_SPEC_TEST = ROOT / "tests" / "unit" / "test_1030_done_trigger_spec.py"
+PROVIDER_RESPONSE_DIAGNOSTIC_TEST = (
+    ROOT / "tests" / "unit" / "test_asf_provider_response_diagnostic.py"
 )
 CODEX_EXEC_ADAPTER_TEST = ROOT / "tests" / "unit" / "test_asf_codex_exec_adapter.py"
 STEP_DECISION_POLICY_TEST = ROOT / "tests" / "unit" / "test_asf_step_decision_policy.py"
@@ -266,6 +294,12 @@ def test_workflow_health_check_files_exist() -> None:
     assert STEP_DECISION_POLICY_DOC.exists()
     assert SUPERVISED_LOOP_SMOKE_DOC.exists()
     assert GPT_PROMPT_GENERATOR_LIVE_DOC.exists()
+    assert GPT_LIVE_CONTINUITY_DOC.exists()
+    assert DONE_TRIGGER_SPEC_DOC.exists()
+    assert HANDOFF_AUTOMATION_DOC.exists()
+    assert MANUAL_LOOP_RUNBOOK_DOC.exists()
+    assert PROMPT_LENGTH_ADVISOR_DOC.exists()
+    assert PROVIDER_RESPONSE_DIAGNOSTIC_DOC.exists()
     assert SUPERVISED_LOOP_STATE_JSON_TEMPLATE.exists()
     assert SUPERVISED_LOOP_EVENT_LOG_TEMPLATE.exists()
     assert POWERSHELL_TASK_ENVELOPE_EXAMPLES.exists()
@@ -279,6 +313,11 @@ def test_workflow_health_check_files_exist() -> None:
     assert POWERSHELL_TASK_RUNNER_SCRIPT.exists()
     assert POWERSHELL_RECOVERY_CLASSIFIER_SCRIPT.exists()
     assert GPT_PROMPT_GENERATOR_SCRIPT.exists()
+    assert RESPONSES_PARSER_SCRIPT.exists()
+    assert BRIDGE_REPORT_DISCOVERY_SCRIPT.exists()
+    assert HANDOFF_PACK_GENERATOR_SCRIPT.exists()
+    assert PROMPT_LENGTH_ADVISOR_SCRIPT.exists()
+    assert PROVIDER_RESPONSE_DIAGNOSTIC_SCRIPT.exists()
     assert CODEX_EXEC_ADAPTER_SCRIPT.exists()
     assert STEP_DECISION_POLICY_SCRIPT.exists()
     assert SUPERVISED_LOOP_SMOKE_SCRIPT.exists()
@@ -287,6 +326,13 @@ def test_workflow_health_check_files_exist() -> None:
     assert SUPERVISED_LOOP_STATE_PROTOCOL_TEST.exists()
     assert GPT_PROMPT_GENERATOR_TEST.exists()
     assert GPT_PROMPT_GENERATOR_LIVE_TEST.exists()
+    assert GPT_RESPONSES_PARSER_TEST.exists()
+    assert NORMALIZED_RESPONSES_PARSER_TEST.exists()
+    assert BRIDGE_REPORT_DISCOVERY_TEST.exists()
+    assert HANDOFF_PACK_GENERATOR_TEST.exists()
+    assert PROMPT_LENGTH_ADVISOR_TEST.exists()
+    assert DONE_TRIGGER_SPEC_TEST.exists()
+    assert PROVIDER_RESPONSE_DIAGNOSTIC_TEST.exists()
     assert CODEX_EXEC_ADAPTER_TEST.exists()
     assert STEP_DECISION_POLICY_TEST.exists()
     assert SUPERVISED_LOOP_SMOKE_TEST.exists()
@@ -1103,6 +1149,119 @@ def test_workflow_health_tracks_gpt_prompt_generator_live_controlled_1020() -> N
     for fragment in ["1020-smoke-generate-codex-prompt", "LIVE_SUCCESS", "LIVE_FAILED_SAFE"]:
         assert fragment in plan_template
         assert fragment in result_template
+
+
+def test_workflow_health_tracks_gpt_live_continuity_1030() -> None:
+    script = read(SCRIPT)
+    doc = read(DOC)
+    index = read(INDEX)
+    continuity_doc = read(GPT_LIVE_CONTINUITY_DOC)
+    trigger_doc = read(DONE_TRIGGER_SPEC_DOC)
+    handoff_doc = read(HANDOFF_AUTOMATION_DOC)
+    runbook_doc = read(MANUAL_LOOP_RUNBOOK_DOC)
+    advisor_doc = read(PROMPT_LENGTH_ADVISOR_DOC)
+
+    indexed_fragments = [
+        "docs/motor/1030_GPT_LIVE_CONTINUITY_MEGA_STEP.md",
+        "docs/motor/1030_DONE_TRIGGER_SPEC.md",
+        "docs/motor/1030_HANDOFF_AUTOMATION.md",
+        "docs/motor/1030_MANUAL_SEMI_AUTOMATIC_LOOP_RUNBOOK.md",
+        "docs/motor/1030_PROMPT_LENGTH_ADVISOR.md",
+        "scripts/asf_responses_parser.py",
+        "scripts/asf_bridge_report_discovery.py",
+        "scripts/asf_handoff_pack_generator.py",
+        "scripts/asf_prompt_length_advisor.py",
+        "tests/unit/test_asf_gpt_prompt_generator_responses_parser.py",
+        "tests/unit/test_asf_responses_parser.py",
+        "tests/unit/test_asf_bridge_report_discovery.py",
+        "tests/unit/test_asf_handoff_pack_generator.py",
+        "tests/unit/test_asf_prompt_length_advisor.py",
+        "tests/unit/test_1030_done_trigger_spec.py",
+        "Responses API Output Extraction Hardening",
+        "parser normalizzato",
+        "Codex fatto",
+        "Pwsh fatto",
+        "max_retries=0",
+        "FOUND",
+        "AMBIGUOUS",
+        "1030-Handoff.json",
+        "1030-Start_Next_Chat_Prompt.md",
+        "prompt monolitico 20-30k default",
+        "no splitter automatico",
+        "no packetizzazione obbligatoria",
+        "1040) Publish GPT Live Continuity Mega-Step",
+    ]
+
+    for fragment in indexed_fragments:
+        assert fragment in script
+        assert fragment in doc
+        assert fragment in index
+
+    for fragment in [
+        "Responses API output extraction hardening",
+        "Responses parser normalization",
+        "Bridge report discovery foundation",
+        "Done trigger spec",
+        "max_retries=0",
+        "loop automatico unattended",
+        "Il prompt monolitico da 20-30k caratteri resta il default ASF/Codex",
+    ]:
+        assert fragment in continuity_doc
+
+    for fragment in ["Codex fatto", "CF", "Pwsh fatto", "PF", "non inventare nulla"]:
+        assert fragment in trigger_doc
+
+    for fragment in ["1030-Handoff.json", "1030-Start_Next_Chat_Prompt.md", "gh pr list", "codex_command"]:
+        assert fragment in handoff_doc
+
+    for fragment in ["Discovery report", "Handoff pack", "PARTIAL_PASS", "manual_paste_instruction"]:
+        assert fragment in runbook_doc
+
+    for fragment in [
+        "Il prompt monolitico da 20-30k caratteri resta il default ASF/Codex",
+        "guardrail leggero",
+        "non una packetizzazione obbligatoria",
+        "Nessuno splitter automatico",
+    ]:
+        assert fragment in advisor_doc
+
+
+def test_workflow_health_tracks_provider_response_diagnostic_1035() -> None:
+    script = read(SCRIPT)
+    doc = read(DOC)
+    index = read(INDEX)
+    diagnostic_doc = read(PROVIDER_RESPONSE_DIAGNOSTIC_DOC)
+
+    indexed_fragments = [
+        "docs/motor/1035_PROVIDER_RESPONSE_DIAGNOSTIC_SANITIZED_REVIEW.md",
+        "scripts/asf_provider_response_diagnostic.py",
+        "tests/unit/test_asf_provider_response_diagnostic.py",
+        "sanitize_provider_response_shape",
+        "detect_candidate_text_paths",
+        "1035-Provider-Shape-Sanitized.json",
+        "1035-Provider-Diagnostic-Sanitized.md",
+        "output[1].content[0].text",
+        "1030_READY_FOR_PUBLISH_AFTER_REVIEW",
+        "no raw request",
+        "no raw response",
+        "no retry live",
+        "1040) Publish GPT Live Continuity Mega-Step",
+    ]
+
+    for fragment in indexed_fragments:
+        assert fragment in script
+        assert fragment in doc
+        assert fragment in index
+
+    for fragment in [
+        "LIVE_FAILED_SAFE",
+        "sanitize_provider_response_shape()",
+        "detect_candidate_text_paths()",
+        "raw_payload_saved=false",
+        "parser_contains_expected_sentinel=true",
+        "1030_READY_FOR_PUBLISH_AFTER_REVIEW",
+    ]:
+        assert fragment in diagnostic_doc
 
 
 def test_workflow_health_tracks_powershell_publish_skill_sync() -> None:

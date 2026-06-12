@@ -100,6 +100,8 @@ Sono presenti:
 - STEP 0945-0970 - ASF Supervised Loop Foundation Batch, con profili adattivi `LIGHT`/`STANDARD`/`FULL`/`ESCALATED`, protocollo Bridge `state.json` e `.flag`, runner PowerShell dry-run default e recovery classifier locale.
 - STEP 0980-1010 - ASF Supervised Loop AI Adapter and End-to-End Smoke Batch, con prompt generator GPT mock-first, adapter Codex exec dry-run, decision policy `PASS/FIX/STOP/ASK_ALBERTO` e smoke `1010-smoke-docs-step` fino a `COMPLETED`.
 - STEP 1020 - GPT Prompt Generator Live Controlled Run, con `mock` ancora default, live solo con `--approve-live`, una sola chiamata provider consentita quando configurata, fallback mock, result sanitizzato e Quality-first operating principle documentato.
+- STEP 1030 - ASF GPT Live Continuity Mega-Step, con parser Responses API robusto e normalizzato, discovery report Bridge, Done Trigger Spec, handoff pack per ripartenza nuova chat e prompt length advisor leggero senza packetizzazione obbligatoria.
+- STEP 1035 - Provider Response Diagnostic Sanitized Review, con shape provider sanitizzato, detector path candidati e live diagnostic one-call senza raw payload.
 - STEP 0200-0280 - Shared Four-Hands Development Backbone, con documenti `docs/collaboration`, template condivisi, script PowerShell safe-by-default e policy operative Alberto-Luca su GitHub, Bridge, ChatGPT Projects, Codex Skills, review, merge e segreti.
 
 Non sono ancora presenti:

@@ -4,6 +4,67 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [1.04.1] - 2026-06-12
+
+### Added
+
+- STEP 1035 - Provider Response Diagnostic Sanitized Review.
+- Script `scripts/asf_provider_response_diagnostic.py` con sanitizer shape provider, candidate path detector e wrapper live diagnostico one-call.
+- Documento `docs/motor/1035_PROVIDER_RESPONSE_DIAGNOSTIC_SANITIZED_REVIEW.md`.
+- Test `tests/unit/test_asf_provider_response_diagnostic.py`.
+
+### Changed
+
+- Project Workflow Index e Workflow Health Check riconoscono lo STEP 1035.
+- La decisione operativa per 1030 puo' usare evidence sanitizzata: path live `output[1].content[0].text` gia' supportato dal parser.
+
+### Guardrails
+
+- Nessun raw request/response salvato.
+- Nessun testo provider completo salvato.
+- Nessun retry live automatico.
+- Nessun commit, push, PR, merge o deploy eseguito.
+
+### Next
+
+- `1040) Publish GPT Live Continuity Mega-Step`.
+
+---
+
+## [1.04.0] - 2026-06-11
+
+### Added
+
+- STEP 1030 - ASF GPT Live Continuity Mega-Step.
+- Documenti `docs/motor/1030_GPT_LIVE_CONTINUITY_MEGA_STEP.md`, `docs/motor/1030_DONE_TRIGGER_SPEC.md`, `docs/motor/1030_HANDOFF_AUTOMATION.md`, `docs/motor/1030_MANUAL_SEMI_AUTOMATIC_LOOP_RUNBOOK.md` e `docs/motor/1030_PROMPT_LENGTH_ADVISOR.md`.
+- Script `scripts/asf_responses_parser.py` per normalizzare payload JSON/dict Responses-style in stati espliciti.
+- Script `scripts/asf_bridge_report_discovery.py` per trovare report Codex/output PowerShell recenti nel Bridge con JSON stabile.
+- Script `scripts/asf_handoff_pack_generator.py` per generare Markdown, JSON e prompt di ripartenza nuova chat.
+- Script `scripts/asf_prompt_length_advisor.py` come guardrail leggero, senza packetizzazione obbligatoria.
+- Test `tests/unit/test_asf_gpt_prompt_generator_responses_parser.py`, `tests/unit/test_asf_responses_parser.py`, `tests/unit/test_asf_bridge_report_discovery.py`, `tests/unit/test_asf_handoff_pack_generator.py`, `tests/unit/test_asf_prompt_length_advisor.py` e `tests/unit/test_1030_done_trigger_spec.py`.
+
+### Changed
+
+- `scripts/asf_gpt_prompt_generator.py` rafforza il parser Responses API per `output_text`, `output[].content[].text`, oggetti SDK-like e refusal fail-closed.
+- `scripts/asf_bridge_report_discovery.py` preferisce report JSON strutturati, produce riepilogo compatto e istruzioni di incolla manuale quando il Bridge non e' accessibile.
+- Il client live OpenAI viene creato con `max_retries=0`; se non e' garantibile, la live viene bloccata prima della chiamata.
+- README, roadmap, decision log, Project Workflow Index e Workflow Health Check riconoscono lo STEP 1030.
+
+### Guardrails
+
+- Nessun loop unattended.
+- Nessuno splitter automatico e nessuna packetizzazione obbligatoria.
+- Nessun Codex exec reale.
+- Nessun commit, push, PR, merge, deploy, reset, clean, rebase o normalizzazione line endings eseguito.
+- Nessun secret, API key, Authorization header o bearer token salvato.
+
+### Next
+
+- Se live one-call passa: `1040) Publish GPT Live Continuity Mega-Step`.
+- Se live fallisce safe: `1035) Provider Response Diagnostic Sanitized Review`.
+
+---
+
 ## [1.03.0] - 2026-06-11
 
 ### Added
