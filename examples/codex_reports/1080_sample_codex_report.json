@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "project": "AI_Software_Factory",
+  "step": "1080",
+  "step_title": "Codex Report JSON Sidecar and Latest Resolver",
+  "status": "PASS",
+  "started_at": null,
+  "finished_at": null,
+  "branch": "step/1050-1130-v1-operator-rc-audit-hardened",
+  "files_created": [
+    "docs/templates/codex_report.schema.json",
+    "scripts/asf_latest_report_resolver.py"
+  ],
+  "files_modified": [],
+  "files_deleted": [],
+  "checks": [
+    {
+      "name": "resolver tests",
+      "command": "python -m pytest tests/unit/test_asf_latest_report_resolver.py",
+      "status": "PASS",
+      "exit_code": 0,
+      "notes": "fixture sample"
+    }
+  ],
+  "risks": [],
+  "decisions_required": [],
+  "next_step": "1090) Risk Classifier Golden Eval and Zero-Downgrade Gate",
+  "report_markdown_path": "examples/codex_reports/1080_sample_codex_report.md",
+  "bridge_paths": [],
+  "forbidden_actions_confirmed": true,
+  "human_gate_required": true,
+  "summary": "Sample Codex report sidecar for resolver tests and documentation."
+}

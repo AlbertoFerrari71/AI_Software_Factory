@@ -19,6 +19,12 @@ Questo documento descrive il ciclo supervisionato ASF V1. Non implementa un nuov
 11. Publish e merge avvengono solo con approvazione esplicita.
 12. `main` finale deve restare pulito, verificato e allineato.
 
+For FULL or ESCALATED steps, the review node follows
+`docs/motor/1100_INDEPENDENT_REVIEW_AND_DISAGREEMENT_PROTOCOL.md`: planner and
+reviewer must not be the same context, L0-L2 disagreements use the more
+conservative verdict, and L3+ or publish/merge/deploy/scope disagreements
+require ASK_ALBERTO.
+
 ## Ruoli
 
 | Ruolo | Responsabilita' | Puo' fare | Non puo' fare | Output atteso | Condizioni di stop |
@@ -64,3 +70,8 @@ Ogni passaggio deve lasciare evidence nel Bridge o nel repository:
 - `stderr` informativo sicuro con exit code `0` e' warning non bloccante.
 - `stderr` inatteso o exit code nonzero resta errore.
 - Warning LF/CRLF non bloccano se `git --no-pager diff --check`, test e verify gate passano.
+- The operator RC uses `scripts/asf_operator_status.py`,
+  `scripts/asf_latest_report_resolver.py`,
+  `scripts/asf_reviewer_packet_builder.py` and
+  `scripts/asf_publish_readiness_gate.py` to summarize evidence without
+  publishing.

@@ -4327,6 +4327,61 @@ Il prossimo step consigliato e':
 
 ---
 
+## DEC-117 - ASF V1 Supervised Operator RC
+
+**Data:** 2026-06-12
+**Stato:** Accettata
+
+### Contesto
+
+[F] Dopo 1030, 1035 e 1040, ASF ha una base stabile per parser Responses,
+diagnostica provider sanitizzata, handoff nuova chat, Bridge manual loop e
+publish controllato.
+
+[F] Il ciclo operativo resta umano: ChatGPT prepara prompt, Alberto incolla in
+Codex, Codex lavora localmente, il report passa nel Bridge, ChatGPT/runner
+revisionano e solo Alberto autorizza publish/merge/deploy/scope.
+
+[S] La fase successiva richiede un operatore locale deterministico che legga
+repo, Bridge e report senza trasformarsi in autonomia di pubblicazione.
+
+### Decisione
+
+[F] Lo STEP 1050-1130 introduce la release candidate locale dell'ASF V1
+Supervised Operator.
+
+[F] Il RC include report Codex JSON sidecar, latest report resolver, operator
+status CLI, publish readiness gate, reviewer packet builder, draft Codex prompt
+builder, risk classifier golden eval zero-downgrade e dogfood evidence pack.
+
+[F] `LAST-*` resta deprecato come pattern generale di repository. L'unica
+eccezione e' l'output operativo standard sotto Bridge/codex_command,
+Bridge/pwsh_command o mirror Bridge gia' previsti da publish runner/state
+machine.
+
+[F] La numerazione usa modello multi-serie: `NNNN` e' univoco entro la serie e
+i riferimenti cross-serie devono usare forme come `motor/1050` o
+`collaboration/0200`.
+
+[F] Il publish readiness gate non pubblica e dichiara
+`publish_command_allowed=false`.
+
+### Conseguenze
+
+[F] La pubblicazione resta fuori da questo RC e puo' avvenire solo in step
+successivo autorizzato da Alberto tramite `scripts/asf_publish_step.ps1`.
+
+[F] La CI acquisisce un secret scan gate e un job Windows PowerShell Runner Gate
+mirato.
+
+[F] Il prossimo step consigliato e':
+
+```text
+1140) Prompt Injection Adversarial Samples and Fencing
+```
+
+---
+
 ## DEC-116 - Provider Response Diagnostic Sanitized Review
 
 **Data:** 2026-06-12

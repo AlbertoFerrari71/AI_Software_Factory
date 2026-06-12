@@ -34,6 +34,53 @@ jobs:
         run: |
           python -m pytest
 
+      - name: Run risk classifier golden eval
+        run: |
+          python scripts/asf_risk_classifier_eval.py
+
       - name: Check diff whitespace
         run: |
           git diff --check
+
+  secret-scan:
+    name: Secret Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  windows-powershell-runner-gate:
+    name: Windows PowerShell Runner Gate
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install project with dev dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+
+      - name: Check PowerShell availability
+        shell: pwsh
+        run: |
+          pwsh --version
+          [scriptblock]::Create((Get-Content -Raw scripts\verify.ps1)) | Out-Null
+
+      - name: Run runner and operator focused tests
+        run: |
+          python -m pytest tests/unit/test_asf_publish_step_runner.py tests/unit/test_asf_publish_step_scope_discovery.py tests/unit/test_asf_publish_step_bridge_outputs.py tests/unit/test_asf_latest_report_resolver.py tests/unit/test_asf_operator_tools.py tests/unit/test_asf_risk_classifier_eval.py

@@ -100,3 +100,31 @@ Input mancanti o parziali devono ridurre confidence e, se bloccanti, produrre `N
 - eventuali file fuori manifest.
 
 `rollback_hint` deve restare pratico e non distruttivo. Nel MVP puo' indicare "hold and review diff manually" oppure "revert only the listed files after Alberto approval"; non deve emettere comandi distruttivi automatici.
+
+---
+
+## 8. STEP 1100 operational protocol
+
+For FULL or ESCALATED steps, the reviewer must be independent from the planner
+context. The reviewer can be a different model, a fresh GPT context with only
+the evidence pack, or a separate human-assisted review context.
+
+Every review records:
+
+- reviewer_actor;
+- reviewer_context_type;
+- evidence_pack_path;
+- verdict;
+- rationale;
+- disagreement_status.
+
+Disagreement rules:
+
+- L0-L2 disagreement: the more conservative verdict wins with rationale;
+- L3+ disagreement: ASK_ALBERTO is mandatory;
+- publish/merge/deploy/scope disagreement: ASK_ALBERTO is mandatory.
+
+Templates:
+
+- `docs/templates/independent_review_packet.md`;
+- `docs/templates/disagreement_comparison.md`.

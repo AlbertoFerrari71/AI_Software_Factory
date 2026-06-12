@@ -1,0 +1,11 @@
+{
+  "semaphore": "GREEN",
+  "status": "PASS",
+  "resolution_status": "FOUND",
+  "reasons": [
+    "Report is PASS, checks are declared, and no raw payload marker was found."
+  ],
+  "warnings": [],
+  "human_approval_required_for_publish": true,
+  "publish_command_allowed": false
+}

@@ -102,6 +102,7 @@ Sono presenti:
 - STEP 1020 - GPT Prompt Generator Live Controlled Run, con `mock` ancora default, live solo con `--approve-live`, una sola chiamata provider consentita quando configurata, fallback mock, result sanitizzato e Quality-first operating principle documentato.
 - STEP 1030 - ASF GPT Live Continuity Mega-Step, con parser Responses API robusto e normalizzato, discovery report Bridge, Done Trigger Spec, handoff pack per ripartenza nuova chat e prompt length advisor leggero senza packetizzazione obbligatoria.
 - STEP 1035 - Provider Response Diagnostic Sanitized Review, con shape provider sanitizzato, detector path candidati e live diagnostic one-call senza raw payload.
+- STEP 1050-1130 - ASF V1 Supervised Operator Release Candidate locale, con resolver report Codex JSON/Markdown, operator status CLI, reviewer packet, draft prompt, publish readiness gate, secret scan foundation, Windows runner CI gate, risk classifier golden eval zero-downgrade e dogfood evidence pack.
 - STEP 0200-0280 - Shared Four-Hands Development Backbone, con documenti `docs/collaboration`, template condivisi, script PowerShell safe-by-default e policy operative Alberto-Luca su GitHub, Bridge, ChatGPT Projects, Codex Skills, review, merge e segreti.
 
 Non sono ancora presenti:
@@ -229,6 +230,19 @@ docs/34_PROJECT_WORKFLOW_INDEX.md
 ```
 
 Usarlo per orientarsi tra Prompt Packet Generator, Verification Gate, Documentation Sync, Soft Protection Guardrails, lifecycle checklist, onboarding e script locali.
+
+Numerazione operativa:
+
+```text
+namespace = directory/serie
+motor/1050
+collaboration/0200
+skills/0260
+```
+
+Il numero `NNNN` e' univoco entro la serie, non globalmente. I riferimenti
+cross-serie devono includere il namespace. I naming storici restano legacy
+congelati e non vanno rinumerati.
 
 Controllo locale read-only del workflow:
 
@@ -436,12 +450,32 @@ docs/motor/0945_ADAPTIVE_VERIFICATION_PROFILES.md
 docs/motor/0950_BRIDGE_STATE_AND_SEMAPHORE_PROTOCOL.md
 docs/motor/0960_POWERSHELL_FAST_TASK_RUNNER.md
 docs/motor/0970_POWERSHELL_RECOVERY_LOOP_FOUNDATION.md
+docs/motor/1050_CONTRACT_COHERENCE_AND_NUMBERING_BASELINE.md
+docs/motor/1060_SECRET_SCANNING_GATE_FOUNDATION.md
+docs/motor/1070_WINDOWS_CI_MATRIX_FOR_POWERSHELL_RUNNER.md
+docs/motor/1080_CODEX_REPORT_JSON_SIDECAR_AND_LATEST_RESOLVER.md
+docs/motor/1090_RISK_CLASSIFIER_GOLDEN_EVAL_ZERO_DOWNGRADE.md
+docs/motor/1100_INDEPENDENT_REVIEW_AND_DISAGREEMENT_PROTOCOL.md
+docs/motor/1110_ASF_OPERATOR_STATUS_AND_PUBLISH_READINESS.md
+docs/motor/1120_REAL_DOGFOOD_LOOP_EVIDENCE.md
+docs/motor/1130_ASF_V1_SUPERVISED_OPERATOR_RC.md
+docs/motor/1130_OPERATOR_RUNBOOK.md
+docs/motor/1130_KNOWN_LIMITS_AND_NEXT_ROADMAP.md
 docs/templates/0950_SUPERVISED_LOOP_STATE_JSON_TEMPLATE.json
 docs/templates/0950_SUPERVISED_LOOP_EVENT_LOG_TEMPLATE.jsonl
 docs/templates/0960_POWERSHELL_TASK_ENVELOPE_EXAMPLES.md
 docs/templates/0970_POWERSHELL_RECOVERY_CLASSIFICATION_EXAMPLES.md
+docs/templates/codex_report.schema.json
+docs/templates/independent_review_packet.md
+docs/templates/disagreement_comparison.md
 scripts/asf_powershell_task_runner.py
 scripts/asf_powershell_recovery_classifier.py
+scripts/asf_latest_report_resolver.py
+scripts/asf_operator_status.py
+scripts/asf_publish_readiness_gate.py
+scripts/asf_reviewer_packet_builder.py
+scripts/asf_codex_next_prompt_builder.py
+scripts/asf_risk_classifier_eval.py
 ```
 
 ---
