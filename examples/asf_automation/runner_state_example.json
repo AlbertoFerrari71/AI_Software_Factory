@@ -1,0 +1,65 @@
+{
+  "runner_state_version": "1.0",
+  "project": "AI_Software_Factory",
+  "step": "1200-1290",
+  "repo_path": "C:\\Users\\alberto.ferrari\\source\\repos\\AI_Software_Factory",
+  "bridge_path": "D:\\FG-SAB Dropbox\\Alberto Ferrari\\ChatGPT_Bridge\\AI_Software_Factory",
+  "current_state": "WAITING_HUMAN_APPROVAL",
+  "status": "PASS_WITH_WARNINGS",
+  "allowed_states": [
+    "PLANNED",
+    "READY_FOR_CONTEXT",
+    "CONTEXT_PACK_BUILT",
+    "TASK_PACKET_BUILT",
+    "WAITING_HUMAN_APPROVAL",
+    "READY_FOR_CODEX",
+    "CODEX_RUNNING",
+    "CODEX_DONE",
+    "REPORT_COLLECTED",
+    "LOCAL_GATE_RUNNING",
+    "LOCAL_GATE_PASS",
+    "LOCAL_GATE_FAIL",
+    "AI_REVIEW_RUNNING",
+    "AI_REVIEW_PASS",
+    "AI_REVIEW_FAIL",
+    "REPAIR_PACKET_BUILT",
+    "REPAIR_RUNNING",
+    "READY_FOR_PUBLISH",
+    "PUBLISH_RUNNING",
+    "PUBLISHED",
+    "CI_RUNNING",
+    "CI_PASS",
+    "CI_FAIL",
+    "DONE",
+    "BLOCKED",
+    "ABORTED"
+  ],
+  "history": [
+    {
+      "from_state": "PLANNED",
+      "to_state": "READY_FOR_CONTEXT",
+      "event": "preconditions_passed",
+      "status": "PASS",
+      "evidence": [
+        "git branch main",
+        "git status clean",
+        "PR #96 merged"
+      ]
+    },
+    {
+      "from_state": "READY_FOR_CONTEXT",
+      "to_state": "TASK_PACKET_BUILT",
+      "event": "offline_contracts_created",
+      "status": "PASS_WITH_WARNINGS",
+      "evidence": [
+        "schemas/asf_automation/",
+        "examples/asf_automation/"
+      ]
+    }
+  ],
+  "open_blockers": [
+    "No real runner exists in 1200-1290.",
+    "Publish is a separate human-approved step."
+  ],
+  "updated_at": "2026-06-13T00:00:00Z"
+}

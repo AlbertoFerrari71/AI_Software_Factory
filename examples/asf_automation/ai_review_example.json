@@ -1,0 +1,24 @@
+{
+  "ai_review_version": "1.0",
+  "project": "AI_Software_Factory",
+  "step": "1200-1290",
+  "reviewer": "offline-example-reviewer",
+  "verdict": "PASS_WITH_WARNINGS",
+  "status": "PASS_WITH_WARNINGS",
+  "risk_level": "L2",
+  "scope_check": "PASS",
+  "tests_check": "PASS",
+  "gate_check": "PASS",
+  "deterministic_gate_status": "PASS",
+  "findings": [],
+  "warnings": [
+    "Architecture and schemas are offline contracts, not an implemented runner.",
+    "Future implementation must keep deterministic gates stronger than AI review."
+  ],
+  "evidence": [
+    "docs/motor/1200_AUTOMATED_MILESTONE_RUNNER_ARCHITECTURE.md",
+    "schemas/asf_automation/task_packet.schema.json",
+    "scripts/asf_validate_automation_schemas.py"
+  ],
+  "recommendation": "READY_FOR_REVIEW"
+}

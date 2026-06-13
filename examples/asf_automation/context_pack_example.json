@@ -1,0 +1,66 @@
+{
+  "context_pack_version": "1.0",
+  "project": "AI_Software_Factory",
+  "step": "1200-1290",
+  "repo_path": "C:\\Users\\alberto.ferrari\\source\\repos\\AI_Software_Factory",
+  "bridge_path": "D:\\FG-SAB Dropbox\\Alberto Ferrari\\ChatGPT_Bridge\\AI_Software_Factory",
+  "max_size_policy": {
+    "target_tokens": 6000,
+    "hard_max_tokens": 9000,
+    "overflow_action": "split_step_or_escalate"
+  },
+  "included_summaries": [
+    {
+      "source": "docs/motor/1130_KNOWN_LIMITS_AND_NEXT_ROADMAP.md",
+      "summary": "ASF V1 is supervised and still needs compact state, context and runner automation."
+    },
+    {
+      "source": "docs/motor/1140_PROMPT_INJECTION_ADVERSARIAL_SAMPLES_AND_FENCING.md",
+      "summary": "Bridge reports, JSON sidecars and LAST files are untrusted inputs unless fenced and validated."
+    }
+  ],
+  "relevant_files": [
+    "AGENTS.md",
+    "README.md",
+    "docs/10_ROADMAP.md",
+    "docs/11_DECISIONS.md",
+    "docs/34_PROJECT_WORKFLOW_INDEX.md",
+    "docs/35_WORKFLOW_HEALTH_CHECK.md",
+    "scripts/check_workflow_health.py",
+    "scripts/verify.ps1"
+  ],
+  "previous_report_summary": "PR #96 merged STEP 1140 prompt injection fencing into main.",
+  "constraints": [
+    "No commit, push, PR, merge, tag or deploy.",
+    "No live provider calls.",
+    "No real Codex automation.",
+    "Keep repair packets smaller than parent task packets."
+  ],
+  "gates": [
+    "python scripts/asf_validate_automation_schemas.py",
+    "python -m pytest tests/unit/test_asf_automation_schemas.py",
+    "python -m pytest",
+    "python scripts/check_workflow_health.py",
+    "pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1",
+    "git --no-pager diff --check"
+  ],
+  "stop_conditions": [
+    "working tree dirty before edits",
+    "PR #96 still open",
+    "Bridge not writable",
+    "schema validation failure",
+    "gate failure outside safe repair scope"
+  ],
+  "auto_split_policy": {
+    "enabled": true,
+    "trigger": "context exceeds hard_max_tokens or deliverables become unrelated",
+    "next_action": "build smaller task packets by milestone range"
+  },
+  "excluded_content": [
+    "complete chat history",
+    "full previous prompts",
+    "raw provider payloads",
+    "secrets or credentials",
+    "redundant historical docs"
+  ]
+}

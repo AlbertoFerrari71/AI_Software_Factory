@@ -104,6 +104,7 @@ Sono presenti:
 - STEP 1035 - Provider Response Diagnostic Sanitized Review, con shape provider sanitizzato, detector path candidati e live diagnostic one-call senza raw payload.
 - STEP 1050-1130 - ASF V1 Supervised Operator Release Candidate locale, con resolver report Codex JSON/Markdown, operator status CLI, reviewer packet, draft prompt, publish readiness gate, secret scan foundation, Windows runner CI gate, risk classifier golden eval zero-downgrade e dogfood evidence pack.
 - STEP 1140 - Prompt Injection Adversarial Samples and Fencing, con convenzione `BEGIN_UNTRUSTED_CONTENT`, almeno 6 sample avversariali innocui e validator task packet che respinge marker prompt-injection non recintati.
+- STEP 1200-1290 - Automated Milestone Runner Architecture, Context Compaction and Gate Loop Roadmap, con ADR, documenti motore, state machine, schemi JSON, esempi offline, validator e test per preparare il futuro runner senza automatizzare Codex.
 - STEP 0200-0280 - Shared Four-Hands Development Backbone, con documenti `docs/collaboration`, template condivisi, script PowerShell safe-by-default e policy operative Alberto-Luca su GitHub, Bridge, ChatGPT Projects, Codex Skills, review, merge e segreti.
 
 Non sono ancora presenti:
@@ -462,6 +463,16 @@ docs/motor/1120_REAL_DOGFOOD_LOOP_EVIDENCE.md
 docs/motor/1130_ASF_V1_SUPERVISED_OPERATOR_RC.md
 docs/motor/1130_OPERATOR_RUNBOOK.md
 docs/motor/1130_KNOWN_LIMITS_AND_NEXT_ROADMAP.md
+docs/motor/1140_PROMPT_INJECTION_ADVERSARIAL_SAMPLES_AND_FENCING.md
+docs/adr/1200_AUTOMATED_MILESTONE_RUNNER.md
+docs/motor/1200_AUTOMATED_MILESTONE_RUNNER_ARCHITECTURE.md
+docs/motor/1200_STATE_MACHINE.md
+docs/motor/1200_TASK_PACKET_SCHEMA.md
+docs/motor/1200_STATE_CARD_SCHEMA.md
+docs/motor/1200_CONTEXT_PACK_SCHEMA.md
+docs/motor/1200_GATE_AND_REPAIR_LOOP.md
+docs/motor/1200_HUMAN_ESCALATION_POLICY.md
+docs/motor/1200_AUTOMATION_ROADMAP.md
 docs/templates/0950_SUPERVISED_LOOP_STATE_JSON_TEMPLATE.json
 docs/templates/0950_SUPERVISED_LOOP_EVENT_LOG_TEMPLATE.jsonl
 docs/templates/0960_POWERSHELL_TASK_ENVELOPE_EXAMPLES.md
@@ -477,6 +488,9 @@ scripts/asf_publish_readiness_gate.py
 scripts/asf_reviewer_packet_builder.py
 scripts/asf_codex_next_prompt_builder.py
 scripts/asf_risk_classifier_eval.py
+scripts/asf_validate_automation_schemas.py
+schemas/asf_automation/
+examples/asf_automation/
 ```
 
 ---

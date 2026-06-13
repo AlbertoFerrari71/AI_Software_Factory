@@ -1,0 +1,288 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ASF Automation Task Packet",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "task_packet_version",
+    "project",
+    "step",
+    "state",
+    "repo_path",
+    "bridge_path",
+    "scope",
+    "allowed_files",
+    "forbidden_actions",
+    "deliverables",
+    "gates",
+    "report",
+    "publish_policy",
+    "human_gate_policy",
+    "repair_policy"
+  ],
+  "properties": {
+    "task_packet_version": {
+      "type": "string",
+      "description": "Version of the task packet contract."
+    },
+    "project": {
+      "type": "string"
+    },
+    "step": {
+      "type": "string"
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "PLANNED",
+        "READY_FOR_CONTEXT",
+        "CONTEXT_PACK_BUILT",
+        "TASK_PACKET_BUILT",
+        "WAITING_HUMAN_APPROVAL",
+        "READY_FOR_CODEX",
+        "CODEX_RUNNING",
+        "CODEX_DONE",
+        "REPORT_COLLECTED",
+        "LOCAL_GATE_RUNNING",
+        "LOCAL_GATE_PASS",
+        "LOCAL_GATE_FAIL",
+        "AI_REVIEW_RUNNING",
+        "AI_REVIEW_PASS",
+        "AI_REVIEW_FAIL",
+        "REPAIR_PACKET_BUILT",
+        "REPAIR_RUNNING",
+        "READY_FOR_PUBLISH",
+        "PUBLISH_RUNNING",
+        "PUBLISHED",
+        "CI_RUNNING",
+        "CI_PASS",
+        "CI_FAIL",
+        "DONE",
+        "BLOCKED",
+        "ABORTED"
+      ]
+    },
+    "repo_path": {
+      "type": "string"
+    },
+    "bridge_path": {
+      "type": "string"
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "objective",
+        "risk_level",
+        "summary",
+        "included_paths",
+        "excluded_paths",
+        "context_size_policy"
+      ],
+      "properties": {
+        "objective": {
+          "type": "string"
+        },
+        "risk_level": {
+          "type": "string",
+          "enum": [
+            "L0",
+            "L1",
+            "L2",
+            "L3",
+            "L4"
+          ]
+        },
+        "summary": {
+          "type": "string"
+        },
+        "included_paths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "excluded_paths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "context_size_policy": {
+          "type": "string"
+        }
+      }
+    },
+    "allowed_files": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "forbidden_actions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    },
+    "deliverables": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path",
+          "type",
+          "required"
+        ],
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "required": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "gates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "command",
+          "required",
+          "status"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "command": {
+            "type": "string"
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PASS",
+              "PASS_WITH_WARNINGS",
+              "FAIL",
+              "BLOCKED"
+            ]
+          }
+        }
+      }
+    },
+    "report": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "format",
+        "required_sections",
+        "output_paths"
+      ],
+      "properties": {
+        "format": {
+          "type": "string"
+        },
+        "required_sections": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "output_paths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "publish_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "commit_allowed",
+        "push_allowed",
+        "pr_allowed",
+        "merge_allowed",
+        "tag_allowed",
+        "deploy_allowed",
+        "requires_human_approval"
+      ],
+      "properties": {
+        "commit_allowed": {
+          "type": "boolean"
+        },
+        "push_allowed": {
+          "type": "boolean"
+        },
+        "pr_allowed": {
+          "type": "boolean"
+        },
+        "merge_allowed": {
+          "type": "boolean"
+        },
+        "tag_allowed": {
+          "type": "boolean"
+        },
+        "deploy_allowed": {
+          "type": "boolean"
+        },
+        "requires_human_approval": {
+          "type": "boolean"
+        }
+      }
+    },
+    "human_gate_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "required",
+        "approval_state",
+        "approver"
+      ],
+      "properties": {
+        "required": {
+          "type": "boolean"
+        },
+        "approval_state": {
+          "type": "string"
+        },
+        "approver": {
+          "type": "string"
+        }
+      }
+    },
+    "repair_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "max_attempts",
+        "repair_must_be_smaller_than_parent",
+        "escalation_after_fail"
+      ],
+      "properties": {
+        "max_attempts": {
+          "type": "integer"
+        },
+        "repair_must_be_smaller_than_parent": {
+          "type": "boolean"
+        },
+        "escalation_after_fail": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

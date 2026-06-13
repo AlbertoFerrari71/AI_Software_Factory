@@ -1,0 +1,121 @@
+{
+  "task_packet_version": "1.0",
+  "project": "AI_Software_Factory",
+  "step": "1200-1290",
+  "state": "TASK_PACKET_BUILT",
+  "repo_path": "C:\\Users\\alberto.ferrari\\source\\repos\\AI_Software_Factory",
+  "bridge_path": "D:\\FG-SAB Dropbox\\Alberto Ferrari\\ChatGPT_Bridge\\AI_Software_Factory",
+  "scope": {
+    "objective": "Create the offline architecture foundation for the future Automated Milestone Runner.",
+    "risk_level": "L2",
+    "summary": "Documentation, JSON Schemas, examples, validator and unit tests only.",
+    "included_paths": [
+      "docs/adr/1200_AUTOMATED_MILESTONE_RUNNER.md",
+      "docs/motor/1200_*.md",
+      "schemas/asf_automation/*.schema.json",
+      "examples/asf_automation/*.json",
+      "scripts/asf_validate_automation_schemas.py",
+      "tests/unit/test_asf_automation_schemas.py"
+    ],
+    "excluded_paths": [
+      ".github/**",
+      "policies/**",
+      "src/**",
+      ".env",
+      "tmp/**"
+    ],
+    "context_size_policy": "Keep packet compact; split future implementation if context exceeds hard budget."
+  },
+  "allowed_files": [
+    "docs/adr/1200_AUTOMATED_MILESTONE_RUNNER.md",
+    "docs/motor/1200_AUTOMATED_MILESTONE_RUNNER_ARCHITECTURE.md",
+    "docs/motor/1200_STATE_MACHINE.md",
+    "docs/motor/1200_TASK_PACKET_SCHEMA.md",
+    "docs/motor/1200_STATE_CARD_SCHEMA.md",
+    "docs/motor/1200_CONTEXT_PACK_SCHEMA.md",
+    "docs/motor/1200_GATE_AND_REPAIR_LOOP.md",
+    "docs/motor/1200_HUMAN_ESCALATION_POLICY.md",
+    "docs/motor/1200_AUTOMATION_ROADMAP.md",
+    "schemas/asf_automation/",
+    "examples/asf_automation/",
+    "scripts/asf_validate_automation_schemas.py",
+    "tests/unit/test_asf_automation_schemas.py"
+  ],
+  "forbidden_actions": [
+    "commit",
+    "push",
+    "open_pull_request",
+    "merge",
+    "tag",
+    "deploy",
+    "live_provider_call",
+    "real_codex_automation",
+    "mcp_execution",
+    "destructive_cleanup"
+  ],
+  "deliverables": [
+    {
+      "path": "docs/adr/1200_AUTOMATED_MILESTONE_RUNNER.md",
+      "type": "adr",
+      "required": true
+    },
+    {
+      "path": "schemas/asf_automation/task_packet.schema.json",
+      "type": "json_schema",
+      "required": true
+    },
+    {
+      "path": "scripts/asf_validate_automation_schemas.py",
+      "type": "validator",
+      "required": true
+    }
+  ],
+  "gates": [
+    {
+      "name": "automation_schema_validator",
+      "command": "python scripts/asf_validate_automation_schemas.py",
+      "required": true,
+      "status": "PASS"
+    },
+    {
+      "name": "unit_tests",
+      "command": "python -m pytest tests/unit/test_asf_automation_schemas.py",
+      "required": true,
+      "status": "PASS"
+    }
+  ],
+  "report": {
+    "format": "markdown_and_json",
+    "required_sections": [
+      "step",
+      "status",
+      "files",
+      "checks",
+      "warnings",
+      "next_step"
+    ],
+    "output_paths": [
+      "D:\\FG-SAB Dropbox\\Alberto Ferrari\\ChatGPT_Bridge\\AI_Software_Factory\\codex_command\\1200-1290-Report_Codex.md",
+      "D:\\FG-SAB Dropbox\\Alberto Ferrari\\ChatGPT_Bridge\\AI_Software_Factory\\codex_command\\1200-1290-Report_Codex.json"
+    ]
+  },
+  "publish_policy": {
+    "commit_allowed": false,
+    "push_allowed": false,
+    "pr_allowed": false,
+    "merge_allowed": false,
+    "tag_allowed": false,
+    "deploy_allowed": false,
+    "requires_human_approval": true
+  },
+  "human_gate_policy": {
+    "required": true,
+    "approval_state": "WAITING_HUMAN_APPROVAL",
+    "approver": "Alberto"
+  },
+  "repair_policy": {
+    "max_attempts": 2,
+    "repair_must_be_smaller_than_parent": true,
+    "escalation_after_fail": "BLOCKED"
+  }
+}

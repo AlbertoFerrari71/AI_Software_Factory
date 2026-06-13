@@ -1,0 +1,131 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ASF Automation Context Pack",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "context_pack_version",
+    "project",
+    "step",
+    "repo_path",
+    "bridge_path",
+    "max_size_policy",
+    "included_summaries",
+    "relevant_files",
+    "previous_report_summary",
+    "constraints",
+    "gates",
+    "stop_conditions",
+    "auto_split_policy",
+    "excluded_content"
+  ],
+  "properties": {
+    "context_pack_version": {
+      "type": "string"
+    },
+    "project": {
+      "type": "string"
+    },
+    "step": {
+      "type": "string"
+    },
+    "repo_path": {
+      "type": "string"
+    },
+    "bridge_path": {
+      "type": "string"
+    },
+    "max_size_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "target_tokens",
+        "hard_max_tokens",
+        "overflow_action"
+      ],
+      "properties": {
+        "target_tokens": {
+          "type": "integer"
+        },
+        "hard_max_tokens": {
+          "type": "integer"
+        },
+        "overflow_action": {
+          "type": "string"
+        }
+      }
+    },
+    "included_summaries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source",
+          "summary"
+        ],
+        "properties": {
+          "source": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "relevant_files": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "previous_report_summary": {
+      "type": "string"
+    },
+    "constraints": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "gates": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "stop_conditions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "auto_split_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "enabled",
+        "trigger",
+        "next_action"
+      ],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "trigger": {
+          "type": "string"
+        },
+        "next_action": {
+          "type": "string"
+        }
+      }
+    },
+    "excluded_content": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}
