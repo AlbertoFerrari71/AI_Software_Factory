@@ -4458,3 +4458,49 @@ Il prossimo step consigliato e':
 ```text
 1150) Property-Based Tests Dev-Only
 ```
+
+---
+
+## DEC-119 - Automated Milestone Runner Architecture and Context Compaction
+
+**Data:** 2026-06-13
+**Stato:** Accettata per review
+
+### Contesto
+
+[F] Dopo PR #96 e lo STEP 1140, ASF distingue istruzioni fidate da contenuto
+non fidato e possiede una base V1 supervised operator.
+
+[F] Il limite operativo successivo non e' solo eseguire altri mega-step, ma
+rendere piccoli, verificabili e ripetibili State Card, Context Pack, Task
+Packet, gate, review e repair.
+
+### Decisione
+
+[F] Lo STEP 1200-1290 definisce la fondazione architetturale dell'Automated
+Milestone Runner senza implementare ancora automazione reale Codex.
+
+[F] Il runner futuro deve usare Roadmap Compiler, State Store, Task Packet
+Builder, Context Pack Builder, State Card Generator, Codex Execution Adapter,
+Gate Runner, AI Reviewer Node, Repair Loop Controller, Publish Controller,
+Bridge Artifact Manager, Human Escalation Manager, Budget / Quota / Timeout
+Controller, MCP Tool Gateway e futura Dashboard / Report UI.
+
+[F] La state machine e gli schemi JSON diventano il primo contratto versionato
+per Task Packet, State Card, Context Pack, runner state, AI review e repair
+packet.
+
+[F] Il repair deve essere piu' piccolo dello step originale. AI review non puo'
+superare un fallimento deterministico.
+
+### Conseguenze
+
+[F] ASF passa da mega-step manuali a una roadmap per milestone automatiche
+supervisionate, ma publish, merge, deploy, live provider, MCP operativo e
+Codex automation restano fuori scope finche' step futuri non li autorizzano.
+
+[F] Il prossimo step consigliato e':
+
+```text
+1300-1390) Task Packet Schema and Roadmap Compiler
+```

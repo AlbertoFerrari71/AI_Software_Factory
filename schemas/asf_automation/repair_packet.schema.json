@@ -1,0 +1,145 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ASF Automation Repair Packet",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "repair_packet_version",
+    "project",
+    "step",
+    "parent_step_id",
+    "parent_task_packet_ref",
+    "trigger",
+    "scope",
+    "allowed_files",
+    "forbidden_actions",
+    "repair_instructions",
+    "gates",
+    "max_attempts",
+    "current_attempt",
+    "escalation_policy",
+    "report"
+  ],
+  "properties": {
+    "repair_packet_version": {
+      "type": "string"
+    },
+    "project": {
+      "type": "string"
+    },
+    "step": {
+      "type": "string"
+    },
+    "parent_step_id": {
+      "type": "string"
+    },
+    "parent_task_packet_ref": {
+      "type": "string"
+    },
+    "trigger": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source",
+        "status",
+        "reason"
+      ],
+      "properties": {
+        "source": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "PASS",
+            "PASS_WITH_WARNINGS",
+            "FAIL",
+            "BLOCKED"
+          ]
+        },
+        "reason": {
+          "type": "string"
+        }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "summary",
+        "must_be_smaller_than_parent",
+        "risk_level"
+      ],
+      "properties": {
+        "summary": {
+          "type": "string"
+        },
+        "must_be_smaller_than_parent": {
+          "type": "boolean"
+        },
+        "risk_level": {
+          "type": "string",
+          "enum": [
+            "L0",
+            "L1",
+            "L2",
+            "L3",
+            "L4"
+          ]
+        }
+      }
+    },
+    "allowed_files": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "forbidden_actions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "repair_instructions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "gates": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "max_attempts": {
+      "type": "integer"
+    },
+    "current_attempt": {
+      "type": "integer"
+    },
+    "escalation_policy": {
+      "type": "string"
+    },
+    "report": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "required",
+        "output_paths"
+      ],
+      "properties": {
+        "required": {
+          "type": "boolean"
+        },
+        "output_paths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

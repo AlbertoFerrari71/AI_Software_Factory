@@ -136,6 +136,7 @@ Esempio:
 | 1040 | Publish GPT Live Continuity Mega-Step | Consolidare su main la continuita' live GPT 1030/1035 tramite publish controllato | PR #94 mergiata, gate pre-publish PASS e gate finali post-merge PASS secondo report operativo | ASF V1 Completion | Completato |
 | 1050-1130 | ASF V1 Supervised Operator Release Candidate | Costruire operatore locale supervisionato per stato, report, reviewer packet, prompt draft, readiness e handoff | Contratti coerenti, secret scan foundation, Windows CI runner gate, report JSON sidecar, resolver, risk eval zero-downgrade, review protocol, operator CLI, dogfood evidence e RC runbook | ASF V1 Completion | Completato |
 | 1140 | Prompt Injection Adversarial Samples and Fencing | Separare istruzioni trusted da contenuto non fidato in task packet, Bridge report, JSON sidecar e output tool | Convenzione `BEGIN_UNTRUSTED_CONTENT`, almeno 6 sample avversariali innocui, validator task packet e test | ASF V1 Hardening | Completato |
+| 1200-1290 | Automated Milestone Runner Architecture, Context Compaction and Gate Loop Roadmap | Definire fondazione per runner milestone automatico supervisionato senza implementare automazione reale Codex | ADR, documenti motore, state machine, schemi JSON, esempi offline, validator, test e roadmap 1300-2990 | ASF Automation Architecture | Completato |
 | 0200-0280 | Shared Four-Hands Development Backbone | Preparare il backbone documentale e operativo Alberto-Luca su piu' repo | Documenti `docs/collaboration`, template, script PowerShell safe-by-default, policy Bridge/GitHub/skills/segreti | Collaboration Backbone | Completato |
 
 ---
@@ -252,10 +253,29 @@ Prossimo step consigliato dopo 1050-1130, ora eseguito dallo STEP 1140:
 
 ---
 
-Prossimo step consigliato dopo 1140:
+Prossimo step consigliato dopo 1140, ora eseguito dallo STEP 1200-1290:
 
 ```text
-1150) Property-Based Tests Dev-Only
+1200-1290) Automated Milestone Runner Architecture, Context Compaction and Gate Loop Roadmap
+```
+
+---
+
+Roadmap successiva dopo 1200-1290:
+
+```text
+1300-1390) Task Packet Schema and Roadmap Compiler
+1400-1490) Context Pack Builder and State Card Compaction
+1500-1590) Codex Execution Adapter Lab
+1600-1690) Gate Runner Unification and Evidence Store
+1700-1790) AI Reviewer and Repair Loop
+1800-1890) Publish Controller and GitHub Integration
+1900-1990) Human Escalation and Risk Policy
+2000-2190) End-to-End Automated Mega-Step Pilot
+2200-2390) FPO Automated Milestone Pilot
+2400-2590) ASF Automation Dashboard
+2600-2790) Recovery, Replay and Audit
+2800-2990) Autonomous Milestone Runner RC
 ```
 
 ---

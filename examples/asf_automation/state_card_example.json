@@ -1,0 +1,27 @@
+{
+  "state_card_version": "1.0",
+  "project": "AI_Software_Factory",
+  "last_completed_step": "1140",
+  "current_branch": "main",
+  "head_commit": "542c7ee",
+  "repo_clean": true,
+  "last_gate_status": "PASS",
+  "last_ci_status": "PASS_WITH_WARNINGS",
+  "capabilities_now_available": [
+    "Prompt injection fencing for task packets",
+    "ASF V1 supervised operator RC",
+    "Offline automation schema contracts"
+  ],
+  "open_warnings": [
+    "Automated Milestone Runner is architecture-only in 1200-1290.",
+    "No real Codex automation is authorized by this state card."
+  ],
+  "do_not_forget": [
+    "Git and versioned files are authoritative.",
+    "Bridge files are operational storage.",
+    "Deterministic gates cannot be overridden by AI review.",
+    "Publish remains a separate human-approved step."
+  ],
+  "next_recommended_step": "1300-1390) Task Packet Schema and Roadmap Compiler",
+  "human_decision_required": true
+}

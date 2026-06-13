@@ -1,0 +1,52 @@
+{
+  "repair_packet_version": "1.0",
+  "project": "AI_Software_Factory",
+  "step": "1200-1290-REPAIR-1",
+  "parent_step_id": "1200-1290",
+  "parent_task_packet_ref": "examples/asf_automation/task_packet_example.json",
+  "trigger": {
+    "source": "automation_schema_validator",
+    "status": "FAIL",
+    "reason": "Example JSON failed required-field validation."
+  },
+  "scope": {
+    "summary": "Fix only the invalid example or schema mismatch reported by the validator.",
+    "must_be_smaller_than_parent": true,
+    "risk_level": "L2"
+  },
+  "allowed_files": [
+    "schemas/asf_automation/*.schema.json",
+    "examples/asf_automation/*.json",
+    "scripts/asf_validate_automation_schemas.py",
+    "tests/unit/test_asf_automation_schemas.py"
+  ],
+  "forbidden_actions": [
+    "commit",
+    "push",
+    "open_pull_request",
+    "merge",
+    "tag",
+    "deploy",
+    "live_provider_call",
+    "real_codex_automation"
+  ],
+  "repair_instructions": [
+    "Read the validator error.",
+    "Fix the smallest schema/example mismatch.",
+    "Do not broaden scope.",
+    "Rerun the validator and focused unit test."
+  ],
+  "gates": [
+    "python scripts/asf_validate_automation_schemas.py",
+    "python -m pytest tests/unit/test_asf_automation_schemas.py"
+  ],
+  "max_attempts": 2,
+  "current_attempt": 1,
+  "escalation_policy": "Escalate to BLOCKED if the second repair attempt fails or scope grows.",
+  "report": {
+    "required": true,
+    "output_paths": [
+      "D:\\FG-SAB Dropbox\\Alberto Ferrari\\ChatGPT_Bridge\\AI_Software_Factory\\codex_command\\1200-1290-Report_Codex.md"
+    ]
+  }
+}

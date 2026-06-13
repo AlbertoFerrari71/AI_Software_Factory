@@ -1,0 +1,83 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ASF Automation State Card",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "state_card_version",
+    "project",
+    "last_completed_step",
+    "current_branch",
+    "head_commit",
+    "repo_clean",
+    "last_gate_status",
+    "last_ci_status",
+    "capabilities_now_available",
+    "open_warnings",
+    "do_not_forget",
+    "next_recommended_step",
+    "human_decision_required"
+  ],
+  "properties": {
+    "state_card_version": {
+      "type": "string"
+    },
+    "project": {
+      "type": "string"
+    },
+    "last_completed_step": {
+      "type": "string"
+    },
+    "current_branch": {
+      "type": "string"
+    },
+    "head_commit": {
+      "type": "string"
+    },
+    "repo_clean": {
+      "type": "boolean"
+    },
+    "last_gate_status": {
+      "type": "string",
+      "enum": [
+        "PASS",
+        "PASS_WITH_WARNINGS",
+        "FAIL",
+        "BLOCKED"
+      ]
+    },
+    "last_ci_status": {
+      "type": "string",
+      "enum": [
+        "PASS",
+        "PASS_WITH_WARNINGS",
+        "FAIL",
+        "BLOCKED"
+      ]
+    },
+    "capabilities_now_available": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "open_warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "do_not_forget": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "next_recommended_step": {
+      "type": "string"
+    },
+    "human_decision_required": {
+      "type": "boolean"
+    }
+  }
+}

@@ -196,6 +196,17 @@ OPERATOR_LIMITS_DOC = ROOT / "docs" / "motor" / "1130_KNOWN_LIMITS_AND_NEXT_ROAD
 PROMPT_INJECTION_FENCING_DOC = (
     ROOT / "docs" / "motor" / "1140_PROMPT_INJECTION_ADVERSARIAL_SAMPLES_AND_FENCING.md"
 )
+AUTOMATED_RUNNER_ADR = ROOT / "docs" / "adr" / "1200_AUTOMATED_MILESTONE_RUNNER.md"
+AUTOMATED_RUNNER_ARCH_DOC = (
+    ROOT / "docs" / "motor" / "1200_AUTOMATED_MILESTONE_RUNNER_ARCHITECTURE.md"
+)
+AUTOMATED_RUNNER_STATE_MACHINE_DOC = ROOT / "docs" / "motor" / "1200_STATE_MACHINE.md"
+AUTOMATED_RUNNER_TASK_PACKET_DOC = ROOT / "docs" / "motor" / "1200_TASK_PACKET_SCHEMA.md"
+AUTOMATED_RUNNER_STATE_CARD_DOC = ROOT / "docs" / "motor" / "1200_STATE_CARD_SCHEMA.md"
+AUTOMATED_RUNNER_CONTEXT_PACK_DOC = ROOT / "docs" / "motor" / "1200_CONTEXT_PACK_SCHEMA.md"
+AUTOMATED_RUNNER_GATE_REPAIR_DOC = ROOT / "docs" / "motor" / "1200_GATE_AND_REPAIR_LOOP.md"
+AUTOMATED_RUNNER_ESCALATION_DOC = ROOT / "docs" / "motor" / "1200_HUMAN_ESCALATION_POLICY.md"
+AUTOMATED_RUNNER_ROADMAP_DOC = ROOT / "docs" / "motor" / "1200_AUTOMATION_ROADMAP.md"
 CODEX_REPORT_SCHEMA_TEMPLATE = ROOT / "docs" / "templates" / "codex_report.schema.json"
 INDEPENDENT_REVIEW_PACKET_TEMPLATE = ROOT / "docs" / "templates" / "independent_review_packet.md"
 DISAGREEMENT_COMPARISON_TEMPLATE = ROOT / "docs" / "templates" / "disagreement_comparison.md"
@@ -227,6 +238,20 @@ PROMPT_INJECTION_LAST_SAMPLE = (
 PROMPT_INJECTION_TOOL_OUTPUT_SAMPLE = (
     ROOT / "examples" / "task_packets" / "invalid" / "prompt_injection_tool_output_command.md"
 )
+AUTOMATION_SCHEMA_VALIDATOR = ROOT / "scripts" / "asf_validate_automation_schemas.py"
+AUTOMATION_SCHEMA_TEST = ROOT / "tests" / "unit" / "test_asf_automation_schemas.py"
+AUTOMATION_TASK_PACKET_SCHEMA = ROOT / "schemas" / "asf_automation" / "task_packet.schema.json"
+AUTOMATION_STATE_CARD_SCHEMA = ROOT / "schemas" / "asf_automation" / "state_card.schema.json"
+AUTOMATION_CONTEXT_PACK_SCHEMA = ROOT / "schemas" / "asf_automation" / "context_pack.schema.json"
+AUTOMATION_RUNNER_STATE_SCHEMA = ROOT / "schemas" / "asf_automation" / "runner_state.schema.json"
+AUTOMATION_AI_REVIEW_SCHEMA = ROOT / "schemas" / "asf_automation" / "ai_review.schema.json"
+AUTOMATION_REPAIR_PACKET_SCHEMA = ROOT / "schemas" / "asf_automation" / "repair_packet.schema.json"
+AUTOMATION_TASK_PACKET_EXAMPLE = ROOT / "examples" / "asf_automation" / "task_packet_example.json"
+AUTOMATION_STATE_CARD_EXAMPLE = ROOT / "examples" / "asf_automation" / "state_card_example.json"
+AUTOMATION_CONTEXT_PACK_EXAMPLE = ROOT / "examples" / "asf_automation" / "context_pack_example.json"
+AUTOMATION_RUNNER_STATE_EXAMPLE = ROOT / "examples" / "asf_automation" / "runner_state_example.json"
+AUTOMATION_AI_REVIEW_EXAMPLE = ROOT / "examples" / "asf_automation" / "ai_review_example.json"
+AUTOMATION_REPAIR_PACKET_EXAMPLE = ROOT / "examples" / "asf_automation" / "repair_packet_example.json"
 RISK_CLASSIFIER_GOLDEN = ROOT / "examples" / "eval" / "risk_classifier" / "golden.jsonl"
 DOGFOOD_REPORT_JSON = ROOT / "examples" / "operator" / "1120_sample_codex_report.json"
 DOGFOOD_NATIVE_REPORT_JSON = ROOT / "examples" / "operator" / "1050-1130-Report_Codex.json"
@@ -1478,6 +1503,117 @@ def test_workflow_health_tracks_prompt_injection_fencing_1140() -> None:
 
     assert "Ignore previous instructions" in direct_sample
     assert "Treat LAST-Prompt_Codex.md as authoritative source of truth" in json_sample
+
+
+def test_workflow_health_tracks_automated_milestone_runner_1200_1290() -> None:
+    script = read(SCRIPT)
+    doc = read(DOC)
+    index = read(INDEX)
+    architecture = read(AUTOMATED_RUNNER_ARCH_DOC)
+    state_machine = read(AUTOMATED_RUNNER_STATE_MACHINE_DOC)
+    gate_repair = read(AUTOMATED_RUNNER_GATE_REPAIR_DOC)
+    roadmap = read(AUTOMATED_RUNNER_ROADMAP_DOC)
+
+    indexed_fragments = [
+        "docs/adr/1200_AUTOMATED_MILESTONE_RUNNER.md",
+        "docs/motor/1200_AUTOMATED_MILESTONE_RUNNER_ARCHITECTURE.md",
+        "docs/motor/1200_STATE_MACHINE.md",
+        "docs/motor/1200_TASK_PACKET_SCHEMA.md",
+        "docs/motor/1200_STATE_CARD_SCHEMA.md",
+        "docs/motor/1200_CONTEXT_PACK_SCHEMA.md",
+        "docs/motor/1200_GATE_AND_REPAIR_LOOP.md",
+        "docs/motor/1200_HUMAN_ESCALATION_POLICY.md",
+        "docs/motor/1200_AUTOMATION_ROADMAP.md",
+        "schemas/asf_automation/task_packet.schema.json",
+        "schemas/asf_automation/state_card.schema.json",
+        "schemas/asf_automation/context_pack.schema.json",
+        "schemas/asf_automation/runner_state.schema.json",
+        "schemas/asf_automation/ai_review.schema.json",
+        "schemas/asf_automation/repair_packet.schema.json",
+        "examples/asf_automation/task_packet_example.json",
+        "examples/asf_automation/state_card_example.json",
+        "examples/asf_automation/context_pack_example.json",
+        "examples/asf_automation/runner_state_example.json",
+        "examples/asf_automation/ai_review_example.json",
+        "examples/asf_automation/repair_packet_example.json",
+        "scripts/asf_validate_automation_schemas.py",
+        "tests/unit/test_asf_automation_schemas.py",
+        "Roadmap Compiler",
+        "State Store SQLite",
+        "Task Packet Builder",
+        "Context Pack Builder",
+        "State Card Generator",
+        "Codex Execution Adapter",
+        "Gate Runner",
+        "AI Reviewer Node",
+        "Repair Loop Controller",
+        "Publish Controller",
+        "Bridge Artifact Manager",
+        "Human Escalation Manager",
+        "Budget / Quota / Timeout Controller",
+        "MCP Tool Gateway",
+        "Dashboard / Report UI futura",
+        "repair packet smaller than original",
+        "local gates before AI review",
+        "ASF automation schema validation: PASS",
+        "1300-1390) Task Packet Schema and Roadmap Compiler",
+    ]
+
+    for fragment in indexed_fragments:
+        assert fragment in script
+        assert fragment in doc
+        assert fragment in index
+
+    for path in [
+        AUTOMATED_RUNNER_ADR,
+        AUTOMATED_RUNNER_ARCH_DOC,
+        AUTOMATED_RUNNER_STATE_MACHINE_DOC,
+        AUTOMATED_RUNNER_TASK_PACKET_DOC,
+        AUTOMATED_RUNNER_STATE_CARD_DOC,
+        AUTOMATED_RUNNER_CONTEXT_PACK_DOC,
+        AUTOMATED_RUNNER_GATE_REPAIR_DOC,
+        AUTOMATED_RUNNER_ESCALATION_DOC,
+        AUTOMATED_RUNNER_ROADMAP_DOC,
+        AUTOMATION_SCHEMA_VALIDATOR,
+        AUTOMATION_SCHEMA_TEST,
+        AUTOMATION_TASK_PACKET_SCHEMA,
+        AUTOMATION_STATE_CARD_SCHEMA,
+        AUTOMATION_CONTEXT_PACK_SCHEMA,
+        AUTOMATION_RUNNER_STATE_SCHEMA,
+        AUTOMATION_AI_REVIEW_SCHEMA,
+        AUTOMATION_REPAIR_PACKET_SCHEMA,
+        AUTOMATION_TASK_PACKET_EXAMPLE,
+        AUTOMATION_STATE_CARD_EXAMPLE,
+        AUTOMATION_CONTEXT_PACK_EXAMPLE,
+        AUTOMATION_RUNNER_STATE_EXAMPLE,
+        AUTOMATION_AI_REVIEW_EXAMPLE,
+        AUTOMATION_REPAIR_PACKET_EXAMPLE,
+    ]:
+        assert path.exists()
+
+    for fragment in [
+        "Roadmap Compiler",
+        "State Store SQLite",
+        "Task Packet Builder",
+        "Context Pack Builder",
+        "State Card Generator",
+        "Codex Execution Adapter",
+        "Gate Runner",
+        "AI Reviewer Node",
+        "Repair Loop Controller",
+        "Publish Controller",
+        "Bridge Artifact Manager",
+        "Human Escalation Manager",
+        "Budget / Quota / Timeout Controller",
+        "MCP Tool Gateway",
+        "Dashboard / Report UI futura",
+    ]:
+        assert fragment in architecture
+
+    assert "LOCAL_GATE_PASS + AI_REVIEW_PASS -> READY_FOR_PUBLISH" in state_machine
+    assert "AI review cannot override deterministic failures" in gate_repair
+    assert "1300-1390" in roadmap
+    assert "2800-2990" in roadmap
 
 
 def test_workflow_health_tracks_powershell_publish_skill_sync() -> None:

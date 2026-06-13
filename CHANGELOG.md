@@ -4,6 +4,34 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [1.07.0] - 2026-06-13
+
+### Added
+
+- STEP 1200-1290 - Automated Milestone Runner Architecture, Context Compaction and Gate Loop Roadmap.
+- ADR `docs/adr/1200_AUTOMATED_MILESTONE_RUNNER.md`.
+- Documenti motore 1200 per architettura, state machine, Task Packet, State Card, Context Pack, Gate/Repair Loop, Human Escalation Policy e roadmap 1300-2990.
+- Schemi JSON in `schemas/asf_automation/`.
+- Esempi offline in `examples/asf_automation/`.
+- Validator `scripts/asf_validate_automation_schemas.py`.
+- Test `tests/unit/test_asf_automation_schemas.py`.
+
+### Changed
+
+- README, roadmap, decision log, Project Workflow Index e Workflow Health Check riconoscono lo STEP 1200-1290.
+
+### Guardrails
+
+- Nessun commit, push, PR, merge, tag o deploy eseguito.
+- Nessuna chiamata live AI, nessuna automazione reale Codex e nessuna nuova dipendenza runtime.
+- Il runner automatico completo resta roadmap.
+
+### Next
+
+- `1300-1390) Task Packet Schema and Roadmap Compiler`.
+
+---
+
 ## [1.06.0] - 2026-06-12
 
 ### Added
