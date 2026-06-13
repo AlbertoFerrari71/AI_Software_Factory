@@ -134,7 +134,8 @@ Esempio:
 | 1030 | ASF GPT Live Continuity Mega-Step | Rafforzare parser Responses API e continuita' manuale/semi-automatica tra ChatGPT, Codex, PowerShell, Bridge e nuova chat | Responses parser hardening, parser normalizzato, Bridge report discovery, Done Trigger Spec, handoff pack generator, prompt length advisor leggero, smoke sicuro e test | ASF V1 Completion | Completato |
 | 1035 | Provider Response Diagnostic Sanitized Review | Diagnosticare in sicurezza lo shape provider dopo LIVE_FAILED_SAFE 1030 | Sanitizer shape provider, candidate path detector, live diagnostic one-call, evidence Bridge sanitizzata e decisione per 1030 | ASF V1 Completion | Completato |
 | 1040 | Publish GPT Live Continuity Mega-Step | Consolidare su main la continuita' live GPT 1030/1035 tramite publish controllato | PR #94 mergiata, gate pre-publish PASS e gate finali post-merge PASS secondo report operativo | ASF V1 Completion | Completato |
-| 1050-1130 | ASF V1 Supervised Operator Release Candidate | Costruire operatore locale supervisionato per stato, report, reviewer packet, prompt draft, readiness e handoff | Contratti coerenti, secret scan foundation, Windows CI runner gate, report JSON sidecar, resolver, risk eval zero-downgrade, review protocol, operator CLI, dogfood evidence e RC runbook | ASF V1 Completion | In corso |
+| 1050-1130 | ASF V1 Supervised Operator Release Candidate | Costruire operatore locale supervisionato per stato, report, reviewer packet, prompt draft, readiness e handoff | Contratti coerenti, secret scan foundation, Windows CI runner gate, report JSON sidecar, resolver, risk eval zero-downgrade, review protocol, operator CLI, dogfood evidence e RC runbook | ASF V1 Completion | Completato |
+| 1140 | Prompt Injection Adversarial Samples and Fencing | Separare istruzioni trusted da contenuto non fidato in task packet, Bridge report, JSON sidecar e output tool | Convenzione `BEGIN_UNTRUSTED_CONTENT`, almeno 6 sample avversariali innocui, validator task packet e test | ASF V1 Hardening | Completato |
 | 0200-0280 | Shared Four-Hands Development Backbone | Preparare il backbone documentale e operativo Alberto-Luca su piu' repo | Documenti `docs/collaboration`, template, script PowerShell safe-by-default, policy Bridge/GitHub/skills/segreti | Collaboration Backbone | Completato |
 
 ---
@@ -243,10 +244,18 @@ Prossimo step consigliato dopo 1035, ora consolidato dallo STEP 1040:
 
 ---
 
-Prossimo step consigliato dopo 1050-1130:
+Prossimo step consigliato dopo 1050-1130, ora eseguito dallo STEP 1140:
 
 ```text
 1140) Prompt Injection Adversarial Samples and Fencing
+```
+
+---
+
+Prossimo step consigliato dopo 1140:
+
+```text
+1150) Property-Based Tests Dev-Only
 ```
 
 ---

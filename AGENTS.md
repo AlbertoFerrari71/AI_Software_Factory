@@ -47,6 +47,9 @@ For Alberto's operational vision of AI as a verifiable collaborator, see docs/pr
 - Prefer explicit checks of native command exit codes.
 - Avoid fragile here-strings in long copy-paste command blocks.
 - Avoid fragile try/finally structures in long pasted command blocks when a simpler explicit flow is possible.
+- Every PowerShell block intended for copy-paste into PowerShell or Windows Terminal must end with `# terminatore copia-incolla` followed by one real blank final line.
+- Do not use `WScript.Shell`, `SendKeys`, or automatic Enter as the default paste-completion workaround. Keep WScript fallback only for explicitly authorized rare cases.
+- Do not use `Set-Clipboard -Path`. To copy a file into the clipboard, use `Get-Content -Path $File -Raw | Set-Clipboard`.
 - For command packs, prefer a short safe bootstrap that writes a full `.ps1`, validates it with `[scriptblock]::Create(...)`, then executes it with `pwsh -NoProfile -ExecutionPolicy Bypass -File`.
 - Do not put complex Git logic, DOCX XML, long functions, nested here-strings, or fragile outer `finally` blocks in the pasted bootstrap.
 - In generated command-pack scripts, use `ArgList` for native command argument parameters; do not use `$Args` as a function parameter name.

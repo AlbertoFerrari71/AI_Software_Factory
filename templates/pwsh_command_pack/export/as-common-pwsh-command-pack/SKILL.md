@@ -22,7 +22,7 @@ Safe Bootstrap PowerShell Command Pack:
 7. The outer wrapper does not contain complex Git logic.
 8. The outer wrapper does not contain nested here-strings.
 9. The outer wrapper does not use fragile `try/finally`.
-10. The final line is actually executable, for example `Write-Host ";"`.
+10. The pasted terminal block ends with `# terminatore copia-incolla` followed by one real blank final line.
 11. The pack generates only progressive `NNNN-II-Tipo_Nome.ext` artifacts.
 12. The pack does not generate or read `LAST-*` artifacts.
 
@@ -41,7 +41,7 @@ The bootstrap must include:
 - execution with `pwsh -NoProfile -ExecutionPolicy Bypass -File $CommandFile`;
 - explicit `$LASTEXITCODE` handling;
 - clear final message;
-- executable final line.
+- paste terminator comment plus one real trailing blank line.
 
 ## Generated Script Requirements
 

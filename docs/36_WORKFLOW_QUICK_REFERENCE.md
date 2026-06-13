@@ -98,7 +98,8 @@ bootstrap corto -> scrive .ps1 completo -> [scriptblock]::Create(...) -> pwsh -N
 
 Regole rapide:
 
-- il blocco incollato resta corto e termina con una riga eseguibile come `Write-Host ";"`;
+- il blocco incollato resta corto e termina con `# terminatore copia-incolla` seguito da una riga vuota finale reale;
+- non usare `WScript.Shell`, `SendKeys` o auto-Enter come workaround automatici; `WScript.Shell` resta solo fallback esplicito per casi rari;
 - niente logica Git complessa nel bootstrap;
 - niente here-string annidate;
 - niente `finally` fragile nel wrapper esterno;

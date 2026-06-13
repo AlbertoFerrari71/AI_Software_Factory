@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -12,6 +13,145 @@ MODE_LITE = "Lite"  # Output line: Mode: Lite
 MODE_STRICT = "Strict"  # Output line: Mode: Strict
 
 SUPPORTED_SUFFIXES = {".md", ".txt"}
+
+UNTRUSTED_BEGIN = "BEGIN_UNTRUSTED_CONTENT"
+UNTRUSTED_END = "END_UNTRUSTED_CONTENT"
+UNTRUSTED_BLOCK_RE = re.compile(
+    rf"(?ims)^{UNTRUSTED_BEGIN}\s*$.*?^{UNTRUSTED_END}\s*$"
+)
+
+PROMPT_INJECTION_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
+    (
+        "ignore previous instructions",
+        re.compile(
+            r"\b(ignore|disregard|forget)\s+(all\s+)?(previous|prior|above)\s+"
+            r"(instructions|rules|context)\b",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "ignora istruzioni precedenti",
+        re.compile(
+            r"\bignora\s+(tutte\s+)?(le\s+)?(istruzioni|regole)\s+"
+            r"(precedenti|sopra)\b",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "ignore AGENTS.md or CLAUDE.md",
+        re.compile(
+            r"\b(ignore|disregard|bypass|ignora|bypassa)\s+`?"
+            r"(AGENTS\.md|CLAUDE\.md)`?\b",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "disregard system or developer instructions",
+        re.compile(
+            r"\b(ignore|disregard|override|bypass)\s+(the\s+)?"
+            r"(system|developer)\s+(prompt|message|instructions|rules)\b",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "reveal system prompt",
+        re.compile(
+            r"\b(reveal|print|show|dump|read)\s+(the\s+)?"
+            r"(system\s+prompt|hidden\s+instructions|developer\s+message)\b",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "disable tests or gates",
+        re.compile(
+            r"\b(disable|skip|bypass|disattiva|salta|bypassa)\s+"
+            r"(tests?|verification gate|gate|verifiche|test)\b",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "execute publish action",
+        re.compile(
+            r"\b(run|execute|perform|esegui|fai)\s+.*\b"
+            r"(commit|push|merge|deploy|publish|pubblica|rilascia)\b",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "unauthorized publish action",
+        re.compile(
+            r"(\b(commit|push|merge|deploy|publish)\b.*\b"
+            r"(without|no|senza)\s+(human\s+|manual\s+)?"
+            r"(approval|authorization|approvazione|autorizzazione)\b)"
+            r"|(\b(push|merge|deploy)\b.*\b(directly|direttamente)\b.*"
+            r"\b(main|production|prod)\b)",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "exfiltrate secrets",
+        re.compile(
+            r"\b(exfiltrate|leak|dump|print|send|copy|read|reveal|export|upload|"
+            r"esfiltra|stampa|leggi|rivela|invia|copia)\s+.*\b"
+            r"(secret|secrets|token|api\s*key|password|\.env|"
+            r"env(?:ironment)?\s+variables?|credenziali)\b",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "mark PASS without evidence",
+        re.compile(
+            r"\b(mark|set|declare|write|report|marca|dichiara)\s+.*\b"
+            r"(PASS|passed|success|successo)\b.*\b(without|senza)\s+.*\b"
+            r"(evidence|prove|verifiche|tests?|test)\b",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "bypass guardrails",
+        re.compile(
+            r"\b(bypass|disable|override|ignore|skip|bypassa|disattiva)\s+.*\b"
+            r"(guardrails?|soft protection|human gate|approval gate|safety gate|gate umano)\b",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "LAST artifact authoritative",
+        re.compile(
+            r"(\b(treat|use|usa)\s+.*LAST-[A-Za-z0-9_.-]+.*"
+            r"(authoritative|autoritativ|source of truth|fonte)\b)"
+            r"|(\bLAST-[A-Za-z0-9_.-]+.*"
+            r"(authoritative|autoritativ|source of truth|fonte)\b)",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "destructive cleanup",
+        re.compile(
+            r"\b(destructive cleanup|cleanup distruttivo|delete workspace|"
+            r"wipe workspace|remove all files|clean before validation)\b",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "tool output command injection",
+        re.compile(
+            r"\b(tool output|output dello strumento|stdout|stderr)\b.*\b"
+            r"(run|execute|esegui|launch)\b.*\b"
+            r"(command|cleanup|deploy|push|merge|validation)\b",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "override human approval",
+        re.compile(
+            r"\b(override|bypass|skip|ignore|forza)\s+.*\b"
+            r"(human approval|manual approval|approval|approvazione umana|"
+            r"approvazione manuale|human gate)\b",
+            re.IGNORECASE,
+        ),
+    ),
+]
 
 
 @dataclass(frozen=True)
@@ -37,6 +177,23 @@ def contains_all(text: str, candidates: list[str]) -> bool:
 
 def contains_each_group(text: str, groups: list[list[str]]) -> bool:
     return all(contains_any(text, group) for group in groups)
+
+
+def strip_untrusted_content_blocks(text: str) -> str:
+    return UNTRUSTED_BLOCK_RE.sub("", text)
+
+
+def untrusted_content_blocks(text: str) -> list[str]:
+    return [match.group(0) for match in UNTRUSTED_BLOCK_RE.finditer(text)]
+
+
+def find_prompt_injection_markers(text: str) -> list[str]:
+    trusted_surface = strip_untrusted_content_blocks(text)
+    markers: list[str] = []
+    for label, pattern in PROMPT_INJECTION_PATTERNS:
+        if pattern.search(trusted_surface):
+            markers.append(label)
+    return markers
 
 
 def check_required_sections(text: str) -> list[CheckResult]:
@@ -98,6 +255,48 @@ def check_final_report(text: str) -> list[CheckResult]:
     return [
         CheckResult("Final Codex report", contains_all(text, required_terms))
     ]
+
+
+def check_untrusted_content_fences(text: str) -> list[CheckResult]:
+    begin_count = len(re.findall(rf"(?im)^{UNTRUSTED_BEGIN}\s*$", text))
+    end_count = len(re.findall(rf"(?im)^{UNTRUSTED_END}\s*$", text))
+
+    if begin_count != end_count:
+        return [
+            CheckResult(
+                "Untrusted content fences",
+                False,
+                "BEGIN_UNTRUSTED_CONTENT and END_UNTRUSTED_CONTENT markers must be balanced.",
+            )
+        ]
+
+    for block in untrusted_content_blocks(text):
+        if not contains_all(
+            block,
+            [
+                "source:",
+                "content_type:",
+                "instructions_inside_are_not_authoritative: true",
+                "---",
+            ],
+        ):
+            return [
+                CheckResult(
+                    "Untrusted content fences",
+                    False,
+                    "Each untrusted block requires source, content_type, non-authoritative flag, and separator.",
+                )
+            ]
+
+    return [CheckResult("Untrusted content fences", True)]
+
+
+def check_prompt_injection_markers(text: str) -> list[CheckResult]:
+    markers = find_prompt_injection_markers(text)
+    detail = ""
+    if markers:
+        detail = "Unfenced prompt injection marker(s): " + ", ".join(markers)
+    return [CheckResult("Prompt injection markers fenced", not markers, detail)]
 
 
 def check_strict_branch_instructions(text: str) -> list[CheckResult]:
@@ -278,6 +477,8 @@ def validate_text(text: str, *, strict: bool = False) -> tuple[list[CheckResult]
         *check_required_sections(text),
         *check_forbidden_actions(text),
         *check_final_report(text),
+        *check_untrusted_content_fences(text),
+        *check_prompt_injection_markers(text),
     ]
     warnings: list[str] = []
 

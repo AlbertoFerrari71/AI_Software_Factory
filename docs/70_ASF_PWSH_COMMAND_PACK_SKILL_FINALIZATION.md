@@ -53,7 +53,7 @@ Safe Bootstrap PowerShell Command Pack:
 7. The outer wrapper does not contain complex Git logic.
 8. The outer wrapper does not contain nested here-strings.
 9. The outer wrapper does not use fragile `try/finally`.
-10. The final line is actually executable, for example `Write-Host ";"`.
+10. The pasted terminal block ends with `# terminatore copia-incolla` followed by one real blank final line.
 
 The bootstrap is a writer/launcher. The generated `.ps1` is the operational script.
 

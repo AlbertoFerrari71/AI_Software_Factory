@@ -184,13 +184,18 @@ Il blocco incollato nel terminale deve essere un bootstrap corto:
 bootstrap corto -> scrive .ps1 completo -> parse-check -> pwsh -File
 ```
 
+Ogni blocco PowerShell destinato al copia/incolla deve terminare con
+`# terminatore copia-incolla` seguito da una riga vuota finale reale. Non usare
+`WScript.Shell`, `SendKeys` o auto-Enter come workaround automatici; `WScript.Shell`
+resta solo fallback esplicito per casi rari.
+
 Il bootstrap deve validare il parsing prima dell'esecuzione:
 
 ```powershell
 [scriptblock]::Create($ScriptText) | Out-Null
 ```
 
-Se il parse-check fallisce, il bootstrap non esegue Git, produce output completo/compatto di blocco, copia il compatto negli appunti e termina non-zero.
+Se il parse-check fallisce, il bootstrap non esegue Git, produce output completo/compatto di blocco e termina non-zero.
 
 ### Script `.ps1`
 

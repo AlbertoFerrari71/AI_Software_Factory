@@ -103,6 +103,7 @@ Sono presenti:
 - STEP 1030 - ASF GPT Live Continuity Mega-Step, con parser Responses API robusto e normalizzato, discovery report Bridge, Done Trigger Spec, handoff pack per ripartenza nuova chat e prompt length advisor leggero senza packetizzazione obbligatoria.
 - STEP 1035 - Provider Response Diagnostic Sanitized Review, con shape provider sanitizzato, detector path candidati e live diagnostic one-call senza raw payload.
 - STEP 1050-1130 - ASF V1 Supervised Operator Release Candidate locale, con resolver report Codex JSON/Markdown, operator status CLI, reviewer packet, draft prompt, publish readiness gate, secret scan foundation, Windows runner CI gate, risk classifier golden eval zero-downgrade e dogfood evidence pack.
+- STEP 1140 - Prompt Injection Adversarial Samples and Fencing, con convenzione `BEGIN_UNTRUSTED_CONTENT`, almeno 6 sample avversariali innocui e validator task packet che respinge marker prompt-injection non recintati.
 - STEP 0200-0280 - Shared Four-Hands Development Backbone, con documenti `docs/collaboration`, template condivisi, script PowerShell safe-by-default e policy operative Alberto-Luca su GitHub, Bridge, ChatGPT Projects, Codex Skills, review, merge e segreti.
 
 Non sono ancora presenti:

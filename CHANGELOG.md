@@ -4,6 +4,34 @@ Formato ispirato a Keep a Changelog, adattato al metodo interno.
 
 ---
 
+## [1.06.0] - 2026-06-12
+
+### Added
+
+- STEP 1140 - Prompt Injection Adversarial Samples and Fencing.
+- Documento `docs/motor/1140_PROMPT_INJECTION_ADVERSARIAL_SAMPLES_AND_FENCING.md`.
+- Sample avversariali innocui in `examples/task_packets/invalid/`.
+- Test `tests/unit/test_prompt_injection_fencing.py`.
+
+### Changed
+
+- `scripts/validate_task_packet.py` respinge marker prompt-injection non recintati.
+- STEP 1140-B porta il corpus a 7 sample prompt-injection e normalizza lo status atteso su enum ASF.
+- `docs/05_SECURITY_MODEL.md` e `docs/25_PROMPT_PACKET_HARDENING.md` documentano separazione istruzioni/dati e fencing.
+- Workflow Health Check e Project Workflow Index riconoscono lo STEP 1140.
+
+### Guardrails
+
+- Nessun commit, push, PR, merge, tag o deploy eseguito.
+- Nessuna chiamata live AI o nuova dipendenza.
+- `LAST-*` resta mirror operativo Bridge, non input autoritativo.
+
+### Next
+
+- `1150) Property-Based Tests Dev-Only`.
+
+---
+
 ## [1.05.0] - 2026-06-12
 
 ### Added
